@@ -26,7 +26,13 @@ android {
 }
 
 ext {
-    SUPPORT_LIB_VERSION = '25.3.1'
+    // The compatible versions of firebase, firebase-ui and the support library are listed here:
+    // https://github.com/firebase/FirebaseUI-Android/blob/master/constants.gradle
+    FIREBASE_VERSION = '10.2.0'
+    FIREBASE_UI_VERSION = '1.2.0'
+    SUPPORT_LIB_VERSION = '25.1.1'
+
+    AUTOVALUE_VERSION = '1.2'
     RETROFIT_VERSION = '2.2.0'
 }
 
@@ -36,9 +42,23 @@ dependencies {
     compile "com.android.support:appcompat-v7:$SUPPORT_LIB_VERSION"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
+    // Firebase
+    compile "com.google.firebase:firebase-auth:$FIREBASE_VERSION"
+    compile "com.google.firebase:firebase-database:$FIREBASE_VERSION"
+
+    // AutoValue
+    // see:  https://github.com/google/auto/blob/master/value/userguide/index.md
+    provided            "com.google.auto.value:auto-value:$AUTOVALUE_VERSION"
+    annotationProcessor "com.google.auto.value:auto-value:$AUTOVALUE_VERSION"
+
+    // test
     testCompile 'junit:junit:4.12'
 
+    // androidTest
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 }
+
+// This plugin reads the google-services.json file and is required for Firebase
+apply plugin: 'com.google.gms.google-services'

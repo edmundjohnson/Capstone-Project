@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1048204857264",
+    "firebase_url": "https://movie-companion.firebaseio.com",
+    "project_id": "movie-companion",
+    "storage_bucket": "movie-companion.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1048204857264:android:a830df2a986c8dc1",
+        "android_client_info": {
+          "package_name": "uk.jumpingmouse.moviecompanion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1048204857264-qgfc13b2inu7faapmcft5e13290v3u0s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "uk.jumpingmouse.moviecompanion",
+            "certificate_hash": "dcc3f6a876b211470a1d4d1c92249be1a9aa17f9"
+          }
+        },
+        {
+          "client_id": "1048204857264-evfbnv8g5lfpkf3bfbdqife9ve6pob4r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-qCnu66_V2tFRdc12RYe3XuIWL5awz-s"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1048204857264-evfbnv8g5lfpkf3bfbdqife9ve6pob4r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
