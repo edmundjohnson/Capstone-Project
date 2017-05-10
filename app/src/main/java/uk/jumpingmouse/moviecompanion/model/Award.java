@@ -5,21 +5,21 @@ import com.google.auto.value.AutoValue;
 /**
  * The Award model class.
  * An Award is uniquely identified by the combination of awardDate, category and imdbId.
- * An example of an award is "Film of the Week" for 12/05/17.
- * Note that there could be more than one Film of the Week for a given week.
- * The Film-Award relationship is one-many.
+ * An example of an award is "Movie of the Week" for 12/05/17.
+ * Note that there could be more than one Movie of the Week for a given week.
+ * The Movie-Award relationship is one-many.
  * @author Edmund Johnson
  */
 @AutoValue
 public abstract class Award {
-    public static final String CATEGORY_FILM = "F";
+    public static final String CATEGORY_MOVIE = "M";
     public static final String CATEGORY_DVD = "D";
 
     // awardDate format is "YYMMDD"
     abstract String awardDate();
-    // categoryId is one of CATEGORY_FILM, CATEGORY_DVD
+    // categoryId is one of CATEGORY_MOVIE, CATEGORY_DVD
     abstract String category();
-    // imdbId is a "foreign key" to Film
+    // imdbId is a "foreign key" to Movie
     abstract String imdbId();
     // free text
     abstract String review();
@@ -39,7 +39,7 @@ public abstract class Award {
      * {@code
      *   Award award = Award.builder()
      *         .awardDate("170512")
-     *         .category(Award.CATEGORY_FILM)
+     *         .category(Award.CATEGORY_MOVIE)
      *         .imdbId("tt4016934")
      *         // etc
      *        .build();

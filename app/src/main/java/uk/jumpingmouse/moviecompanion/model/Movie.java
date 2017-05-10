@@ -5,13 +5,13 @@ import com.google.auto.value.AutoValue;
 import android.support.annotation.Nullable;
 
 /**
- * The Film model class.
+ * The Movie model class.
  * The imdbId is entered by an admin user.
- * The remainder of the Film information is obtained from the Open Movie Database.
+ * The remainder of the Movie information is obtained from the Open Movie Database.
  * @author Edmund Johnson
  */
 @AutoValue
-public abstract class Film {
+public abstract class Movie {
     public static final int RUNTIME_UNKNOWN = -1;
 
     // e.g. "tt4016934"
@@ -31,7 +31,7 @@ public abstract class Film {
     @Nullable
     abstract String posterUrl();
 
-    // The year of the film's release (not the year of this award), e.g. "2017"
+    // The year of the movie's release (not the year of this award), e.g. "2017"
     @Nullable
     abstract String year();
 
@@ -43,24 +43,24 @@ public abstract class Film {
         abstract Builder runtime(int value);
         abstract Builder posterUrl(String value);
         abstract Builder year(String value);
-        abstract Film build();
+        abstract Movie build();
     }
 
     /**
      * Builder for this class.  Usage:
      * <blockquote><pre>
      * {@code
-     *   Film film = Film.builder()
+     *   Movie movie = Movie.builder()
      *         .imdbId("tt4016934")
      *         .title("The Handmaiden")
      *         // etc
      *        .build();
      * }
      * </pre></blockquote>
-     * @return an instance of the Film class.
+     * @return an instance of the Movie class.
      */
     public static Builder builder() {
-        return new AutoValue_Film.Builder();
+        return new AutoValue_Movie.Builder();
     }
 
 }

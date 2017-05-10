@@ -21,7 +21,7 @@ public class AwardTest {
     public void setUp() {
         award = Award.builder()
                 .awardDate("170512")
-                .category(Award.CATEGORY_FILM)
+                .category(Award.CATEGORY_MOVIE)
                 .imdbId("tt4016934")
                 .review(REVIEW)
                 .build();
@@ -37,7 +37,7 @@ public class AwardTest {
 
         // test that the fields return the expected values
         assertEquals("170512", award.awardDate());
-        assertEquals(Award.CATEGORY_FILM, award.category());
+        assertEquals(Award.CATEGORY_MOVIE, award.category());
         assertEquals("tt4016934", award.imdbId());
         assertEquals(REVIEW, award.review());
     }
@@ -47,7 +47,7 @@ public class AwardTest {
         // test that building with the same parameter values results in equals(...) returning true
         assertTrue(Award.builder()
                 .awardDate("170512")
-                .category(Award.CATEGORY_FILM)
+                .category(Award.CATEGORY_MOVIE)
                 .imdbId("tt4016934")
                 .review(REVIEW)
                 .build()
@@ -56,7 +56,7 @@ public class AwardTest {
         // test that building with a different awardDate results in equals(...) returning false
         assertFalse(Award.builder()
                 .awardDate("170519")
-                .category(Award.CATEGORY_FILM)
+                .category(Award.CATEGORY_MOVIE)
                 .imdbId("tt4016934")
                 .review(REVIEW)
                 .build()
@@ -66,7 +66,7 @@ public class AwardTest {
     @Test
     public void testToString() {
         assertEquals(
-                "Award{awardDate=170512, category=" + Award.CATEGORY_FILM +
+                "Award{awardDate=170512, category=" + Award.CATEGORY_MOVIE +
                         ", imdbId=tt4016934, review=" + REVIEW + "}",
                 award.toString());
     }

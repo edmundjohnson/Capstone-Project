@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Movie Companion</string>
+
+    <!-- Security -->
+    <string name="sign_out">Sign Out</string>
+    <string name="sign_in_ok">Signed in!</string>
+    <string name="sign_in_cancelled">Sign-in cancelled</string>
+
+    <!-- Validation -->
+    <string name="error_title">Error</string>
+
 </resources>
