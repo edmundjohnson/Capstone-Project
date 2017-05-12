@@ -9,10 +9,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import timber.log.Timber;
+
+import uk.jumpingmouse.moviecompanion.BuildConfig;
 import uk.jumpingmouse.moviecompanion.R;
+import uk.jumpingmouse.moviecompanion.androidutils.ViewUtils;
 import uk.jumpingmouse.moviecompanion.security.SecurityManager;
 import uk.jumpingmouse.moviecompanion.security.SecurityManagerFactory;
-import uk.jumpingmouse.moviecompanion.view.ViewUtils;
 
 /**
  * The main activity, i.e. the movie list.
@@ -33,6 +36,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Initialise Timber
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        //} else {
+        //    // Read the Timber documentation for this
+        //    Timber.plant(new CrashReportingTree());
+        }
 
         getSecurityManager().onCreateActivity(this);
 

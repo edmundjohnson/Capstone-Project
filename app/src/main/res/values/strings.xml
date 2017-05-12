@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Movie Companion</string>
 
+    <!-- Content provider -->
+    <string name="content_authority">uk.jumpingmouse.moviecompanion</string>
+
     <!-- Security -->
     <string name="sign_out">Sign Out</string>
     <string name="sign_in_ok">Signed in!</string>

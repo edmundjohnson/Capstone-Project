@@ -1,4 +1,4 @@
-package uk.jumpingmouse.moviecompanion.model;
+package uk.jumpingmouse.moviecompanion.data;
 
 import com.google.auto.value.AutoValue;
 

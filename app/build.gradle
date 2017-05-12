@@ -64,6 +64,9 @@ dependencies {
     provided            "com.google.auto.value:auto-value:$AUTOVALUE_VERSION"
     annotationProcessor "com.google.auto.value:auto-value:$AUTOVALUE_VERSION"
 
+    // Timber
+    compile 'com.jakewharton.timber:timber:4.5.1'
+
     // test
     testCompile 'junit:junit:4.12'
 

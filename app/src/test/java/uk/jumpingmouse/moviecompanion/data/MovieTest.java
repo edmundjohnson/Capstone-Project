@@ -1,16 +1,19 @@
-package uk.jumpingmouse.moviecompanion.model;
+package uk.jumpingmouse.moviecompanion.data;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
+
 import static org.junit.Assert.*;
 
 /**
- * Test class for Movie model class.
+ * Test class for the Movie data class.
  * @author Edmund Johnson
  */
 public class MovieTest {
+
     @SuppressWarnings("SpellCheckingInspection")
     private static final String POSTER_URL =
             "https://images-na.ssl-images-amazon.com/images/M/MV5BYTBjYjllZTctMTdkMy00MmE5LTllYjctYzg3OTc1MTFjZGYzXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg";
@@ -26,6 +29,7 @@ public class MovieTest {
                 .runtime(144)
                 .posterUrl(POSTER_URL)
                 .year("2017")
+                .released(ModelUtils.toLongOmdbReleased("01 Jun 2017"))
                 .build();
     }
 
@@ -53,6 +57,7 @@ public class MovieTest {
                 .runtime(Movie.RUNTIME_UNKNOWN)
                 .posterUrl(null)
                 .year(null)
+                .released(Movie.RELEASED_UNKNOWN)
                 .build();
         assertNotNull(movieWithNulls);
     }
@@ -67,6 +72,7 @@ public class MovieTest {
                 .runtime(144)
                 .posterUrl(POSTER_URL)
                 .year("2017")
+                .released(ModelUtils.toLongOmdbReleased("01 Jun 2017"))
                 .build()
                 .equals(movie));
 
@@ -78,6 +84,7 @@ public class MovieTest {
                 .runtime(144)
                 .posterUrl(POSTER_URL)
                 .year("2017")
+                .released(ModelUtils.toLongOmdbReleased("01 Jun 2017"))
                 .build()
                 .equals(movie));
     }
@@ -85,8 +92,9 @@ public class MovieTest {
     @Test
     public void testToString() {
         assertEquals(
-                "Movie{imdbId=tt4016934, title=The Handmaiden, genre=Drama, Mystery, Romance," +
-                        " runtime=144, posterUrl=" + POSTER_URL + ", year=2017}",
+                "Movie{imdbId=tt4016934, title=The Handmaiden, genre=Drama, Mystery, Romance, runtime=144, " +
+                        "posterUrl=" + POSTER_URL + ", year=2017, " +
+                        "released=" + ModelUtils.toLongOmdbReleased("01 Jun 2017") + "}",
                 movie.toString());
     }
 
