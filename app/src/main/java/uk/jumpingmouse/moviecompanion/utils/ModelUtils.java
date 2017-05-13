@@ -2,6 +2,7 @@ package uk.jumpingmouse.moviecompanion.utils;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import timber.log.Timber;
@@ -17,14 +18,26 @@ import java.util.Date;
  */
 public final class ModelUtils {
 
+    /** Private default constructor to prevent instantiation. */
+    private ModelUtils() {
+    }
+
     /**
      * Creates and returns a Movie object based on a set of ContentValues.
      * @param values the ContentValues
      * @return a Movie object corresponding to the ContentValues
      */
     @Nullable
-    public static Movie toMovie(@Nullable final ContentValues values) {
-        if (values == null) {
+    public static Movie toMovie(@NonNull final ContentValues values) {
+        // if any mandatory attribute is missing, return null
+        String imdbId = (String) values.get(DataContract.MovieEntry.COLUMN_IMDB_ID);
+        if (imdbId == null) {
+            Timber.w("toMovie: missing imdbId");
+            return null;
+        }
+        String title = (String) values.get(DataContract.MovieEntry.COLUMN_TITLE);
+        if (title == null) {
+            Timber.w("toMovie: missing title");
             return null;
         }
 
@@ -36,8 +49,8 @@ public final class ModelUtils {
         long released = ModelUtils.toLongOmdbReleased(strReleased);
 
         return Movie.builder()
-                .imdbId((String) values.get(DataContract.MovieEntry.COLUMN_IMDB_ID))
-                .title((String) values.get(DataContract.MovieEntry.COLUMN_TITLE))
+                .imdbId(imdbId)
+                .title(title)
                 .genre((String) values.get(DataContract.MovieEntry.COLUMN_GENRE))
                 .runtime(runtime)
                 .posterUrl((String) values.get(DataContract.MovieEntry.COLUMN_POSTER_URL))
@@ -52,10 +65,7 @@ public final class ModelUtils {
      * @return a movie based on the values of the cursor row
      */
     @Nullable
-    public static Movie toMovie(@Nullable Cursor cursor) {
-        if (cursor == null) {
-            return null;
-        }
+    public static Movie toMovie(@NonNull Cursor cursor) {
         return Movie.builder()
                 .imdbId(cursor.getString(DataContract.MovieEntry.COL_IMDB_ID))
                 .title(cursor.getString(DataContract.MovieEntry.COL_TITLE))

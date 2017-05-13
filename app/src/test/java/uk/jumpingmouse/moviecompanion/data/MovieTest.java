@@ -2,7 +2,9 @@ package uk.jumpingmouse.moviecompanion.data;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 
@@ -18,11 +20,17 @@ public class MovieTest {
     private static final String POSTER_URL =
             "https://images-na.ssl-images-amazon.com/images/M/MV5BYTBjYjllZTctMTdkMy00MmE5LTllYjctYzg3OTc1MTFjZGYzXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg";
 
-    private Movie movie;
+    private Movie mMovie;
+    private Movie mMovieWithNulls;
+
+    // By default, expect no exceptions.
+    // thrown must be public.
+    @Rule
+    public final ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
-        movie = Movie.builder()
+        mMovie = Movie.builder()
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
                 .genre("Drama, Mystery, Romance")
@@ -31,23 +39,36 @@ public class MovieTest {
                 .year("2017")
                 .released(ModelUtils.toLongOmdbReleased("01 Jun 2017"))
                 .build();
+
+        mMovieWithNulls = Movie.builder()
+                .imdbId("tt4016934")
+                .title("The Handmaiden")
+                .genre(null)
+                .runtime(Movie.RUNTIME_UNKNOWN)
+                .posterUrl(null)
+                .year(null)
+                .released(Movie.RELEASED_UNKNOWN)
+                .build();
     }
 
     @After
     public void tearDown() {
-        movie = null;
+        mMovie = null;
     }
 
+    /**
+     * Test that builder works with valid values.
+     */
     @Test
     public void builder() {
 
         // test that the fields return the expected values
-        assertEquals("tt4016934", movie.imdbId());
-        assertEquals("The Handmaiden", movie.title());
-        assertEquals("Drama, Mystery, Romance", movie.genre());
-        assertEquals(144, movie.runtime());
-        assertEquals(POSTER_URL, movie.posterUrl());
-        assertEquals("2017", movie.year());
+        assertEquals("tt4016934", mMovie.imdbId());
+        assertEquals("The Handmaiden", mMovie.title());
+        assertEquals("Drama, Mystery, Romance", mMovie.genre());
+        assertEquals(144, mMovie.runtime());
+        assertEquals(POSTER_URL, mMovie.posterUrl());
+        assertEquals("2017", mMovie.year());
 
         // test that the nullable fields are nullable, i.e. no exception thrown
         Movie movieWithNulls = Movie.builder()
@@ -62,8 +83,58 @@ public class MovieTest {
         assertNotNull(movieWithNulls);
     }
 
+    /**
+     * Test that the imdbId field is mandatory, i.e. if it is null, an exception is thrown.
+     */
+    @Test
+    public void builderImdbIdIsMandatory() {
+        // We expect an exception to be thrown
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage("Missing required properties: imdbId");
+
+        @SuppressWarnings({"unused", "UnusedAssignment"})
+        Movie movie = Movie.builder()
+                .imdbId(null)
+                .title("The Handmaiden")
+                .genre("Drama, Mystery, Romance")
+                .runtime(144)
+                .posterUrl(POSTER_URL)
+                .year("2017")
+                .released(ModelUtils.toLongOmdbReleased("01 Jun 2017"))
+                .build();
+    }
+
+    /**
+     * Test that the title field is mandatory, i.e. if it is null, an exception is thrown.
+     */
+    @Test
+    public void builderTitleIsMandatory() {
+        // We expect an exception to be thrown
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage("Missing required properties: title");
+
+        @SuppressWarnings({"unused", "UnusedAssignment"})
+        Movie movie = Movie.builder()
+                .imdbId("tt4016934")
+                .title(null)
+                .genre("Drama, Mystery, Romance")
+                .runtime(144)
+                .posterUrl(POSTER_URL)
+                .year("2017")
+                .released(ModelUtils.toLongOmdbReleased("01 Jun 2017"))
+                .build();
+    }
+
     @Test
     public void testEquals() {
+        // test that a movie equals itself
+        //noinspection EqualsWithItself
+        assertTrue(mMovie.equals(mMovie));
+
+        // test that a movie does not equal a String
+        //noinspection EqualsBetweenInconvertibleTypes
+        assertFalse(mMovie.equals(mMovie.toString()));
+
         // test that building with the same parameter values results in equals(...) returning true
         assertTrue(Movie.builder()
                 .imdbId("tt4016934")
@@ -74,7 +145,19 @@ public class MovieTest {
                 .year("2017")
                 .released(ModelUtils.toLongOmdbReleased("01 Jun 2017"))
                 .build()
-                .equals(movie));
+                .equals(mMovie));
+
+        // test that building with the same null parameter values results in equals(...) returning true
+        assertTrue(Movie.builder()
+                .imdbId("tt4016934")
+                .title("The Handmaiden")
+                .genre(null)
+                .runtime(Movie.RUNTIME_UNKNOWN)
+                .posterUrl(null)
+                .year(null)
+                .released(Movie.RELEASED_UNKNOWN)
+                .build()
+                .equals(mMovieWithNulls));
 
         // test that building with a different imdbId results in equals(...) returning false
         assertFalse(Movie.builder()
@@ -86,7 +169,13 @@ public class MovieTest {
                 .year("2017")
                 .released(ModelUtils.toLongOmdbReleased("01 Jun 2017"))
                 .build()
-                .equals(movie));
+                .equals(mMovie));
+    }
+
+    @Test
+    public void testHashcode() {
+        assertTrue(mMovie.hashCode() > 1);
+        assertTrue(mMovie.hashCode() != mMovieWithNulls.hashCode());
     }
 
     @Test
@@ -95,7 +184,7 @@ public class MovieTest {
                 "Movie{imdbId=tt4016934, title=The Handmaiden, genre=Drama, Mystery, Romance, runtime=144, " +
                         "posterUrl=" + POSTER_URL + ", year=2017, " +
                         "released=" + ModelUtils.toLongOmdbReleased("01 Jun 2017") + "}",
-                movie.toString());
+                mMovie.toString());
     }
 
 }

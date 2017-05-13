@@ -47,7 +47,7 @@ public final class DataContract {
 //    private static final int MAX_ROWS_DEFAULT = 0;
 //    private static final int OFFSET_DEFAULT = 0;
 
-    /** Private constructor to prevent instantiation. */
+    /** Private default constructor to prevent instantiation. */
     private DataContract() {
     }
 

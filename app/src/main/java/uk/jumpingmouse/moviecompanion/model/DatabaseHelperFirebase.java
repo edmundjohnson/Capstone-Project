@@ -8,7 +8,7 @@ import uk.jumpingmouse.moviecompanion.data.Movie;
 import java.util.List;
 
 /**
- * Helper class for the Firebase Realtime Database.
+ * Database helper class for accessing the Firebase Realtime Database.
  * @author Edmund Johnson
  */
 public class DatabaseHelperFirebase implements DatabaseHelper {

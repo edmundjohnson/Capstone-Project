@@ -11,15 +11,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Helper class for the Firebase Realtime Database.
+ * Database helper class for accessing a mock database.
  * @author Edmund Johnson
  */
-public class DatabaseHelperMock implements DatabaseHelper {
+class DatabaseHelperMock implements DatabaseHelper {
 
     /** The singleton instance of this class. */
     private static DatabaseHelperMock sDatabaseHelper = null;
 
-    private static final MockDatabase mockDatabase = new MockDatabase();
+    private static final MockDatabase sMockDatabase = new MockDatabase();
 
     //---------------------------------------------------------------------
     // Instance handling methods
@@ -29,7 +29,7 @@ public class DatabaseHelperMock implements DatabaseHelper {
      * @return an instance of this class
      */
     @NonNull
-    public static DatabaseHelperMock getInstance() {
+    static DatabaseHelperMock getInstance() {
         if (sDatabaseHelper == null) {
             sDatabaseHelper = new DatabaseHelperMock();
         }
@@ -48,7 +48,7 @@ public class DatabaseHelperMock implements DatabaseHelper {
      * @param movie the movie to insert
      */
     public void insertMovie(@NonNull Movie movie) {
-        mockDatabase.insertMovie(movie);
+        sMockDatabase.insertMovie(movie);
     }
 
     /**
@@ -58,7 +58,7 @@ public class DatabaseHelperMock implements DatabaseHelper {
      * @return the number of rows updated
      */
     public int updateMovie(@NonNull Movie movie) {
-        return mockDatabase.updateMovie(movie);
+        return sMockDatabase.updateMovie(movie);
     }
 
     /**
@@ -67,7 +67,7 @@ public class DatabaseHelperMock implements DatabaseHelper {
      * @return the number of rows deleted
      */
     public int deleteMovie(@NonNull String imdbId) {
-        return mockDatabase.deleteMovie(imdbId);
+        return sMockDatabase.deleteMovie(imdbId);
     }
 
     /**
@@ -78,7 +78,7 @@ public class DatabaseHelperMock implements DatabaseHelper {
     @Override
     @Nullable
     public Movie selectMovieByImdbId(@NonNull String imdbId) {
-        return mockDatabase.selectMovieByImdbId(imdbId);
+        return sMockDatabase.selectMovieByImdbId(imdbId);
     }
 
     /**
@@ -100,35 +100,33 @@ public class DatabaseHelperMock implements DatabaseHelper {
     @Override
     @Nullable
     public List<Movie> selectMovies(@NonNull String sortColumn, @NonNull String sortOrder) {
-        return mockDatabase.selectMovies(sortColumn, sortOrder);
+        return sMockDatabase.selectMovies(sortColumn, sortOrder);
     }
 
     /**
      * A class representing a mock database.
      */
     private static class MockDatabase {
-        List<Movie> movieList;
+        final List<Movie> movieList;
 
         MockDatabase() {
             movieList = new ArrayList<>();
         }
 
-        void insertMovie(@Nullable Movie movie) {
-            if (movie == null) {
-                Timber.w("insertMovie: method called with null movie");
-                return;
-            }
+        void insertMovie(@NonNull Movie movie) {
             movieList.add(movie);
         }
 
-        int updateMovie(@Nullable Movie movie) {
-            if (movie == null) {
-                Timber.w("updateMovie: method called with null movie");
+        int updateMovie(@NonNull Movie movie) {
+            String imdbId = movie.imdbId();
+            // This cannot happen due to previous checks, but the compiler requires it
+            if (imdbId == null) {
+                Timber.w("updateMovie: Cannot update movie whose imdbId is null");
                 return 0;
             }
-            Movie existingMovie = selectMovieByImdbId(movie.imdbId());
+            Movie existingMovie = selectMovieByImdbId(imdbId);
             if (existingMovie == null) {
-                Timber.w("updateMovie: Movie not found with imdbId: " + movie.imdbId());
+                Timber.w("updateMovie: Movie not found with imdbId: " + imdbId);
                 return 0;
             }
             // Movie is immutable, so delete the existing one and add the new one
@@ -137,11 +135,7 @@ public class DatabaseHelperMock implements DatabaseHelper {
             return 1;
         }
 
-        int deleteMovie(@Nullable String imdbId) {
-            if (imdbId == null) {
-                Timber.w("deleteMovie: method called with null imdbId");
-                return 0;
-            }
+        int deleteMovie(@NonNull String imdbId) {
             Movie existingMovie = selectMovieByImdbId(imdbId);
             if (existingMovie == null) {
                 Timber.w("deleteMovie: Movie not found with imdbId: " + imdbId);
@@ -157,11 +151,7 @@ public class DatabaseHelperMock implements DatabaseHelper {
          * @return the movie with the specified imdbId, or null if there are no matching movies
          */
         @Nullable
-        Movie selectMovieByImdbId(@Nullable String imdbId) {
-            if (imdbId == null) {
-                Timber.w("selectMovieByImdbId: method called with null imdbId");
-                return null;
-            }
+        Movie selectMovieByImdbId(@NonNull String imdbId) {
             for (Movie movie : movieList) {
                 if (imdbId.equals(movie.imdbId())) {
                     return movie;

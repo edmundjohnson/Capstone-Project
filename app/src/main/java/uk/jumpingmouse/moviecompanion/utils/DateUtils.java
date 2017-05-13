@@ -30,10 +30,9 @@ public final class DateUtils {
 //    /** The day/month format for displaying dates. */
 //    private static SimpleDateFormat sDateFormatDisplay;
 
-    /**
-     * Private default constructor to prevent instantiation.
-     */
-    private DateUtils() { }
+    /** Private default constructor to prevent instantiation. */
+    private DateUtils() {
+    }
 
     /**
      * Returns a SimpleDateFormat object for OMDb released dates.

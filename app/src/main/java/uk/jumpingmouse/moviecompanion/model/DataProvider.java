@@ -17,8 +17,6 @@ import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 
 import java.util.List;
 
-import static uk.jumpingmouse.moviecompanion.utils.ModelUtils.toMovie;
-
 /**
  * Content provider for this app.
  */
@@ -32,9 +30,9 @@ public class DataProvider extends ContentProvider {
 //            DataContract.MovieEntry.COLUMN_TITLE + " " + DataContract.ORDER_ASC;
 
     // Constants representing URL formats
-    static final int MOVIE = 100;
-    static final int MOVIE_IMDB_ID = 101;
-    static final int MOVIE_ALL = 102;
+    private static final int MOVIE = 100;
+    private static final int MOVIE_IMDB_ID = 101;
+    private static final int MOVIE_ALL = 102;
 
     //---------------------------------------------------------------------
     // URI matcher
@@ -44,7 +42,7 @@ public class DataProvider extends ContentProvider {
      * @return the URI matcher
      */
     @NonNull
-    static UriMatcher buildUriMatcher() {
+    private static UriMatcher buildUriMatcher() {
         // 1) The code passed into the constructor represents the code to return for the root
         // URI.  It's common to use NO_MATCH as the code for this case. Add the constructor below.
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -138,19 +136,22 @@ public class DataProvider extends ContentProvider {
         switch (URI_MATCHER.match(uri)) {
             // "movie"
             case MOVIE:
-                cursor = selectMovies(projection, selection, selectionArgs, sortOrder);
-                break;
-            // "movie/#"
-            case MOVIE_IMDB_ID:
-                String imdbId = uri.getLastPathSegment();
-                cursor = selectMovieByImdbId(imdbId);
-                break;
             // "movie/all"
             case MOVIE_ALL:
                 cursor = selectMovies(projection, selection, selectionArgs, sortOrder);
                 break;
+            // "movie/*"
+            case MOVIE_IMDB_ID:
+                String imdbId = uri.getLastPathSegment();
+                // imdbId can never be null because the MOVIE case would be executed
+                if (imdbId == null) {
+                    cursor = null;
+                } else {
+                    cursor = selectMovieByImdbId(imdbId);
+                }
+                break;
             default:
-                throw new UnsupportedOperationException("Unknown URI: " + uri);
+                throw new UnsupportedOperationException("Unknown URI for query: " + uri);
         }
         if (cursor != null && getContext() != null) {
             cursor.setNotificationUri(getContext().getContentResolver(), uri);
@@ -185,7 +186,7 @@ public class DataProvider extends ContentProvider {
                 returnUri = DataContract.MovieEntry.buildUriMovieId(movie.imdbId());
                 break;
             default:
-                throw new UnsupportedOperationException("Unknown uri: " + uri);
+                throw new UnsupportedOperationException("Unknown URI for insert: " + uri);
         }
         notifyChange(uri, null);
 
@@ -284,7 +285,7 @@ public class DataProvider extends ContentProvider {
                 rowsDeleted = deleteMovie(imdbId);
                 break;
             default:
-                throw new UnsupportedOperationException("Unknown uri for delete: " + uri);
+                throw new UnsupportedOperationException("Unknown URI for delete: " + uri);
         }
 
         // Notify the URI listeners (using the content resolver) if the rowsDeleted != 0.
@@ -352,7 +353,10 @@ public class DataProvider extends ContentProvider {
      * @return the inserted movie
      */
     @Nullable
-    private Movie insertMovie(final ContentValues values) {
+    private Movie insertMovie(@Nullable final ContentValues values) {
+        if (values == null) {
+            return null;
+        }
         Movie movie = ModelUtils.toMovie(values);
         if (movie == null) {
             return null;
@@ -369,7 +373,10 @@ public class DataProvider extends ContentProvider {
      * @return the number of rows updated
      */
     private int updateMovie(@NonNull final String imdbId, @Nullable final ContentValues values) {
-        Movie movie = toMovie(values);
+        if (values == null) {
+            return 0;
+        }
+        Movie movie = ModelUtils.toMovie(values);
         if (movie == null) {
             return 0;
         } else if (!imdbId.equals(movie.imdbId())) {
@@ -393,10 +400,7 @@ public class DataProvider extends ContentProvider {
      * @return a cursor whose first row is the row with the specified IMDb id
      */
     @Nullable
-    private Cursor selectMovieByImdbId(@Nullable final String imdbId) {
-        if (imdbId == null) {
-            return null;
-        }
+    private Cursor selectMovieByImdbId(@NonNull final String imdbId) {
         Movie movie = getDatabaseHelper().selectMovieByImdbId(imdbId);
         if (movie == null) {
             Timber.w("", "Movie not found with IMDb id: " + imdbId);
@@ -448,6 +452,9 @@ public class DataProvider extends ContentProvider {
     @Nullable
     private Cursor toCursor(@Nullable List<Movie> movies) {
         if (movies == null) {
+            // This path can only be executed if no movies match a query, i.e. it requires
+            // an empty database or query filters which currently do not exist.
+            // Hence code coverage tests may not include this path.
             return null;
         }
         // Create a cursor containing the movie columns
