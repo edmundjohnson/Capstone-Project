@@ -10,8 +10,6 @@ import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
 
-import java.util.Date;
-
 /**
  * Class for model utilities.
  * @author Edmund Johnson
@@ -25,7 +23,8 @@ public final class ModelUtils {
     /**
      * Creates and returns a Movie object based on a set of ContentValues.
      * @param values the ContentValues
-     * @return a Movie object corresponding to the ContentValues
+     * @return a Movie object corresponding to the ContentValues, or null if the ContentValues
+     *         do not contain values for any of the fields which are mandatory for Movie
      */
     @Nullable
     public static Movie toMovie(@NonNull final ContentValues values) {
@@ -46,7 +45,7 @@ public final class ModelUtils {
         int runtime = ModelUtils.toIntOmdbRuntime(strRuntime);
         // Convert released from String to Date
         String strReleased = (String) values.get(DataContract.MovieEntry.COLUMN_RELEASED);
-        long released = ModelUtils.toLongOmdbReleased(strReleased);
+        long released = DateUtils.toLongOmdbReleased(strReleased);
 
         return Movie.builder()
                 .imdbId(imdbId)
@@ -60,20 +59,50 @@ public final class ModelUtils {
     }
 
     /**
-     * Return a movie based on the values of a cursor row.
+     * Creates and returns a movie based on the values of a cursor row.
      * @param cursor a cursor positioned at the required row
-     * @return a movie based on the values of the cursor row
+     * @return a movie based on the values of the cursor row, or null if the cursor row
+     *         does not contain values for any of the fields which are mandatory for Movie
      */
     @Nullable
     public static Movie toMovie(@NonNull Cursor cursor) {
+        final String imdbId = cursor.getString(DataContract.MovieEntry.COL_IMDB_ID);
+        final String title = cursor.getString(DataContract.MovieEntry.COL_TITLE);
+        final String genre = cursor.getString(DataContract.MovieEntry.COL_GENRE);
+        final String posterUrl = cursor.getString(DataContract.MovieEntry.COL_POSTER_URL);
+        final String year = cursor.getString(DataContract.MovieEntry.COL_YEAR);
+
+        // if the imdbId mandatory attribute is missing, return null
+        if (imdbId == null) {
+            Timber.w("toMovie(Cursor): missing imdbId");
+            return null;
+        }
+        // if the title mandatory attribute is missing, return null
+        if (title == null) {
+            Timber.w("toMovie(Cursor): missing title");
+            return null;
+        }
+        // if the runtime is invalid set it to unknown
+        int runtime = cursor.getInt(DataContract.MovieEntry.COL_RUNTIME);
+        if (runtime < 1) {
+            Timber.w("toMovie(Cursor): invalid runtime");
+            runtime = Movie.RUNTIME_UNKNOWN;
+        }
+        // if the release date is invalid set it to unknown
+        long released = cursor.getLong(DataContract.MovieEntry.COL_RELEASED);
+        if (released < 0) {
+            Timber.w("toMovie(Cursor): invalid released");
+            released = Movie.RELEASED_UNKNOWN;
+        }
+
         return Movie.builder()
-                .imdbId(cursor.getString(DataContract.MovieEntry.COL_IMDB_ID))
-                .title(cursor.getString(DataContract.MovieEntry.COL_TITLE))
-                .genre(cursor.getString(DataContract.MovieEntry.COL_GENRE))
-                .runtime(cursor.getInt(DataContract.MovieEntry.COL_RUNTIME))
-                .posterUrl(cursor.getString(DataContract.MovieEntry.COL_POSTER_URL))
-                .year(cursor.getString(DataContract.MovieEntry.COL_YEAR))
-                .released(cursor.getLong(DataContract.MovieEntry.COL_RELEASED))
+                .imdbId(imdbId)
+                .title(title)
+                .genre(genre)
+                .runtime(runtime)
+                .posterUrl(posterUrl)
+                .year(year)
+                .released(released)
                 .build();
     }
 
@@ -96,21 +125,6 @@ public final class ModelUtils {
             }
         }
         return Movie.RUNTIME_UNKNOWN;
-    }
-
-    /**
-     * Returns a long representing an OMDb-formatted released date as a number of milliseconds.
-     * @param omdbReleased an OMDb released date, formatted as "dd MMM yyyy"
-     * @return a long object representing omdbReleased as a number of milliseconds,
-     *         or RELEASED_UNKNOWN if omdbReleased could not be converted to a long
-     */
-    public static long toLongOmdbReleased(@Nullable final String omdbReleased) {
-        Date dateReleased = DateUtils.toDateOmdbReleased(omdbReleased);
-        if (dateReleased == null) {
-            return Movie.RELEASED_UNKNOWN;
-        } else {
-            return dateReleased.getTime();
-        }
     }
 
 }

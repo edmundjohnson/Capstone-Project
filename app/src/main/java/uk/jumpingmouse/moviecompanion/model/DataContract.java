@@ -39,9 +39,15 @@ public final class DataContract {
     // Query parameters
     public static final String PARAM_ALL = "all";
 
-    // Values for sort order (...Entry.PARAM_ORDER)
-    public static final String ORDER_ASC = "ASC";
-    //public static final String ORDER_DESC = "DESC";
+    // Values for sort direction (PARAM_SORT_DIRECTION)
+    public static final String SORT_DIRECTION_ASC = "ASC";
+    //public static final String SORT_DIRECTION_DESC = "DESC";
+
+    // Query parameters which are not columns
+//        public static final String PARAM_LIMIT = "limit";
+//        public static final String PARAM_EXCLUDINGNEWEST = "excludingnewest";
+//        public static final String PARAM_SORT_COLUMN = "sortColumn";
+//        public static final String PARAM_SORT_DIRECTION = "sortDirection";
 
 //    // Default values for limit queries
 //    private static final int MAX_ROWS_DEFAULT = 0;
@@ -96,12 +102,6 @@ public final class DataContract {
         public static final int COL_POSTER_URL = COL_RUNTIME + 1;
         public static final int COL_YEAR = COL_POSTER_URL + 1;
         public static final int COL_RELEASED = COL_YEAR + 1;
-
-        // Query parameters which are not columns
-//        public static final String PARAM_LIMIT = "limit";
-//        public static final String PARAM_EXCLUDINGNEWEST = "excludingnewest";
-//        public static final String PARAM_ORDER_COLUMN = "orderColumn";
-//        public static final String PARAM_ORDER = "order";
 
         // URIs
 

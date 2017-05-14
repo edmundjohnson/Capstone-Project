@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
@@ -33,13 +34,16 @@ public class DataProviderTest {
     private ContentResolver mContentResolver;
 
     @SuppressWarnings("SpellCheckingInspection")
-    private static final String MOCK_POSTER_URL =
+    private static final String TEST_POSTER_URL =
             "https://images-na.ssl-images-amazon.com/images/M/MV5BYTBjYjllZTctMTdkMy00MmE5LTllYjctYzg3OTc1MTFjZGYzXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg";
+
     private static final Movie TEST_MOVIE_1;
     private static final Movie TEST_MOVIE_1_MODIFIED;
     private static final Movie TEST_MOVIE_2;
     //private static final Movie TEST_MOVIE_3;
 
+    private static final Uri URI_TEST_MOVIE_1;
+    private static final Uri URI_TEST_MOVIE_2;
 
     static {
         // DO NOT USE REAL MOVIES, as these tests are destructive!
@@ -48,41 +52,45 @@ public class DataProviderTest {
                 .title("Test Movie 1")
                 .genre("Drama, Mystery, Romance")
                 .runtime(111)
-                .posterUrl(MOCK_POSTER_URL)
+                .posterUrl(TEST_POSTER_URL)
                 .year("2011")
-                .released(ModelUtils.toLongOmdbReleased("01 Jun 2011"))
+                .released(DateUtils.toLongOmdbReleased("01 Jun 2011"))
                 .build();
         TEST_MOVIE_1_MODIFIED = Movie.builder()
                 .imdbId("tt9999991")
                 .title("Test Movie 1 modified")
                 .genre("Comedy")
                 .runtime(121)
-                .posterUrl(MOCK_POSTER_URL + ".modified")
+                .posterUrl(TEST_POSTER_URL + ".modified")
                 .year("2012")
-                .released(ModelUtils.toLongOmdbReleased("01 Jun 2012"))
+                .released(DateUtils.toLongOmdbReleased("01 Jun 2012"))
                 .build();
         TEST_MOVIE_2 = Movie.builder()
                 .imdbId("tt9999992")
                 .title("Test Movie 2")
                 .genre("Drama, Mystery, Romance")
                 .runtime(122)
-                .posterUrl(MOCK_POSTER_URL)
+                .posterUrl(TEST_POSTER_URL)
                 .year("2012")
-                .released(ModelUtils.toLongOmdbReleased("01 Jun 2012"))
+                .released(DateUtils.toLongOmdbReleased("01 Jun 2012"))
                 .build();
 //        TEST_MOVIE_3 = Movie.builder()
 //                .imdbId("tt9999993")
 //                .title("Test Movie 3")
 //                .genre("Drama, Mystery, Romance")
 //                .runtime(133)
-//                .posterUrl(MOCK_POSTER_URL)
+//                .posterUrl(TEST_POSTER_URL)
 //                .year("2013")
-//                .released(ModelUtils.toLongOmdbReleased("01 Jun 2013"))
+//                .released(DateUtils.toLongOmdbReleased("01 Jun 2013"))
 //                .build();
+
+        URI_TEST_MOVIE_1 = DataContract.MovieEntry.buildUriMovieId(TEST_MOVIE_1.imdbId());
+        URI_TEST_MOVIE_2 = DataContract.MovieEntry.buildUriMovieId(TEST_MOVIE_2.imdbId());
     }
 
     // By default, expect no exceptions.
     // thrown must be public.
+    @SuppressWarnings("WeakerAccess")
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
 
@@ -90,6 +98,10 @@ public class DataProviderTest {
     public void setUp() {
 //        mContext = InstrumentationRegistry.getTargetContext();
         mContentResolver = InstrumentationRegistry.getTargetContext().getContentResolver();
+
+        // Ensure that none of the test movies are in the database
+        mContentResolver.delete(URI_TEST_MOVIE_1, null, null);
+        mContentResolver.delete(URI_TEST_MOVIE_2, null, null);
     }
 
     @Test
@@ -137,7 +149,6 @@ public class DataProviderTest {
         Cursor cursor;
         int rowsDeleted;
         int rowsCurrent;
-        Uri uri;
 
         // Save the initial number of rows returned by the query
         cursor = mContentResolver.query(
@@ -168,12 +179,35 @@ public class DataProviderTest {
         assertEquals("rowsCurrent should be 2 greater than rowsInitial", rowsInitial + 2, rowsCurrent);
         closeCursor(cursor);
 
+        // query for specific movie TEST_MOVIE_1 - should now be there
+        cursor = mContentResolver.query(URI_TEST_MOVIE_1, null, null, null, null);
+        rowsCurrent = cursor == null ? 0 : cursor.getCount();
+        // The query should return a movie which is equal to TEST_MOVIE_1
+        assertEquals("The query should return 1 row", 1, rowsCurrent);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            Movie movie = ModelUtils.toMovie(cursor);
+            assertEquals("TEST_MOVIE_1 should be returned by the query", TEST_MOVIE_1, movie);
+        }
+        closeCursor(cursor);
+
+        // query for specific movie TEST_MOVIE_1 - should now be there
+        // Note: this tests an additional execution path to the query for TEST_MOVIE_1
+        cursor = mContentResolver.query(URI_TEST_MOVIE_2, null, null, null, null);
+        rowsCurrent = cursor == null ? 0 : cursor.getCount();
+        // The query should return a movie which is equal to TEST_MOVIE_2
+        assertEquals("The query should return 1 row", 1, rowsCurrent);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            Movie movie = ModelUtils.toMovie(cursor);
+            assertEquals("TEST_MOVIE_2 should be returned by the query", TEST_MOVIE_2, movie);
+        }
+        closeCursor(cursor);
+
         // delete the added rows
-        uri = DataContract.MovieEntry.buildUriMovieId(TEST_MOVIE_1.imdbId());
-        rowsDeleted = mContentResolver.delete(uri, null, null);
+        rowsDeleted = mContentResolver.delete(URI_TEST_MOVIE_1, null, null);
         assertEquals("rowsDeleted should be 1", 1, rowsDeleted);
-        uri = DataContract.MovieEntry.buildUriMovieId(TEST_MOVIE_2.imdbId());
-        rowsDeleted = mContentResolver.delete(uri, null, null);
+        rowsDeleted = mContentResolver.delete(URI_TEST_MOVIE_2, null, null);
         assertEquals("rowsDeleted should be 1", 1, rowsDeleted);
 
         // Verify that the number of rows returned by the query is back to its original value
@@ -217,12 +251,9 @@ public class DataProviderTest {
         Cursor cursor;
         int rowsDeleted;
         int rowsCurrent;
-        // URI for querying for TEST_MOVIE_1
-        Uri uriQuery = DataContract.MovieEntry.buildUriMovieId(TEST_MOVIE_1.imdbId());
-        assertNotNull(uriQuery);
 
         // query for specific movie TEST_MOVIE_1 - initially should not be there
-        cursor = mContentResolver.query(uriQuery, null, null, null, null);
+        cursor = mContentResolver.query(URI_TEST_MOVIE_1, null, null, null, null);
         rowsCurrent = cursor == null ? 0 : cursor.getCount();
         assertEquals(String.format("Movie \"%s\" should not initially be in database", TEST_MOVIE_1.imdbId()),
                 0, rowsCurrent);
@@ -231,10 +262,10 @@ public class DataProviderTest {
         // insert TEST_MOVIE_1
         Uri uriInserted = mContentResolver.insert(DataContract.MovieEntry.CONTENT_URI, toContentValues(TEST_MOVIE_1));
         assertNotNull(uriInserted);
-        assertTrue(uriInserted.equals(uriQuery));
+        assertTrue(uriInserted.equals(URI_TEST_MOVIE_1));
 
         // query for specific movie TEST_MOVIE_1 - should now be there
-        cursor = mContentResolver.query(uriQuery, null, null, null, null);
+        cursor = mContentResolver.query(URI_TEST_MOVIE_1, null, null, null, null);
         rowsCurrent = cursor == null ? 0 : cursor.getCount();
         // The query should return a movie which is equal to TEST_MOVIE_1
         assertEquals("The query should return 1 row", 1, rowsCurrent);
@@ -246,11 +277,11 @@ public class DataProviderTest {
         closeCursor(cursor);
 
         // delete the added row
-        rowsDeleted = mContentResolver.delete(uriQuery, null, null);
+        rowsDeleted = mContentResolver.delete(URI_TEST_MOVIE_1, null, null);
         assertEquals("rowsDeleted should be 1", 1, rowsDeleted);
 
         // query for specific movie TEST_MOVIE_1 - should no longer be there
-        cursor = mContentResolver.query(uriQuery, null, null, null, null);
+        cursor = mContentResolver.query(URI_TEST_MOVIE_1, null, null, null, null);
         rowsCurrent = cursor == null ? 0 : cursor.getCount();
         assertEquals(String.format("Movie \"%s\" should no longer be in database", TEST_MOVIE_1.imdbId()),
                 0, rowsCurrent);
@@ -266,17 +297,32 @@ public class DataProviderTest {
         assertNull(uriInserted);
     }
 
+    /**
+     * Test inserting a movie using values from which a movie cannot be created.
+     */
+    @Test
+    public void insertMovieInvalid() {
+        ContentValues values = toContentValues(TEST_MOVIE_1);
+        values.remove(DataContract.MovieEntry.COLUMN_IMDB_ID);
+        Uri uriInserted = mContentResolver.insert(DataContract.MovieEntry.CONTENT_URI, values);
+        assertNull(uriInserted);
+
+        // query for specific movie TEST_MOVIE_1 - should not be there
+        Cursor cursor = mContentResolver.query(URI_TEST_MOVIE_1, null, null, null, null);
+        int rowsCurrent = cursor == null ? 0 : cursor.getCount();
+        assertEquals(String.format("Movie \"%s\" should not initially be in database", TEST_MOVIE_1.imdbId()),
+                0, rowsCurrent);
+        closeCursor(cursor);
+    }
+
     @Test
     public void updateMovie() {
         Cursor cursor;
         int rowsUpdated;
         int rowsCurrent;
-        // URI for querying for TEST_MOVIE_1
-        Uri uriQuery = DataContract.MovieEntry.buildUriMovieId(TEST_MOVIE_1.imdbId());
-        assertNotNull(uriQuery);
 
         // query for specific movie TEST_MOVIE_1 - initially should not be there
-        cursor = mContentResolver.query(uriQuery, null, null, null, null);
+        cursor = mContentResolver.query(URI_TEST_MOVIE_1, null, null, null, null);
         rowsCurrent = cursor == null ? 0 : cursor.getCount();
         assertEquals(String.format("Movie \"%s\" should not initially be in database", TEST_MOVIE_1.imdbId()),
                 0, rowsCurrent);
@@ -287,7 +333,7 @@ public class DataProviderTest {
         assertNotNull(uriInserted);
 
         // query for specific row TEST_MOVIE_1 - should now be there
-        cursor = mContentResolver.query(uriQuery, null, null, null, null);
+        cursor = mContentResolver.query(URI_TEST_MOVIE_1, null, null, null, null);
         assertNotNull("TEST_MOVIE_1 should be in database", cursor);
         // The query should return a movie which is equal to TEST_MOVIE_1
         assertEquals("The query should return 1 row", 1, cursor.getCount());
@@ -297,11 +343,13 @@ public class DataProviderTest {
         closeCursor(cursor);
 
         // update the added row
-        rowsUpdated = mContentResolver.update(uriQuery, toContentValues(TEST_MOVIE_1_MODIFIED), null, null);
+        rowsUpdated = mContentResolver.update(
+                URI_TEST_MOVIE_1, toContentValues(TEST_MOVIE_1_MODIFIED), null, null);
         assertEquals("rowsUpdated should be 1", 1, rowsUpdated);
 
         // query for specific row TEST_MOVIE_1 - should still be there, with new values
-        cursor = mContentResolver.query(uriQuery, null, null, null, null);
+        cursor = mContentResolver.query(
+                URI_TEST_MOVIE_1, null, null, null, null);
         assertNotNull("TEST_MOVIE_1 should still be in database", cursor);
         assertEquals("TEST_MOVIE_1 should still be in database", 1, cursor.getCount());
         cursor.moveToFirst();
@@ -317,11 +365,11 @@ public class DataProviderTest {
         closeCursor(cursor);
 
         // delete the added row
-        int rowsDeleted = mContentResolver.delete(uriQuery, null, null);
+        int rowsDeleted = mContentResolver.delete(URI_TEST_MOVIE_1, null, null);
         assertEquals("rowsDeleted should be 1", 1, rowsDeleted);
 
         // query for specific movie TEST_MOVIE_1_MODIFIED - should no longer be there
-        cursor = mContentResolver.query(uriQuery, null, null, null, null);
+        cursor = mContentResolver.query(URI_TEST_MOVIE_1, null, null, null, null);
         rowsCurrent = cursor == null ? 0 : cursor.getCount();
         assertEquals(String.format("Movie \"%s\" should no longer be in database", TEST_MOVIE_1_MODIFIED.imdbId()),
                 0, rowsCurrent);
@@ -333,8 +381,7 @@ public class DataProviderTest {
      */
     @Test
     public void updateMovieNullValues() {
-        int rowsUpdated = mContentResolver.update(DataContract.MovieEntry.buildUriMovieId(TEST_MOVIE_1.imdbId()),
-                null, null, null);
+        int rowsUpdated = mContentResolver.update(URI_TEST_MOVIE_1, null, null, null);
         assertEquals(0, rowsUpdated);
     }
 
@@ -347,8 +394,7 @@ public class DataProviderTest {
         values.remove(DataContract.MovieEntry.COLUMN_ID);
         values.remove(DataContract.MovieEntry.COLUMN_IMDB_ID);
 
-        int rowsUpdated = mContentResolver.update(DataContract.MovieEntry.buildUriMovieId(TEST_MOVIE_1.imdbId()),
-                values, null, null);
+        int rowsUpdated = mContentResolver.update(URI_TEST_MOVIE_1, values, null, null);
         assertEquals(0, rowsUpdated);
     }
 
@@ -357,8 +403,7 @@ public class DataProviderTest {
      */
     @Test
     public void updateMovieNotFound() {
-        Uri uriUpdate = DataContract.MovieEntry.buildUriMovieId(TEST_MOVIE_2.imdbId());
-        int rowsUpdated = mContentResolver.update(uriUpdate, toContentValues(TEST_MOVIE_2), null, null);
+        int rowsUpdated = mContentResolver.update(URI_TEST_MOVIE_2, toContentValues(TEST_MOVIE_2), null, null);
         assertEquals(0, rowsUpdated);
     }
 
@@ -380,8 +425,7 @@ public class DataProviderTest {
      */
     @Test
     public void deleteMovieNotFound() {
-        Uri uriDelete = DataContract.MovieEntry.buildUriMovieId(TEST_MOVIE_2.imdbId());
-        int rowsDeleted = mContentResolver.delete(uriDelete, null, null);
+        int rowsDeleted = mContentResolver.delete(URI_TEST_MOVIE_2, null, null);
         assertEquals(0, rowsDeleted);
     }
 
@@ -481,9 +525,9 @@ public class DataProviderTest {
      * @return an OMDb-formatted released date string corresponding to released,
      *         or an empty String if released indicates an unknown release date
      */
-    @Nullable
+    @NonNull
     private static String toStringOmdbReleased(final long released) {
-        if (released == Movie.RELEASED_UNKNOWN) {
+        if (released == Movie.RELEASED_UNKNOWN || released < 0) {
             return "";
         }
         Date dateReleased = new Date(released);
@@ -494,7 +538,7 @@ public class DataProviderTest {
      * Silently close a cursor.
      * @param cursor the cursor
      */
-    private void closeCursor(Cursor cursor) {
+    private void closeCursor(@Nullable Cursor cursor) {
         if (cursor != null) {
             cursor.close();
             //cursor = null;

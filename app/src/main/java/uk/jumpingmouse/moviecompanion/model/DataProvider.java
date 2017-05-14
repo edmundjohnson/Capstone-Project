@@ -27,7 +27,7 @@ public class DataProvider extends ContentProvider {
 
 //    /** The sort order for ordering movies in ascending order of title. */
 //    private static final String MOVIE_SORT_TITLE_ASC =
-//            DataContract.MovieEntry.COLUMN_TITLE + " " + DataContract.ORDER_ASC;
+//            DataContract.MovieEntry.COLUMN_TITLE + " " + DataContract.SORT_DIRECTION_ASC;
 
     // Constants representing URL formats
     private static final int MOVIE = 100;
@@ -418,13 +418,15 @@ public class DataProvider extends ContentProvider {
      * @param selectionArgs Any ?s included in selection will be replaced by
      *      the values from selectionArgs, in the order that they appear in the selection.
      *      The values will be bound as Strings.
+     * @param sortOrder How the rows in the cursor should be sorted.
+     *      If this is {@code null}, the sort order is undefined.
      * @return a cursor which contains all of the movies in the database in the default order
      */
     @Nullable
     private Cursor selectMovies(
             @Nullable final String[] projection, @Nullable final String selection,
             @Nullable final String[] selectionArgs, @Nullable final String sortOrder) {
-        return toCursor(getDatabaseHelper().selectMovies());
+        return toCursor(getDatabaseHelper().selectMovies(projection, selection, selectionArgs, sortOrder));
     }
 
     /**
@@ -476,8 +478,8 @@ public class DataProvider extends ContentProvider {
      */
     private Object[] toObjectArray(Movie movie) {
         return new Object[] {
-                // This must match the order of columns in DataContract.MovieEntry.COLUMNS_ALL
-                // for now we are using imdbId as the _id, so it is repeated
+                // This must match the order of columns in DataContract.MovieEntry.getAllColumns().
+                // We are using imdbId as the _id, so it is repeated.
                 movie.imdbId(),
                 movie.imdbId(),
                 movie.title(),

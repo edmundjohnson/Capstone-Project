@@ -83,24 +83,46 @@ class DatabaseHelperMock implements DatabaseHelper {
 
     /**
      * Returns a list of all the movies in the database in the default order.
+     * @param projection The list of columns to put into the cursor.
+     *                   If this is {@code null} all columns are included.
+     * @param selection A selection criteria to apply when filtering rows.
+     *                  If this is {@code null} then all rows are included.
+     * @param selectionArgs Any ?s included in selection will be replaced by
+     *      the values from selectionArgs, in the order that they appear in the selection.
+     *      The values will be bound as Strings.
+     * @param sortOrder How the rows in the cursor should be sorted.
+     *      If this is {@code null}, the sort order is undefined.
      * @return a list of all the movies in the database in the default order
      */
     @Override
     @Nullable
-    public List<Movie> selectMovies() {
-        return selectMovies(MOVIE_SORT_COLUMN_DEFAULT, MOVIE_SORT_ORDER_DEFAULT);
+    public List<Movie> selectMovies(
+            @Nullable final String[] projection, @Nullable final String selection,
+            @Nullable final String[] selectionArgs, @Nullable final String sortOrder) {
+        if (projection != null) {
+            Timber.d("selectMovies: projection is currently not supported");
+        }
+        if (selection != null) {
+            Timber.d("selectMovies: selection is currently not supported");
+        }
+        if (selectionArgs != null) {
+            Timber.d("selectMovies: selectionArgs is currently not supported");
+        }
+        if (sortOrder != null) {
+            Timber.d("selectMovies: sortOrder is currently not supported");
+        }
+        return selectMovies(MOVIE_SORT_COLUMN_DEFAULT, MOVIE_SORT_DIRECTION_DEFAULT);
     }
 
     /**
      * Returns a list of all the movies in the database ordered by a specified column.
      * @param sortColumn the column to sort by
-     * @param sortOrder the sort order, "ASC" or "DESC"
+     * @param sortDirection the sort direction, "ASC" or "DESC"
      * @return a list of all the movies in the database ordered by a specified column
      */
-    @Override
     @Nullable
-    public List<Movie> selectMovies(@NonNull String sortColumn, @NonNull String sortOrder) {
-        return sMockDatabase.selectMovies(sortColumn, sortOrder);
+    private List<Movie> selectMovies(@NonNull String sortColumn, @NonNull String sortDirection) {
+        return sMockDatabase.selectMovies(sortColumn, sortDirection);
     }
 
     /**

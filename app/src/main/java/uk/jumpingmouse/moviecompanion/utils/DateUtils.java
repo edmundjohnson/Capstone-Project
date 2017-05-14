@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 
 import timber.log.Timber;
 
+import uk.jumpingmouse.moviecompanion.data.Movie;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -86,8 +88,23 @@ public final class DateUtils {
      *         or null if the String could not be parsed as a date
      */
     @Nullable
-    public static Date toDateOmdbReleased(@Nullable final String strDate) {
+    private static Date toDateOmdbReleased(@Nullable final String strDate) {
         return toDate(getDateFormatOmdbReleased(), strDate);
+    }
+
+    /**
+     * Returns a long representing an OMDb-formatted released date as a number of milliseconds.
+     * @param omdbReleased an OMDb released date, formatted as "dd MMM yyyy"
+     * @return a long object representing omdbReleased as a number of milliseconds,
+     *         or RELEASED_UNKNOWN if omdbReleased could not be converted to a long
+     */
+    public static long toLongOmdbReleased(@Nullable final String omdbReleased) {
+        Date dateReleased = DateUtils.toDateOmdbReleased(omdbReleased);
+        if (dateReleased == null) {
+            return Movie.RELEASED_UNKNOWN;
+        } else {
+            return dateReleased.getTime();
+        }
     }
 
     /**
@@ -96,11 +113,8 @@ public final class DateUtils {
      * @param date the Date
      * @return the Date as a String
      */
-    @Nullable
-    private static String toString(@NonNull SimpleDateFormat format, @Nullable final Date date) {
-        if (date == null) {
-            return null;
-        }
+    @NonNull
+    private static String toString(@NonNull SimpleDateFormat format, @NonNull final Date date) {
         return format.format(date);
     }
 
@@ -109,8 +123,8 @@ public final class DateUtils {
      * @param date the date
      * @return the date in the OMDb released date string format
      */
-    @Nullable
-    public static String toStringOmdbReleased(@Nullable final Date date) {
+    @NonNull
+    public static String toStringOmdbReleased(@NonNull final Date date) {
         return toString(getDateFormatOmdbReleased(), date);
     }
 

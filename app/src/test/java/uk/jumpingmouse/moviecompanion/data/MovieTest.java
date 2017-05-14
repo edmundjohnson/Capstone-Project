@@ -6,7 +6,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
+import uk.jumpingmouse.moviecompanion.utils.DateUtils;
 
 import static org.junit.Assert.*;
 
@@ -25,6 +25,7 @@ public class MovieTest {
 
     // By default, expect no exceptions.
     // thrown must be public.
+    @SuppressWarnings("WeakerAccess")
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
 
@@ -37,7 +38,7 @@ public class MovieTest {
                 .runtime(144)
                 .posterUrl(POSTER_URL)
                 .year("2017")
-                .released(ModelUtils.toLongOmdbReleased("01 Jun 2017"))
+                .released(DateUtils.toLongOmdbReleased("01 Jun 2017"))
                 .build();
 
         mMovieWithNulls = Movie.builder()
@@ -100,7 +101,7 @@ public class MovieTest {
                 .runtime(144)
                 .posterUrl(POSTER_URL)
                 .year("2017")
-                .released(ModelUtils.toLongOmdbReleased("01 Jun 2017"))
+                .released(DateUtils.toLongOmdbReleased("01 Jun 2017"))
                 .build();
     }
 
@@ -121,7 +122,7 @@ public class MovieTest {
                 .runtime(144)
                 .posterUrl(POSTER_URL)
                 .year("2017")
-                .released(ModelUtils.toLongOmdbReleased("01 Jun 2017"))
+                .released(DateUtils.toLongOmdbReleased("01 Jun 2017"))
                 .build();
     }
 
@@ -143,7 +144,7 @@ public class MovieTest {
                 .runtime(144)
                 .posterUrl(POSTER_URL)
                 .year("2017")
-                .released(ModelUtils.toLongOmdbReleased("01 Jun 2017"))
+                .released(DateUtils.toLongOmdbReleased("01 Jun 2017"))
                 .build()
                 .equals(mMovie));
 
@@ -167,7 +168,7 @@ public class MovieTest {
                 .runtime(144)
                 .posterUrl(POSTER_URL)
                 .year("2017")
-                .released(ModelUtils.toLongOmdbReleased("01 Jun 2017"))
+                .released(DateUtils.toLongOmdbReleased("01 Jun 2017"))
                 .build()
                 .equals(mMovie));
     }
@@ -183,7 +184,7 @@ public class MovieTest {
         assertEquals(
                 "Movie{imdbId=tt4016934, title=The Handmaiden, genre=Drama, Mystery, Romance, runtime=144, " +
                         "posterUrl=" + POSTER_URL + ", year=2017, " +
-                        "released=" + ModelUtils.toLongOmdbReleased("01 Jun 2017") + "}",
+                        "released=" + DateUtils.toLongOmdbReleased("01 Jun 2017") + "}",
                 mMovie.toString());
     }
 

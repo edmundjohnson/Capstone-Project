@@ -11,10 +11,10 @@ import java.util.List;
  * Interface for database helper classes.
  * @author Edmund Johnson
  */
-public interface DatabaseHelper {
+interface DatabaseHelper {
 
     String MOVIE_SORT_COLUMN_DEFAULT = DataContract.MovieEntry.COLUMN_TITLE;
-    String MOVIE_SORT_ORDER_DEFAULT = DataContract.ORDER_ASC;
+    String MOVIE_SORT_DIRECTION_DEFAULT = DataContract.SORT_DIRECTION_ASC;
 
     //---------------------------------------------------------------------
     // Movie methods
@@ -49,19 +49,21 @@ public interface DatabaseHelper {
     Movie selectMovieByImdbId(@NonNull String imdbId);
 
     /**
-     * Returns a list of all the movies in the database in the default order.
-     * @return a list of all the movies in the database in the default order
+     * Returns a list of movies in the database.
+     * @param projection The list of columns to put into the cursor.
+     *                   If this is {@code null} all columns are included.
+     * @param selection A selection criteria to apply when filtering rows.
+     *                  If this is {@code null} then all rows are included.
+     * @param selectionArgs Any ?s included in selection will be replaced by
+     *      the values from selectionArgs, in the order that they appear in the selection.
+     *      The values will be bound as Strings.
+     * @param sortOrder How the rows in the cursor should be sorted.
+     *      If this is {@code null}, the sort order is undefined.
+     * @return a list of movies in the database
      */
     @Nullable
-    List<Movie> selectMovies();
-
-    /**
-     * Returns a list of all the movies in the database ordered by a specified column.
-     * @param sortColumn the column to sort by
-     * @param sortOrder the sort order, "ASC" or "DESC"
-     * @return a list of all the movies in the database ordered by a specified column
-     */
-    @Nullable
-    List<Movie> selectMovies(@NonNull String sortColumn, @NonNull String sortOrder);
+    List<Movie> selectMovies(
+            @Nullable final String[] projection, @Nullable final String selection,
+            @Nullable final String[] selectionArgs, @Nullable final String sortOrder);
 
 }

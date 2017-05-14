@@ -1,4 +1,4 @@
-package uk.jumpingmouse.moviecompanion.androidutils;
+package uk.jumpingmouse.moviecompanion.utils;
 
 import android.content.Context;
 import android.content.DialogInterface;

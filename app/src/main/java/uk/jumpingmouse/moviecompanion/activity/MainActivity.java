@@ -13,9 +13,9 @@ import timber.log.Timber;
 
 import uk.jumpingmouse.moviecompanion.BuildConfig;
 import uk.jumpingmouse.moviecompanion.R;
-import uk.jumpingmouse.moviecompanion.androidutils.ViewUtils;
 import uk.jumpingmouse.moviecompanion.security.SecurityManager;
 import uk.jumpingmouse.moviecompanion.security.SecurityManagerFactory;
+import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
 /**
  * The main activity, i.e. the movie list.
