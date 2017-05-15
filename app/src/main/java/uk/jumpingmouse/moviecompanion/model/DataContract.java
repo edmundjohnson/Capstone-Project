@@ -41,7 +41,7 @@ public final class DataContract {
 
     // Values for sort direction (PARAM_SORT_DIRECTION)
     public static final String SORT_DIRECTION_ASC = "ASC";
-    //public static final String SORT_DIRECTION_DESC = "DESC";
+    public static final String SORT_DIRECTION_DESC = "DESC";
 
     // Query parameters which are not columns
 //        public static final String PARAM_LIMIT = "limit";

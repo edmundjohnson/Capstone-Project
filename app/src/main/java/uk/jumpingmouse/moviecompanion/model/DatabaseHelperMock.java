@@ -8,6 +8,8 @@ import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -19,7 +21,7 @@ class DatabaseHelperMock implements DatabaseHelper {
     /** The singleton instance of this class. */
     private static DatabaseHelperMock sDatabaseHelper = null;
 
-    private static final MockDatabase sMockDatabase = new MockDatabase();
+    private final MockDatabase sMockDatabase = new MockDatabase();
 
     //---------------------------------------------------------------------
     // Instance handling methods
@@ -108,35 +110,76 @@ class DatabaseHelperMock implements DatabaseHelper {
         if (selectionArgs != null) {
             Timber.d("selectMovies: selectionArgs is currently not supported");
         }
-        if (sortOrder != null) {
-            Timber.d("selectMovies: sortOrder is currently not supported");
-        }
-        return selectMovies(MOVIE_SORT_COLUMN_DEFAULT, MOVIE_SORT_DIRECTION_DEFAULT);
+        return selectMovies(getSortColumn(sortOrder), isSortAscending(sortOrder));
     }
 
     /**
      * Returns a list of all the movies in the database ordered by a specified column.
      * @param sortColumn the column to sort by
-     * @param sortDirection the sort direction, "ASC" or "DESC"
+     * @param sortAscending whether the sort is ascending
      * @return a list of all the movies in the database ordered by a specified column
      */
     @Nullable
-    private List<Movie> selectMovies(@NonNull String sortColumn, @NonNull String sortDirection) {
-        return sMockDatabase.selectMovies(sortColumn, sortDirection);
+    private List<Movie> selectMovies(@NonNull String sortColumn, boolean sortAscending) {
+        return sMockDatabase.selectMovies(sortColumn, sortAscending);
+    }
+
+    /**
+     * Returns the sort column from a sort order.
+     * @param sortOrder the sort order, e.g. "title ASC"
+     * @return the sort column, e.g. "title"
+     */
+    private static String getSortColumn(@Nullable String sortOrder) {
+        if (sortOrder != null) {
+            String[] split = sortOrder.split(" ");
+            if (split.length > 0) {
+                switch (split[0]) {
+                    case DataContract.MovieEntry.COLUMN_IMDB_ID:
+                        return DataContract.MovieEntry.COLUMN_IMDB_ID;
+                    case DataContract.MovieEntry.COLUMN_TITLE:
+                        return DataContract.MovieEntry.COLUMN_TITLE;
+                    default:
+                        return MOVIE_SORT_COLUMN_DEFAULT;
+                }
+            }
+        }
+        return MOVIE_SORT_COLUMN_DEFAULT;
+    }
+
+    /**
+     * Returns whether the sort column is ascending from a sort order.
+     * @param sortOrder the sort order, e.g. "title ASC"
+     * @return whether the sort column is ascending
+     */
+    private static boolean isSortAscending(@Nullable String sortOrder) {
+        if (sortOrder != null) {
+            String[] split = sortOrder.split(" ");
+            if (split.length > 1) {
+                switch (split[1]) {
+                    case DataContract.SORT_DIRECTION_ASC:
+                        return true;
+                    case DataContract.SORT_DIRECTION_DESC:
+                        return false;
+                    default:
+                        return MOVIE_SORT_ASCENDING_DEFAULT;
+                }
+            }
+        }
+        return MOVIE_SORT_ASCENDING_DEFAULT;
     }
 
     /**
      * A class representing a mock database.
      */
-    private static class MockDatabase {
-        final List<Movie> movieList;
+    private class MockDatabase {
+        final List<Movie> mMovieList;
 
         MockDatabase() {
-            movieList = new ArrayList<>();
+            mMovieList = new ArrayList<>();
         }
 
         void insertMovie(@NonNull Movie movie) {
-            movieList.add(movie);
+            mMovieList.add(movie);
         }
 
         int updateMovie(@NonNull Movie movie) {
@@ -152,8 +195,8 @@ class DatabaseHelperMock implements DatabaseHelper {
                 return 0;
             }
             // Movie is immutable, so delete the existing one and add the new one
-            movieList.remove(existingMovie);
-            movieList.add(movie);
+            mMovieList.remove(existingMovie);
+            mMovieList.add(movie);
             return 1;
         }
 
@@ -163,7 +206,7 @@ class DatabaseHelperMock implements DatabaseHelper {
                 Timber.w("deleteMovie: Movie not found with imdbId: " + imdbId);
                 return 0;
             }
-            movieList.remove(existingMovie);
+            mMovieList.remove(existingMovie);
             return 1;
         }
 
@@ -174,7 +217,7 @@ class DatabaseHelperMock implements DatabaseHelper {
          */
         @Nullable
         Movie selectMovieByImdbId(@NonNull String imdbId) {
-            for (Movie movie : movieList) {
+            for (Movie movie : mMovieList) {
                 if (imdbId.equals(movie.imdbId())) {
                     return movie;
                 }
@@ -186,14 +229,32 @@ class DatabaseHelperMock implements DatabaseHelper {
         /**
          * Returns a list of all the movies in the mock database ordered by a specified column.
          * @param sortColumn the column to sort by
-         * @param sortOrder the sort order, "ASC" or "DESC"
-         * @return a list of all the movies in the mock database ordered by a specified column
+         * @param sortAscending whether the sort is ascending
+         * @return a list of all the movies in the mock database ordered by the specified column
          */
         @Nullable
-        List<Movie> selectMovies(@NonNull String sortColumn, @NonNull String sortOrder) {
-            Timber.d(String.format("selectMovies: sortColumn = %s, sortOrder = %s", sortColumn, sortOrder));
-            // TODO implement sorting
-            return movieList;
+        List<Movie> selectMovies(@NonNull String sortColumn, boolean sortAscending) {
+            Timber.d(String.format("selectMovies: sortColumn = %s, sortAscending = %b",
+                    sortColumn, sortAscending));
+
+            Comparator<Movie> comparator;
+            switch (sortColumn) {
+                case DataContract.MovieEntry.COLUMN_IMDB_ID:
+                    comparator = Movie.MovieComparatorImdbId;
+                    break;
+                case DataContract.MovieEntry.COLUMN_TITLE:
+                    comparator = Movie.MovieComparatorTitle;
+                    break;
+                // default case should never happen
+                default:
+                    comparator = Movie.MovieComparatorTitle;
+                    break;
+            }
+            if (!sortAscending) {
+                comparator = Collections.reverseOrder(comparator);
+            }
+            Collections.sort(mMovieList, comparator);
+            return mMovieList;
         }
 
     }

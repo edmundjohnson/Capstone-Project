@@ -10,6 +10,9 @@ import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Class for model utilities.
  * @author Edmund Johnson
@@ -104,6 +107,27 @@ public final class ModelUtils {
                 .year(year)
                 .released(released)
                 .build();
+    }
+
+    /**
+     * Returns the list of movies represented by a cursor.
+     * @param cursor the cursor
+     * @return the list of movies represented by the cursor
+     */
+    @Nullable
+    public static List<Movie> toMovieList(@NonNull Cursor cursor) {
+        if (cursor.getCount() == 0) {
+            return null;
+        }
+        List<Movie> movieList = new ArrayList<>();
+        // assume that the cursor is in its initial position before the first row
+        while (cursor.moveToNext()) {
+            Movie movie = toMovie(cursor);
+            if (movie != null) {
+                movieList.add(movie);
+            }
+        }
+        return movieList;
     }
 
     /**

@@ -14,7 +14,7 @@ import java.util.List;
 interface DatabaseHelper {
 
     String MOVIE_SORT_COLUMN_DEFAULT = DataContract.MovieEntry.COLUMN_TITLE;
-    String MOVIE_SORT_DIRECTION_DEFAULT = DataContract.SORT_DIRECTION_ASC;
+    boolean MOVIE_SORT_ASCENDING_DEFAULT = true;
 
     //---------------------------------------------------------------------
     // Movie methods

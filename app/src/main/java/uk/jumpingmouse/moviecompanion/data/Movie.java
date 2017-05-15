@@ -4,6 +4,8 @@ import com.google.auto.value.AutoValue;
 
 import android.support.annotation.Nullable;
 
+import java.util.Comparator;
+
 /**
  * The Movie model class.
  * The imdbId is entered by an admin user.
@@ -39,6 +41,10 @@ public abstract class Movie {
     // The release date, as a millisecond value
     public abstract long released();
 
+    /**
+     * Builder class for Movie, must be public.
+     */
+    @SuppressWarnings("WeakerAccess")
     @AutoValue.Builder
     public abstract static class Builder {
         public abstract Builder imdbId(String value);
@@ -67,5 +73,25 @@ public abstract class Movie {
     public static Builder builder() {
         return new AutoValue_Movie.Builder();
     }
+
+    /** Comparator for ordering by imdbId. */
+    public static final Comparator<Movie> MovieComparatorImdbId = new Comparator<Movie>() {
+        public int compare(Movie movie1, Movie movie2) {
+            // ascending order
+            return movie1.imdbId().compareTo(movie2.imdbId());
+            // descending order
+            //return movie2.imdbId().compareTo(movie1.imdbId());
+        }
+    };
+
+    /** Comparator for ordering by title. */
+    public static final Comparator<Movie> MovieComparatorTitle = new Comparator<Movie>() {
+        public int compare(Movie movie1, Movie movie2) {
+            // ascending order
+            return movie1.title().compareTo(movie2.title());
+            // descending order
+            //return movie2.title().compareTo(movie1.title());
+        }
+    };
 
 }

@@ -13,7 +13,7 @@ import java.util.List;
  * Database helper class for accessing the Firebase Realtime Database.
  * @author Edmund Johnson
  */
-public class DatabaseHelperFirebase implements DatabaseHelper {
+class DatabaseHelperFirebase implements DatabaseHelper {
 
     /** The singleton instance of this class. */
     private static DatabaseHelperFirebase sDatabaseHelper = null;
@@ -108,22 +108,63 @@ public class DatabaseHelperFirebase implements DatabaseHelper {
         if (selectionArgs != null) {
             Timber.d("selectMovies: selectionArgs is currently not supported");
         }
-        if (sortOrder != null) {
-            Timber.d("selectMovies: sortOrder is currently not supported");
-        }
-        return selectMovies(MOVIE_SORT_COLUMN_DEFAULT, MOVIE_SORT_DIRECTION_DEFAULT);
+        return selectMovies(getSortColumn(sortOrder), isSortAscending(sortOrder));
     }
 
     /**
      * Returns a list of all the movies in the database ordered by a specified column.
      * @param sortColumn the column to sort by
-     * @param sortDirection the sort direction, "ASC" or "DESC"
+     * @param sortAscending whether the sort is ascending
      * @return a list of all the movies in the database ordered by a specified column
      */
     @Nullable
-    private List<Movie> selectMovies(@NonNull String sortColumn, @NonNull String sortDirection) {
+    private List<Movie> selectMovies(@NonNull String sortColumn, boolean sortAscending) {
         // TODO
         return null;
+    }
+
+    /**
+     * Returns the sort column from a sort order.
+     * @param sortOrder the sort order, e.g. "title ASC"
+     * @return the sort column, e.g. "title"
+     */
+    private static String getSortColumn(@Nullable String sortOrder) {
+        if (sortOrder != null) {
+            String[] split = sortOrder.split(" ");
+            if (split.length > 0) {
+                switch (split[0]) {
+                    case DataContract.MovieEntry.COLUMN_IMDB_ID:
+                        return DataContract.MovieEntry.COLUMN_IMDB_ID;
+                    case DataContract.MovieEntry.COLUMN_TITLE:
+                        return DataContract.MovieEntry.COLUMN_TITLE;
+                    default:
+                        return MOVIE_SORT_COLUMN_DEFAULT;
+                }
+            }
+        }
+        return MOVIE_SORT_COLUMN_DEFAULT;
+    }
+
+    /**
+     * Returns whether the sort column is ascending from a sort order.
+     * @param sortOrder the sort order, e.g. "title ASC"
+     * @return whether the sort column is ascending
+     */
+    private static boolean isSortAscending(@Nullable String sortOrder) {
+        if (sortOrder != null) {
+            String[] split = sortOrder.split(" ");
+            if (split.length > 1) {
+                switch (split[1]) {
+                    case DataContract.SORT_DIRECTION_ASC:
+                        return true;
+                    case DataContract.SORT_DIRECTION_DESC:
+                        return false;
+                    default:
+                        return MOVIE_SORT_ASCENDING_DEFAULT;
+                }
+            }
+        }
+        return MOVIE_SORT_ASCENDING_DEFAULT;
     }
 
 }

@@ -16,6 +16,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import java.util.Date;
+import java.util.List;
 
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.utils.DateUtils;
@@ -40,10 +41,11 @@ public class DataProviderTest {
     private static final Movie TEST_MOVIE_1;
     private static final Movie TEST_MOVIE_1_MODIFIED;
     private static final Movie TEST_MOVIE_2;
-    //private static final Movie TEST_MOVIE_3;
+    private static final Movie TEST_MOVIE_3;
 
     private static final Uri URI_TEST_MOVIE_1;
     private static final Uri URI_TEST_MOVIE_2;
+    private static final Uri URI_TEST_MOVIE_3;
 
     static {
         // DO NOT USE REAL MOVIES, as these tests are destructive!
@@ -74,18 +76,20 @@ public class DataProviderTest {
                 .year("2012")
                 .released(DateUtils.toLongOmdbReleased("01 Jun 2012"))
                 .build();
-//        TEST_MOVIE_3 = Movie.builder()
-//                .imdbId("tt9999993")
-//                .title("Test Movie 3")
-//                .genre("Drama, Mystery, Romance")
-//                .runtime(133)
-//                .posterUrl(TEST_POSTER_URL)
-//                .year("2013")
-//                .released(DateUtils.toLongOmdbReleased("01 Jun 2013"))
-//                .build();
+        TEST_MOVIE_3 = Movie.builder()
+                .imdbId("tt9999993")
+                // Do not change the 0 to a 3! 0 is required for query order test.
+                .title("Test Movie 0")
+                .genre("Drama, Mystery, Romance")
+                .runtime(133)
+                .posterUrl(TEST_POSTER_URL)
+                .year("2013")
+                .released(DateUtils.toLongOmdbReleased("01 Jun 2013"))
+                .build();
 
         URI_TEST_MOVIE_1 = DataContract.MovieEntry.buildUriMovieId(TEST_MOVIE_1.imdbId());
         URI_TEST_MOVIE_2 = DataContract.MovieEntry.buildUriMovieId(TEST_MOVIE_2.imdbId());
+        URI_TEST_MOVIE_3 = DataContract.MovieEntry.buildUriMovieId(TEST_MOVIE_3.imdbId());
     }
 
     // By default, expect no exceptions.
@@ -102,6 +106,7 @@ public class DataProviderTest {
         // Ensure that none of the test movies are in the database
         mContentResolver.delete(URI_TEST_MOVIE_1, null, null);
         mContentResolver.delete(URI_TEST_MOVIE_2, null, null);
+        mContentResolver.delete(URI_TEST_MOVIE_3, null, null);
     }
 
     @Test
@@ -145,10 +150,12 @@ public class DataProviderTest {
      * Test the content provider query ".../movie"
      */
     @Test
-    public void queryMovies() {
+    public void queryMultipleRows() {
         Cursor cursor;
         int rowsDeleted;
         int rowsCurrent;
+        Movie movie;
+        List<Movie> movieList;
 
         // Save the initial number of rows returned by the query
         cursor = mContentResolver.query(
@@ -161,13 +168,47 @@ public class DataProviderTest {
         int rowsInitial = cursor == null ? 0 : cursor.getCount();
         closeCursor(cursor);
 
-        // insert two rows
+        // insert test rows
         Uri uriInserted1 = mContentResolver.insert(DataContract.MovieEntry.CONTENT_URI, toContentValues(TEST_MOVIE_1));
         Uri uriInserted2 = mContentResolver.insert(DataContract.MovieEntry.CONTENT_URI, toContentValues(TEST_MOVIE_2));
+        Uri uriInserted3 = mContentResolver.insert(DataContract.MovieEntry.CONTENT_URI, toContentValues(TEST_MOVIE_3));
         assertNotNull(uriInserted1);
         assertNotNull(uriInserted2);
+        assertNotNull(uriInserted3);
 
-        // Verify that the number of rows returned by the query has increased by 2
+        // query for specific movie TEST_MOVIE_1 - should now be there
+        cursor = mContentResolver.query(URI_TEST_MOVIE_1, null, null, null, null);
+        assertNotNull(cursor);
+        // The query should return a movie which is equal to TEST_MOVIE_1
+        assertEquals("The query should return 1 row", 1, cursor.getCount());
+        cursor.moveToFirst();
+        movie = ModelUtils.toMovie(cursor);
+        assertEquals("TEST_MOVIE_1 should be returned by the query", TEST_MOVIE_1, movie);
+        closeCursor(cursor);
+
+        // query for specific movie TEST_MOVIE_2 - should now be there
+        // Note: this tests an additional execution path to the query for TEST_MOVIE_1
+        cursor = mContentResolver.query(URI_TEST_MOVIE_2, null, null, null, null);
+        assertNotNull(cursor);
+        // The query should return a movie which is equal to TEST_MOVIE_2
+        assertEquals("The query should return 1 row", 1, cursor.getCount());
+        cursor.moveToFirst();
+        movie = ModelUtils.toMovie(cursor);
+        assertEquals("TEST_MOVIE_2 should be returned by the query", TEST_MOVIE_2, movie);
+        closeCursor(cursor);
+
+        // query for specific movie TEST_MOVIE_3 - should now be there
+        cursor = mContentResolver.query(URI_TEST_MOVIE_3, null, null, null, null);
+        assertNotNull(cursor);
+        // The query should return a movie which is equal to TEST_MOVIE_3
+        assertEquals("The query should return 1 row", 1, cursor.getCount());
+        cursor.moveToFirst();
+        movie = ModelUtils.toMovie(cursor);
+        assertEquals("TEST_MOVIE_3 should be returned by the query", TEST_MOVIE_3, movie);
+        closeCursor(cursor);
+
+        //------------------------------------
+        // Verify that the total number of rows has increased by 3
         cursor = mContentResolver.query(
                 DataContract.MovieEntry.CONTENT_URI,
                 null,
@@ -175,39 +216,87 @@ public class DataProviderTest {
                 null,
                 null
         );
-        rowsCurrent = cursor == null ? 0 : cursor.getCount();
-        assertEquals("rowsCurrent should be 2 greater than rowsInitial", rowsInitial + 2, rowsCurrent);
+        assertNotNull(cursor);
+        rowsCurrent = cursor.getCount();
+        assertEquals("rowsCurrent should be 3 greater than rowsInitial", rowsInitial + 3, rowsCurrent);
         closeCursor(cursor);
 
-        // query for specific movie TEST_MOVIE_1 - should now be there
-        cursor = mContentResolver.query(URI_TEST_MOVIE_1, null, null, null, null);
-        rowsCurrent = cursor == null ? 0 : cursor.getCount();
-        // The query should return a movie which is equal to TEST_MOVIE_1
-        assertEquals("The query should return 1 row", 1, rowsCurrent);
-        if (cursor != null) {
-            cursor.moveToFirst();
-            Movie movie = ModelUtils.toMovie(cursor);
-            assertEquals("TEST_MOVIE_1 should be returned by the query", TEST_MOVIE_1, movie);
-        }
+        //------------------------------------
+        // Verify ordering by imdbId ascending
+        cursor = mContentResolver.query(
+                DataContract.MovieEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                "imdbId ASC"
+        );
+        assertNotNull(cursor);
+        movieList = ModelUtils.toMovieList(cursor);
+        assertNotNull(movieList);
+        assertTrue("Sort imdbId ASC: Movie 1 before Movie 2",
+                movieList.indexOf(TEST_MOVIE_1) < movieList.indexOf(TEST_MOVIE_2));
+        assertTrue("Sort imdbId ASC: Movie 2 before Movie 3",
+                movieList.indexOf(TEST_MOVIE_2) < movieList.indexOf(TEST_MOVIE_3));
         closeCursor(cursor);
 
-        // query for specific movie TEST_MOVIE_1 - should now be there
-        // Note: this tests an additional execution path to the query for TEST_MOVIE_1
-        cursor = mContentResolver.query(URI_TEST_MOVIE_2, null, null, null, null);
-        rowsCurrent = cursor == null ? 0 : cursor.getCount();
-        // The query should return a movie which is equal to TEST_MOVIE_2
-        assertEquals("The query should return 1 row", 1, rowsCurrent);
-        if (cursor != null) {
-            cursor.moveToFirst();
-            Movie movie = ModelUtils.toMovie(cursor);
-            assertEquals("TEST_MOVIE_2 should be returned by the query", TEST_MOVIE_2, movie);
-        }
+        // Verify ordering by imdbId descending
+        cursor = mContentResolver.query(
+                DataContract.MovieEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                "imdbId DESC"
+        );
+        assertNotNull(cursor);
+        movieList = ModelUtils.toMovieList(cursor);
+        assertNotNull(movieList);
+        assertTrue("Sort imdbId DESC: Movie 3 before Movie 2",
+                movieList.indexOf(TEST_MOVIE_3) < movieList.indexOf(TEST_MOVIE_2));
+        assertTrue("Sort imdbId DESC: Movie 2 before Movie 1",
+                movieList.indexOf(TEST_MOVIE_2) < movieList.indexOf(TEST_MOVIE_1));
         closeCursor(cursor);
 
+        // Verify ordering by title ascending
+        cursor = mContentResolver.query(
+                DataContract.MovieEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                "title ASC"
+        );
+        assertNotNull(cursor);
+        movieList = ModelUtils.toMovieList(cursor);
+        assertNotNull(movieList);
+        assertTrue("Sort title ASC: Movie 3 before Movie 1",
+                movieList.indexOf(TEST_MOVIE_3) < movieList.indexOf(TEST_MOVIE_1));
+        assertTrue("Sort title ASC: Movie 1 before Movie 2",
+                movieList.indexOf(TEST_MOVIE_1) < movieList.indexOf(TEST_MOVIE_2));
+        closeCursor(cursor);
+
+        // Verify ordering by title descending
+        cursor = mContentResolver.query(
+                DataContract.MovieEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                "title DESC"
+        );
+        assertNotNull(cursor);
+        movieList = ModelUtils.toMovieList(cursor);
+        assertNotNull(movieList);
+        assertTrue("Sort title DESC: Movie 2 before Movie 1",
+                movieList.indexOf(TEST_MOVIE_2) < movieList.indexOf(TEST_MOVIE_1));
+        assertTrue("Sort title DESC: Movie 1 before Movie 3",
+                movieList.indexOf(TEST_MOVIE_1) < movieList.indexOf(TEST_MOVIE_3));
+        closeCursor(cursor);
+
+        //----------------------
         // delete the added rows
         rowsDeleted = mContentResolver.delete(URI_TEST_MOVIE_1, null, null);
         assertEquals("rowsDeleted should be 1", 1, rowsDeleted);
         rowsDeleted = mContentResolver.delete(URI_TEST_MOVIE_2, null, null);
+        assertEquals("rowsDeleted should be 1", 1, rowsDeleted);
+        rowsDeleted = mContentResolver.delete(URI_TEST_MOVIE_3, null, null);
         assertEquals("rowsDeleted should be 1", 1, rowsDeleted);
 
         // Verify that the number of rows returned by the query is back to its original value
@@ -266,14 +355,12 @@ public class DataProviderTest {
 
         // query for specific movie TEST_MOVIE_1 - should now be there
         cursor = mContentResolver.query(URI_TEST_MOVIE_1, null, null, null, null);
-        rowsCurrent = cursor == null ? 0 : cursor.getCount();
+        assertNotNull(cursor);
         // The query should return a movie which is equal to TEST_MOVIE_1
-        assertEquals("The query should return 1 row", 1, rowsCurrent);
-        if (cursor != null) {
-            cursor.moveToFirst();
-            Movie movie = ModelUtils.toMovie(cursor);
-            assertEquals("TEST_MOVIE_1 should be returned by the query", TEST_MOVIE_1, movie);
-        }
+        assertEquals("The query should return 1 row", 1, cursor.getCount());
+        cursor.moveToFirst();
+        Movie movie = ModelUtils.toMovie(cursor);
+        assertEquals("TEST_MOVIE_1 should be returned by the query", TEST_MOVIE_1, movie);
         closeCursor(cursor);
 
         // delete the added row
