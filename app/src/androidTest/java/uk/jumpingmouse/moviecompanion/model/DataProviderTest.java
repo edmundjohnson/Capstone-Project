@@ -208,12 +208,13 @@ public class DataProviderTest {
         closeCursor(cursor);
 
         //------------------------------------
-        // Verify that the total number of rows has increased by 3
+        // Verify that the total number of rows has increased by 3.
+        // Also check that the currently-unsupported parameters do not cause problems.
         cursor = mContentResolver.query(
                 DataContract.MovieEntry.CONTENT_URI,
-                null,
-                null,
-                null,
+                new String[]{},
+                "",
+                new String[]{},
                 null
         );
         assertNotNull(cursor);
@@ -288,6 +289,40 @@ public class DataProviderTest {
                 movieList.indexOf(TEST_MOVIE_2) < movieList.indexOf(TEST_MOVIE_1));
         assertTrue("Sort title DESC: Movie 1 before Movie 3",
                 movieList.indexOf(TEST_MOVIE_1) < movieList.indexOf(TEST_MOVIE_3));
+        closeCursor(cursor);
+
+        // Verify that the default ordering (title ASC) is used for empty sort order
+        cursor = mContentResolver.query(
+                DataContract.MovieEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                ""
+        );
+        assertNotNull(cursor);
+        movieList = ModelUtils.toMovieList(cursor);
+        assertNotNull(movieList);
+        assertTrue("Sort title ASC: Movie 3 before Movie 1",
+                movieList.indexOf(TEST_MOVIE_3) < movieList.indexOf(TEST_MOVIE_1));
+        assertTrue("Sort title ASC: Movie 1 before Movie 2",
+                movieList.indexOf(TEST_MOVIE_1) < movieList.indexOf(TEST_MOVIE_2));
+        closeCursor(cursor);
+
+        // Verify that the default ordering (title ASC) is used for invalid sort order
+        cursor = mContentResolver.query(
+                DataContract.MovieEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                "InvalidFieldName NOT_ASC_OR_DESC"
+        );
+        assertNotNull(cursor);
+        movieList = ModelUtils.toMovieList(cursor);
+        assertNotNull(movieList);
+        assertTrue("Sort title ASC: Movie 3 before Movie 1",
+                movieList.indexOf(TEST_MOVIE_3) < movieList.indexOf(TEST_MOVIE_1));
+        assertTrue("Sort title ASC: Movie 1 before Movie 2",
+                movieList.indexOf(TEST_MOVIE_1) < movieList.indexOf(TEST_MOVIE_2));
         closeCursor(cursor);
 
         //----------------------

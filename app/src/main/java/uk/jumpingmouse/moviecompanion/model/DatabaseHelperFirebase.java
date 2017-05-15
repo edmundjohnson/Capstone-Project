@@ -7,6 +7,7 @@ import timber.log.Timber;
 
 import uk.jumpingmouse.moviecompanion.data.Movie;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -119,8 +120,11 @@ class DatabaseHelperFirebase implements DatabaseHelper {
      */
     @Nullable
     private List<Movie> selectMovies(@NonNull String sortColumn, boolean sortAscending) {
+        Timber.d(String.format("selectMovies: sortColumn = %s, sortAscending = %b",
+                sortColumn, sortAscending));
         // TODO
-        return null;
+        // dummy code to avoid lint warnings
+        return sortAscending ? null : new ArrayList<Movie>();
     }
 
     /**
@@ -131,15 +135,14 @@ class DatabaseHelperFirebase implements DatabaseHelper {
     private static String getSortColumn(@Nullable String sortOrder) {
         if (sortOrder != null) {
             String[] split = sortOrder.split(" ");
-            if (split.length > 0) {
-                switch (split[0]) {
-                    case DataContract.MovieEntry.COLUMN_IMDB_ID:
-                        return DataContract.MovieEntry.COLUMN_IMDB_ID;
-                    case DataContract.MovieEntry.COLUMN_TITLE:
-                        return DataContract.MovieEntry.COLUMN_TITLE;
-                    default:
-                        return MOVIE_SORT_COLUMN_DEFAULT;
-                }
+            // split.length is always at least 1
+            switch (split[0]) {
+                case DataContract.MovieEntry.COLUMN_IMDB_ID:
+                    return DataContract.MovieEntry.COLUMN_IMDB_ID;
+                case DataContract.MovieEntry.COLUMN_TITLE:
+                    return DataContract.MovieEntry.COLUMN_TITLE;
+                default:
+                    return MOVIE_SORT_COLUMN_DEFAULT;
             }
         }
         return MOVIE_SORT_COLUMN_DEFAULT;

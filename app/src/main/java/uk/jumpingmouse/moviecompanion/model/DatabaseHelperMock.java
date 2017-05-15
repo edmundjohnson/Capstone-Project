@@ -132,15 +132,15 @@ class DatabaseHelperMock implements DatabaseHelper {
     private static String getSortColumn(@Nullable String sortOrder) {
         if (sortOrder != null) {
             String[] split = sortOrder.split(" ");
-            if (split.length > 0) {
-                switch (split[0]) {
-                    case DataContract.MovieEntry.COLUMN_IMDB_ID:
-                        return DataContract.MovieEntry.COLUMN_IMDB_ID;
-                    case DataContract.MovieEntry.COLUMN_TITLE:
-                        return DataContract.MovieEntry.COLUMN_TITLE;
-                    default:
-                        return MOVIE_SORT_COLUMN_DEFAULT;
-                }
+            // split.length is always at least 1
+            // code coverage: split[0] cannot be null
+            switch (split[0]) {
+                case DataContract.MovieEntry.COLUMN_IMDB_ID:
+                    return DataContract.MovieEntry.COLUMN_IMDB_ID;
+                case DataContract.MovieEntry.COLUMN_TITLE:
+                    return DataContract.MovieEntry.COLUMN_TITLE;
+                default:
+                    return MOVIE_SORT_COLUMN_DEFAULT;
             }
         }
         return MOVIE_SORT_COLUMN_DEFAULT;
@@ -155,6 +155,7 @@ class DatabaseHelperMock implements DatabaseHelper {
         if (sortOrder != null) {
             String[] split = sortOrder.split(" ");
             if (split.length > 1) {
+                // code coverage: split[1] cannot be null
                 switch (split[1]) {
                     case DataContract.SORT_DIRECTION_ASC:
                         return true;
@@ -238,6 +239,7 @@ class DatabaseHelperMock implements DatabaseHelper {
                     sortColumn, sortAscending));
 
             Comparator<Movie> comparator;
+            // code coverage: sortColumn cannot be null
             switch (sortColumn) {
                 case DataContract.MovieEntry.COLUMN_IMDB_ID:
                     comparator = Movie.MovieComparatorImdbId;
@@ -245,7 +247,7 @@ class DatabaseHelperMock implements DatabaseHelper {
                 case DataContract.MovieEntry.COLUMN_TITLE:
                     comparator = Movie.MovieComparatorTitle;
                     break;
-                // default case should never happen
+                // code coverage: default case cannot happen due to earlier checks
                 default:
                     comparator = Movie.MovieComparatorTitle;
                     break;

@@ -1,11 +1,15 @@
 package uk.jumpingmouse.moviecompanion.utils;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.MatrixCursor;
+import android.support.annotation.Nullable;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.List;
 
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
@@ -106,7 +110,7 @@ public class ModelUtilsTest {
         VALUES_TITLE_NULL.put(DataContract.MovieEntry.COLUMN_RELEASED, MOVIE_RELEASED_STR);
 
         CURSOR_FIELDS_SET = new MatrixCursor(DataContract.MovieEntry.getAllColumns());
-        CURSOR_FIELDS_SET.addRow(new Object[] {
+        CURSOR_FIELDS_SET.addRow(new Object[]{
                 // This must match the order of columns in DataContract.MovieEntry.getAllColumns().
                 // We are using imdbId as the _id, so it is repeated.
                 MOVIE_IMDB_ID,
@@ -120,7 +124,7 @@ public class ModelUtilsTest {
         });
 
         CURSOR_FIELDS_NULL = new MatrixCursor(DataContract.MovieEntry.getAllColumns());
-        CURSOR_FIELDS_NULL.addRow(new Object[] {
+        CURSOR_FIELDS_NULL.addRow(new Object[]{
                 // This must match the order of columns in DataContract.MovieEntry.getAllColumns().
                 // We are using imdbId as the _id, so it is repeated.
                 "tt9999992",
@@ -134,7 +138,7 @@ public class ModelUtilsTest {
         });
 
         CURSOR_FIELDS_INVALID = new MatrixCursor(DataContract.MovieEntry.getAllColumns());
-        CURSOR_FIELDS_INVALID.addRow(new Object[] {
+        CURSOR_FIELDS_INVALID.addRow(new Object[]{
                 // This must match the order of columns in DataContract.MovieEntry.getAllColumns().
                 // We are using imdbId as the _id, so it is repeated.
                 MOVIE_IMDB_ID,
@@ -148,7 +152,7 @@ public class ModelUtilsTest {
         });
 
         CURSOR_IMDB_ID_NULL = new MatrixCursor(DataContract.MovieEntry.getAllColumns());
-        CURSOR_IMDB_ID_NULL.addRow(new Object[] {
+        CURSOR_IMDB_ID_NULL.addRow(new Object[]{
                 // This must match the order of columns in DataContract.MovieEntry.getAllColumns().
                 // We are using imdbId as the _id, so it is repeated.
                 MOVIE_IMDB_ID,
@@ -162,7 +166,7 @@ public class ModelUtilsTest {
         });
 
         CURSOR_TITLE_NULL = new MatrixCursor(DataContract.MovieEntry.getAllColumns());
-        CURSOR_TITLE_NULL.addRow(new Object[] {
+        CURSOR_TITLE_NULL.addRow(new Object[]{
                 // This must match the order of columns in DataContract.MovieEntry.getAllColumns().
                 // We are using imdbId as the _id, so it is repeated.
                 MOVIE_IMDB_ID,
@@ -279,7 +283,89 @@ public class ModelUtilsTest {
         // toMovie(Cursor) returns null when mandatory field title is not set in cursor row
         CURSOR_TITLE_NULL.moveToFirst();
         assertNull(ModelUtils.toMovie(CURSOR_TITLE_NULL));
+    }
 
+    @Test
+    public void toMovieList() {
+        List<Movie> movieList;
+        Movie movie;
+        MatrixCursor cursor;
+
+        // toMovieList(Cursor) returns null when cursor has no rows
+        cursor = new MatrixCursor(DataContract.MovieEntry.getAllColumns());
+        movieList = ModelUtils.toMovieList(cursor);
+        assertNull(movieList);
+        closeCursor(cursor);
+
+        // toMovieList(Cursor) does not include elements for cursor rows which cannot
+        // be converted to Movies
+        cursor = new MatrixCursor(DataContract.MovieEntry.getAllColumns());
+        cursor.addRow(new Object[] {
+                // This must match the order of columns in DataContract.MovieEntry.getAllColumns().
+                // We are using imdbId as the _id, so it is repeated.
+                null,
+                null,
+                MOVIE_TITLE,
+                MOVIE_GENRE,
+                MOVIE_RUNTIME_INT,
+                MOVIE_POSTER_URL,
+                MOVIE_YEAR,
+                MOVIE_RELEASED_LNG
+        });
+        movieList = ModelUtils.toMovieList(cursor);
+        assertNotNull(movieList);
+        assertEquals(0, movieList.size());
+        closeCursor(cursor);
+
+        // toMovieList(Cursor) converts each valid cursor row into a Movie and adds it to the list
+        cursor = new MatrixCursor(DataContract.MovieEntry.getAllColumns());
+        cursor.addRow(new Object[] {
+                // This must match the order of columns in DataContract.MovieEntry.getAllColumns().
+                // We are using imdbId as the _id, so it is repeated.
+                "imdbId1",
+                "imdbId1",
+                "Title 1",
+                "Genre1",
+                MOVIE_RUNTIME_INT,
+                "posterUrl1.jpg",
+                "2011",
+                MOVIE_RELEASED_LNG
+        });
+        cursor.addRow(new Object[] {
+                // This must match the order of columns in DataContract.MovieEntry.getAllColumns().
+                // We are using imdbId as the _id, so it is repeated.
+                "imdbId2",
+                "imdbId2",
+                "Title 2",
+                "Genre2",
+                MOVIE_RUNTIME_INT,
+                "posterUrl2.jpg",
+                "2011",
+                MOVIE_RELEASED_LNG
+        });
+        movieList = ModelUtils.toMovieList(cursor);
+        assertNotNull(movieList);
+        assertEquals(2, movieList.size());
+        movie = movieList.get(0);
+        assertNotNull(movie);
+        assertEquals("imdbId1", movie.imdbId());
+        assertEquals("Title 1", movie.title());
+        movie = movieList.get(1);
+        assertNotNull(movie);
+        assertEquals("imdbId2", movie.imdbId());
+        assertEquals("Title 2", movie.title());
+        closeCursor(cursor);
+    }
+
+    /**
+     * Silently close a cursor.
+     * @param cursor the cursor
+     */
+    private void closeCursor(@Nullable Cursor cursor) {
+        if (cursor != null) {
+            cursor.close();
+            //cursor = null;
+        }
     }
 
 }

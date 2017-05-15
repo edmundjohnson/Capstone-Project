@@ -22,6 +22,7 @@ public class AwardTest {
 
     // By default, expect no exceptions.
     // thrown must be public.
+    @SuppressWarnings("WeakerAccess")
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
 

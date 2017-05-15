@@ -120,7 +120,9 @@ public final class ModelUtils {
             return null;
         }
         List<Movie> movieList = new ArrayList<>();
-        // assume that the cursor is in its initial position before the first row
+        // Assume that the cursor is in its initial position before the first row.
+        // The next line is safer if the initial position of the cursor is unknown:
+        //for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
         while (cursor.moveToNext()) {
             Movie movie = toMovie(cursor);
             if (movie != null) {
@@ -138,14 +140,13 @@ public final class ModelUtils {
     private static int toIntOmdbRuntime(@Nullable String omdbRuntime) {
         if (omdbRuntime != null) {
             String[] split = omdbRuntime.split(" ", 2);
-            if (split.length > 0) {
-                try {
-                    return Integer.decode(split[0]);
-                } catch (NumberFormatException e) {
-                    Timber.w(String.format(
-                            "NumberFormatException while attempting to decode OMDb runtime to int: \"%s\"",
-                            omdbRuntime));
-                }
+            // split.length is always at least 1
+            try {
+                return Integer.decode(split[0]);
+            } catch (NumberFormatException e) {
+                Timber.w(String.format(
+                        "NumberFormatException while attempting to decode OMDb runtime to int: \"%s\"",
+                        omdbRuntime));
             }
         }
         return Movie.RUNTIME_UNKNOWN;

@@ -99,8 +99,9 @@ public class ViewUtils {
      * @param titleResId the string resource id of the dialog title
      * @param messageResId the string resource id of the dialog text
      */
-    private static void displayAlertDialog(@Nullable Context context, @StringRes int titleResId,
-                                           @StringRes int messageResId) {
+    private static void displayAlertDialog(@Nullable Context context,
+            @SuppressWarnings("SameParameterValue") @StringRes int titleResId,
+            @StringRes int messageResId) {
         if (context != null) {
             new AlertDialog.Builder(context)
                     .setIconAttribute(android.R.attr.alertDialogIcon)

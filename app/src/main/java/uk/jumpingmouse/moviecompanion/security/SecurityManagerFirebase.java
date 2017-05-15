@@ -8,13 +8,15 @@ import android.support.v4.app.FragmentActivity;
 
 import com.firebase.ui.auth.AuthUI;
 
+import timber.log.Timber;
+
 import java.util.Arrays;
 
 /**
  * A Firebase implementation of SecurityManager.
  * @author Edmund Johnson
  */
-public class SecurityManagerFirebase implements SecurityManager {
+class SecurityManagerFirebase implements SecurityManager {
 
     /** The singleton instance of this class. */
     private static SecurityManagerFirebase sSecurityManager;
@@ -30,7 +32,7 @@ public class SecurityManagerFirebase implements SecurityManager {
      * Return a Firebase implementation of SecurityManager.
      * @return a Firebase implementation of SecurityManager
      */
-    public static SecurityManager getInstance() {
+    static SecurityManager getInstance() {
         if (sSecurityManager == null) {
             sSecurityManager = new SecurityManagerFirebase();
         }
@@ -120,6 +122,8 @@ public class SecurityManagerFirebase implements SecurityManager {
     }
 
     private void onSignedInInitialise() {
+        // To avoid lint warnings
+        Timber.d("onSignedInInitialise");
 //        mUsername = username;
 
         // TODO: Implement database sign in processing - pass listeners in
@@ -129,6 +133,8 @@ public class SecurityManagerFirebase implements SecurityManager {
     }
 
     private void onSignedOutCleanup() {
+        // To avoid lint warnings
+        Timber.d("onSignedOutCleanup");
 //        mUsername = ANONYMOUS;
 
         // TODO: Implement adapter sign out processing - pass adapters in
