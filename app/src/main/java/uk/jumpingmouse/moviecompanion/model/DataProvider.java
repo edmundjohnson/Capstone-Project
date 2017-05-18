@@ -3,6 +3,7 @@ package uk.jumpingmouse.moviecompanion.model;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -12,6 +13,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import timber.log.Timber;
+
+import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 
@@ -24,10 +27,6 @@ public class DataProvider extends ContentProvider {
 
     /** The URI Matcher used by this content provider. */
     private static final UriMatcher URI_MATCHER = buildUriMatcher();
-
-//    /** The sort order for ordering movies in ascending order of title. */
-//    private static final String MOVIE_SORT_TITLE_ASC =
-//            DataContract.MovieEntry.COLUMN_TITLE + " " + DataContract.SORT_DIRECTION_ASC;
 
     // Constants representing URL formats
     private static final int MOVIE = 100;
@@ -48,15 +47,15 @@ public class DataProvider extends ContentProvider {
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
         // 2) Use the addURI function to match each of the types.  Use the constants from
-        // PostContract to help define the types to the UriMatcher.
+        // DataContract to help define the types to the UriMatcher.
         uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
-                DataContract.PATH_MOVIE,
+                DataContract.URI_PATH_MOVIE,
                 MOVIE);
         uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
-                DataContract.PATH_MOVIE + "/" + DataContract.PARAM_ALL,
+                DataContract.URI_PATH_MOVIE + "/" + DataContract.PARAM_ALL,
                 MOVIE_ALL);
         uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
-                DataContract.PATH_MOVIE + "/*",
+                DataContract.URI_PATH_MOVIE + "/*",
                 MOVIE_IMDB_ID);
 
         // 3) Return the new matcher!
@@ -174,21 +173,22 @@ public class DataProvider extends ContentProvider {
     @Override
     public Uri insert(@NonNull final Uri uri, @Nullable final ContentValues values) {
         Uri returnUri;
+        Context context = getContext();
 
         final int match = URI_MATCHER.match(uri);
         switch (match) {
             case MOVIE:
-                Movie movie = insertMovie(values);
+                Movie movie = insertMovie(context, values);
                 if (movie == null) {
                     Timber.w("Failed to insert movie using ContentValues: ", values);
                     return null;
                 }
-                returnUri = DataContract.MovieEntry.buildUriMovieId(movie.imdbId());
+                returnUri = DataContract.MovieEntry.buildUriMovieId(movie.getImdbId());
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown URI for insert: " + uri);
         }
-        notifyChange(uri, null);
+        notifyChange(context, uri, null);
 
         return returnUri;
     }
@@ -217,6 +217,7 @@ public class DataProvider extends ContentProvider {
     public final int update(@NonNull final Uri uri, @Nullable final ContentValues values,
                             @Nullable final String selection, @Nullable final String[] selectionArgs) {
         int rowsUpdated;
+        Context context = getContext();
 
         // Use the uriMatcher to get the id of the URI being handled.
         // If there is no match, throw an UnsupportedOperationException.
@@ -225,18 +226,18 @@ public class DataProvider extends ContentProvider {
         switch (match) {
 //            case MOVIE:
 //                // A null id updates all rows
-//                rowsUpdated = updateAllMovies(values);
+//                rowsUpdated = updateAllMovies(context, values);
 //                break;
             case MOVIE_IMDB_ID:
                 String imdbId = uri.getLastPathSegment();
-                rowsUpdated = updateMovie(imdbId, values);
+                rowsUpdated = updateMovie(context, imdbId, values);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown URI for update: " + uri);
         }
         // Notify the listeners.
         if (rowsUpdated != 0) {
-            notifyChange(uri, null);
+            notifyChange(context, uri, null);
         }
 
         // Return the number of rows updated
@@ -265,6 +266,7 @@ public class DataProvider extends ContentProvider {
     public final int delete(@NonNull final Uri uri, @Nullable String selection,
                             @Nullable final String[] selectionArgs) {
         int rowsDeleted;
+        Context context = getContext();
 
 //        // A null selection deletes all rows and returns 0.
 //        // A selection of "1" deletes all rows and returns the number of rows deleted.
@@ -278,11 +280,11 @@ public class DataProvider extends ContentProvider {
 
         switch (match) {
 //            case MOVIE:
-//                rowsDeleted = deleteAllMovies(values);
+//                rowsDeleted = deleteAllMovies(context, values);
 //                break;
             case MOVIE_IMDB_ID:
                 String imdbId = uri.getLastPathSegment();
-                rowsDeleted = deleteMovie(imdbId);
+                rowsDeleted = deleteMovie(context, imdbId);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown URI for delete: " + uri);
@@ -290,7 +292,7 @@ public class DataProvider extends ContentProvider {
 
         // Notify the URI listeners (using the content resolver) if the rowsDeleted != 0.
         if (rowsDeleted != 0) {
-            notifyChange(uri, null);
+            notifyChange(context, uri, null);
         }
 
         // return the number of rows deleted
@@ -304,13 +306,14 @@ public class DataProvider extends ContentProvider {
 
     /**
      * Notify observers registered with the content resolver that content was updated.
+     * @param context the context
      * @param uri The URI of the content that was updated.
      * @param observer The observer that originated the change, may be <code>null</code>.
      */
-    private void notifyChange(@NonNull final Uri uri,
+    private void notifyChange(@Nullable Context context, @NonNull final Uri uri,
                 @SuppressWarnings("SameParameterValue") @Nullable final ContentObserver observer) {
-        if (getContext() != null && getContext().getContentResolver() != null) {
-            getContext().getContentResolver().notifyChange(uri, observer);
+        if (context != null && context.getContentResolver() != null) {
+            context.getContentResolver().notifyChange(uri, observer);
         }
     }
 
@@ -349,11 +352,12 @@ public class DataProvider extends ContentProvider {
 
     /**
      * Inserts a movie into the database.
+     * @param context the context
      * @param values the values to use for the new movie
      * @return the inserted movie
      */
     @Nullable
-    private Movie insertMovie(@Nullable final ContentValues values) {
+    private Movie insertMovie(@Nullable Context context, @Nullable final ContentValues values) {
         if (values == null) {
             return null;
         }
@@ -361,37 +365,43 @@ public class DataProvider extends ContentProvider {
         if (movie == null) {
             return null;
         }
-        getDatabaseHelper().insertMovie(movie);
-
-        return movie;
+        int rowsAdded = getDatabaseHelper().addMovie(context, movie);
+        if (rowsAdded == 0) {
+            return null;
+        } else {
+            return movie;
+        }
     }
 
     /**
      * Updates a movie in the database.
-     * @param imdbId the movie's imdbId
+     * @param context the context
+     * @param imdbId the movie's getImdbId
      * @param values the new values to use for the movie
      * @return the number of rows updated
      */
-    private int updateMovie(@NonNull final String imdbId, @Nullable final ContentValues values) {
+    private int updateMovie(@Nullable Context context, @NonNull final String imdbId,
+                            @Nullable final ContentValues values) {
         if (values == null) {
             return 0;
         }
         Movie movie = ModelUtils.toMovie(values);
         if (movie == null) {
             return 0;
-        } else if (!imdbId.equals(movie.imdbId())) {
+        } else if (!imdbId.equals(movie.getImdbId())) {
             throw new UnsupportedOperationException("ImdbId mismatch between URL and body of update request");
         }
-        return getDatabaseHelper().updateMovie(movie);
+        return getDatabaseHelper().addMovie(context, movie);
     }
 
     /**
      * Deletes a movie from the database.
+     * @param context the context
      * @param imdbId the movie's imdbId
      * @return the number of rows deleted
      */
-    private int deleteMovie(@NonNull final String imdbId) {
-        return getDatabaseHelper().deleteMovie(imdbId);
+    private int deleteMovie(@Nullable Context context, @NonNull final String imdbId) {
+        return getDatabaseHelper().deleteMovie(context, imdbId);
     }
 
     /**
@@ -480,14 +490,14 @@ public class DataProvider extends ContentProvider {
         return new Object[] {
                 // This must match the order of columns in DataContract.MovieEntry.getAllColumns().
                 // We are using imdbId as the _id, so it is repeated.
-                movie.imdbId(),
-                movie.imdbId(),
-                movie.title(),
-                movie.genre(),
-                movie.runtime(),
-                movie.posterUrl(),
-                movie.year(),
-                movie.released()
+                movie.getImdbId(),
+                movie.getImdbId(),
+                movie.getTitle(),
+                movie.getGenre(),
+                movie.getRuntime(),
+                movie.getPosterUrl(),
+                movie.getYear(),
+                movie.getReleased()
         };
     }
 
@@ -495,15 +505,12 @@ public class DataProvider extends ContentProvider {
     // Getters
 
     /**
-     * Convenience method for returning a database helper.
-     * @return a database helper
+     * Convenience method for returning a reference to the database helper.
+     * @return a reference to the database helper
      */
     @NonNull
     private DatabaseHelper getDatabaseHelper() {
-        // For using the Firebase Realtime Database
-        //return DatabaseHelperFirebase.getInstance();
-        // For using a mock database, e.g. when unit testing the ContentProvider class
-        return DatabaseHelperMock.getInstance();
+        return ObjectFactory.getDatabaseHelper();
     }
 
 }

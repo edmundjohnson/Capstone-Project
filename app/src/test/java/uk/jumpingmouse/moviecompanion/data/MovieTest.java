@@ -64,12 +64,12 @@ public class MovieTest {
     public void builder() {
 
         // test that the fields return the expected values
-        assertEquals("tt4016934", mMovie.imdbId());
-        assertEquals("The Handmaiden", mMovie.title());
-        assertEquals("Drama, Mystery, Romance", mMovie.genre());
-        assertEquals(144, mMovie.runtime());
-        assertEquals(POSTER_URL, mMovie.posterUrl());
-        assertEquals("2017", mMovie.year());
+        assertEquals("tt4016934", mMovie.getImdbId());
+        assertEquals("The Handmaiden", mMovie.getTitle());
+        assertEquals("Drama, Mystery, Romance", mMovie.getGenre());
+        assertEquals(144, mMovie.getRuntime());
+        assertEquals(POSTER_URL, mMovie.getPosterUrl());
+        assertEquals("2017", mMovie.getYear());
 
         // test that the nullable fields are nullable, i.e. no exception thrown
         Movie movieWithNulls = Movie.builder()
@@ -182,8 +182,8 @@ public class MovieTest {
     @Test
     public void testToString() {
         assertEquals(
-                "Movie{imdbId=tt4016934, title=The Handmaiden, genre=Drama, Mystery, Romance, runtime=144, " +
-                        "posterUrl=" + POSTER_URL + ", year=2017, " +
+                "Movie{imdbId=tt4016934, title=The Handmaiden, genre=Drama, Mystery, Romance," +
+                        " runtime=144, posterUrl=" + POSTER_URL + ", year=2017, " +
                         "released=" + DateUtils.toLongOmdbReleased("01 Jun 2017") + "}",
                 mMovie.toString());
     }

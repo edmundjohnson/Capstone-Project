@@ -44,8 +44,13 @@ ext {
     SUPPORT_LIB_VERSION = '25.1.1'
     FIREBASE_VERSION = '10.2.0'
     FIREBASE_UI_VERSION = '1.2.0'
+//    SUPPORT_LIB_VERSION = '25.0.1'
+//    FIREBASE_VERSION = '9.6.0'
+//    FIREBASE_UI_VERSION = '0.6.0'
 
-    AUTOVALUE_VERSION = '1.2'
+    //AUTOVALUE_VERSION = '1.2'
+    AUTOVALUE_FIREBASE_VERSION = '1.0.1'
+
     RETROFIT_VERSION = '2.2.0'
 }
 
@@ -61,10 +66,16 @@ dependencies {
     // Firebase UI Auth
     compile "com.firebaseui:firebase-ui-auth:$FIREBASE_UI_VERSION"
 
-    // AutoValue
-    // see:  https://github.com/google/auto/blob/master/value/userguide/index.md
-    provided            "com.google.auto.value:auto-value:$AUTOVALUE_VERSION"
-    annotationProcessor "com.google.auto.value:auto-value:$AUTOVALUE_VERSION"
+//    // AutoValue
+//    // see:  https://github.com/google/auto/blob/master/value/userguide/index.md
+//    provided            "com.google.auto.value:auto-value:$AUTOVALUE_VERSION"
+//    annotationProcessor "com.google.auto.value:auto-value:$AUTOVALUE_VERSION"
+
+    // AutoValue-Firebase
+    provided "me.mattlogan.auto.value:auto-value-firebase:$AUTOVALUE_FIREBASE_VERSION"
+    provided "me.mattlogan.auto.value:auto-value-firebase-annotation:$AUTOVALUE_FIREBASE_VERSION"
+    // Optional type adapter dependency
+    //compile "me.mattlogan.auto.value:auto-value-firebase-adapter:$AUTOVALUE_VERSION"
 
     // Timber
     compile 'com.jakewharton.timber:timber:4.5.1'

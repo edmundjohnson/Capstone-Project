@@ -32,9 +32,9 @@ public final class DataContract {
      * "content://uk.jumpingmouse.moviecompanion/give-me-root/" will fail, as the
      * ContentProvider hasn't been given any information on what to do with "give-me-root".
      */
-    public static final String PATH_MOVIE = "movie";
-    public static final String PATH_AWARD = "award";
-    public static final String PATH_USER = "user";
+    public static final String URI_PATH_MOVIE = "movie";
+    //public static final String URI_PATH_AWARD = "award";
+    //public static final String URI_PATH_USER = "user";
 
     // Query parameters
     public static final String PARAM_ALL = "all";
@@ -61,13 +61,13 @@ public final class DataContract {
     public static final class MovieEntry implements BaseColumns {
 
         public static final String CONTENT_DIR_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MOVIE;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + URI_PATH_MOVIE;
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MOVIE;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + URI_PATH_MOVIE;
 
         // Database
 
-        public static final String ROOT_NODE = "posts";
+        public static final String ROOT_NODE = "movies";
 
         public static final String COLUMN_ID = MovieEntry._ID;
         public static final String COLUMN_IMDB_ID = "imdbId";
@@ -106,7 +106,7 @@ public final class DataContract {
         // URIs
 
         public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIE).build();
+                BASE_CONTENT_URI.buildUpon().appendPath(URI_PATH_MOVIE).build();
 
         /**
          * Build and return the URI for a movie identified by its id.
@@ -138,7 +138,7 @@ public final class DataContract {
 //         * using the default offset for the first returned row and the default sort order.
 //         * e.g. "content://org.balancedview.dailybenefit/movie/limit/100".
 //         * @param limit the maximum number of rows to return
-//         * @return the URI for querying posts with the specified max number of rows, using the
+//         * @return the URI for querying movies with the specified max number of rows, using the
 //         *         default offset and sort order
 //         */
 //        @NonNull
@@ -154,7 +154,7 @@ public final class DataContract {
 //         * newest n movies. If there are less than n+10 total movies, the URI returns no movies.
 //         * e.g. "content://org.balancedview.dailybenefit/movie/excludingnewest/100".
 //         * @param excludingNewest the number of newest rows to exclude from the returned list
-//         * @return the URI for querying the oldest posts
+//         * @return the URI for querying the oldest movies
 //         */
 //        @NonNull
 //        public static Uri buildUriMovieExcludingNewest(final int excludingNewest) {

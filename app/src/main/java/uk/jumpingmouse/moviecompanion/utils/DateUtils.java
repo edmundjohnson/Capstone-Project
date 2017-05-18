@@ -108,6 +108,16 @@ public final class DateUtils {
     }
 
     /**
+     * Returns a Date as a String in the OMDb released date format, e.g. "12 Jun 2017".
+     * @param date the date
+     * @return the date in the OMDb released date string format
+     */
+    @NonNull
+    public static String toStringOmdbReleased(@NonNull final Date date) {
+        return toString(getDateFormatOmdbReleased(), date);
+    }
+
+    /**
      * Returns a Date as a String.
      * @param format the SimpleDateFormat used for returned String, e.g. "dd MMM yyyy"
      * @param date the Date
@@ -116,16 +126,6 @@ public final class DateUtils {
     @NonNull
     private static String toString(@NonNull SimpleDateFormat format, @NonNull final Date date) {
         return format.format(date);
-    }
-
-    /**
-     * Returns a Date as a String in the OMDb released date format, e.g. "12 Jun 2017".
-     * @param date the date
-     * @return the date in the OMDb released date string format
-     */
-    @NonNull
-    public static String toStringOmdbReleased(@NonNull final Date date) {
-        return toString(getDateFormatOmdbReleased(), date);
     }
 
 //    /**

@@ -12,9 +12,9 @@ import android.view.MenuItem;
 import timber.log.Timber;
 
 import uk.jumpingmouse.moviecompanion.BuildConfig;
+import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.security.SecurityManager;
-import uk.jumpingmouse.moviecompanion.security.SecurityManagerFactory;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
 /**
@@ -96,10 +96,10 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // The user signed in successfully
                 //IdpResponse idpResponse = IdpResponse.fromResultIntent(data);
-                ViewUtils.getInstance().displayInfoMessage(this, R.string.sign_in_ok);
+                getViewUtils().displayInfoMessage(this, R.string.sign_in_ok);
             } else if (resultCode == RESULT_CANCELED) {
                 // The user cancelled the sign-in, e.g. they hit the back button
-                ViewUtils.getInstance().displayInfoMessage(this, R.string.sign_in_cancelled);
+                getViewUtils().displayInfoMessage(this, R.string.sign_in_cancelled);
                 // finish the activity
                 finish();
             }
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //---------------------------------------------------------------------
-    // Security methods
+    // Getters
 
     /**
      * Convenience method which returns a SecurityManager.
@@ -149,7 +149,15 @@ public class MainActivity extends AppCompatActivity {
      */
     @NonNull
     private SecurityManager getSecurityManager() {
-        return SecurityManagerFactory.getSecurityManager();
+        return ObjectFactory.getSecurityManager();
     }
 
+    /**
+     * Convenience method which returns a reference to a ViewUtils object.
+     * @return a reference to a ViewUtils object
+     */
+    @NonNull
+    private ViewUtils getViewUtils() {
+        return ObjectFactory.getViewUtils();
+    }
 }

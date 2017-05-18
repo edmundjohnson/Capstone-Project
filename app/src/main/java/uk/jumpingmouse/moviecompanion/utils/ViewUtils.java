@@ -78,10 +78,30 @@ public class ViewUtils {
      */
     public void displayInfoMessage(@Nullable Context context, @StringRes int messageResId) {
         if (context != null) {
-            Toast toast = Toast.makeText(context, messageResId, Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
+            displayToast(context, context.getString(messageResId));
         }
+    }
+
+    /**
+     * Display an informational message as a toast.
+     * @param context the context
+     * @param message the message to be displayed
+     */
+    public void displayInfoMessage(@Nullable Context context, @NonNull String message) {
+        if (context != null) {
+            displayToast(context, message);
+        }
+    }
+
+    /**
+     * Display a message as a toast.
+     * @param context the context
+     * @param message the message to be displayed
+     */
+    private void displayToast(@NonNull Context context, @NonNull String message) {
+        Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
     }
 
     /**
@@ -89,31 +109,42 @@ public class ViewUtils {
      * @param context the context
      * @param messageResId the string resource id of the message to be displayed
      */
-    public void displayErrorMessage(Context context, @StringRes int messageResId) {
-        displayAlertDialog(context, R.string.error_title, messageResId);
+    public void displayErrorMessage(@Nullable Context context, @StringRes int messageResId) {
+        if (context != null) {
+            displayAlertDialog(context, R.string.error_title, context.getString(messageResId));
+        }
+    }
+
+    /**
+     * Display an error message in a dialog.
+     * @param context the context
+     * @param message the message to be displayed
+     */
+    public void displayErrorMessage(@Nullable Context context, @NonNull String message) {
+        if (context != null) {
+            displayAlertDialog(context, R.string.error_title, message);
+        }
     }
 
     /**
      * Display an alert dialog.
      * @param context the context
-     * @param titleResId the string resource id of the dialog title
-     * @param messageResId the string resource id of the dialog text
+     * @param titleResId the string resource id of the dialog getTitle
+     * @param message the dialog message
      */
-    private static void displayAlertDialog(@Nullable Context context,
-            @SuppressWarnings("SameParameterValue") @StringRes int titleResId,
-            @StringRes int messageResId) {
-        if (context != null) {
-            new AlertDialog.Builder(context)
-                    .setIconAttribute(android.R.attr.alertDialogIcon)
-                    .setTitle(titleResId)
-                    .setMessage(messageResId)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // do nothing
-                        }
-                    })
-                    .show();
-        }
+    private static void displayAlertDialog(@NonNull Context context,
+            @SuppressWarnings("SameParameterValue") @StringRes int titleResId, @NonNull String message) {
+
+        new AlertDialog.Builder(context)
+                .setIconAttribute(android.R.attr.alertDialogIcon)
+                .setTitle(titleResId)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .show();
     }
 
 }

@@ -188,46 +188,46 @@ public class ModelUtilsTest {
         // toMovie(ContentValues) works correctly when all fields are set
         movie = ModelUtils.toMovie(VALUES_FIELDS_SET);
         assertNotNull(movie);
-        assertEquals(movie.imdbId(), MOVIE_IMDB_ID);
-        assertEquals(movie.title(), MOVIE_TITLE);
-        assertEquals(movie.genre(), MOVIE_GENRE);
-        assertEquals(movie.runtime(), MOVIE_RUNTIME_INT);
-        assertEquals(movie.posterUrl(), MOVIE_POSTER_URL);
-        assertEquals(movie.year(), MOVIE_YEAR);
-        assertEquals(movie.released(), MOVIE_RELEASED_LNG);
+        assertEquals(movie.getImdbId(), MOVIE_IMDB_ID);
+        assertEquals(movie.getTitle(), MOVIE_TITLE);
+        assertEquals(movie.getGenre(), MOVIE_GENRE);
+        assertEquals(movie.getRuntime(), MOVIE_RUNTIME_INT);
+        assertEquals(movie.getPosterUrl(), MOVIE_POSTER_URL);
+        assertEquals(movie.getYear(), MOVIE_YEAR);
+        assertEquals(movie.getReleased(), MOVIE_RELEASED_LNG);
 
         // toMovie(ContentValues) works correctly when non-mandatory fields are not set
         movie = ModelUtils.toMovie(VALUES_FIELDS_NULL);
         assertNotNull(movie);
-        assertEquals(movie.imdbId(), "tt9999992");
-        assertEquals(movie.title(), "Movie Title With Nulls");
-        assertNull(movie.genre());
-        assertEquals(movie.runtime(), Movie.RUNTIME_UNKNOWN);
-        assertNull(movie.posterUrl());
-        assertNull(movie.year());
-        assertEquals(movie.released(), Movie.RELEASED_UNKNOWN);
+        assertEquals(movie.getImdbId(), "tt9999992");
+        assertEquals(movie.getTitle(), "Movie Title With Nulls");
+        assertNull(movie.getGenre());
+        assertEquals(movie.getRuntime(), Movie.RUNTIME_UNKNOWN);
+        assertNull(movie.getPosterUrl());
+        assertNull(movie.getYear());
+        assertEquals(movie.getReleased(), Movie.RELEASED_UNKNOWN);
 
         // toMovie(ContentValues) works correctly when fields have invalid values
         movie = ModelUtils.toMovie(VALUES_FIELDS_INVALID_1);
         assertNotNull(movie);
-        assertEquals(movie.imdbId(), MOVIE_IMDB_ID);
-        assertEquals(movie.title(), MOVIE_TITLE);
-        assertEquals(movie.genre(), MOVIE_GENRE);
-        assertEquals(movie.runtime(), Movie.RUNTIME_UNKNOWN);
-        assertEquals(movie.posterUrl(), MOVIE_POSTER_URL);
-        assertEquals(movie.year(), MOVIE_YEAR);
-        assertEquals(movie.released(), Movie.RELEASED_UNKNOWN);
+        assertEquals(movie.getImdbId(), MOVIE_IMDB_ID);
+        assertEquals(movie.getTitle(), MOVIE_TITLE);
+        assertEquals(movie.getGenre(), MOVIE_GENRE);
+        assertEquals(movie.getRuntime(), Movie.RUNTIME_UNKNOWN);
+        assertEquals(movie.getPosterUrl(), MOVIE_POSTER_URL);
+        assertEquals(movie.getYear(), MOVIE_YEAR);
+        assertEquals(movie.getReleased(), Movie.RELEASED_UNKNOWN);
 
         // toMovie(ContentValues) works correctly when fields have invalid values
         movie = ModelUtils.toMovie(VALUES_FIELDS_INVALID_2);
         assertNotNull(movie);
-        assertEquals(movie.imdbId(), MOVIE_IMDB_ID);
-        assertEquals(movie.title(), MOVIE_TITLE);
-        assertEquals(movie.genre(), MOVIE_GENRE);
-        assertEquals(movie.runtime(), Movie.RUNTIME_UNKNOWN);
-        assertEquals(movie.posterUrl(), MOVIE_POSTER_URL);
-        assertEquals(movie.year(), MOVIE_YEAR);
-        assertEquals(movie.released(), Movie.RELEASED_UNKNOWN);
+        assertEquals(movie.getImdbId(), MOVIE_IMDB_ID);
+        assertEquals(movie.getTitle(), MOVIE_TITLE);
+        assertEquals(movie.getGenre(), MOVIE_GENRE);
+        assertEquals(movie.getRuntime(), Movie.RUNTIME_UNKNOWN);
+        assertEquals(movie.getPosterUrl(), MOVIE_POSTER_URL);
+        assertEquals(movie.getYear(), MOVIE_YEAR);
+        assertEquals(movie.getReleased(), Movie.RELEASED_UNKNOWN);
 
         // toMovie(ContentValues) returns null when mandatory field imdbId is not set in values
         assertNull(ModelUtils.toMovie(VALUES_IMDB_DB_NULL));
@@ -244,37 +244,37 @@ public class ModelUtilsTest {
         CURSOR_FIELDS_SET.moveToFirst();
         movie = ModelUtils.toMovie(CURSOR_FIELDS_SET);
         assertNotNull(movie);
-        assertEquals(movie.imdbId(), MOVIE_IMDB_ID);
-        assertEquals(movie.title(), MOVIE_TITLE);
-        assertEquals(movie.genre(), MOVIE_GENRE);
-        assertEquals(movie.runtime(), MOVIE_RUNTIME_INT);
-        assertEquals(movie.posterUrl(), MOVIE_POSTER_URL);
-        assertEquals(movie.year(), MOVIE_YEAR);
-        assertEquals(movie.released(), MOVIE_RELEASED_LNG);
+        assertEquals(movie.getImdbId(), MOVIE_IMDB_ID);
+        assertEquals(movie.getTitle(), MOVIE_TITLE);
+        assertEquals(movie.getGenre(), MOVIE_GENRE);
+        assertEquals(movie.getRuntime(), MOVIE_RUNTIME_INT);
+        assertEquals(movie.getPosterUrl(), MOVIE_POSTER_URL);
+        assertEquals(movie.getYear(), MOVIE_YEAR);
+        assertEquals(movie.getReleased(), MOVIE_RELEASED_LNG);
 
         // toMovie(Cursor) works correctly when non-mandatory fields are not set
         CURSOR_FIELDS_NULL.moveToFirst();
         movie = ModelUtils.toMovie(CURSOR_FIELDS_NULL);
         assertNotNull(movie);
-        assertEquals(movie.imdbId(), "tt9999992");
-        assertEquals(movie.title(), "Movie Title With Nulls");
-        assertNull(movie.genre());
-        assertEquals(movie.runtime(), Movie.RUNTIME_UNKNOWN);
-        assertNull(movie.posterUrl());
-        assertNull(movie.year());
-        assertEquals(movie.released(), Movie.RELEASED_UNKNOWN);
+        assertEquals(movie.getImdbId(), "tt9999992");
+        assertEquals(movie.getTitle(), "Movie Title With Nulls");
+        assertNull(movie.getGenre());
+        assertEquals(movie.getRuntime(), Movie.RUNTIME_UNKNOWN);
+        assertNull(movie.getPosterUrl());
+        assertNull(movie.getYear());
+        assertEquals(movie.getReleased(), Movie.RELEASED_UNKNOWN);
 
         // toMovie(Cursor) works correctly when fields have invalid values
         CURSOR_FIELDS_INVALID.moveToFirst();
         movie = ModelUtils.toMovie(CURSOR_FIELDS_INVALID);
         assertNotNull(movie);
-        assertEquals(movie.imdbId(), MOVIE_IMDB_ID);
-        assertEquals(movie.title(), MOVIE_TITLE);
-        assertEquals(movie.genre(), MOVIE_GENRE);
-        assertEquals(movie.runtime(), Movie.RUNTIME_UNKNOWN);
-        assertEquals(movie.posterUrl(), MOVIE_POSTER_URL);
-        assertEquals(movie.year(), MOVIE_YEAR);
-        assertEquals(movie.released(), Movie.RELEASED_UNKNOWN);
+        assertEquals(movie.getImdbId(), MOVIE_IMDB_ID);
+        assertEquals(movie.getTitle(), MOVIE_TITLE);
+        assertEquals(movie.getGenre(), MOVIE_GENRE);
+        assertEquals(movie.getRuntime(), Movie.RUNTIME_UNKNOWN);
+        assertEquals(movie.getPosterUrl(), MOVIE_POSTER_URL);
+        assertEquals(movie.getYear(), MOVIE_YEAR);
+        assertEquals(movie.getReleased(), Movie.RELEASED_UNKNOWN);
 
         // toMovie(Cursor) returns null when mandatory field imdbId is not set in cursor row
         CURSOR_IMDB_ID_NULL.moveToFirst();
@@ -348,12 +348,12 @@ public class ModelUtilsTest {
         assertEquals(2, movieList.size());
         movie = movieList.get(0);
         assertNotNull(movie);
-        assertEquals("imdbId1", movie.imdbId());
-        assertEquals("Title 1", movie.title());
+        assertEquals("imdbId1", movie.getImdbId());
+        assertEquals("Title 1", movie.getTitle());
         movie = movieList.get(1);
         assertNotNull(movie);
-        assertEquals("imdbId2", movie.imdbId());
-        assertEquals("Title 2", movie.title());
+        assertEquals("imdbId2", movie.getImdbId());
+        assertEquals("Title 2", movie.getTitle());
         closeCursor(cursor);
     }
 

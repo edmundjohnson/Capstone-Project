@@ -16,7 +16,7 @@ import java.util.Arrays;
  * A Firebase implementation of SecurityManager.
  * @author Edmund Johnson
  */
-class SecurityManagerFirebase implements SecurityManager {
+public class SecurityManagerFirebase implements SecurityManager {
 
     /** The singleton instance of this class. */
     private static SecurityManagerFirebase sSecurityManager;
@@ -32,7 +32,7 @@ class SecurityManagerFirebase implements SecurityManager {
      * Return a Firebase implementation of SecurityManager.
      * @return a Firebase implementation of SecurityManager
      */
-    static SecurityManager getInstance() {
+    public static SecurityManager getInstance() {
         if (sSecurityManager == null) {
             sSecurityManager = new SecurityManagerFirebase();
         }
@@ -69,7 +69,12 @@ class SecurityManagerFirebase implements SecurityManager {
                             AuthUI.getInstance()
                                     .createSignInIntentBuilder()
                                     .setIsSmartLockEnabled(false)
-                                    .setProviders(Arrays.asList(
+                            .setProviders(
+//                                    // Firebase UI 0.6.0
+//                                    AuthUI.EMAIL_PROVIDER,
+//                                    AuthUI.GOOGLE_PROVIDER)
+                                    // Firebase UI 1.0.1
+                                    Arrays.asList(
                                             new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
                                             new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
                                     .build(),

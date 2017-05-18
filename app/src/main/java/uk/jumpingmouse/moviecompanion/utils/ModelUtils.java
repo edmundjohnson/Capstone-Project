@@ -91,7 +91,7 @@ public final class ModelUtils {
             Timber.w("toMovie(Cursor): invalid runtime");
             runtime = Movie.RUNTIME_UNKNOWN;
         }
-        // if the release date is invalid set it to unknown
+        // if the released date is invalid set it to unknown
         long released = cursor.getLong(DataContract.MovieEntry.COL_RELEASED);
         if (released < 0) {
             Timber.w("toMovie(Cursor): invalid released");

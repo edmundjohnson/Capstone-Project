@@ -1,6 +1,5 @@
 package uk.jumpingmouse.moviecompanion.model;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -9,10 +8,10 @@ import uk.jumpingmouse.moviecompanion.data.Movie;
 import java.util.List;
 
 /**
- * Interface for database helper classes (classes through which databases may be accessed.
+ * Interface for database implementation classes.
  * @author Edmund Johnson
  */
-public interface DatabaseHelper {
+public interface LocalDatabase {
 
     String MOVIE_SORT_COLUMN_DEFAULT = DataContract.MovieEntry.COLUMN_TITLE;
     boolean MOVIE_SORT_ASCENDING_DEFAULT = true;
@@ -24,19 +23,17 @@ public interface DatabaseHelper {
      * Adds a movie's details to the database.
      * If the movie does not exist in the database, it is inserted.
      * If it already exists in the database, it is updated.
-     * @param context the context
      * @param movie the movie to insert or update
      * @return the number of rows inserted or updated
      */
-    int addMovie(@Nullable final Context context, @NonNull final Movie movie);
+    int addMovie(@NonNull Movie movie);
 
     /**
      * Deletes a movie from the database.
-     * @param context the context
      * @param imdbId the getImdbId of the movie to be deleted
      * @return the number of rows deleted
      */
-    int deleteMovie(@Nullable Context context, @NonNull String imdbId);
+    int deleteMovie(@NonNull String imdbId);
 
     /**
      * Returns the movie with a specified IMDb id.

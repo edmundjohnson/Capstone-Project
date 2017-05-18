@@ -9,6 +9,10 @@
     <string name="sign_in_ok">Signed in!</string>
     <string name="sign_in_cancelled">Sign-in cancelled</string>
 
+    <!-- Firebase database operations -->
+    <string name="nodeAddedSuccess">Node \"%1$s\" added successfully to node /%2$s</string>
+    <string name="nodeAddedFailure">Failed to add node \"%1$s\" to node /%2$s; error code: %3$d, details: %4$s, message: %5$s</string>
+
     <!-- Validation -->
     <string name="error_title">Error</string>
 

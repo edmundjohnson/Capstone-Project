@@ -7,11 +7,12 @@ import java.util.Comparator;
 
 /**
  * The Movie model class.
- * The imdbId is entered by an admin user.
- * The remainder of the Movie information is obtained from the Open Movie Database.
+ * The imdbId is entered by an admin user. The remainder of the Movie information
+ * is obtained from the Open Movie Database.
+ * Note that AutoValue is incompatible with Firebase.
  * @author Edmund Johnson
  */
-public class Movie {
+public class MovieWithoutAutoValue {
     public static final int RUNTIME_UNKNOWN = -1;
     public static final int RELEASED_UNKNOWN = -1;
 
@@ -30,10 +31,10 @@ public class Movie {
     // The release date, as a millisecond value
     private long released;
 
-    private Movie() {
+    private MovieWithoutAutoValue() {
     }
 
-    private Movie(
+    private MovieWithoutAutoValue(
             @Nullable String imdbId,
             @Nullable String title,
             @Nullable String genre,
@@ -42,11 +43,11 @@ public class Movie {
             @Nullable String year,
             long released) {
         if (imdbId == null) {
-            throw new NullPointerException("Null getImdbId");
+            throw new NullPointerException("Null imdbId");
         }
         this.imdbId = imdbId;
         if (title == null) {
-            throw new NullPointerException("Null getTitle");
+            throw new NullPointerException("Null title");
         }
         this.title = title;
         this.genre = genre;
@@ -106,17 +107,17 @@ public class Movie {
      * Builder for this class.  Usage:
      * <blockquote><pre>
      * {@code
-     *   Movie movie = Movie.builder()
+     *   Movie movie = MovieWithoutAutoValue.builder()
      *         .imdbId("tt4016934")
      *         .title("The Handmaiden")
      *         // etc
      *        .build();
      * }
      * </pre></blockquote>
-     * @return an instance of the Movie class.
+     * @return an instance of this class.
      */
     public static Builder builder() {
-        return new Movie.Builder();
+        return new MovieWithoutAutoValue.Builder();
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -132,7 +133,7 @@ public class Movie {
         Builder() {
         }
 
-        Builder(Movie source) {
+        Builder(MovieWithoutAutoValue source) {
             this.imdbId = source.imdbId;
             this.title = source.title;
             this.genre = source.genre;
@@ -142,36 +143,36 @@ public class Movie {
             this.released = source.released;
         }
 
-        public Movie.Builder imdbId(String imdbId) {
+        public MovieWithoutAutoValue.Builder imdbId(String imdbId) {
             this.imdbId = imdbId;
             return this;
         }
-        public Movie.Builder title(String title) {
+        public MovieWithoutAutoValue.Builder title(String title) {
             this.title = title;
             return this;
         }
-        public Movie.Builder genre(@Nullable String genre) {
+        public MovieWithoutAutoValue.Builder genre(@Nullable String genre) {
             this.genre = genre;
             return this;
         }
-        public Movie.Builder runtime(int runtime) {
+        public MovieWithoutAutoValue.Builder runtime(int runtime) {
             this.runtime = runtime;
             return this;
         }
-        public Movie.Builder posterUrl(@Nullable String posterUrl) {
+        public MovieWithoutAutoValue.Builder posterUrl(@Nullable String posterUrl) {
             this.posterUrl = posterUrl;
             return this;
         }
-        public Movie.Builder year(@Nullable String year) {
+        public MovieWithoutAutoValue.Builder year(@Nullable String year) {
             this.year = year;
             return this;
         }
-        public Movie.Builder released(long released) {
+        public MovieWithoutAutoValue.Builder released(long released) {
             this.released = released;
             return this;
         }
         /** Builds and returns an object of this class. */
-        public Movie build() {
+        public MovieWithoutAutoValue build() {
             String missing = "";
             if (imdbId == null) {
                 missing += " imdbId";
@@ -188,7 +189,7 @@ public class Movie {
             if (!missing.isEmpty()) {
                 throw new IllegalStateException("Missing required properties:" + missing);
             }
-            return new Movie(
+            return new MovieWithoutAutoValue(
                     this.imdbId,
                     this.title,
                     this.genre,
@@ -205,13 +206,13 @@ public class Movie {
     @Override
     public String toString() {
         return "Movie{"
-                + "imdbId=" + imdbId + ", "
-                + "title=" + title + ", "
-                + "genre=" + genre + ", "
-                + "runtime=" + runtime + ", "
-                + "posterUrl=" + posterUrl + ", "
-                + "year=" + year + ", "
-                + "released=" + released
+                + "getImdbId=" + imdbId + ", "
+                + "getTitle=" + title + ", "
+                + "getGenre=" + genre + ", "
+                + "getRuntime=" + runtime + ", "
+                + "getPosterUrl=" + posterUrl + ", "
+                + "getYear=" + year + ", "
+                + "getReleased=" + released
                 + "}";
     }
 
@@ -220,14 +221,14 @@ public class Movie {
         if (o == this) {
             return true;
         }
-        if (o instanceof Movie) {
-            Movie that = (Movie) o;
+        if (o instanceof MovieWithoutAutoValue) {
+            MovieWithoutAutoValue that = (MovieWithoutAutoValue) o;
             return (this.imdbId.equals(that.imdbId))
                     && (this.title.equals(that.title))
                     && ((this.genre == null) ? (that.genre == null) : this.genre.equals(that.genre))
                     && (this.runtime == that.runtime)
                     && ((this.posterUrl == null) ? (that.posterUrl == null) :
-                    this.posterUrl.equals(that.posterUrl))
+                            this.posterUrl.equals(that.posterUrl))
                     && ((this.year == null) ? (that.year == null) : this.year.equals(that.year))
                     && (this.released == that.released);
         }
@@ -258,9 +259,9 @@ public class Movie {
     // Comparators
 
     /** Comparator for ordering by imdbId. */
-    public static final Comparator<Movie> MovieComparatorImdbId
-            = new Comparator<Movie>() {
-                public int compare(Movie movie1, Movie movie2) {
+    public static final Comparator<MovieWithoutAutoValue> MovieComparatorImdbId
+            = new Comparator<MovieWithoutAutoValue>() {
+                public int compare(MovieWithoutAutoValue movie1, MovieWithoutAutoValue movie2) {
                     // ascending order
                     return movie1.imdbId.compareTo(movie2.imdbId);
                     // descending order
@@ -269,9 +270,9 @@ public class Movie {
             };
 
     /** Comparator for ordering by title. */
-    public static final Comparator<Movie> MovieComparatorTitle
-            = new Comparator<Movie>() {
-                public int compare(Movie movie1, Movie movie2) {
+    public static final Comparator<MovieWithoutAutoValue> MovieComparatorTitle
+            = new Comparator<MovieWithoutAutoValue>() {
+                public int compare(MovieWithoutAutoValue movie1, MovieWithoutAutoValue movie2) {
                     // ascending order
                     return movie1.title.compareTo(movie2.title);
                     // descending order
