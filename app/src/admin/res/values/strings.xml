@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Movie Companion - Admin</string>
+
+    <!-- Content provider -->
+    <!-- Specify a different content_authority for the admin product flavour so the
+         different product flavours can coexist on a single device -->
+    <string name="content_authority" translatable="false">uk.jumpingmouse.moviecompanion.admin</string>
+
+    <!-- Menu -->
+    <string name="menu_option_add_movie">Add Movie</string>
+
+    <!-- Admin -->
+    <string name="button_label_fetch_details">Fetch Details</string>
+    <string name="button_label_save">Save</string>
+
+    <!-- Add Movie -->
+    <string name="title_add_movie">Add Movie</string>
+    <string name="hint_imdb_id">IMDb id</string>
+
+</resources>

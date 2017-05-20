@@ -14,7 +14,7 @@ repositories {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "25.0.3"
     defaultConfig {
         applicationId "uk.jumpingmouse.moviecompanion"
         minSdkVersion 16
@@ -25,15 +25,29 @@ android {
     }
     buildTypes {
         debug {
+            // If it is required to keep debug (test) data and release (production) data separate,
+            // add the following applicationIdSuffix, and create a new Firebase project for the
+            // "debug" build type.
+            //applicationIdSuffix ".debug"
             debuggable true
             minifyEnabled false
             testCoverageEnabled true
         }
         release {
+            // Use the defaultConfig applicationId for the build type which is uploaded
+            // to the Play Store.
             debuggable false
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+        free {
+            applicationIdSuffix ".free"
+        }
+        admin {
+            applicationIdSuffix ".admin"
         }
     }
 }
@@ -55,7 +69,7 @@ ext {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
 
     compile "com.android.support:appcompat-v7:$SUPPORT_LIB_VERSION"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -63,22 +77,22 @@ dependencies {
     // Firebase
     compile "com.google.firebase:firebase-auth:$FIREBASE_VERSION"
     compile "com.google.firebase:firebase-database:$FIREBASE_VERSION"
+    compile "com.google.firebase:firebase-crash:$FIREBASE_VERSION"
     // Firebase UI Auth
     compile "com.firebaseui:firebase-ui-auth:$FIREBASE_UI_VERSION"
 
-//    // AutoValue
-//    // see:  https://github.com/google/auto/blob/master/value/userguide/index.md
-//    provided            "com.google.auto.value:auto-value:$AUTOVALUE_VERSION"
-//    annotationProcessor "com.google.auto.value:auto-value:$AUTOVALUE_VERSION"
+    // Timber
+    compile 'com.jakewharton.timber:timber:4.5.1'
 
+    //    // AutoValue
+    //    // see:  https://github.com/google/auto/blob/master/value/userguide/index.md
+    //    provided            "com.google.auto.value:auto-value:$AUTOVALUE_VERSION"
+    //    annotationProcessor "com.google.auto.value:auto-value:$AUTOVALUE_VERSION"
     // AutoValue-Firebase
     provided "me.mattlogan.auto.value:auto-value-firebase:$AUTOVALUE_FIREBASE_VERSION"
     provided "me.mattlogan.auto.value:auto-value-firebase-annotation:$AUTOVALUE_FIREBASE_VERSION"
     // Optional type adapter dependency
     //compile "me.mattlogan.auto.value:auto-value-firebase-adapter:$AUTOVALUE_VERSION"
-
-    // Timber
-    compile 'com.jakewharton.timber:timber:4.5.1'
 
     // test
     testCompile 'junit:junit:4.12'

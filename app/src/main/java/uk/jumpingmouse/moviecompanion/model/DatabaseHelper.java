@@ -9,7 +9,10 @@ import uk.jumpingmouse.moviecompanion.data.Movie;
 import java.util.List;
 
 /**
- * Interface for database helper classes (classes through which databases may be accessed.
+ * Interface for database helper classes.
+ * The database helper classes access:
+ * - the master database for database modification methods
+ * - the local database for database queries.
  * @author Edmund Johnson
  */
 public interface DatabaseHelper {
@@ -18,7 +21,16 @@ public interface DatabaseHelper {
     boolean MOVIE_SORT_ASCENDING_DEFAULT = true;
 
     //---------------------------------------------------------------------
-    // Movie methods
+    // Event-related methods
+
+    /** Performs processing required when a user has signed in. */
+    void onSignedIn();
+
+    /** Performs processing required when a user has signed out. */
+    void onSignedOut();
+
+    //---------------------------------------------------------------------
+    // Movie modification methods
 
     /**
      * Adds a movie's details to the database.
@@ -28,19 +40,28 @@ public interface DatabaseHelper {
      * @param movie the movie to insert or update
      * @return the number of rows inserted or updated
      */
-    int addMovie(@Nullable final Context context, @NonNull final Movie movie);
+    int addMovie(
+            // context is used - analyser confused by product flavours
+            @SuppressWarnings("UnusedParameters") @Nullable final Context context,
+            @NonNull final Movie movie);
 
     /**
      * Deletes a movie from the database.
      * @param context the context
-     * @param imdbId the getImdbId of the movie to be deleted
+     * @param imdbId the imdbId of the movie to be deleted
      * @return the number of rows deleted
      */
-    int deleteMovie(@Nullable Context context, @NonNull String imdbId);
+    int deleteMovie(
+            // context is used, but analyser gets confused by product flavours
+            @SuppressWarnings("UnusedParameters") @Nullable Context context,
+            @NonNull String imdbId);
+
+    //---------------------------------------------------------------------
+    // Movie query methods
 
     /**
      * Returns the movie with a specified IMDb id.
-     * @param imdbId the getImdbId of the movie to be returned
+     * @param imdbId the imdbId of the movie to be returned
      * @return the movie with the specified IMDb id
      */
     @Nullable

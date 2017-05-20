@@ -42,11 +42,11 @@ public class Movie {
             @Nullable String year,
             long released) {
         if (imdbId == null) {
-            throw new NullPointerException("Null getImdbId");
+            throw new NullPointerException("Null imdbId");
         }
         this.imdbId = imdbId;
         if (title == null) {
-            throw new NullPointerException("Null getTitle");
+            throw new NullPointerException("Null title");
         }
         this.title = title;
         this.genre = genre;

@@ -30,14 +30,14 @@ public interface LocalDatabase {
 
     /**
      * Deletes a movie from the database.
-     * @param imdbId the getImdbId of the movie to be deleted
+     * @param imdbId the imdbId of the movie to be deleted
      * @return the number of rows deleted
      */
     int deleteMovie(@NonNull String imdbId);
 
     /**
      * Returns the movie with a specified IMDb id.
-     * @param imdbId the getImdbId of the movie to be returned
+     * @param imdbId the imdbId of the movie to be returned
      * @return the movie with the specified IMDb id
      */
     @Nullable

@@ -1,5 +1,7 @@
 package uk.jumpingmouse.moviecompanion.model;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -7,6 +9,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 
 import timber.log.Timber;
 
@@ -21,47 +24,42 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Database helper class for accessing the Firebase Realtime Database.
+ * Superclass for helper classes for accessing the Firebase Realtime Database.
  * @author Edmund Johnson
  */
-public class DatabaseHelperFirebase implements DatabaseHelper {
+abstract class DatabaseHelperFirebaseBase implements DatabaseHelper {
 
-    /** The singleton instance of this class. */
-    private static DatabaseHelperFirebase sDatabaseHelper = null;
-
-
+    // The Firebase Realtime Database.
     private static FirebaseDatabase sFirebaseDatabase;
+    // A database reference to the "/movies" node.
     private static DatabaseReference sDatabaseReferenceMovies;
 
-//    /**
-//     * A local database which stores the Firebase Realtime database data
-//     * which is relevant to the current user.
-//     * The local database is to allow faster queries to be executed.
-//     */
-//    private static LocalDatabase mLocalDatabase;
-
+    // A listener which listens for database events at the "/movies" node.
+    private ChildEventListener mChildEventListenerMovies;
 
     //---------------------------------------------------------------------
     // Instance handling methods
 
-    /**
-     * Returns an instance of this class.
-     * @return an instance of this class
-     */
-    @NonNull
-    public static DatabaseHelper getInstance() {
-        if (sDatabaseHelper == null) {
-            sDatabaseHelper = new DatabaseHelperFirebase();
-        }
-        return sDatabaseHelper;
-    }
-
-    /** Private default constructor to prevent instantiation from outside this class. */
-    private DatabaseHelperFirebase() {
+    /** Default constructor. */
+    DatabaseHelperFirebaseBase() {
     }
 
     //---------------------------------------------------------------------
-    // Database changes initiated on the local device
+    // Event-related methods
+
+    /** Performs processing required when a user has signed in. */
+    public void onSignedIn() {
+        attachDatabaseEventListenerMovies();
+    }
+
+    /** Performs processing required when a user has signed out. */
+    public void onSignedOut() {
+        detachDatabaseEventListenerMovies();
+    }
+
+    //---------------------------------------------------------------------
+    // Firebase database movie modification methods.
+    // By default, not allowed.
 
     /**
      * Adds a movie's details to the Firebase database.
@@ -73,8 +71,22 @@ public class DatabaseHelperFirebase implements DatabaseHelper {
      */
     @Override
     public int addMovie(@Nullable final Context context, @NonNull final Movie movie) {
-        return addNode(context, DataContract.MovieEntry.ROOT_NODE, movie.getImdbId(), movie);
+        throw new UnsupportedOperationException("Insufficient privileges for add movie");
     }
+
+    /**
+     * Deletes a movie from the Firebase database.
+     * @param context the context
+     * @param imdbId the imdbId of the movie to be deleted
+     * @return the number of rows deleted
+     */
+    @Override
+    public int deleteMovie(@Nullable Context context, @NonNull String imdbId) {
+        throw new UnsupportedOperationException("Insufficient privileges for delete movie");
+    }
+
+    //---------------------------------------------------------------------
+    // Database changes initiated on the local device
 
     /**
      * Adds an object to the Firebase database.
@@ -88,76 +100,87 @@ public class DatabaseHelperFirebase implements DatabaseHelper {
      * @param nodeValue the value of the new node to insert or update
      * @return the number of rows inserted or updated
      */
-    private int addNode(@Nullable final Context context, @NonNull final String targetNode,
+    int addNode(@Nullable final Context context, @NonNull final String targetNode,
                         @NonNull String nodeKey, @NonNull final Object nodeValue) {
+        if (context == null) {
+            return 0;
+        }
         // Create the node to add to the database.
         Map<String, Object> mapValue = new HashMap<>(1);
         mapValue.put(nodeKey, nodeValue);
 
         // Add the new node to the database target node.
         getDatabaseReference(targetNode).updateChildren(mapValue,
-                getUpdateChildrenCompletionListener(context, targetNode, nodeKey, true));
+                getDatabaseOperationCompletionListener(context, R.string.databaseOperationAddNode,
+                        targetNode, nodeKey, true));
 
         // We don't know whether the add will succeed - assume it will
         return 1;
     }
 
     /**
-     * Returns a listener which listens for the completion of "updateChildren" database events.
-     * The listener reports on the success or failure of the operation.
-     * It is assumed that only one child node is added at a time.
+     * Deletes a node from the database.
      * @param context the context
-     * @param targetNode the name of the node where the children were attempted to be added
-     * @param newNode the name of the node which was attempted to be added
-     * @param isAdminFunction whether the node is being added as part of an admin function
-     * @return a listener which listens for the completion of "updateChildren" database events
+     * @param targetNode the node from which the node is to be deleted
+     * @param nodeKey the key of the node to be deleted
+     * @return the number of rows deleted
      */
-    private DatabaseReference.CompletionListener getUpdateChildrenCompletionListener(
-            @Nullable final Context context,
-            @NonNull final String targetNode, @NonNull final String newNode,
+    int deleteNode(@Nullable Context context, @NonNull final String targetNode,
+                           @NonNull String nodeKey) {
+        if (context == null) {
+            return 0;
+        }
+        // Add the new node to the database target node.
+        getDatabaseReference(targetNode).child(nodeKey).removeValue(
+                getDatabaseOperationCompletionListener(context, R.string.databaseOperationDeleteNode,
+                        targetNode, nodeKey, true));
+
+        // We don't know whether the delete will succeed - assume it will
+        return 1;
+    }
+
+    /**
+     * Returns a listener which listens for the completion of database modification operations.
+     * The listener reports on the success or failure of the operation.
+     * It is assumed that only one child node is added or deleted at a time.
+     * @param context the context
+     * @param operationResId the String resource id of the name of the database operation,
+     *                       e.g. a String resource for "Add node"
+     * @param targetNode the name of the node where the child node was attempted to be added or deleted
+     * @param childNode the name of the node which was attempted to be added or deleted
+     * @param isAdminFunction whether the node is being added or deleted as part of an admin function
+     * @return a listener which listens for the completion of database modification operations
+     */
+    private DatabaseReference.CompletionListener getDatabaseOperationCompletionListener(
+            @NonNull final Context context, @StringRes final int operationResId,
+            @NonNull final String targetNode, @NonNull final String childNode,
             @SuppressWarnings("SameParameterValue") final boolean isAdminFunction) {
 
         return new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 if (databaseError == null) {
-                    Timber.d(String.format(Locale.getDefault(),
-                            "Node \"%s\" added successfully to node \"/%s\"", newNode, targetNode));
+                    String message = context.getString(R.string.databaseOperationSuccess,
+                            context.getString(operationResId), childNode, targetNode);
+                    Timber.d(message);
 
                     // For admin functions, display a message indicating success
-                    if (context != null && isAdminFunction) {
-                        String message = context.getString(R.string.nodeAddedSuccess, newNode, targetNode);
+                    if (isAdminFunction) {
                         getViewUtils().displayInfoMessage(context, message);
                     }
                 } else {
-                    Timber.e(String.format(Locale.getDefault(),
-                            "Failed to add node \"%s\" to node /\"%s\","
-                                    + " error code: %d, details: %s, message: %s",
-                            newNode, targetNode, databaseError.getCode(),
-                            databaseError.getDetails(), databaseError.getMessage()));
+                    String message = context.getString(R.string.databaseOperationFailure,
+                            context.getString(operationResId), childNode, targetNode, databaseError.getCode(),
+                            databaseError.getDetails(), databaseError.getMessage());
+                    Timber.e(message);
 
                     // For admin function failures, display detailed error message
-                    if (context != null && isAdminFunction) {
-                        String message = context.getString(R.string.nodeAddedFailure,
-                                newNode, targetNode, databaseError.getCode(),
-                                databaseError.getDetails(), databaseError.getMessage());
+                    if (isAdminFunction) {
                         getViewUtils().displayErrorMessage(context, message);
                     }
                 }
             }
         };
-    }
-
-    /**
-     * Deletes a movie from the database.
-     * @param context the context
-     * @param imdbId the getImdbId of the movie to be deleted
-     * @return the number of rows deleted
-     */
-    @Override
-    public int deleteMovie(@Nullable Context context, @NonNull String imdbId) {
-        // TODO
-        return 0;
     }
 
     //---------------------------------------------------------------------
@@ -198,43 +221,60 @@ public class DatabaseHelperFirebase implements DatabaseHelper {
     }
 
     //---------------------------------------------------------------------
-    // Database listeners
+    // Database event listeners
 
-//    private void attachDatabaseReadListener() {
-//        if (mChildEventListener == null) {
-//            mChildEventListener = new ChildEventListener() {
-//                // This is called for each existing child when the listener is attached
-//                @Override
-//                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                    Movie movie = dataSnapshot.getValue(Movie.class);
-//                    getLocalDatabase().addMovie(movie);
-//                    //mMovieAdapter.add(movie);
-//                }
-//
-//                @Override
-//                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//                    Movie movie = dataSnapshot.getValue(Movie.class);
-//                    getLocalDatabase().addMovie(movie);
-//                    //mMovieAdapter.add(movie);
-//                }
-//
-//                @Override
-//                public void onChildRemoved(DataSnapshot dataSnapshot) {
-//                }
-//
-//                @Override
-//                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//                }
-//
-//                // Called if an error occurs while attempting a database operation
-//                @Override
-//                public void onCancelled(DatabaseError databaseError) {
-//                }
-//            };
-//
-//            getDatabaseReferenceMovies().addChildEventListener(mChildEventListener);
-//        }
-//    }
+    /** Attach a ChildEventListener to the "/movies" node. */
+    private void attachDatabaseEventListenerMovies() {
+        if (mChildEventListenerMovies == null) {
+            mChildEventListenerMovies = new ChildEventListener() {
+                // This is called for each existing child when the listener is attached
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    Movie movie = dataSnapshot.getValue(Movie.class);
+                    getLocalDatabase().addMovie(movie);
+                    //mMovieAdapter.add(movie);
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    Movie movie = dataSnapshot.getValue(Movie.class);
+                    getLocalDatabase().addMovie(movie);
+                    //mMovieAdapter.add(movie);
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    Movie movie = dataSnapshot.getValue(Movie.class);
+                    getLocalDatabase().deleteMovie(movie.getImdbId());
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    Timber.e("Unexpected operation detected at \"/movies\" node: onChildMoved(...)");
+                }
+
+                // Called if an error occurs while attempting a database operation
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Timber.e(String.format(Locale.getDefault(),
+                            "Unexpected operation detected at node \"%s\": onCancelled(...)."
+                            + "Error code: %d, details: %s, message: %s",
+                            "/movies", databaseError.getCode(),
+                            databaseError.getDetails(), databaseError.getMessage()));
+                }
+            };
+
+            getDatabaseReferenceMovies().addChildEventListener(mChildEventListenerMovies);
+        }
+    }
+
+    /** Detach the ChildEventListener from the "/movies" node. */
+    private void detachDatabaseEventListenerMovies() {
+        if (mChildEventListenerMovies != null) {
+            getDatabaseReferenceMovies().removeEventListener(mChildEventListenerMovies);
+            mChildEventListenerMovies = null;
+        }
+    }
 
     //---------------------------------------------------------------------
     // Getters
@@ -282,7 +322,7 @@ public class DatabaseHelperFirebase implements DatabaseHelper {
      * @return a reference to the local database
      */
     @NonNull
-    private LocalDatabase getLocalDatabase() {
+    private static LocalDatabase getLocalDatabase() {
         return ObjectFactory.getLocalDatabase();
     }
 
@@ -291,7 +331,7 @@ public class DatabaseHelperFirebase implements DatabaseHelper {
      * @return a reference to a ViewUtils object
      */
     @NonNull
-    private ViewUtils getViewUtils() {
+    private static ViewUtils getViewUtils() {
         return ObjectFactory.getViewUtils();
     }
 

@@ -13,7 +13,9 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * A class containing a local copy of the database.
+ * Class giving access to a local copy of the database.
+ * This class is used by all product flavours; it is only access to the master database
+ * which is restricted.
  * @author Edmund Johnson
  */
 public class LocalDatabaseInMemory implements LocalDatabase {
@@ -44,7 +46,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
     }
 
     //---------------------------------------------------------------------
-    // Movie handling methods
+    // Movie modification methods
 
     /**
      * Adds a movie's details to the database.
@@ -57,8 +59,9 @@ public class LocalDatabaseInMemory implements LocalDatabase {
     public int addMovie(@NonNull Movie movie) {
         String imdbId = movie.getImdbId();
         // This cannot happen due to previous checks, but the compiler requires it
+        //noinspection ConstantConditions
         if (imdbId == null) {
-            Timber.w("addMovie: Cannot add a movie whose getImdbId is null");
+            Timber.w("addMovie: Cannot add a movie whose imdbId is null");
             return 0;
         }
         // remove the movie if it already exists
@@ -75,17 +78,20 @@ public class LocalDatabaseInMemory implements LocalDatabase {
     public int deleteMovie(@NonNull String imdbId) {
         Movie existingMovie = selectMovieByImdbId(imdbId);
         if (existingMovie == null) {
-            Timber.w("deleteMovie: Movie not found with getImdbId: " + imdbId);
+            Timber.w("deleteMovie: Movie not found with imdbId: " + imdbId);
             return 0;
         }
         mMovieList.remove(existingMovie);
         return 1;
     }
 
+    //---------------------------------------------------------------------
+    // Movie query methods
+
     /**
-     * Returns the movie with a specified getImdbId.
-     * @param imdbId the getImdbId
-     * @return the movie with the specified getImdbId, or null if there are no matching movies
+     * Returns the movie with a specified imdbId.
+     * @param imdbId the imdbId
+     * @return the movie with the specified imdbId, or null if there are no matching movies
      */
     @Override
     @Nullable
@@ -95,7 +101,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
                 return movie;
             }
         }
-        Timber.d("selectMovieByImdbId: No movies found with matching getImdbId");
+        Timber.d("selectMovieByImdbId: No movies found with matching imdbId");
         return null;
     }
 
@@ -163,8 +169,8 @@ public class LocalDatabaseInMemory implements LocalDatabase {
 
     /**
      * Returns the sort column from a sort order.
-     * @param sortOrder the sort order, e.g. "getTitle ASC"
-     * @return the sort column, e.g. "getTitle"
+     * @param sortOrder the sort order, e.g. "title ASC"
+     * @return the sort column, e.g. "title"
      */
     private static String getSortColumn(@Nullable String sortOrder) {
         if (sortOrder != null) {
@@ -185,7 +191,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
 
     /**
      * Returns whether the sort column is ascending from a sort order.
-     * @param sortOrder the sort order, e.g. "getTitle ASC"
+     * @param sortOrder the sort order, e.g. "title ASC"
      * @return whether the sort column is ascending
      */
     private static boolean isSortAscending(@Nullable String sortOrder) {

@@ -10,13 +10,15 @@ import uk.jumpingmouse.moviecompanion.data.Movie;
 import java.util.List;
 
 /**
- * Database helper class for accessing a local database.
+ * Helper class for accessing a local database.
+ * This class is used by all product flavours; it is only access to the master database
+ * which is restricted.
  * @author Edmund Johnson
  */
 class DatabaseHelperLocal implements DatabaseHelper {
 
     /** The singleton instance of this class. */
-    private static DatabaseHelperLocal sDatabaseHelper = null;
+    private static DatabaseHelper sDatabaseHelper = null;
 
     //---------------------------------------------------------------------
     // Instance handling methods
@@ -33,12 +35,25 @@ class DatabaseHelperLocal implements DatabaseHelper {
         return sDatabaseHelper;
     }
 
-    /** Private default constructor to prevent instantiation from outside this class. */
+    /** Private constructor to prevent instantiation from outside this class. */
     private DatabaseHelperLocal() {
     }
 
     //---------------------------------------------------------------------
-    // Movie methods
+    // Event-related methods
+
+    /** Performs processing required when a user has signed in. */
+    public void onSignedIn() {
+        // no action required
+    }
+
+    /** Performs processing required when a user has signed out. */
+    public void onSignedOut() {
+        // no action required
+    }
+
+    //---------------------------------------------------------------------
+    // Movie modification methods
 
     /**
      * Adds a movie's details to the database.
@@ -55,16 +70,19 @@ class DatabaseHelperLocal implements DatabaseHelper {
     /**
      * Deletes a movie from the database.
      * @param context the context
-     * @param imdbId the getImdbId of the movie to be deleted
+     * @param imdbId the imdbId of the movie to be deleted
      * @return the number of rows deleted
      */
     public int deleteMovie(@Nullable Context context, @NonNull String imdbId) {
         return getLocalDatabase().deleteMovie(imdbId);
     }
 
+    //---------------------------------------------------------------------
+    // Movie query methods
+
     /**
      * Returns the movie with a specified IMDb id.
-     * @param imdbId the getImdbId of the movie to be returned
+     * @param imdbId the imdbId of the movie to be returned
      * @return the movie with the specified IMDb id
      */
     @Override
@@ -94,11 +112,14 @@ class DatabaseHelperLocal implements DatabaseHelper {
         return getLocalDatabase().selectMovies(projection, selection, selectionArgs, sortOrder);
     }
 
+    //---------------------------------------------------------------------
+    // Getters
+
     /**
      * Convenience method which returns a reference to a local database.
      * @return a reference to a local database
      */
-    private LocalDatabase getLocalDatabase() {
+    private static LocalDatabase getLocalDatabase() {
         return ObjectFactory.getLocalDatabase();
     }
 

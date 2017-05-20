@@ -8,6 +8,8 @@ import uk.jumpingmouse.moviecompanion.model.LocalDatabase;
 import uk.jumpingmouse.moviecompanion.model.LocalDatabaseInMemory;
 import uk.jumpingmouse.moviecompanion.security.SecurityManager;
 import uk.jumpingmouse.moviecompanion.security.SecurityManagerFirebase;
+import uk.jumpingmouse.moviecompanion.utils.NavUtils;
+import uk.jumpingmouse.moviecompanion.utils.NavUtilsImpl;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
 /**
@@ -56,6 +58,15 @@ public class ObjectFactory {
     @NonNull
     public static ViewUtils getViewUtils() {
         return ViewUtils.getInstance();
+    }
+
+    /**
+     * Returns a reference to a NavUtils object.
+     * @return a reference to a NavUtils object
+     */
+    @NonNull
+    public static NavUtils getNavUtils() {
+        return NavUtilsImpl.getInstance();
     }
 
 }

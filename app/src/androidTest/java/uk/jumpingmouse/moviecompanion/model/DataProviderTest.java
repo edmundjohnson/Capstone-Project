@@ -604,7 +604,7 @@ public class DataProviderTest {
     }
 
     /**
-     * Test updating a movie which has a null getImdbId.
+     * Test updating a movie which has a null imdbId.
      */
     @Test
     public void updateMovieNullImdbId() {

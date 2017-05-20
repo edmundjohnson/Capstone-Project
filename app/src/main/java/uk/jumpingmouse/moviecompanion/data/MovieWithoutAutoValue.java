@@ -12,7 +12,7 @@ import java.util.Comparator;
  * Note that AutoValue is incompatible with Firebase.
  * @author Edmund Johnson
  */
-public class MovieWithoutAutoValue {
+class MovieWithoutAutoValue {
     public static final int RUNTIME_UNKNOWN = -1;
     public static final int RELEASED_UNKNOWN = -1;
 
@@ -206,13 +206,13 @@ public class MovieWithoutAutoValue {
     @Override
     public String toString() {
         return "Movie{"
-                + "getImdbId=" + imdbId + ", "
-                + "getTitle=" + title + ", "
-                + "getGenre=" + genre + ", "
-                + "getRuntime=" + runtime + ", "
-                + "getPosterUrl=" + posterUrl + ", "
-                + "getYear=" + year + ", "
-                + "getReleased=" + released
+                + "imdbId=" + imdbId + ", "
+                + "title=" + title + ", "
+                + "genre=" + genre + ", "
+                + "runtime=" + runtime + ", "
+                + "posterUrl=" + posterUrl + ", "
+                + "year=" + year + ", "
+                + "released=" + released
                 + "}";
     }
 

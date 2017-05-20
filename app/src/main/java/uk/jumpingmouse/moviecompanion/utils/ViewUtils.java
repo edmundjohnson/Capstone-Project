@@ -129,7 +129,7 @@ public class ViewUtils {
     /**
      * Display an alert dialog.
      * @param context the context
-     * @param titleResId the string resource id of the dialog getTitle
+     * @param titleResId the string resource id of the dialog title
      * @param message the dialog message
      */
     private static void displayAlertDialog(@NonNull Context context,

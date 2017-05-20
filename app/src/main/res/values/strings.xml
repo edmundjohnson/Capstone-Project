@@ -2,16 +2,20 @@
     <string name="app_name">Movie Companion</string>
 
     <!-- Content provider -->
-    <string name="content_authority">uk.jumpingmouse.moviecompanion</string>
+    <string name="content_authority" translatable="false">uk.jumpingmouse.moviecompanion</string>
 
     <!-- Security -->
-    <string name="sign_out">Sign Out</string>
     <string name="sign_in_ok">Signed in!</string>
     <string name="sign_in_cancelled">Sign-in cancelled</string>
 
+    <!-- Menu -->
+    <string name="menu_option_sign_out">Sign Out</string>
+
     <!-- Firebase database operations -->
-    <string name="nodeAddedSuccess">Node \"%1$s\" added successfully to node /%2$s</string>
-    <string name="nodeAddedFailure">Failed to add node \"%1$s\" to node /%2$s; error code: %3$d, details: %4$s, message: %5$s</string>
+    <string name="databaseOperationAddNode">Add node</string>
+    <string name="databaseOperationDeleteNode">Delete node</string>
+    <string name="databaseOperationSuccess">Success: %1$s \"%2$s\" at node /%3$s</string>
+    <string name="databaseOperationFailure">FAILURE: %1$s \"%2$s\" at node /%3$s; error code: %4$d, details: %5$s, message: %6$s</string>
 
     <!-- Validation -->
     <string name="error_title">Error</string>

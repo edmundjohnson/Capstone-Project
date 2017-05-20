@@ -10,6 +10,9 @@ import com.firebase.ui.auth.AuthUI;
 
 import timber.log.Timber;
 
+import uk.jumpingmouse.moviecompanion.ObjectFactory;
+import uk.jumpingmouse.moviecompanion.model.DatabaseHelper;
+
 import java.util.Arrays;
 
 /**
@@ -127,30 +130,24 @@ public class SecurityManagerFirebase implements SecurityManager {
     }
 
     private void onSignedInInitialise() {
-        // To avoid lint warnings
         Timber.d("onSignedInInitialise");
+
 //        mUsername = username;
 
-        // TODO: Implement database sign in processing - pass listeners in
-//        attachDatabaseReadListenerFilms();
-//        attachDatabaseReadListenerAwards();
-//        attachDatabaseReadListenerCritics();
+        getDatabaseHelper().onSignedIn();
     }
 
     private void onSignedOutCleanup() {
-        // To avoid lint warnings
         Timber.d("onSignedOutCleanup");
+
 //        mUsername = ANONYMOUS;
 
-        // TODO: Implement adapter sign out processing - pass adapters in
+        getDatabaseHelper().onSignedOut();
+
+        // TODO: Implement adapter sign out processing - pass adapters in?
 //        mFilmAdapter.clear();
 //        mAwardAdapter.clear();
 //        mCriticAdapter.clear();
-
-        // TODO: Implement database sign out processing - pass listeners in
-//        detachDatabaseReadListenerFilms();
-//        detachDatabaseReadListenerAwards();
-//        detachDatabaseReadListenerCritics();
     }
 
 
@@ -160,6 +157,18 @@ public class SecurityManagerFirebase implements SecurityManager {
     @Override
     public void signOut(FragmentActivity activity) {
         AuthUI.getInstance().signOut(activity);
+    }
+
+    //---------------------------------------------------------------------
+    // Getters
+
+    /**
+     * Convenience method for returning a reference to the database helper.
+     * @return a reference to the database helper
+     */
+    @NonNull
+    private static DatabaseHelper getDatabaseHelper() {
+        return ObjectFactory.getDatabaseHelper();
     }
 
 }

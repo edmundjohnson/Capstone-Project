@@ -15,6 +15,7 @@ import uk.jumpingmouse.moviecompanion.BuildConfig;
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.security.SecurityManager;
+import uk.jumpingmouse.moviecompanion.utils.NavUtils;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
 /**
@@ -125,19 +126,13 @@ public class MainActivity extends AppCompatActivity {
      * Process selection of an item in the options menu.
      * @param item the menu item that was selected
      * @return false to allow normal menu processing to proceed,
-     *         true to consume it here.
+     *         true if menu processing is consumed here.
      */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            // sign out
-            case R.id.sign_out_menu:
-                getSecurityManager().signOut(this);
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        boolean consumed = getNavUtils().onOptionsItemSelected(this, item);
+        //noinspection SimplifiableConditionalExpression
+        return consumed ? true : super.onOptionsItemSelected(item);
     }
 
     //---------------------------------------------------------------------
@@ -148,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
      * @return a SecurityManager
      */
     @NonNull
-    private SecurityManager getSecurityManager() {
+    private static SecurityManager getSecurityManager() {
         return ObjectFactory.getSecurityManager();
     }
 
@@ -157,7 +152,17 @@ public class MainActivity extends AppCompatActivity {
      * @return a reference to a ViewUtils object
      */
     @NonNull
-    private ViewUtils getViewUtils() {
+    private static ViewUtils getViewUtils() {
         return ObjectFactory.getViewUtils();
     }
+
+    /**
+     * Convenience method which returns a reference to a NavUtils object.
+     * @return a reference to a NavUtils object
+     */
+    @NonNull
+    private static NavUtils getNavUtils() {
+        return ObjectFactory.getNavUtils();
+    }
+
 }

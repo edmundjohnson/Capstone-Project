@@ -49,6 +49,94 @@
           "status": 2
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1048204857264:android:a7428fb2964fa18b",
+        "android_client_info": {
+          "package_name": "uk.jumpingmouse.moviecompanion.admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1048204857264-4b6jqcakd60cavpe6psu66m5imq3hf6e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "uk.jumpingmouse.moviecompanion.admin",
+            "certificate_hash": "dcc3f6a876b211470a1d4d1c92249be1a9aa17f9"
+          }
+        },
+        {
+          "client_id": "1048204857264-evfbnv8g5lfpkf3bfbdqife9ve6pob4r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-qCnu66_V2tFRdc12RYe3XuIWL5awz-s"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1048204857264-evfbnv8g5lfpkf3bfbdqife9ve6pob4r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1048204857264:android:98661779eeffd14d",
+        "android_client_info": {
+          "package_name": "uk.jumpingmouse.moviecompanion.free"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1048204857264-lsan2hif0jn5n81ea8c2uj3k3emhh6t6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "uk.jumpingmouse.moviecompanion.free",
+            "certificate_hash": "dcc3f6a876b211470a1d4d1c92249be1a9aa17f9"
+          }
+        },
+        {
+          "client_id": "1048204857264-evfbnv8g5lfpkf3bfbdqife9ve6pob4r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-qCnu66_V2tFRdc12RYe3XuIWL5awz-s"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1048204857264-evfbnv8g5lfpkf3bfbdqife9ve6pob4r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
     }
   ],
   "configuration_version": "1"
