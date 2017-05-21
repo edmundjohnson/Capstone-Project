@@ -47,10 +47,10 @@ public class AwardTest {
     @Test
     public void builder() {
         // test that the fields return the expected values
-        assertEquals("170512", mAward.awardDate());
-        assertEquals(Award.CATEGORY_MOVIE, mAward.category());
-        assertEquals("tt4016934", mAward.imdbId());
-        assertEquals(REVIEW, mAward.review());
+        assertEquals("170512", mAward.getAwardDate());
+        assertEquals(Award.CATEGORY_MOVIE, mAward.getCategory());
+        assertEquals("tt4016934", mAward.getImdbId());
+        assertEquals(REVIEW, mAward.getReview());
     }
 
     /**
@@ -62,7 +62,7 @@ public class AwardTest {
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("Missing required properties: awardDate category imdbId review");
 
-        @SuppressWarnings({"unused", "UnusedAssignment"})
+        @SuppressWarnings({"unused", "UnusedAssignment", "ConstantConditions"})
         Award award = Award.builder()
                 .awardDate(null)
                 .category(null)

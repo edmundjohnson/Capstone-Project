@@ -720,7 +720,7 @@ public class DataProviderTest {
      * @return an OMDb-formatted runtime string corresponding to the runtime,
      *         or an empty String if runtime indicates an unknown runtime
      */
-    @Nullable
+    @NonNull
     private static String toStringOmdbRuntime(final int runtime) {
         if (runtime == Movie.RUNTIME_UNKNOWN) {
             return "";

@@ -93,7 +93,7 @@ public class MovieTest {
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("Missing required properties: imdbId");
 
-        @SuppressWarnings({"unused", "UnusedAssignment"})
+        @SuppressWarnings({"unused", "UnusedAssignment", "ConstantConditions"})
         Movie movie = Movie.builder()
                 .imdbId(null)
                 .title("The Handmaiden")
@@ -114,7 +114,7 @@ public class MovieTest {
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("Missing required properties: title");
 
-        @SuppressWarnings({"unused", "UnusedAssignment"})
+        @SuppressWarnings({"unused", "UnusedAssignment", "ConstantConditions"})
         Movie movie = Movie.builder()
                 .imdbId("tt4016934")
                 .title(null)

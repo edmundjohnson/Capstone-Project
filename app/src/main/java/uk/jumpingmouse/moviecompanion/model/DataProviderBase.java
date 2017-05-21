@@ -10,12 +10,12 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.List;
+
 import timber.log.Timber;
 
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.data.Movie;
-
-import java.util.List;
 
 /**
  * The base class for the content provider, containing the content provider elements which
@@ -212,7 +212,7 @@ public abstract class DataProviderBase extends ContentProvider {
      * @param movie the movie
      * @return a one-row cursor containing the movie
      */
-    @Nullable
+    @NonNull
     private Cursor toCursor(@NonNull Movie movie) {
         // Create a cursor containing the movie columns
         String[] columns = DataContract.MovieEntry.getAllColumns();

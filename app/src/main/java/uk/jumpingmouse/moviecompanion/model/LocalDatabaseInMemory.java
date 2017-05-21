@@ -3,14 +3,14 @@ package uk.jumpingmouse.moviecompanion.model;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import timber.log.Timber;
-
-import uk.jumpingmouse.moviecompanion.data.Movie;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import timber.log.Timber;
+
+import uk.jumpingmouse.moviecompanion.data.Movie;
 
 /**
  * Class giving access to a local copy of the database.
@@ -119,7 +119,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
      * @return a list of all the movies in the database in the default order
      */
     @Override
-    @Nullable
+    @NonNull
     public List<Movie> selectMovies(
             @Nullable final String[] projection, @Nullable final String selection,
             @Nullable final String[] selectionArgs, @Nullable final String sortOrder) {
@@ -141,7 +141,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
      * @param sortAscending whether the sort is ascending
      * @return a list of all the movies in the mock database ordered by the specified column
      */
-    @Nullable
+    @NonNull
     private List<Movie> selectMovies(@NonNull String sortColumn, boolean sortAscending) {
         Timber.d(String.format("selectMovies: sortColumn = %s, sortAscending = %b",
                 sortColumn, sortAscending));

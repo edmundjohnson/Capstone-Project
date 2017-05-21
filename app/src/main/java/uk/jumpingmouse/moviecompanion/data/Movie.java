@@ -142,11 +142,11 @@ public class Movie {
             this.released = source.released;
         }
 
-        public Movie.Builder imdbId(String imdbId) {
+        public Movie.Builder imdbId(@NonNull String imdbId) {
             this.imdbId = imdbId;
             return this;
         }
-        public Movie.Builder title(String title) {
+        public Movie.Builder title(@NonNull String title) {
             this.title = title;
             return this;
         }
