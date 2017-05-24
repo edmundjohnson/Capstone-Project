@@ -4,10 +4,10 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.List;
+
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.data.Movie;
-
-import java.util.List;
 
 /**
  * Helper class for accessing a local database.
@@ -70,25 +70,25 @@ class DatabaseHelperLocal implements DatabaseHelper {
     /**
      * Deletes a movie from the database.
      * @param context the context
-     * @param imdbId the imdbId of the movie to be deleted
+     * @param id the id of the movie to be deleted
      * @return the number of rows deleted
      */
-    public int deleteMovie(@Nullable Context context, @NonNull String imdbId) {
-        return getLocalDatabase().deleteMovie(imdbId);
+    public int deleteMovie(@Nullable Context context, @NonNull String id) {
+        return getLocalDatabase().deleteMovie(id);
     }
 
     //---------------------------------------------------------------------
     // Movie query methods
 
     /**
-     * Returns the movie with a specified IMDb id.
-     * @param imdbId the imdbId of the movie to be returned
-     * @return the movie with the specified IMDb id
+     * Returns the movie with a specified id.
+     * @param id the id of the movie to be returned
+     * @return the movie with the specified id
      */
     @Override
     @Nullable
-    public Movie selectMovieByImdbId(@NonNull String imdbId) {
-        return getLocalDatabase().selectMovieByImdbId(imdbId);
+    public Movie selectMovieById(@NonNull String id) {
+        return getLocalDatabase().selectMovieById(id);
     }
 
     /**

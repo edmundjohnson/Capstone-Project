@@ -31,7 +31,7 @@ public class AwardTest {
         mAward = Award.builder()
                 .awardDate("170512")
                 .category(Award.CATEGORY_MOVIE)
-                .imdbId("tt4016934")
+                .id("tt4016934")
                 .review(REVIEW)
                 .build();
     }
@@ -49,7 +49,7 @@ public class AwardTest {
         // test that the fields return the expected values
         assertEquals("170512", mAward.getAwardDate());
         assertEquals(Award.CATEGORY_MOVIE, mAward.getCategory());
-        assertEquals("tt4016934", mAward.getImdbId());
+        assertEquals("tt4016934", mAward.getId());
         assertEquals(REVIEW, mAward.getReview());
     }
 
@@ -60,13 +60,13 @@ public class AwardTest {
     public void builderMandatoryFieldsAreNull() {
         // We expect an exception to be thrown
         thrown.expect(IllegalStateException.class);
-        thrown.expectMessage("Missing required properties: awardDate category imdbId review");
+        thrown.expectMessage("Missing required properties: awardDate category id review");
 
         @SuppressWarnings({"unused", "UnusedAssignment", "ConstantConditions"})
         Award award = Award.builder()
                 .awardDate(null)
                 .category(null)
-                .imdbId(null)
+                .id(null)
                 .review(null)
                 .build();
     }
@@ -88,7 +88,7 @@ public class AwardTest {
         assertTrue(Award.builder()
                 .awardDate("170512")
                 .category(Award.CATEGORY_MOVIE)
-                .imdbId("tt4016934")
+                .id("tt4016934")
                 .review(REVIEW)
                 .build()
                 .equals(mAward));
@@ -97,7 +97,7 @@ public class AwardTest {
         assertFalse(Award.builder()
                 .awardDate("170519")
                 .category(Award.CATEGORY_MOVIE)
-                .imdbId("tt4016934")
+                .id("tt4016934")
                 .review(REVIEW)
                 .build()
                 .equals(mAward));
@@ -110,7 +110,7 @@ public class AwardTest {
         assertTrue(mAward.hashCode() != Award.builder()
                 .awardDate("170519")
                 .category(Award.CATEGORY_MOVIE)
-                .imdbId("tt4016934")
+                .id("tt4016934")
                 .review(REVIEW)
                 .build()
                 .hashCode());
@@ -120,7 +120,7 @@ public class AwardTest {
     public void testToString() {
         assertEquals(
                 "Award{awardDate=170512, category=" + Award.CATEGORY_MOVIE +
-                        ", imdbId=tt4016934, review=" + REVIEW + "}",
+                        ", id=tt4016934, review=" + REVIEW + "}",
                 mAward.toString());
     }
 

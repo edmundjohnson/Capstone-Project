@@ -3,9 +3,9 @@ package uk.jumpingmouse.moviecompanion.model;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import uk.jumpingmouse.moviecompanion.data.Movie;
-
 import java.util.List;
+
+import uk.jumpingmouse.moviecompanion.data.Movie;
 
 /**
  * Interface for database implementation classes.
@@ -30,18 +30,18 @@ public interface LocalDatabase {
 
     /**
      * Deletes a movie from the database.
-     * @param imdbId the imdbId of the movie to be deleted
+     * @param id the id of the movie to be deleted
      * @return the number of rows deleted
      */
-    int deleteMovie(@NonNull String imdbId);
+    int deleteMovie(@NonNull String id);
 
     /**
-     * Returns the movie with a specified IMDb id.
-     * @param imdbId the imdbId of the movie to be returned
-     * @return the movie with the specified IMDb id
+     * Returns the movie with a specified id.
+     * @param id the id of the movie to be returned
+     * @return the movie with the specified id
      */
     @Nullable
-    Movie selectMovieByImdbId(@NonNull String imdbId);
+    Movie selectMovieById(@NonNull String id);
 
     /**
      * Returns a list of movies in the database.

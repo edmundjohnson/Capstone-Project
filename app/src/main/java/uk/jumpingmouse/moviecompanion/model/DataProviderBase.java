@@ -28,7 +28,7 @@ public abstract class DataProviderBase extends ContentProvider {
 
     // Constants representing URL formats
     static final int MOVIE = 100;
-    static final int MOVIE_IMDB_ID = 101;
+    static final int MOVIE_ID = 101;
     private static final int MOVIE_ALL = 102;
 
     //---------------------------------------------------------------------
@@ -54,7 +54,7 @@ public abstract class DataProviderBase extends ContentProvider {
                 MOVIE_ALL);
         uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
                 DataContract.URI_PATH_MOVIE + "/*",
-                MOVIE_IMDB_ID);
+                MOVIE_ID);
 
         // 3) Return the new matcher!
         return uriMatcher;
@@ -95,7 +95,7 @@ public abstract class DataProviderBase extends ContentProvider {
         switch (match) {
             case MOVIE:
                 return DataContract.MovieEntry.CONTENT_DIR_TYPE;
-            case MOVIE_IMDB_ID:
+            case MOVIE_ID:
                 return DataContract.MovieEntry.CONTENT_ITEM_TYPE;
             case MOVIE_ALL:
                 return DataContract.MovieEntry.CONTENT_DIR_TYPE;
@@ -151,13 +151,13 @@ public abstract class DataProviderBase extends ContentProvider {
                 cursor = selectMovies(projection, selection, selectionArgs, sortOrder);
                 break;
             // "movie/*"
-            case MOVIE_IMDB_ID:
-                String imdbId = uri.getLastPathSegment();
-                // imdbId can never be null because the MOVIE case would be executed
-                if (imdbId == null) {
+            case MOVIE_ID:
+                String id = uri.getLastPathSegment();
+                // id can never be null because the MOVIE case would be executed
+                if (id == null) {
                     cursor = null;
                 } else {
-                    cursor = selectMovieByImdbId(imdbId);
+                    cursor = selectMovieById(id);
                 }
                 break;
             default:
@@ -173,15 +173,15 @@ public abstract class DataProviderBase extends ContentProvider {
     // Movie query methods
 
     /**
-     * Return a cursor whose first row is the movie with a specified IMDb id.
-     * @param imdbId the IMDb id of the required row
-     * @return a cursor whose first row is the row with the specified IMDb id
+     * Return a cursor whose first row is the movie with a specified id.
+     * @param id the id of the required row
+     * @return a cursor whose first row is the row with the specified id
      */
     @Nullable
-    private Cursor selectMovieByImdbId(@NonNull final String imdbId) {
-        Movie movie = getDatabaseHelper().selectMovieByImdbId(imdbId);
+    private Cursor selectMovieById(@NonNull final String id) {
+        Movie movie = getDatabaseHelper().selectMovieById(id);
         if (movie == null) {
-            Timber.w("", "Movie not found with IMDb id: " + imdbId);
+            Timber.w("", "Movie not found with id: " + id);
             return null;
         }
         return toCursor(movie);
@@ -257,8 +257,7 @@ public abstract class DataProviderBase extends ContentProvider {
     private Object[] toObjectArray(Movie movie) {
         return new Object[] {
                 // This must match the order of columns in DataContract.MovieEntry.getAllColumns().
-                // We are using imdbId as the _id, so it is repeated.
-                movie.getImdbId(),
+                movie.getId(),
                 movie.getImdbId(),
                 movie.getTitle(),
                 movie.getGenre(),

@@ -47,7 +47,7 @@ public class DataProvider extends DataProviderBase {
                     Timber.w("Failed to insert movie using ContentValues: ", values);
                     return null;
                 }
-                returnUri = DataContract.MovieEntry.buildUriMovieId(movie.getImdbId());
+                returnUri = DataContract.MovieEntry.buildUriMovieId(movie.getId());
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown URI for insert: " + uri);
@@ -92,9 +92,9 @@ public class DataProvider extends DataProviderBase {
 //                // A null id updates all rows
 //                rowsUpdated = updateAllMovies(context, values);
 //                break;
-            case MOVIE_IMDB_ID:
-                String imdbId = uri.getLastPathSegment();
-                rowsUpdated = updateMovie(context, imdbId, values);
+            case MOVIE_ID:
+                String id = uri.getLastPathSegment();
+                rowsUpdated = updateMovie(context, id, values);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown URI for update: " + uri);
@@ -146,9 +146,9 @@ public class DataProvider extends DataProviderBase {
 //            case MOVIE:
 //                rowsDeleted = deleteAllMovies(context, values);
 //                break;
-            case MOVIE_IMDB_ID:
-                String imdbId = uri.getLastPathSegment();
-                rowsDeleted = deleteMovie(context, imdbId);
+            case MOVIE_ID:
+                String id = uri.getLastPathSegment();
+                rowsDeleted = deleteMovie(context, id);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown URI for delete: " + uri);
@@ -192,11 +192,11 @@ public class DataProvider extends DataProviderBase {
     /**
      * Updates a movie in the database.
      * @param context the context
-     * @param imdbId the movie's imdbId
+     * @param id the movie's id
      * @param values the new values to use for the movie
      * @return the number of rows updated
      */
-    private int updateMovie(@Nullable Context context, @NonNull final String imdbId,
+    private int updateMovie(@Nullable Context context, @NonNull final String id,
                             @Nullable final ContentValues values) {
         if (values == null) {
             return 0;
@@ -204,8 +204,8 @@ public class DataProvider extends DataProviderBase {
         Movie movie = ModelUtils.toMovie(values);
         if (movie == null) {
             return 0;
-        } else if (!imdbId.equals(movie.getImdbId())) {
-            throw new UnsupportedOperationException("ImdbId mismatch between URL and body of update request");
+        } else if (!id.equals(movie.getId())) {
+            throw new UnsupportedOperationException("Id mismatch between URL and body of update request");
         }
         return getDatabaseHelper().addMovie(context, movie);
     }
@@ -213,11 +213,11 @@ public class DataProvider extends DataProviderBase {
     /**
      * Deletes a movie from the database.
      * @param context the context
-     * @param imdbId the movie's imdbId
+     * @param id the movie's id
      * @return the number of rows deleted
      */
-    private int deleteMovie(@Nullable Context context, @NonNull final String imdbId) {
-        return getDatabaseHelper().deleteMovie(context, imdbId);
+    private int deleteMovie(@Nullable Context context, @NonNull final String id) {
+        return getDatabaseHelper().deleteMovie(context, id);
     }
 
     //---------------------------------------------------------------------

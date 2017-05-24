@@ -55,6 +55,7 @@ public class DataProviderTest {
     static {
         // DO NOT USE REAL MOVIES, as these tests are destructive!
         TEST_MOVIE_1 = Movie.builder()
+                .id("tt9999991")
                 .imdbId("tt9999991")
                 .title("Test Movie 1")
                 .genre("Drama, Mystery, Romance")
@@ -64,6 +65,7 @@ public class DataProviderTest {
                 .released(DateUtils.toLongOmdbReleased("01 Jun 2011"))
                 .build();
         TEST_MOVIE_1_MODIFIED = Movie.builder()
+                .id("tt9999991")
                 .imdbId("tt9999991")
                 .title("Test Movie 1 modified")
                 .genre("Comedy")
@@ -73,6 +75,7 @@ public class DataProviderTest {
                 .released(DateUtils.toLongOmdbReleased("01 Jun 2012"))
                 .build();
         TEST_MOVIE_2 = Movie.builder()
+                .id("tt9999992")
                 .imdbId("tt9999992")
                 .title("Test Movie 2")
                 .genre("Drama, Mystery, Romance")
@@ -82,6 +85,7 @@ public class DataProviderTest {
                 .released(DateUtils.toLongOmdbReleased("01 Jun 2012"))
                 .build();
         TEST_MOVIE_3 = Movie.builder()
+                .id("tt9999993")
                 .imdbId("tt9999993")
                 // Do not change the 0 to a 3! 0 is required for query order test.
                 .title("Test Movie 0")
@@ -92,9 +96,9 @@ public class DataProviderTest {
                 .released(DateUtils.toLongOmdbReleased("01 Jun 2013"))
                 .build();
 
-        URI_TEST_MOVIE_1 = DataContract.MovieEntry.buildUriMovieId(TEST_MOVIE_1.getImdbId());
-        URI_TEST_MOVIE_2 = DataContract.MovieEntry.buildUriMovieId(TEST_MOVIE_2.getImdbId());
-        URI_TEST_MOVIE_3 = DataContract.MovieEntry.buildUriMovieId(TEST_MOVIE_3.getImdbId());
+        URI_TEST_MOVIE_1 = DataContract.MovieEntry.buildUriMovieId(TEST_MOVIE_1.getId());
+        URI_TEST_MOVIE_2 = DataContract.MovieEntry.buildUriMovieId(TEST_MOVIE_2.getId());
+        URI_TEST_MOVIE_3 = DataContract.MovieEntry.buildUriMovieId(TEST_MOVIE_3.getId());
     }
 
     // By default, expect no exceptions.
@@ -372,11 +376,11 @@ public class DataProviderTest {
     }
 
 //    /**
-//     * Test querying a movie using an empty imdbId.
+//     * Test querying a movie using an empty id.
 //     * No, this returns all movies.
 //     */
 //    @Test
-//    public void queryMovieWithNullImdbId() {
+//    public void queryMovieWithNullId() {
 //        Uri uriQuery = Uri.parse("content://uk.jumpingmouse.moviecompanion/movie/");
 //        Cursor cursor = mContentResolver.query(uriQuery, null, null, null, null, null);
 //        assertNull(cursor);
@@ -391,7 +395,7 @@ public class DataProviderTest {
         // query for specific movie TEST_MOVIE_1 - initially should not be there
         cursor = mContentResolver.query(URI_TEST_MOVIE_1, null, null, null, null);
         rowsCurrent = cursor == null ? 0 : cursor.getCount();
-        assertEquals(String.format("Movie \"%s\" should not initially be in database", TEST_MOVIE_1.getImdbId()),
+        assertEquals(String.format("Movie \"%s\" should not initially be in database", TEST_MOVIE_1.getId()),
                 0, rowsCurrent);
         closeCursor(cursor);
 
@@ -419,7 +423,7 @@ public class DataProviderTest {
 //        // query for specific movie TEST_MOVIE_1 - should no longer be there
 //        cursor = mContentResolver.query(URI_TEST_MOVIE_1, null, null, null, null);
 //        rowsCurrent = cursor == null ? 0 : cursor.getCount();
-//        assertEquals(String.format("Movie \"%s\" should no longer be in database", TEST_MOVIE_1.getImdbId()),
+//        assertEquals(String.format("Movie \"%s\" should no longer be in database", TEST_MOVIE_1.getId()),
 //                0, rowsCurrent);
 //        closeCursor(cursor);
     }
@@ -433,7 +437,7 @@ public class DataProviderTest {
         // query for specific movie TEST_MOVIE_1 - initially should not be there
         cursor = mContentResolver.query(URI_TEST_MOVIE_1, null, null, null, null);
         rowsCurrent = cursor == null ? 0 : cursor.getCount();
-        assertEquals(String.format("Movie \"%s\" should not initially be in database", TEST_MOVIE_1.getImdbId()),
+        assertEquals(String.format("Movie \"%s\" should not initially be in database", TEST_MOVIE_1.getId()),
                 0, rowsCurrent);
         closeCursor(cursor);
 
@@ -459,7 +463,7 @@ public class DataProviderTest {
         // query for specific movie TEST_MOVIE_1 - should no longer be there
         cursor = mContentResolver.query(URI_TEST_MOVIE_1, null, null, null, null);
         rowsCurrent = cursor == null ? 0 : cursor.getCount();
-        assertEquals(String.format("Movie \"%s\" should no longer be in database", TEST_MOVIE_1.getImdbId()),
+        assertEquals(String.format("Movie \"%s\" should no longer be in database", TEST_MOVIE_1.getId()),
                 0, rowsCurrent);
         closeCursor(cursor);
     }
@@ -486,7 +490,7 @@ public class DataProviderTest {
         // query for specific movie TEST_MOVIE_1 - should not be there
         Cursor cursor = mContentResolver.query(URI_TEST_MOVIE_1, null, null, null, null);
         int rowsCurrent = cursor == null ? 0 : cursor.getCount();
-        assertEquals(String.format("Movie \"%s\" should not initially be in database", TEST_MOVIE_1.getImdbId()),
+        assertEquals(String.format("Movie \"%s\" should not initially be in database", TEST_MOVIE_1.getId()),
                 0, rowsCurrent);
         closeCursor(cursor);
     }
@@ -500,7 +504,7 @@ public class DataProviderTest {
         // query for specific movie TEST_MOVIE_1 - initially should not be there
         cursor = mContentResolver.query(URI_TEST_MOVIE_1, null, null, null, null);
         rowsCurrent = cursor == null ? 0 : cursor.getCount();
-        assertEquals(String.format("Movie \"%s\" should not initially be in database", TEST_MOVIE_1.getImdbId()),
+        assertEquals(String.format("Movie \"%s\" should not initially be in database", TEST_MOVIE_1.getId()),
                 0, rowsCurrent);
         closeCursor(cursor);
 
@@ -531,6 +535,7 @@ public class DataProviderTest {
         cursor.moveToFirst();
         Movie movieUpdated = ModelUtils.toMovie(cursor);
         assertNotNull(movieUpdated);
+        assertEquals("id should be unchanged", TEST_MOVIE_1.getId(), movieUpdated.getId());
         assertEquals("imdbId should be unchanged", TEST_MOVIE_1.getImdbId(), movieUpdated.getImdbId());
         assertEquals("title should be updated", TEST_MOVIE_1_MODIFIED.getTitle(), movieUpdated.getTitle());
         assertEquals("genre should be updated", TEST_MOVIE_1_MODIFIED.getGenre(), movieUpdated.getGenre());
@@ -547,7 +552,7 @@ public class DataProviderTest {
         // query for specific movie TEST_MOVIE_1_MODIFIED - should no longer be there
         cursor = mContentResolver.query(URI_TEST_MOVIE_1, null, null, null, null);
         rowsCurrent = cursor == null ? 0 : cursor.getCount();
-        assertEquals(String.format("Movie \"%s\" should no longer be in database", TEST_MOVIE_1_MODIFIED.getImdbId()),
+        assertEquals(String.format("Movie \"%s\" should no longer be in database", TEST_MOVIE_1_MODIFIED.getId()),
                 0, rowsCurrent);
         closeCursor(cursor);
     }
@@ -564,7 +569,7 @@ public class DataProviderTest {
         // query for specific movie TEST_MOVIE_2 - initially should not be there
         cursor = mContentResolver.query(URI_TEST_MOVIE_2, null, null, null, null);
         rowsCurrent = cursor == null ? 0 : cursor.getCount();
-        assertEquals(String.format("Movie \"%s\" should not initially be in database", TEST_MOVIE_2.getImdbId()),
+        assertEquals(String.format("Movie \"%s\" should not initially be in database", TEST_MOVIE_2.getId()),
                 0, rowsCurrent);
         closeCursor(cursor);
 
@@ -589,7 +594,7 @@ public class DataProviderTest {
         // query for specific movie TEST_MOVIE_2 - should no longer be there
         cursor = mContentResolver.query(URI_TEST_MOVIE_2, null, null, null, null);
         rowsCurrent = cursor == null ? 0 : cursor.getCount();
-        assertEquals(String.format("Movie \"%s\" should no longer be in database", TEST_MOVIE_2.getImdbId()),
+        assertEquals(String.format("Movie \"%s\" should no longer be in database", TEST_MOVIE_2.getId()),
                 0, rowsCurrent);
         closeCursor(cursor);
     }
@@ -604,25 +609,25 @@ public class DataProviderTest {
     }
 
     /**
-     * Test updating a movie which has a null imdbId.
+     * Test updating a movie which has a null id.
      */
     @Test
-    public void updateMovieNullImdbId() {
+    public void updateMovieNullId() {
         ContentValues values = toContentValues(TEST_MOVIE_1);
         values.remove(DataContract.MovieEntry.COLUMN_ID);
-        values.remove(DataContract.MovieEntry.COLUMN_IMDB_ID);
+        //values.remove(DataContract.MovieEntry.COLUMN_IMDB_ID);
 
         int rowsUpdated = mContentResolver.update(URI_TEST_MOVIE_1, values, null, null);
         assertEquals(0, rowsUpdated);
     }
 
     /**
-     * Test updating a movie when the imdbId in the URI does not match the one in the content values.
+     * Test updating a movie when the id in the URI does not match the one in the content values.
      */
     @Test
     public void updateMovieMismatch() {
         thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("ImdbId mismatch between URL and body of update request");
+        thrown.expectMessage("Id mismatch between URL and body of update request");
 
         Uri uriUpdate = DataContract.MovieEntry.buildUriMovieId("noSuchMovie");
         int rowsUpdated = mContentResolver.update(uriUpdate, toContentValues(TEST_MOVIE_1), null, null);
@@ -702,7 +707,7 @@ public class DataProviderTest {
     private ContentValues toContentValues(Movie movie) {
         ContentValues values = new ContentValues();
 
-        values.put(DataContract.MovieEntry.COLUMN_ID, movie.getImdbId());
+        values.put(DataContract.MovieEntry.COLUMN_ID, movie.getId());
         values.put(DataContract.MovieEntry.COLUMN_IMDB_ID, movie.getImdbId());
         values.put(DataContract.MovieEntry.COLUMN_TITLE, movie.getTitle());
         values.put(DataContract.MovieEntry.COLUMN_GENRE, movie.getGenre());

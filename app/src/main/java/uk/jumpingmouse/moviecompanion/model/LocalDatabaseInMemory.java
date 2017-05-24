@@ -57,15 +57,15 @@ public class LocalDatabaseInMemory implements LocalDatabase {
      */
     @Override
     public int addMovie(@NonNull Movie movie) {
-        String imdbId = movie.getImdbId();
+        String id = movie.getId();
         // This cannot happen due to previous checks, but the compiler requires it
         //noinspection ConstantConditions
-        if (imdbId == null) {
-            Timber.w("addMovie: Cannot add a movie whose imdbId is null");
+        if (id == null) {
+            Timber.w("addMovie: Cannot add a movie whose id is null");
             return 0;
         }
         // remove the movie if it already exists
-        Movie existingMovie = selectMovieByImdbId(imdbId);
+        Movie existingMovie = selectMovieById(id);
         if (existingMovie != null) {
             mMovieList.remove(existingMovie);
         }
@@ -74,11 +74,16 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         return 1;
     }
 
+    /**
+     * Deletes a movie from the database.
+     * @param id the id of the movie to be deleted
+     * @return the number of rows deleted
+     */
     @Override
-    public int deleteMovie(@NonNull String imdbId) {
-        Movie existingMovie = selectMovieByImdbId(imdbId);
+    public int deleteMovie(@NonNull String id) {
+        Movie existingMovie = selectMovieById(id);
         if (existingMovie == null) {
-            Timber.w("deleteMovie: Movie not found with imdbId: " + imdbId);
+            Timber.w("deleteMovie: Movie not found with id: " + id);
             return 0;
         }
         mMovieList.remove(existingMovie);
@@ -89,19 +94,19 @@ public class LocalDatabaseInMemory implements LocalDatabase {
     // Movie query methods
 
     /**
-     * Returns the movie with a specified imdbId.
-     * @param imdbId the imdbId
-     * @return the movie with the specified imdbId, or null if there are no matching movies
+     * Returns the movie with a specified id.
+     * @param id the movie's id
+     * @return the movie with the specified id, or null if there are no matching movies
      */
     @Override
     @Nullable
-    public Movie selectMovieByImdbId(@NonNull String imdbId) {
+    public Movie selectMovieById(@NonNull String id) {
         for (Movie movie : mMovieList) {
-            if (imdbId.equals(movie.getImdbId())) {
+            if (id.equals(movie.getId())) {
                 return movie;
             }
         }
-        Timber.d("selectMovieByImdbId: No movies found with matching imdbId");
+        Timber.d("selectMovieById: No movies found with matching id: " + id);
         return null;
     }
 
@@ -149,6 +154,10 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         Comparator<Movie> comparator;
         // code coverage: sortColumn cannot be null
         switch (sortColumn) {
+            // A bit of a fiddle, but it works for now
+            case DataContract.MovieEntry.COLUMN_ID:
+                comparator = Movie.MovieComparatorImdbId;
+                break;
             case DataContract.MovieEntry.COLUMN_IMDB_ID:
                 comparator = Movie.MovieComparatorImdbId;
                 break;
@@ -178,6 +187,8 @@ public class LocalDatabaseInMemory implements LocalDatabase {
             // split.length is always at least 1
             // code coverage: split[0] cannot be null
             switch (split[0]) {
+                case DataContract.MovieEntry.COLUMN_ID:
+                    return DataContract.MovieEntry.COLUMN_ID;
                 case DataContract.MovieEntry.COLUMN_IMDB_ID:
                     return DataContract.MovieEntry.COLUMN_IMDB_ID;
                 case DataContract.MovieEntry.COLUMN_TITLE:

@@ -15,6 +15,8 @@ public class Movie {
     public static final int RUNTIME_UNKNOWN = -1;
     public static final int RELEASED_UNKNOWN = -1;
 
+    // The unique identifier of the movie. For now, this has the same value as imdbId.
+    private String id;
     // e.g. "tt4016934"
     private String imdbId;
     // e.g. "The Handmaiden"
@@ -34,6 +36,7 @@ public class Movie {
     }
 
     private Movie(
+            @Nullable String id,
             @Nullable String imdbId,
             @Nullable String title,
             @Nullable String genre,
@@ -41,13 +44,17 @@ public class Movie {
             @Nullable String posterUrl,
             @Nullable String year,
             long released) {
+        if (id == null) {
+            throw new NullPointerException("Null id");
+        }
         if (imdbId == null) {
             throw new NullPointerException("Null imdbId");
         }
-        this.imdbId = imdbId;
         if (title == null) {
             throw new NullPointerException("Null title");
         }
+        this.id = id;
+        this.imdbId = imdbId;
         this.title = title;
         this.genre = genre;
         this.runtime = runtime;
@@ -58,6 +65,12 @@ public class Movie {
 
     //---------------------------------------------------------------
     // Getters
+
+    /** Returns the unique id. */
+    @NonNull
+    public String getId() {
+        return id;
+    }
 
     /** Returns the IMDb id, e.g. "tt4016934". */
     @NonNull
@@ -107,6 +120,7 @@ public class Movie {
      * <blockquote><pre>
      * {@code
      *   Movie movie = Movie.builder()
+     *         .id("tt4016934")
      *         .imdbId("tt4016934")
      *         .title("The Handmaiden")
      *         // etc
@@ -121,6 +135,7 @@ public class Movie {
 
     @SuppressWarnings("WeakerAccess")
     public static final class Builder {
+        private String id;
         private String imdbId;
         private String title;
         private String genre;
@@ -133,6 +148,7 @@ public class Movie {
         }
 
         Builder(Movie source) {
+            this.id = source.id;
             this.imdbId = source.imdbId;
             this.title = source.title;
             this.genre = source.genre;
@@ -142,6 +158,10 @@ public class Movie {
             this.released = source.released;
         }
 
+        public Movie.Builder id(@NonNull String id) {
+            this.id = id;
+            return this;
+        }
         public Movie.Builder imdbId(@NonNull String imdbId) {
             this.imdbId = imdbId;
             return this;
@@ -173,6 +193,9 @@ public class Movie {
         /** Builds and returns an object of this class. */
         public Movie build() {
             String missing = "";
+            if (id == null) {
+                missing += " id";
+            }
             if (imdbId == null) {
                 missing += " imdbId";
             }
@@ -189,6 +212,7 @@ public class Movie {
                 throw new IllegalStateException("Missing required properties:" + missing);
             }
             return new Movie(
+                    this.id,
                     this.imdbId,
                     this.title,
                     this.genre,
@@ -205,6 +229,7 @@ public class Movie {
     @Override
     public String toString() {
         return "Movie{"
+                + "id=" + id + ", "
                 + "imdbId=" + imdbId + ", "
                 + "title=" + title + ", "
                 + "genre=" + genre + ", "
@@ -222,7 +247,8 @@ public class Movie {
         }
         if (o instanceof Movie) {
             Movie that = (Movie) o;
-            return (this.imdbId.equals(that.imdbId))
+            return (this.id.equals(that.id))
+                    && (this.imdbId.equals(that.imdbId))
                     && (this.title.equals(that.title))
                     && ((this.genre == null) ? (that.genre == null) : this.genre.equals(that.genre))
                     && (this.runtime == that.runtime)
@@ -237,6 +263,8 @@ public class Movie {
     @Override
     public int hashCode() {
         int h = 1;
+        h *= 1000003;
+        h ^= this.id.hashCode();
         h *= 1000003;
         h ^= this.imdbId.hashCode();
         h *= 1000003;

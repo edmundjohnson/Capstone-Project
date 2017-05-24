@@ -90,7 +90,7 @@ public class DataProvider extends DataProviderBase {
 //                // A null id updates all rows
 //                rowsUpdated = updateAllMovies(context, values);
 //                break;
-            case MOVIE_IMDB_ID:
+            case MOVIE_ID:
                 // updating a movie requires admin privileges
                 throw new UnsupportedOperationException("Insufficient privileges for update: " + uri);
             default:
@@ -145,7 +145,7 @@ public class DataProvider extends DataProviderBase {
 //            case MOVIE:
 //                rowsDeleted = deleteAllMovies(context, values);
 //                break;
-            case MOVIE_IMDB_ID:
+            case MOVIE_ID:
                 // deleting a movie requires admin privileges
                 throw new UnsupportedOperationException("Insufficient privileges for delete: " + uri);
             default:

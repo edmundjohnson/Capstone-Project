@@ -48,18 +48,18 @@ public class DatabaseHelperFirebase extends DatabaseHelperFirebaseBase {
      */
     @Override
     public int addMovie(@Nullable final Context context, @NonNull final Movie movie) {
-        return addNode(context, DataContract.MovieEntry.ROOT_NODE, movie.getImdbId(), movie);
+        return addNode(context, DataContract.MovieEntry.ROOT_NODE, movie.getId(), movie);
     }
 
     /**
      * Deletes a movie from the database.
      * @param context the context
-     * @param imdbId the imdbId of the movie to be deleted
+     * @param id the id of the movie to be deleted
      * @return the number of rows deleted
      */
     @Override
-    public int deleteMovie(@Nullable Context context, @NonNull String imdbId) {
-        return deleteNode(context, DataContract.MovieEntry.ROOT_NODE, imdbId);
+    public int deleteMovie(@Nullable Context context, @NonNull String id) {
+        return deleteNode(context, DataContract.MovieEntry.ROOT_NODE, id);
     }
 
     //---------------------------------------------------------------------

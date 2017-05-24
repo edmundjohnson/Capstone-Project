@@ -1,27 +1,26 @@
 package uk.jumpingmouse.moviecompanion.model;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-
-import timber.log.Timber;
-
-import uk.jumpingmouse.moviecompanion.ObjectFactory;
-import uk.jumpingmouse.moviecompanion.R;
-import uk.jumpingmouse.moviecompanion.data.Movie;
-import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import timber.log.Timber;
+import uk.jumpingmouse.moviecompanion.ObjectFactory;
+import uk.jumpingmouse.moviecompanion.R;
+import uk.jumpingmouse.moviecompanion.data.Movie;
+import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
 /**
  * Superclass for helper classes for accessing the Firebase Realtime Database.
@@ -77,11 +76,11 @@ abstract class DatabaseHelperFirebaseBase implements DatabaseHelper {
     /**
      * Deletes a movie from the Firebase database.
      * @param context the context
-     * @param imdbId the imdbId of the movie to be deleted
+     * @param id the id of the movie to be deleted
      * @return the number of rows deleted
      */
     @Override
-    public int deleteMovie(@Nullable Context context, @NonNull String imdbId) {
+    public int deleteMovie(@Nullable Context context, @NonNull String id) {
         throw new UnsupportedOperationException("Insufficient privileges for delete movie");
     }
 
@@ -188,14 +187,14 @@ abstract class DatabaseHelperFirebaseBase implements DatabaseHelper {
     // Queries are performed using the local database.
 
     /**
-     * Returns the movie with a specified IMDb id.
-     * @param imdbId the imdbId of the movie to be returned
-     * @return the movie with the specified IMDb id
+     * Returns the movie with a specified id.
+     * @param id the id of the movie to be returned
+     * @return the movie with the specified id
      */
     @Override
     @Nullable
-    public Movie selectMovieByImdbId(@NonNull String imdbId) {
-        return getLocalDatabase().selectMovieByImdbId(imdbId);
+    public Movie selectMovieById(@NonNull String id) {
+        return getLocalDatabase().selectMovieById(id);
     }
 
     /**
@@ -245,7 +244,7 @@ abstract class DatabaseHelperFirebaseBase implements DatabaseHelper {
                 @Override
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
                     Movie movie = dataSnapshot.getValue(Movie.class);
-                    getLocalDatabase().deleteMovie(movie.getImdbId());
+                    getLocalDatabase().deleteMovie(movie.getId());
                 }
 
                 @Override

@@ -5,13 +5,12 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import timber.log.Timber;
-
-import uk.jumpingmouse.moviecompanion.data.Movie;
-import uk.jumpingmouse.moviecompanion.model.DataContract;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import timber.log.Timber;
+import uk.jumpingmouse.moviecompanion.data.Movie;
+import uk.jumpingmouse.moviecompanion.model.DataContract;
 
 /**
  * Class for model utilities.
@@ -32,6 +31,11 @@ public final class ModelUtils {
     @Nullable
     public static Movie toMovie(@NonNull final ContentValues values) {
         // if any mandatory attribute is missing, return null
+        String id = (String) values.get(DataContract.MovieEntry.COLUMN_ID);
+        if (id == null) {
+            Timber.w("toMovie: missing id");
+            return null;
+        }
         String imdbId = (String) values.get(DataContract.MovieEntry.COLUMN_IMDB_ID);
         if (imdbId == null) {
             Timber.w("toMovie: missing imdbId");
@@ -51,6 +55,7 @@ public final class ModelUtils {
         long released = DateUtils.toLongOmdbReleased(strReleased);
 
         return Movie.builder()
+                .id(id)
                 .imdbId(imdbId)
                 .title(title)
                 .genre((String) values.get(DataContract.MovieEntry.COLUMN_GENRE))
@@ -69,12 +74,18 @@ public final class ModelUtils {
      */
     @Nullable
     public static Movie toMovie(@NonNull Cursor cursor) {
+        final String id = cursor.getString(DataContract.MovieEntry.COL_ID);
         final String imdbId = cursor.getString(DataContract.MovieEntry.COL_IMDB_ID);
         final String title = cursor.getString(DataContract.MovieEntry.COL_TITLE);
         final String genre = cursor.getString(DataContract.MovieEntry.COL_GENRE);
         final String posterUrl = cursor.getString(DataContract.MovieEntry.COL_POSTER_URL);
         final String year = cursor.getString(DataContract.MovieEntry.COL_YEAR);
 
+        // if the id mandatory attribute is missing, return null
+        if (id == null) {
+            Timber.w("toMovie(Cursor): missing id");
+            return null;
+        }
         // if the imdbId mandatory attribute is missing, return null
         if (imdbId == null) {
             Timber.w("toMovie(Cursor): missing imdbId");
@@ -99,6 +110,7 @@ public final class ModelUtils {
         }
 
         return Movie.builder()
+                .id(id)
                 .imdbId(imdbId)
                 .title(title)
                 .genre(genre)

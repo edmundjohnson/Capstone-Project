@@ -1,28 +1,29 @@
 apply plugin: 'com.android.application'
-apply plugin: 'jacoco'
+//apply plugin: 'jacoco'
 
 // See the following regarding optimisation of gradle builds:
 //   https://developer.android.com/studio/build/optimize-your-build.html
 // See the following regarding migrating to gradle plugin version 3:
 //   https://developer.android.com/studio/preview/features/new-android-plugin-migration.html
 
+// The line 'maven { url 'https://maven.fabric.io/public' }' is to fix the error:
+//     'Error: Failed to resolve: com.twitter.sdk.android:twitter:x.y.z'
+// See https://github.com/firebase/FirebaseUI-Android/issues/392'
 repositories {
     mavenLocal()
     flatDir {
         dirs 'libs'
     }
-    // This is to fix the error:
-    //     Error: Failed to resolve: com.twitter.sdk.android:twitter:x.y.z
-    // See https://github.com/firebase/FirebaseUI-Android/issues/392
     maven { url 'https://maven.fabric.io/public' }
 }
 
+// minSdkVersion must be >= 17 to support RTL
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
     defaultConfig {
         applicationId "uk.jumpingmouse.moviecompanion"
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -96,7 +97,9 @@ ext {
     // The compatible versions of firebase, firebase-ui and the support library are listed here:
     // https://github.com/firebase/FirebaseUI-Android/blob/master/constants.gradle
     SUPPORT_LIB_VERSION = '25.1.1'
+    //SUPPORT_LIB_VERSION = '25.3.1'
     FIREBASE_VERSION = '10.2.0'
+    //FIREBASE_VERSION = '10.2.6'
     FIREBASE_UI_VERSION = '1.2.0'
 
     RETROFIT_VERSION = '2.2.0'
@@ -105,24 +108,24 @@ ext {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
 
-    implementation "com.android.support:appcompat-v7:$SUPPORT_LIB_VERSION"
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile "com.android.support:appcompat-v7:$SUPPORT_LIB_VERSION"
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
     // Firebase
-    implementation "com.google.firebase:firebase-auth:$FIREBASE_VERSION"
-    implementation "com.google.firebase:firebase-database:$FIREBASE_VERSION"
-    implementation "com.google.firebase:firebase-crash:$FIREBASE_VERSION"
+    compile "com.google.firebase:firebase-auth:$FIREBASE_VERSION"
+    compile "com.google.firebase:firebase-database:$FIREBASE_VERSION"
+    compile "com.google.firebase:firebase-crash:$FIREBASE_VERSION"
     // Firebase UI Auth
-    implementation "com.firebaseui:firebase-ui-auth:$FIREBASE_UI_VERSION"
+    compile "com.firebaseui:firebase-ui-auth:$FIREBASE_UI_VERSION"
 
     // Timber
-    implementation 'com.jakewharton.timber:timber:4.5.1'
+    compile 'com.jakewharton.timber:timber:4.5.1'
 
     // test
-    testImplementation 'junit:junit:4.12'
+    testCompile 'junit:junit:4.12'
 
     // androidTest
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 }

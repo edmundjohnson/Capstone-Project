@@ -4,9 +4,9 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import uk.jumpingmouse.moviecompanion.data.Movie;
-
 import java.util.List;
+
+import uk.jumpingmouse.moviecompanion.data.Movie;
 
 /**
  * Interface for database helper classes.
@@ -65,7 +65,7 @@ public interface DatabaseHelper {
      * @return the movie with the specified IMDb id
      */
     @Nullable
-    Movie selectMovieByImdbId(@NonNull String imdbId);
+    Movie selectMovieById(@NonNull String imdbId);
 
     /**
      * Returns a list of movies in the database.

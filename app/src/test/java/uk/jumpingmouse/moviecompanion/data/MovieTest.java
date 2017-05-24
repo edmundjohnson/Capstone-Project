@@ -32,6 +32,7 @@ public class MovieTest {
     @Before
     public void setUp() {
         mMovie = Movie.builder()
+                .id("tt4016934")
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
                 .genre("Drama, Mystery, Romance")
@@ -42,6 +43,7 @@ public class MovieTest {
                 .build();
 
         mMovieWithNulls = Movie.builder()
+                .id("tt4016934")
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
                 .genre(null)
@@ -64,6 +66,7 @@ public class MovieTest {
     public void builder() {
 
         // test that the fields return the expected values
+        assertEquals("tt4016934", mMovie.getId());
         assertEquals("tt4016934", mMovie.getImdbId());
         assertEquals("The Handmaiden", mMovie.getTitle());
         assertEquals("Drama, Mystery, Romance", mMovie.getGenre());
@@ -73,6 +76,7 @@ public class MovieTest {
 
         // test that the nullable fields are nullable, i.e. no exception thrown
         Movie movieWithNulls = Movie.builder()
+                .id("tt4016934")
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
                 .genre(null)
@@ -82,6 +86,28 @@ public class MovieTest {
                 .released(Movie.RELEASED_UNKNOWN)
                 .build();
         assertNotNull(movieWithNulls);
+    }
+
+    /**
+     * Test that the id field is mandatory, i.e. if it is null, an exception is thrown.
+     */
+    @Test
+    public void builderIdIsMandatory() {
+        // We expect an exception to be thrown
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage("Missing required properties: id");
+
+        @SuppressWarnings({"unused", "UnusedAssignment", "ConstantConditions"})
+        Movie movie = Movie.builder()
+                .id(null)
+                .imdbId("tt4016934")
+                .title("The Handmaiden")
+                .genre("Drama, Mystery, Romance")
+                .runtime(144)
+                .posterUrl(POSTER_URL)
+                .year("2017")
+                .released(DateUtils.toLongOmdbReleased("01 Jun 2017"))
+                .build();
     }
 
     /**
@@ -95,6 +121,7 @@ public class MovieTest {
 
         @SuppressWarnings({"unused", "UnusedAssignment", "ConstantConditions"})
         Movie movie = Movie.builder()
+                .id("tt4016934")
                 .imdbId(null)
                 .title("The Handmaiden")
                 .genre("Drama, Mystery, Romance")
@@ -116,6 +143,7 @@ public class MovieTest {
 
         @SuppressWarnings({"unused", "UnusedAssignment", "ConstantConditions"})
         Movie movie = Movie.builder()
+                .id("tt4016934")
                 .imdbId("tt4016934")
                 .title(null)
                 .genre("Drama, Mystery, Romance")
@@ -138,6 +166,7 @@ public class MovieTest {
 
         // test that building with the same parameter values results in equals(...) returning true
         assertTrue(Movie.builder()
+                .id("tt4016934")
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
                 .genre("Drama, Mystery, Romance")
@@ -150,6 +179,7 @@ public class MovieTest {
 
         // test that building with the same null parameter values results in equals(...) returning true
         assertTrue(Movie.builder()
+                .id("tt4016934")
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
                 .genre(null)
@@ -162,6 +192,7 @@ public class MovieTest {
 
         // test that building with a different imdbId results in equals(...) returning false
         assertFalse(Movie.builder()
+                .id("tt4016934")
                 .imdbId("tt4016935")
                 .title("The Handmaiden")
                 .genre("Drama, Mystery, Romance")
@@ -182,9 +213,9 @@ public class MovieTest {
     @Test
     public void testToString() {
         assertEquals(
-                "Movie{imdbId=tt4016934, title=The Handmaiden, genre=Drama, Mystery, Romance," +
-                        " runtime=144, posterUrl=" + POSTER_URL + ", year=2017, " +
-                        "released=" + DateUtils.toLongOmdbReleased("01 Jun 2017") + "}",
+                "Movie{id=tt4016934, imdbId=tt4016934, title=The Handmaiden," +
+                        " genre=Drama, Mystery, Romance, runtime=144, posterUrl=" + POSTER_URL + "," +
+                        " year=2017, released=" + DateUtils.toLongOmdbReleased("01 Jun 2017") + "}",
                 mMovie.toString());
     }
 

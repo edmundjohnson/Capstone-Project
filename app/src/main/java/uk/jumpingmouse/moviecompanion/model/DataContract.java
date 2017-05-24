@@ -122,9 +122,9 @@ public final class DataContract {
         }
 
         /**
-         * Create and return a URI for querying all movies in default order.
+         * Create and return a URI for querying all movies.
          * i.e. "content://uk.jumpingmouse.moviecompanion/movie/all".
-         * @return the URI for querying all movies in default order
+         * @return the URI for querying all movies
          */
         @NonNull
         public static Uri buildUriMovieAll() {
@@ -146,21 +146,6 @@ public final class DataContract {
 //            return CONTENT_URI.buildUpon()
 //                    .appendPath(PARAM_LIMIT)
 //                    .appendPath(String.valueOf(limit))
-//                    .build();
-//        }
-
-//        /**
-//         * Create and return a URI for querying older movies, i.e. the movies excluding the
-//         * newest n movies. If there are less than n+10 total movies, the URI returns no movies.
-//         * e.g. "content://org.balancedview.dailybenefit/movie/excludingnewest/100".
-//         * @param excludingNewest the number of newest rows to exclude from the returned list
-//         * @return the URI for querying the oldest movies
-//         */
-//        @NonNull
-//        public static Uri buildUriMovieExcludingNewest(final int excludingNewest) {
-//            return CONTENT_URI.buildUpon()
-//                    .appendPath(PARAM_EXCLUDINGNEWEST)
-//                    .appendPath(String.valueOf(excludingNewest))
 //                    .build();
 //        }
 
