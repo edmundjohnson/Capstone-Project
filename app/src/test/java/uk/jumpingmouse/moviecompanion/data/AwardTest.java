@@ -15,6 +15,10 @@ import static org.junit.Assert.assertTrue;
  * @author Edmund Johnson
  */
 public class AwardTest {
+    private static final String ID = "award_pk_1";
+    private static final String MOVIE_ID = "tt4016934";
+    private static final String AWARD_DATE_1 = "170512";
+    private static final String AWARD_DATE_2 = "170519";
     private static final String REVIEW =
             "A really smart satire on what's been referred to as post-racial America.";
 
@@ -29,9 +33,10 @@ public class AwardTest {
     @Before
     public void setUp() {
         mAward = Award.builder()
-                .awardDate("170512")
+                .id(ID)
+                .movieId(MOVIE_ID)
+                .awardDate(AWARD_DATE_1)
                 .category(Award.CATEGORY_MOVIE)
-                .id("tt4016934")
                 .review(REVIEW)
                 .build();
     }
@@ -47,9 +52,10 @@ public class AwardTest {
     @Test
     public void builder() {
         // test that the fields return the expected values
-        assertEquals("170512", mAward.getAwardDate());
+        assertEquals(ID, mAward.getId());
+        assertEquals(MOVIE_ID, mAward.getMovieId());
+        assertEquals(AWARD_DATE_1, mAward.getAwardDate());
         assertEquals(Award.CATEGORY_MOVIE, mAward.getCategory());
-        assertEquals("tt4016934", mAward.getId());
         assertEquals(REVIEW, mAward.getReview());
     }
 
@@ -60,13 +66,14 @@ public class AwardTest {
     public void builderMandatoryFieldsAreNull() {
         // We expect an exception to be thrown
         thrown.expect(IllegalStateException.class);
-        thrown.expectMessage("Missing required properties: awardDate category id review");
+        thrown.expectMessage("Missing required properties: id movieId awardDate category review");
 
         @SuppressWarnings({"unused", "UnusedAssignment", "ConstantConditions"})
         Award award = Award.builder()
+                .id(null)
+                .movieId(null)
                 .awardDate(null)
                 .category(null)
-                .id(null)
                 .review(null)
                 .build();
     }
@@ -86,18 +93,20 @@ public class AwardTest {
 
         // test that building with the same parameter values results in equals(...) returning true
         assertTrue(Award.builder()
-                .awardDate("170512")
+                .id(ID)
+                .movieId(MOVIE_ID)
+                .awardDate(AWARD_DATE_1)
                 .category(Award.CATEGORY_MOVIE)
-                .id("tt4016934")
                 .review(REVIEW)
                 .build()
                 .equals(mAward));
 
         // test that building with a different awardDate results in equals(...) returning false
         assertFalse(Award.builder()
-                .awardDate("170519")
+                .id(ID)
+                .movieId(MOVIE_ID)
+                .awardDate(AWARD_DATE_2)
                 .category(Award.CATEGORY_MOVIE)
-                .id("tt4016934")
                 .review(REVIEW)
                 .build()
                 .equals(mAward));
@@ -105,12 +114,13 @@ public class AwardTest {
 
     @Test
     public void testHashcode() {
-        assertTrue(mAward.hashCode() > 1);
+        //assertTrue(mAward.hashCode() > 1); // no, hashCode can be negative
         // test that the hashcode is different when the award is built with a different awardDate
         assertTrue(mAward.hashCode() != Award.builder()
-                .awardDate("170519")
+                .id(ID)
+                .movieId(MOVIE_ID)
+                .awardDate(AWARD_DATE_2)
                 .category(Award.CATEGORY_MOVIE)
-                .id("tt4016934")
                 .review(REVIEW)
                 .build()
                 .hashCode());
@@ -119,8 +129,11 @@ public class AwardTest {
     @Test
     public void testToString() {
         assertEquals(
-                "Award{awardDate=170512, category=" + Award.CATEGORY_MOVIE +
-                        ", id=tt4016934, review=" + REVIEW + "}",
+                "Award{id=" + ID +
+                        ", movieId=" + MOVIE_ID +
+                        ", awardDate=" + AWARD_DATE_1 +
+                        ", category=" + Award.CATEGORY_MOVIE +
+                        ", review=" + REVIEW + "}",
                 mAward.toString());
     }
 

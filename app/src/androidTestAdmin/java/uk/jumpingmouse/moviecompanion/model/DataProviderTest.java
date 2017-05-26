@@ -96,9 +96,9 @@ public class DataProviderTest {
                 .released(DateUtils.toLongOmdbReleased("01 Jun 2013"))
                 .build();
 
-        URI_TEST_MOVIE_1 = DataContract.MovieEntry.buildUriMovieId(TEST_MOVIE_1.getId());
-        URI_TEST_MOVIE_2 = DataContract.MovieEntry.buildUriMovieId(TEST_MOVIE_2.getId());
-        URI_TEST_MOVIE_3 = DataContract.MovieEntry.buildUriMovieId(TEST_MOVIE_3.getId());
+        URI_TEST_MOVIE_1 = DataContract.MovieEntry.buildUriForRowById(TEST_MOVIE_1.getId());
+        URI_TEST_MOVIE_2 = DataContract.MovieEntry.buildUriForRowById(TEST_MOVIE_2.getId());
+        URI_TEST_MOVIE_3 = DataContract.MovieEntry.buildUriForRowById(TEST_MOVIE_3.getId());
     }
 
     // By default, expect no exceptions.
@@ -142,14 +142,14 @@ public class DataProviderTest {
                 DataContract.MovieEntry.CONTENT_DIR_TYPE, type);
 
         // URI: content://uk.jumpingmouse.moviecompanion/movie/all
-        type = mContentResolver.getType(DataContract.MovieEntry.buildUriMovieAll());
+        type = mContentResolver.getType(DataContract.MovieEntry.buildUriForAllRows());
         // Expected getType(URI): vnd.android.cursor.dir/uk.jumpingmouse.moviecompanion/movie
         assertEquals("Error: ContentProvider.getType() for all movies URI should be" +
                         " DataContract.MovieEntry.CONTENT_DIR_TYPE",
                 DataContract.MovieEntry.CONTENT_DIR_TYPE, type);
 
         // URI: content://uk.jumpingmouse.moviecompanion/movie/*
-        type = mContentResolver.getType(DataContract.MovieEntry.buildUriMovieId("tt1234567"));
+        type = mContentResolver.getType(DataContract.MovieEntry.buildUriForRowById("tt1234567"));
         // Expected getType(URI): vnd.android.cursor.item/uk.jumpingmouse.moviecompanion/movie
         assertEquals("Error: ContentProvider.getType() for specific movie URI should be" +
                         " DataContract.MovieEntry.CONTENT_ITEM_TYPE",
@@ -364,7 +364,7 @@ public class DataProviderTest {
 
         // Verify the other URI query works ".../movie/all" rather than ".../movie"
         cursor = mContentResolver.query(
-                DataContract.MovieEntry.buildUriMovieAll(),
+                DataContract.MovieEntry.buildUriForAllRows(),
                 null,
                 null,
                 null,
@@ -446,6 +446,8 @@ public class DataProviderTest {
         assertNotNull(uriInserted);
         assertTrue(uriInserted.equals(URI_TEST_MOVIE_1));
 
+//TODO: This fails because the insert adds the movie to the local database asynchronously,
+//      so it's not there yet.
         // query for specific movie TEST_MOVIE_1 - should now be there
         cursor = mContentResolver.query(URI_TEST_MOVIE_1, null, null, null, null);
         assertNotNull(cursor);
@@ -629,7 +631,7 @@ public class DataProviderTest {
         thrown.expect(UnsupportedOperationException.class);
         thrown.expectMessage("Id mismatch between URL and body of update request");
 
-        Uri uriUpdate = DataContract.MovieEntry.buildUriMovieId("noSuchMovie");
+        Uri uriUpdate = DataContract.MovieEntry.buildUriForRowById("noSuchMovie");
         int rowsUpdated = mContentResolver.update(uriUpdate, toContentValues(TEST_MOVIE_1), null, null);
         assertEquals(0, rowsUpdated);
     }
@@ -639,8 +641,24 @@ public class DataProviderTest {
      */
     @Test
     public void deleteMovieNotFound() {
+        int initialRows = getMovieCount();
         int rowsDeleted = mContentResolver.delete(URI_TEST_MOVIE_2, null, null);
-        assertEquals(0, rowsDeleted);
+        // delete is asynchronous, so 1 is always returned
+        //assertEquals(0, rowsDeleted);
+        assertEquals(1, rowsDeleted);
+        // instead of rowsDeleted being 0, check that the number of movies is unchanged
+        assertEquals(initialRows, getMovieCount());
+    }
+
+    private int getMovieCount() {
+        int count = 0;
+        Cursor cursor = mContentResolver.query(DataContract.MovieEntry.buildUriForAllRows(),
+                null, null, null, null);
+        if (cursor != null) {
+            count = cursor.getCount();
+            closeCursor(cursor);
+        }
+        return count;
     }
 
     /**
@@ -649,9 +667,9 @@ public class DataProviderTest {
     @Test
     public void queryUnsupportedUri() {
         thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("Unknown URI for query: content://uk.jumpingmouse.moviecompanion/film");
+        thrown.expectMessage("Unknown URI for query: content://" + DataContract.CONTENT_AUTHORITY + "/film");
 
-        Uri uriQuery = Uri.parse("content://uk.jumpingmouse.moviecompanion/film");
+        Uri uriQuery = Uri.parse("content://" + DataContract.CONTENT_AUTHORITY + "/film");
         Cursor cursor = mContentResolver.query(uriQuery, null, null, null, null, null);
         //assertNull(cursor);
         closeCursor(cursor);
@@ -663,9 +681,9 @@ public class DataProviderTest {
     @Test
     public void insertUnsupportedUri() {
         thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("Unknown URI for insert: " + DataContract.MovieEntry.buildUriMovieAll().toString());
+        thrown.expectMessage("Unknown URI for insert: " + DataContract.MovieEntry.buildUriForAllRows().toString());
 
-        Uri uriInsert = DataContract.MovieEntry.buildUriMovieAll();
+        Uri uriInsert = DataContract.MovieEntry.buildUriForAllRows();
         Uri uriInserted = mContentResolver.insert(uriInsert, toContentValues(TEST_MOVIE_1));
         assertNull(uriInserted);
     }
@@ -676,9 +694,9 @@ public class DataProviderTest {
     @Test
     public void updateUnsupportedUri() {
         thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("Unknown URI for update: " + DataContract.MovieEntry.buildUriMovieAll().toString());
+        thrown.expectMessage("Unknown URI for update: " + DataContract.MovieEntry.buildUriForAllRows().toString());
 
-        Uri uriUpdate = DataContract.MovieEntry.buildUriMovieAll();
+        Uri uriUpdate = DataContract.MovieEntry.buildUriForAllRows();
         int rowsUpdated = mContentResolver.update(uriUpdate, toContentValues(TEST_MOVIE_1), null, null);
         assertEquals(0, rowsUpdated);
     }
@@ -689,9 +707,9 @@ public class DataProviderTest {
     @Test
     public void deleteUnsupportedUri() {
         thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("Unknown URI for delete: " + DataContract.MovieEntry.buildUriMovieAll().toString());
+        thrown.expectMessage("Unknown URI for delete: " + DataContract.MovieEntry.buildUriForAllRows().toString());
 
-        Uri uriDelete = DataContract.MovieEntry.buildUriMovieAll();
+        Uri uriDelete = DataContract.MovieEntry.buildUriForAllRows();
         int rowsDeleted = mContentResolver.delete(uriDelete, null, null);
         assertEquals(0, rowsDeleted);
     }

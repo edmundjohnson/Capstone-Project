@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 
+import uk.jumpingmouse.moviecompanion.BuildConfig;
+
 /**
  * Class which defines the contract between the model (database) and view layers.
  * @author Edmund Johnson
@@ -12,18 +14,15 @@ import android.support.annotation.NonNull;
 public final class DataContract {
 
     /**
-     * The "Content authority" is a name for the entire content provider, similar to the
+     * The "content authority" is a name for the entire content provider, similar to the
      * relationship between a domain name and its website.  A convenient string to use for the
      * content authority is the package name for the app, which is guaranteed to be unique on the
      * device.
      */
-    public static final String CONTENT_AUTHORITY = "uk.jumpingmouse.moviecompanion";
+    static final String CONTENT_AUTHORITY;
 
-    /**
-     * Use CONTENT_AUTHORITY to create the base of all URIs which apps will use to contact
-     * the content provider.
-     */
-    private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+    /** The base of all the URIs which apps will use to contact the content provider. */
+    private static final Uri BASE_CONTENT_URI;
 
     /**
      * relative paths appended to base content URI.
@@ -32,16 +31,16 @@ public final class DataContract {
      * "content://uk.jumpingmouse.moviecompanion/give-me-root/" will fail, as the
      * ContentProvider hasn't been given any information on what to do with "give-me-root".
      */
-    public static final String URI_PATH_MOVIE = "movie";
-    //public static final String URI_PATH_AWARD = "award";
-    //public static final String URI_PATH_USER = "user";
+    static final String URI_PATH_MOVIE = "movie";
+    //static final String URI_PATH_AWARD = "award";
+    //static final String URI_PATH_USER = "user";
 
     // Query parameters
-    public static final String PARAM_ALL = "all";
+    static final String PARAM_ALL = "all";
 
     // Values for sort direction (PARAM_SORT_DIRECTION)
-    public static final String SORT_DIRECTION_ASC = "ASC";
-    public static final String SORT_DIRECTION_DESC = "DESC";
+    static final String SORT_DIRECTION_ASC = "ASC";
+    static final String SORT_DIRECTION_DESC = "DESC";
 
     // Query parameters which are not columns
 //        public static final String PARAM_LIMIT = "limit";
@@ -53,6 +52,16 @@ public final class DataContract {
 //    private static final int MAX_ROWS_DEFAULT = 0;
 //    private static final int OFFSET_DEFAULT = 0;
 
+    static {
+        // The content authority for the admin product flavour has a different name so that the
+        // different apps can coexist on the same device.
+        CONTENT_AUTHORITY = BuildConfig.FLAVOR_mode.equals("admin") ?
+                "uk.jumpingmouse.moviecompanion.admin" :
+                "uk.jumpingmouse.moviecompanion";
+
+        BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+    }
+
     /** Private default constructor to prevent instantiation. */
     private DataContract() {
     }
@@ -60,14 +69,14 @@ public final class DataContract {
     /** Inner class that defines the contents of the movie node. */
     public static final class MovieEntry implements BaseColumns {
 
-        public static final String CONTENT_DIR_TYPE =
+        static final String CONTENT_DIR_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + URI_PATH_MOVIE;
-        public static final String CONTENT_ITEM_TYPE =
+        static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + URI_PATH_MOVIE;
 
         // Database
 
-        public static final String ROOT_NODE = "movies";
+        static final String ROOT_NODE = "movies";
 
         public static final String COLUMN_ID = MovieEntry._ID;
         public static final String COLUMN_IMDB_ID = "imdbId";
@@ -105,7 +114,7 @@ public final class DataContract {
 
         // URIs
 
-        public static final Uri CONTENT_URI =
+        static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(URI_PATH_MOVIE).build();
 
         /**
@@ -115,7 +124,7 @@ public final class DataContract {
          * @return the URI for obtaining the specific movie
          */
         @NonNull
-        public static Uri buildUriMovieId(final String id) {
+        static Uri buildUriForRowById(final String id) {
             return CONTENT_URI.buildUpon()
                     .appendPath(id)
                     .build();
@@ -127,7 +136,7 @@ public final class DataContract {
          * @return the URI for querying all movies
          */
         @NonNull
-        public static Uri buildUriMovieAll() {
+        static Uri buildUriForAllRows() {
             return CONTENT_URI.buildUpon()
                     .appendPath(PARAM_ALL)
                     .build();
@@ -142,7 +151,7 @@ public final class DataContract {
 //         *         default offset and sort order
 //         */
 //        @NonNull
-//        public static Uri buildUriMovieLimit(final int limit) {
+//        public static Uri buildUriForAllRowsWithLimit(final int limit) {
 //            return CONTENT_URI.buildUpon()
 //                    .appendPath(PARAM_LIMIT)
 //                    .appendPath(String.valueOf(limit))

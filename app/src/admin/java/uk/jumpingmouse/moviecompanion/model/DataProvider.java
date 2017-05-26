@@ -47,7 +47,7 @@ public class DataProvider extends DataProviderBase {
                     Timber.w("Failed to insert movie using ContentValues: ", values);
                     return null;
                 }
-                returnUri = DataContract.MovieEntry.buildUriMovieId(movie.getId());
+                returnUri = DataContract.MovieEntry.buildUriForRowById(movie.getId());
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown URI for insert: " + uri);

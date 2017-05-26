@@ -15,12 +15,14 @@ public class Award {
     static final String CATEGORY_MOVIE = "M";
     public static final String CATEGORY_DVD = "D";
 
-    // awardDate format is "YYMMDD"
+    // id is a unique identifier for award
+    private String id;
+    // movieId is a "foreign key" to Movie
+    private String movieId;
+    // awardDate is formatted as "YYMMDD"
     private String awardDate;
     // categoryId is one of CATEGORY_MOVIE, CATEGORY_DVD
     private String category;
-    // id is a "foreign key" to Movie
-    private String id;
     // free text
     private String review;
 
@@ -28,30 +30,45 @@ public class Award {
     }
 
     private Award(
+            @Nullable String id,
+            @Nullable String movieId,
             @Nullable String awardDate,
             @Nullable String category,
-            @Nullable String id,
             @Nullable String review) {
+        if (id == null) {
+            throw new NullPointerException("Null id");
+        }
+        if (movieId == null) {
+            throw new NullPointerException("Null movieId");
+        }
         if (awardDate == null) {
             throw new NullPointerException("Null awardDate");
         }
         if (category == null) {
             throw new NullPointerException("Null category");
         }
-        if (id == null) {
-            throw new NullPointerException("Null id");
-        }
         if (review == null) {
             throw new NullPointerException("Null review");
         }
+        this.id = id;
+        this.movieId = movieId;
         this.awardDate = awardDate;
         this.category = category;
-        this.id = id;
         this.review = review;
     }
 
     //---------------------------------------------------------------
     // Getters
+
+    @NonNull
+    public String getId() {
+        return id;
+    }
+
+    @NonNull
+    public String getMovieId() {
+        return movieId;
+    }
 
     @NonNull
     public String getAwardDate() {
@@ -61,11 +78,6 @@ public class Award {
     @NonNull
     public String getCategory() {
         return category;
-    }
-
-    @NonNull
-    public String getId() {
-        return id;
     }
 
     @NonNull
@@ -81,9 +93,10 @@ public class Award {
      * <blockquote><pre>
      * {@code
      *   Award award = Award.builder()
+     *         .id("???")
+     *         .movieId("tt4016934")
      *         .awardDate("170512")
      *         .category(Award.CATEGORY_MOVIE)
-     *         .id("tt4016934")
      *         .review("A great movie")
      *        .build();
      * }
@@ -96,19 +109,31 @@ public class Award {
 
     @SuppressWarnings("WeakerAccess")
     public static final class Builder {
+        private String id;
+        private String movieId;
         private String awardDate;
         private String category;
-        private String id;
         private String review;
 
         Builder() {
         }
 
         Builder(Award source) {
+            this.id = source.id;
+            this.movieId = source.movieId;
             this.awardDate = source.awardDate;
             this.category = source.category;
-            this.id = source.id;
             this.review = source.review;
+        }
+
+        public Award.Builder id(@NonNull String id) {
+            this.id = id;
+            return this;
+        }
+
+        public Award.Builder movieId(@NonNull String movieId) {
+            this.movieId = movieId;
+            return this;
         }
 
         public Award.Builder awardDate(@NonNull String awardDate) {
@@ -121,11 +146,6 @@ public class Award {
             return this;
         }
 
-        public Award.Builder id(@NonNull String id) {
-            this.id = id;
-            return this;
-        }
-
         public Award.Builder review(@NonNull String review) {
             this.review = review;
             return this;
@@ -133,14 +153,17 @@ public class Award {
         /** Builds and returns an object of this class. */
         public Award build() {
             String missing = "";
+            if (id == null) {
+                missing += " id";
+            }
+            if (movieId == null) {
+                missing += " movieId";
+            }
             if (awardDate == null) {
                 missing += " awardDate";
             }
             if (category == null) {
                 missing += " category";
-            }
-            if (id == null) {
-                missing += " id";
             }
             if (review == null) {
                 missing += " review";
@@ -149,9 +172,10 @@ public class Award {
                 throw new IllegalStateException("Missing required properties:" + missing);
             }
             return new Award(
+                    this.id,
+                    this.movieId,
                     this.awardDate,
                     this.category,
-                    this.id,
                     this.review);
         }
     }
@@ -162,9 +186,10 @@ public class Award {
     @Override
     public String toString() {
         return "Award{"
+                + "id=" + id + ", "
+                + "movieId=" + movieId + ", "
                 + "awardDate=" + awardDate + ", "
                 + "category=" + category + ", "
-                + "id=" + id + ", "
                 + "review=" + review
                 + "}";
     }
@@ -176,9 +201,10 @@ public class Award {
         }
         if (o instanceof Award) {
             Award that = (Award) o;
-            return (this.awardDate.equals(that.awardDate))
+            return (this.id.equals(that.id))
+                    && (this.movieId.equals(that.movieId))
+                    && (this.awardDate.equals(that.awardDate))
                     && (this.category.equals(that.category))
-                    && (this.id.equals(that.id))
                     && (this.review.equals(that.review));
         }
         return false;
@@ -188,11 +214,13 @@ public class Award {
     public int hashCode() {
         int h = 1;
         h *= 1000003;
+        h ^= this.id.hashCode();
+        h *= 1000003;
+        h ^= this.movieId.hashCode();
+        h *= 1000003;
         h ^= this.awardDate.hashCode();
         h *= 1000003;
         h ^= this.category.hashCode();
-        h *= 1000003;
-        h ^= this.id.hashCode();
         h *= 1000003;
         h ^= this.review.hashCode();
         return h;
