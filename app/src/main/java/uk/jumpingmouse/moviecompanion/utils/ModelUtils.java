@@ -49,7 +49,7 @@ public final class ModelUtils {
 
         // Convert runtime from String to int
         String strRuntime = (String) values.get(DataContract.MovieEntry.COLUMN_RUNTIME);
-        int runtime = ModelUtils.toIntOmdbRuntime(strRuntime);
+        int runtime = OmdbUtils.toIntOmdbRuntime(strRuntime);
         // Convert released from String to Date
         String strReleased = (String) values.get(DataContract.MovieEntry.COLUMN_RELEASED);
         long released = DateUtils.toLongOmdbReleased(strReleased);
@@ -58,11 +58,11 @@ public final class ModelUtils {
                 .id(id)
                 .imdbId(imdbId)
                 .title(title)
-                .genre((String) values.get(DataContract.MovieEntry.COLUMN_GENRE))
-                .runtime(runtime)
-                .posterUrl((String) values.get(DataContract.MovieEntry.COLUMN_POSTER_URL))
                 .year((String) values.get(DataContract.MovieEntry.COLUMN_YEAR))
                 .released(released)
+                .runtime(runtime)
+                .genre((String) values.get(DataContract.MovieEntry.COLUMN_GENRE))
+                .poster((String) values.get(DataContract.MovieEntry.COLUMN_POSTER))
                 .build();
     }
 
@@ -77,9 +77,9 @@ public final class ModelUtils {
         final String id = cursor.getString(DataContract.MovieEntry.COL_ID);
         final String imdbId = cursor.getString(DataContract.MovieEntry.COL_IMDB_ID);
         final String title = cursor.getString(DataContract.MovieEntry.COL_TITLE);
-        final String genre = cursor.getString(DataContract.MovieEntry.COL_GENRE);
-        final String posterUrl = cursor.getString(DataContract.MovieEntry.COL_POSTER_URL);
         final String year = cursor.getString(DataContract.MovieEntry.COL_YEAR);
+        final String genre = cursor.getString(DataContract.MovieEntry.COL_GENRE);
+        final String poster = cursor.getString(DataContract.MovieEntry.COL_POSTER);
 
         // if the id mandatory attribute is missing, return null
         if (id == null) {
@@ -96,28 +96,28 @@ public final class ModelUtils {
             Timber.w("toMovie(Cursor): missing title");
             return null;
         }
-        // if the runtime is invalid set it to unknown
-        int runtime = cursor.getInt(DataContract.MovieEntry.COL_RUNTIME);
-        if (runtime < 1) {
-            Timber.w("toMovie(Cursor): invalid runtime");
-            runtime = Movie.RUNTIME_UNKNOWN;
-        }
         // if the released date is invalid set it to unknown
         long released = cursor.getLong(DataContract.MovieEntry.COL_RELEASED);
         if (released < 0) {
             Timber.w("toMovie(Cursor): invalid released");
             released = Movie.RELEASED_UNKNOWN;
         }
+        // if the runtime is invalid set it to unknown
+        int runtime = cursor.getInt(DataContract.MovieEntry.COL_RUNTIME);
+        if (runtime < 1) {
+            Timber.w("toMovie(Cursor): invalid runtime");
+            runtime = Movie.RUNTIME_UNKNOWN;
+        }
 
         return Movie.builder()
                 .id(id)
                 .imdbId(imdbId)
                 .title(title)
-                .genre(genre)
-                .runtime(runtime)
-                .posterUrl(posterUrl)
                 .year(year)
                 .released(released)
+                .runtime(runtime)
+                .genre(genre)
+                .poster(poster)
                 .build();
     }
 
@@ -142,26 +142,6 @@ public final class ModelUtils {
             }
         }
         return movieList;
-    }
-
-    /**
-     * Returns an OMDb runtime as an int, e.g. returns "144 min" as 144
-     * @param omdbRuntime the OMDb runtime, e.g. "144 min"
-     * @return the runtime as an int, e.g. 144
-     */
-    private static int toIntOmdbRuntime(@Nullable String omdbRuntime) {
-        if (omdbRuntime != null) {
-            String[] split = omdbRuntime.split(" ", 2);
-            // split.length is always at least 1
-            try {
-                return Integer.decode(split[0]);
-            } catch (NumberFormatException e) {
-                Timber.w(String.format(
-                        "NumberFormatException while attempting to decode OMDb runtime to int: \"%s\"",
-                        omdbRuntime));
-            }
-        }
-        return Movie.RUNTIME_UNKNOWN;
     }
 
 }

@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+
+    <!-- Material palette: Deep Purple -->
+    <!-- see: https://material.io/guidelines/style/color.html#color-color-palette  -->
+    <color name="deepPurple400">#9575CD</color>
+    <color name="deepPurple500">#673AB7</color>
+    <color name="deepPurple700">#512DA8</color>
+    <color name="greenA200">#68EFAD</color>
+
+
+    <!-- Theme colours -->
+    <color name="colorPrimary">@color/deepPurple500</color>
+    <color name="colorPrimaryDark">@color/deepPurple700</color>
+    <!-- green A200 -->
+    <color name="colorAccent">@color/greenA200</color>
+
+    <!-- Deep Purple 400 -->
+    <color name="colorButtonBackground">@color/deepPurple400</color>
 </resources>

@@ -1,11 +1,14 @@
 package uk.jumpingmouse.moviecompanion.utils;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.view.MenuItem;
 
 import uk.jumpingmouse.moviecompanion.R;
+import uk.jumpingmouse.moviecompanion.activity.AddMovieActivity;
 
 /**
  * Class containing utility methods related to navigation.
@@ -36,19 +39,19 @@ public class NavUtilsImpl extends NavUtils {
     // Utility methods
 
     /**
-     * Process selection of an item in the options menu.
-     * @param activity the activity for which the menu is displayed
-     * @param item the menu item that was selected
+     * Processes the selection of an item in the options menu.
+     * @param activity the activity for which the menu is being displayed
+     * @param item the selected menu item
      * @return false to allow normal menu processing to proceed,
      *         true to consume it here.
      */
     @Override
-    public boolean onOptionsItemSelected(
-            @Nullable FragmentActivity activity, @NonNull MenuItem item) {
+    public boolean onOptionsItemSelected(@Nullable FragmentActivity activity,
+                                         @NonNull MenuItem item) {
         switch (item.getItemId()) {
             // add movie
             case R.id.menu_option_add_movie:
-                //TODO
+                displayAddMovie(activity);
                 return true;
 
             // sign out
@@ -57,9 +60,30 @@ public class NavUtilsImpl extends NavUtils {
                 return true;
 
             default:
+                // The caller must call super.onOptionsItemSelected(item) if this method
+                // returns false
                 return false;
         }
     }
 
+    /**
+     * Displays the add movie screen.
+     * @param context the context
+     */
+    private void displayAddMovie(@Nullable Context context) {
+        displayActivity(context, AddMovieActivity.class);
+    }
+
+    /**
+     * Displays an activity.
+     * @param context the context
+     * @param activityClass the class of the activity, e.g. AddMovieActivity.class
+     */
+    private void displayActivity(@Nullable Context context, @NonNull Class activityClass) {
+        if (context != null) {
+            Intent intent = new Intent(context, activityClass);
+            context.startActivity(intent);
+        }
+    }
 
 }

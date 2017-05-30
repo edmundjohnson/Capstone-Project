@@ -1,9 +1,13 @@
 package uk.jumpingmouse.moviecompanion.data;
 
+import android.content.ContentValues;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.Comparator;
+
+import uk.jumpingmouse.moviecompanion.model.DataContract;
+import uk.jumpingmouse.moviecompanion.utils.OmdbUtils;
 
 /**
  * The Movie model class.
@@ -21,16 +25,16 @@ public class Movie {
     private String imdbId;
     // e.g. "The Handmaiden"
     private String title;
-    // a comma-separated list of genres, e.g. "Drama, Mystery, Romance"
-    private String genre;
-    // length in minutes
-    private int runtime;
-    // We may not have a poster URL, the view must take this into account
-    private String posterUrl;
     // The year of the movie's release (not the year of this award), e.g. "2017"
     private String year;
     // The release date, as a millisecond value
     private long released;
+    // length in minutes
+    private int runtime;
+    // a comma-separated list of genres, e.g. "Drama, Mystery, Romance"
+    private String genre;
+    // We may not have a poster URL, the view must take this into account
+    private String poster;
 
     private Movie() {
     }
@@ -39,11 +43,11 @@ public class Movie {
             @Nullable String id,
             @Nullable String imdbId,
             @Nullable String title,
-            @Nullable String genre,
-            int runtime,
-            @Nullable String posterUrl,
             @Nullable String year,
-            long released) {
+            long released,
+            int runtime,
+            @Nullable String genre,
+            @Nullable String poster) {
         if (id == null) {
             throw new NullPointerException("Null id");
         }
@@ -56,11 +60,11 @@ public class Movie {
         this.id = id;
         this.imdbId = imdbId;
         this.title = title;
-        this.genre = genre;
-        this.runtime = runtime;
-        this.posterUrl = posterUrl;
         this.year = year;
         this.released = released;
+        this.runtime = runtime;
+        this.genre = genre;
+        this.poster = poster;
     }
 
     //---------------------------------------------------------------
@@ -84,23 +88,6 @@ public class Movie {
         return title;
     }
 
-    /** Returns a comma-separated list of genres, e.g. "Drama, Mystery, Romance". */
-    @Nullable
-    public String getGenre() {
-        return genre;
-    }
-
-    /** Returns the runtime in minutes, e.g. 144. */
-    public int getRuntime() {
-        return runtime;
-    }
-
-    /** Returns the poster URL. */
-    @Nullable
-    public String getPosterUrl() {
-        return posterUrl;
-    }
-
     /** Returns the year of the movie's release (not the year of this award), e.g. "2017". */
     @Nullable
     public String getYear() {
@@ -110,6 +97,23 @@ public class Movie {
     /** Returns the released date, as a millisecond value. */
     public long getReleased() {
         return released;
+    }
+
+    /** Returns the runtime in minutes, e.g. 144. */
+    public int getRuntime() {
+        return runtime;
+    }
+
+    /** Returns a comma-separated list of genres, e.g. "Drama, Mystery, Romance". */
+    @Nullable
+    public String getGenre() {
+        return genre;
+    }
+
+    /** Returns the poster URL. */
+    @Nullable
+    public String getPoster() {
+        return poster;
     }
 
     //---------------------------------------------------------------
@@ -138,11 +142,11 @@ public class Movie {
         private String id;
         private String imdbId;
         private String title;
-        private String genre;
-        private Integer runtime;
-        private String posterUrl;
         private String year;
         private Long released;
+        private Integer runtime;
+        private String genre;
+        private String poster;
 
         Builder() {
         }
@@ -151,11 +155,11 @@ public class Movie {
             this.id = source.id;
             this.imdbId = source.imdbId;
             this.title = source.title;
-            this.genre = source.genre;
-            this.runtime = source.runtime;
-            this.posterUrl = source.posterUrl;
             this.year = source.year;
             this.released = source.released;
+            this.runtime = source.runtime;
+            this.genre = source.genre;
+            this.poster = source.poster;
         }
 
         public Movie.Builder id(@NonNull String id) {
@@ -170,24 +174,24 @@ public class Movie {
             this.title = title;
             return this;
         }
-        public Movie.Builder genre(@Nullable String genre) {
-            this.genre = genre;
-            return this;
-        }
-        public Movie.Builder runtime(int runtime) {
-            this.runtime = runtime;
-            return this;
-        }
-        public Movie.Builder posterUrl(@Nullable String posterUrl) {
-            this.posterUrl = posterUrl;
-            return this;
-        }
         public Movie.Builder year(@Nullable String year) {
             this.year = year;
             return this;
         }
         public Movie.Builder released(long released) {
             this.released = released;
+            return this;
+        }
+        public Movie.Builder runtime(int runtime) {
+            this.runtime = runtime;
+            return this;
+        }
+        public Movie.Builder genre(@Nullable String genre) {
+            this.genre = genre;
+            return this;
+        }
+        public Movie.Builder poster(@Nullable String poster) {
+            this.poster = poster;
             return this;
         }
         /** Builds and returns an object of this class. */
@@ -202,11 +206,11 @@ public class Movie {
             if (title == null) {
                 missing += " title";
             }
-            if (runtime == null) {
-                missing += " runtime";
-            }
             if (released == null) {
                 missing += " released";
+            }
+            if (runtime == null) {
+                missing += " runtime";
             }
             if (!missing.isEmpty()) {
                 throw new IllegalStateException("Missing required properties:" + missing);
@@ -215,12 +219,37 @@ public class Movie {
                     this.id,
                     this.imdbId,
                     this.title,
-                    this.genre,
-                    this.runtime,
-                    this.posterUrl,
                     this.year,
-                    this.released);
+                    this.released,
+                    this.runtime,
+                    this.genre,
+                    this.poster);
         }
+    }
+
+    //---------------------------------------------------------------
+    // Util methods
+
+    /**
+     * Returns a set of ContentValues corresponding to the movie.
+     * @return the set of ContentValues corresponding to the movie
+     */
+    @NonNull
+    public ContentValues toContentValues() {
+        ContentValues values = new ContentValues();
+
+        values.put(DataContract.MovieEntry.COLUMN_ID, this.getId());
+        values.put(DataContract.MovieEntry.COLUMN_IMDB_ID, this.getImdbId());
+        values.put(DataContract.MovieEntry.COLUMN_TITLE, this.getTitle());
+        values.put(DataContract.MovieEntry.COLUMN_YEAR, this.getYear());
+        values.put(DataContract.MovieEntry.COLUMN_RELEASED,
+                OmdbUtils.toStringOmdbReleased(this.getReleased()));
+        values.put(DataContract.MovieEntry.COLUMN_RUNTIME,
+                OmdbUtils.toStringOmdbRuntime(this.getRuntime()));
+        values.put(DataContract.MovieEntry.COLUMN_GENRE, this.getGenre());
+        values.put(DataContract.MovieEntry.COLUMN_POSTER, this.getPoster());
+
+        return values;
     }
 
     //---------------------------------------------------------------
@@ -229,14 +258,14 @@ public class Movie {
     @Override
     public String toString() {
         return "Movie{"
-                + "id=" + id + ", "
-                + "imdbId=" + imdbId + ", "
-                + "title=" + title + ", "
-                + "genre=" + genre + ", "
-                + "runtime=" + runtime + ", "
-                + "posterUrl=" + posterUrl + ", "
-                + "year=" + year + ", "
-                + "released=" + released
+                + "id=" + id
+                + ", imdbId=" + imdbId
+                + ", title=" + title
+                + ", year=" + year
+                + ", released=" + released
+                + ", runtime=" + runtime
+                + ", genre=" + genre
+                + ", poster=" + poster
                 + "}";
     }
 
@@ -250,12 +279,12 @@ public class Movie {
             return (this.id.equals(that.id))
                     && (this.imdbId.equals(that.imdbId))
                     && (this.title.equals(that.title))
-                    && ((this.genre == null) ? (that.genre == null) : this.genre.equals(that.genre))
-                    && (this.runtime == that.runtime)
-                    && ((this.posterUrl == null) ? (that.posterUrl == null) :
-                    this.posterUrl.equals(that.posterUrl))
                     && ((this.year == null) ? (that.year == null) : this.year.equals(that.year))
-                    && (this.released == that.released);
+                    && (this.released == that.released)
+                    && (this.runtime == that.runtime)
+                    && ((this.genre == null) ? (that.genre == null) : this.genre.equals(that.genre))
+                    && ((this.poster == null) ? (that.poster == null) :
+                            this.poster.equals(that.poster));
         }
         return false;
     }
@@ -270,15 +299,15 @@ public class Movie {
         h *= 1000003;
         h ^= this.title.hashCode();
         h *= 1000003;
-        h ^= (genre == null) ? 0 : this.genre.hashCode();
-        h *= 1000003;
-        h ^= this.runtime;
-        h *= 1000003;
-        h ^= (posterUrl == null) ? 0 : this.posterUrl.hashCode();
-        h *= 1000003;
         h ^= (year == null) ? 0 : this.year.hashCode();
         h *= 1000003;
         h ^= (this.released >>> 32) ^ this.released;
+        h *= 1000003;
+        h ^= this.runtime;
+        h *= 1000003;
+        h ^= (genre == null) ? 0 : this.genre.hashCode();
+        h *= 1000003;
+        h ^= (poster == null) ? 0 : this.poster.hashCode();
         return h;
     }
 

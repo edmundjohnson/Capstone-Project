@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 public class MovieTest {
 
     @SuppressWarnings("SpellCheckingInspection")
-    private static final String POSTER_URL =
+    private static final String POSTER =
             "https://images-na.ssl-images-amazon.com/images/M/MV5BYTBjYjllZTctMTdkMy00MmE5LTllYjctYzg3OTc1MTFjZGYzXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg";
 
     private Movie mMovie;
@@ -35,22 +35,22 @@ public class MovieTest {
                 .id("tt4016934")
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
-                .genre("Drama, Mystery, Romance")
-                .runtime(144)
-                .posterUrl(POSTER_URL)
                 .year("2017")
                 .released(DateUtils.toLongOmdbReleased("01 Jun 2017"))
+                .runtime(144)
+                .genre("Drama, Mystery, Romance")
+                .poster(POSTER)
                 .build();
 
         mMovieWithNulls = Movie.builder()
                 .id("tt4016934")
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
-                .genre(null)
-                .runtime(Movie.RUNTIME_UNKNOWN)
-                .posterUrl(null)
                 .year(null)
                 .released(Movie.RELEASED_UNKNOWN)
+                .runtime(Movie.RUNTIME_UNKNOWN)
+                .genre(null)
+                .poster(null)
                 .build();
     }
 
@@ -69,21 +69,22 @@ public class MovieTest {
         assertEquals("tt4016934", mMovie.getId());
         assertEquals("tt4016934", mMovie.getImdbId());
         assertEquals("The Handmaiden", mMovie.getTitle());
-        assertEquals("Drama, Mystery, Romance", mMovie.getGenre());
-        assertEquals(144, mMovie.getRuntime());
-        assertEquals(POSTER_URL, mMovie.getPosterUrl());
         assertEquals("2017", mMovie.getYear());
+        assertEquals(DateUtils.toLongOmdbReleased("01 Jun 2017"), mMovie.getReleased());
+        assertEquals(144, mMovie.getRuntime());
+        assertEquals("Drama, Mystery, Romance", mMovie.getGenre());
+        assertEquals(POSTER, mMovie.getPoster());
 
         // test that the nullable fields are nullable, i.e. no exception thrown
         Movie movieWithNulls = Movie.builder()
                 .id("tt4016934")
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
-                .genre(null)
-                .runtime(Movie.RUNTIME_UNKNOWN)
-                .posterUrl(null)
                 .year(null)
                 .released(Movie.RELEASED_UNKNOWN)
+                .runtime(Movie.RUNTIME_UNKNOWN)
+                .genre(null)
+                .poster(null)
                 .build();
         assertNotNull(movieWithNulls);
     }
@@ -102,11 +103,11 @@ public class MovieTest {
                 .id(null)
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
-                .genre("Drama, Mystery, Romance")
-                .runtime(144)
-                .posterUrl(POSTER_URL)
                 .year("2017")
                 .released(DateUtils.toLongOmdbReleased("01 Jun 2017"))
+                .runtime(144)
+                .genre("Drama, Mystery, Romance")
+                .poster(POSTER)
                 .build();
     }
 
@@ -124,11 +125,11 @@ public class MovieTest {
                 .id("tt4016934")
                 .imdbId(null)
                 .title("The Handmaiden")
-                .genre("Drama, Mystery, Romance")
-                .runtime(144)
-                .posterUrl(POSTER_URL)
                 .year("2017")
                 .released(DateUtils.toLongOmdbReleased("01 Jun 2017"))
+                .runtime(144)
+                .genre("Drama, Mystery, Romance")
+                .poster(POSTER)
                 .build();
     }
 
@@ -146,11 +147,11 @@ public class MovieTest {
                 .id("tt4016934")
                 .imdbId("tt4016934")
                 .title(null)
-                .genre("Drama, Mystery, Romance")
-                .runtime(144)
-                .posterUrl(POSTER_URL)
                 .year("2017")
                 .released(DateUtils.toLongOmdbReleased("01 Jun 2017"))
+                .runtime(144)
+                .genre("Drama, Mystery, Romance")
+                .poster(POSTER)
                 .build();
     }
 
@@ -169,11 +170,11 @@ public class MovieTest {
                 .id("tt4016934")
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
-                .genre("Drama, Mystery, Romance")
-                .runtime(144)
-                .posterUrl(POSTER_URL)
                 .year("2017")
                 .released(DateUtils.toLongOmdbReleased("01 Jun 2017"))
+                .runtime(144)
+                .genre("Drama, Mystery, Romance")
+                .poster(POSTER)
                 .build()
                 .equals(mMovie));
 
@@ -184,7 +185,7 @@ public class MovieTest {
                 .title("The Handmaiden")
                 .genre(null)
                 .runtime(Movie.RUNTIME_UNKNOWN)
-                .posterUrl(null)
+                .poster(null)
                 .year(null)
                 .released(Movie.RELEASED_UNKNOWN)
                 .build()
@@ -195,27 +196,28 @@ public class MovieTest {
                 .id("tt4016934")
                 .imdbId("tt4016935")
                 .title("The Handmaiden")
-                .genre("Drama, Mystery, Romance")
-                .runtime(144)
-                .posterUrl(POSTER_URL)
                 .year("2017")
                 .released(DateUtils.toLongOmdbReleased("01 Jun 2017"))
+                .runtime(144)
+                .genre("Drama, Mystery, Romance")
+                .poster(POSTER)
                 .build()
                 .equals(mMovie));
     }
 
     @Test
     public void testHashcode() {
-        assertTrue(mMovie.hashCode() > 1);
+        //assertTrue(mMovie.hashCode() > 1); // could be negative
         assertTrue(mMovie.hashCode() != mMovieWithNulls.hashCode());
     }
 
     @Test
     public void testToString() {
         assertEquals(
-                "Movie{id=tt4016934, imdbId=tt4016934, title=The Handmaiden," +
-                        " genre=Drama, Mystery, Romance, runtime=144, posterUrl=" + POSTER_URL + "," +
-                        " year=2017, released=" + DateUtils.toLongOmdbReleased("01 Jun 2017") + "}",
+                "Movie{id=tt4016934, imdbId=tt4016934, title=The Handmaiden" +
+                        ", year=2017, released=" + DateUtils.toLongOmdbReleased("01 Jun 2017") +
+                        ", runtime=144, genre=Drama, Mystery, Romance, poster=" + POSTER +
+                        "}",
                 mMovie.toString());
     }
 

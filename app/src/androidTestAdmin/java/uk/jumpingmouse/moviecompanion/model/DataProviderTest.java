@@ -15,11 +15,9 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
-import java.util.Date;
 import java.util.List;
 
 import timber.log.Timber;
-
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.utils.DateUtils;
 import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
@@ -40,7 +38,7 @@ public class DataProviderTest {
     private ContentResolver mContentResolver;
 
     @SuppressWarnings("SpellCheckingInspection")
-    private static final String TEST_POSTER_URL =
+    private static final String TEST_POSTER =
             "https://images-na.ssl-images-amazon.com/images/M/MV5BYTBjYjllZTctMTdkMy00MmE5LTllYjctYzg3OTc1MTFjZGYzXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg";
 
     private static final Movie TEST_MOVIE_1;
@@ -58,42 +56,42 @@ public class DataProviderTest {
                 .id("tt9999991")
                 .imdbId("tt9999991")
                 .title("Test Movie 1")
-                .genre("Drama, Mystery, Romance")
-                .runtime(111)
-                .posterUrl(TEST_POSTER_URL)
                 .year("2011")
                 .released(DateUtils.toLongOmdbReleased("01 Jun 2011"))
+                .runtime(111)
+                .genre("Drama, Mystery, Romance")
+                .poster(TEST_POSTER)
                 .build();
         TEST_MOVIE_1_MODIFIED = Movie.builder()
                 .id("tt9999991")
                 .imdbId("tt9999991")
                 .title("Test Movie 1 modified")
-                .genre("Comedy")
-                .runtime(121)
-                .posterUrl(TEST_POSTER_URL + ".modified")
                 .year("2012")
                 .released(DateUtils.toLongOmdbReleased("01 Jun 2012"))
+                .runtime(121)
+                .genre("Comedy")
+                .poster(TEST_POSTER + ".modified")
                 .build();
         TEST_MOVIE_2 = Movie.builder()
                 .id("tt9999992")
                 .imdbId("tt9999992")
                 .title("Test Movie 2")
-                .genre("Drama, Mystery, Romance")
-                .runtime(122)
-                .posterUrl(TEST_POSTER_URL)
                 .year("2012")
                 .released(DateUtils.toLongOmdbReleased("01 Jun 2012"))
+                .runtime(122)
+                .genre("Drama, Mystery, Romance")
+                .poster(TEST_POSTER)
                 .build();
         TEST_MOVIE_3 = Movie.builder()
                 .id("tt9999993")
                 .imdbId("tt9999993")
                 // Do not change the 0 to a 3! 0 is required for query order test.
                 .title("Test Movie 0")
-                .genre("Drama, Mystery, Romance")
-                .runtime(133)
-                .posterUrl(TEST_POSTER_URL)
                 .year("2013")
                 .released(DateUtils.toLongOmdbReleased("01 Jun 2013"))
+                .runtime(133)
+                .genre("Drama, Mystery, Romance")
+                .poster(TEST_POSTER)
                 .build();
 
         URI_TEST_MOVIE_1 = DataContract.MovieEntry.buildUriForRowById(TEST_MOVIE_1.getId());
@@ -540,11 +538,11 @@ public class DataProviderTest {
         assertEquals("id should be unchanged", TEST_MOVIE_1.getId(), movieUpdated.getId());
         assertEquals("imdbId should be unchanged", TEST_MOVIE_1.getImdbId(), movieUpdated.getImdbId());
         assertEquals("title should be updated", TEST_MOVIE_1_MODIFIED.getTitle(), movieUpdated.getTitle());
-        assertEquals("genre should be updated", TEST_MOVIE_1_MODIFIED.getGenre(), movieUpdated.getGenre());
-        assertEquals("runtime should be updated", TEST_MOVIE_1_MODIFIED.getRuntime(), movieUpdated.getRuntime());
-        assertEquals("posterUrl should be updated", TEST_MOVIE_1_MODIFIED.getPosterUrl(), movieUpdated.getPosterUrl());
         assertEquals("year should be updated", TEST_MOVIE_1_MODIFIED.getYear(), movieUpdated.getYear());
         assertEquals("released should be updated", TEST_MOVIE_1_MODIFIED.getReleased(), movieUpdated.getReleased());
+        assertEquals("runtime should be updated", TEST_MOVIE_1_MODIFIED.getRuntime(), movieUpdated.getRuntime());
+        assertEquals("genre should be updated", TEST_MOVIE_1_MODIFIED.getGenre(), movieUpdated.getGenre());
+        assertEquals("poster should be updated", TEST_MOVIE_1_MODIFIED.getPoster(), movieUpdated.getPoster());
         closeCursor(cursor);
 
         // delete the added row
@@ -722,48 +720,9 @@ public class DataProviderTest {
      * @param movie the movie
      * @return the set of ContentValues corresponding to the movie
      */
-    private ContentValues toContentValues(Movie movie) {
-        ContentValues values = new ContentValues();
-
-        values.put(DataContract.MovieEntry.COLUMN_ID, movie.getId());
-        values.put(DataContract.MovieEntry.COLUMN_IMDB_ID, movie.getImdbId());
-        values.put(DataContract.MovieEntry.COLUMN_TITLE, movie.getTitle());
-        values.put(DataContract.MovieEntry.COLUMN_GENRE, movie.getGenre());
-        values.put(DataContract.MovieEntry.COLUMN_RUNTIME, toStringOmdbRuntime(movie.getRuntime()));
-        values.put(DataContract.MovieEntry.COLUMN_POSTER_URL, movie.getPosterUrl());
-        values.put(DataContract.MovieEntry.COLUMN_YEAR, movie.getYear());
-        values.put(DataContract.MovieEntry.COLUMN_RELEASED, toStringOmdbReleased(movie.getReleased()));
-
-        return values;
-    }
-
-    /**
-     * Returns an OMDb-formatted runtime string representing a number of minutes.
-     * @param runtime the runtime in minutes
-     * @return an OMDb-formatted runtime string corresponding to the runtime,
-     *         or an empty String if runtime indicates an unknown runtime
-     */
     @NonNull
-    private static String toStringOmdbRuntime(final int runtime) {
-        if (runtime == Movie.RUNTIME_UNKNOWN) {
-            return "";
-        }
-        return runtime + " min";
-    }
-
-    /**
-     * Returns an OMDb-formatted released date string representing a number of milliseconds.
-     * @param released a release date as a number of milliseconds
-     * @return an OMDb-formatted released date string corresponding to released,
-     *         or an empty String if released indicates an unknown release date
-     */
-    @NonNull
-    private static String toStringOmdbReleased(final long released) {
-        if (released == Movie.RELEASED_UNKNOWN || released < 0) {
-            return "";
-        }
-        Date dateReleased = new Date(released);
-        return DateUtils.toStringOmdbReleased(dateReleased);
+    private static ContentValues toContentValues(@NonNull Movie movie) {
+        return movie.toContentValues();
     }
 
     /**

@@ -9,12 +9,19 @@
     <!-- Menu -->
     <string name="menu_option_add_movie">Add Movie</string>
 
-    <!-- Admin -->
+    <!-- Admin Screens -->
     <string name="button_label_fetch_details">Fetch Details</string>
     <string name="button_label_save">Save</string>
+    <string name="button_label_cancel">Cancel</string>
 
     <!-- Add Movie -->
     <string name="title_add_movie">Add Movie</string>
     <string name="hint_imdb_id">IMDb id</string>
+    <string name="label_title">Title</string>
+    <string name="label_genre">Genre</string>
+    <string name="movie_saved">Movie saved: %s</string>
+    <string name="movie_not_saved">Movie not saved: %s</string>
+    <string name="movie_not_found">Movie not found</string>
+
 
 </resources>

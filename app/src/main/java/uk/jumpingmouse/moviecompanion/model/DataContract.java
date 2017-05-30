@@ -81,11 +81,11 @@ public final class DataContract {
         public static final String COLUMN_ID = MovieEntry._ID;
         public static final String COLUMN_IMDB_ID = "imdbId";
         public static final String COLUMN_TITLE = "title";
-        public static final String COLUMN_GENRE = "genre";
-        public static final String COLUMN_RUNTIME = "runtime";
-        public static final String COLUMN_POSTER_URL = "posterUrl";
         public static final String COLUMN_YEAR = "year";
         public static final String COLUMN_RELEASED = "released";
+        public static final String COLUMN_RUNTIME = "runtime";
+        public static final String COLUMN_GENRE = "genre";
+        public static final String COLUMN_POSTER = "poster";
 
         // Note: arrays are mutable, so ALL_COLUMNS should not be public.
         // See Effective Java, Item 13.
@@ -93,11 +93,11 @@ public final class DataContract {
                 COLUMN_ID,
                 COLUMN_IMDB_ID,
                 COLUMN_TITLE,
-                COLUMN_GENRE,
-                COLUMN_RUNTIME,
-                COLUMN_POSTER_URL,
                 COLUMN_YEAR,
-                COLUMN_RELEASED
+                COLUMN_RELEASED,
+                COLUMN_RUNTIME,
+                COLUMN_GENRE,
+                COLUMN_POSTER
         };
         public static String[] getAllColumns() {
             return ALL_COLUMNS.clone();
@@ -106,15 +106,15 @@ public final class DataContract {
         public static final int COL_ID = 0;
         public static final int COL_IMDB_ID = COL_ID + 1;
         public static final int COL_TITLE = COL_IMDB_ID + 1;
-        public static final int COL_GENRE = COL_TITLE + 1;
-        public static final int COL_RUNTIME = COL_GENRE + 1;
-        public static final int COL_POSTER_URL = COL_RUNTIME + 1;
-        public static final int COL_YEAR = COL_POSTER_URL + 1;
+        public static final int COL_YEAR = COL_TITLE + 1;
         public static final int COL_RELEASED = COL_YEAR + 1;
+        public static final int COL_RUNTIME = COL_RELEASED + 1;
+        public static final int COL_GENRE = COL_RUNTIME + 1;
+        public static final int COL_POSTER = COL_GENRE + 1;
 
         // URIs
 
-        static final Uri CONTENT_URI =
+        public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(URI_PATH_MOVIE).build();
 
         /**

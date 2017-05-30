@@ -6,6 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:paddingTop="@dimen/activity_margin_vertical"
+    android:paddingBottom="@dimen/activity_margin_vertical"
+    android:paddingStart="@dimen/activity_margin_vertical"
+    android:paddingEnd="@dimen/activity_margin_vertical"
     tools:context=".activity.AddMovieActivity">
 
     <TextView
@@ -15,45 +19,89 @@
         android:text="@string/title_add_movie" />
 
     <EditText
-        android:id="@+id/txtMovieImdbId"
-        android:layout_width="match_parent"
+        android:id="@+id/txtImdbId"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@android:color/white"
-        android:inputType="number"
+        android:inputType="text"
         android:hint="@string/hint_imdb_id" />
 
     <Button
         android:id="@+id/btnFetchDetails"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/button_label_fetch_details" />
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/button_label_fetch_details"
+        android:onClick="onFetchDetails" />
 
+    <!-- The remaining fields are hidden until the movie has been fetched. -->
+
+    <!-- Title -->
     <TextView
-        android:id="@+id/txtMovieTitle"
+        android:id="@+id/labelTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="@string/label_title"
+        style="@style/LabelStyle"
+        tools:visibility="visible" />
+    <TextView
+        android:id="@+id/txtTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:visibility="gone"
-        android:background="@android:color/white" />
+        style="@style/FieldValueStyle"
+        tools:text="Colossal"
+        tools:visibility="visible" />
 
+    <!-- Genre -->
+    <TextView
+        android:id="@+id/labelGenre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="@string/label_genre"
+        style="@style/LabelStyle"
+        tools:visibility="visible" />
     <TextView
         android:id="@+id/txtGenre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:visibility="gone"
-        android:background="@android:color/white" />
+        style="@style/FieldValueStyle"
+        tools:text="Action, Comedy, Drama"
+        tools:visibility="visible" />
 
-    <!-- etc ? -->
-
-    <Button
-        android:id="@+id/btnSave"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:visibility="gone"
-        android:text="@string/button_label_save" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone"
+            android:text="@string/button_label_cancel"
+            android:onClick="onCancel"
+            tools:visibility="visible"
+            tools:ignore="ButtonStyle" />
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginStart="16dp"
+            android:visibility="gone"
+            android:text="@string/button_label_save"
+            android:onClick="onSave"
+            tools:visibility="visible"
+            tools:ignore="ButtonStyle" />
+
+    </LinearLayout>
 
 </LinearLayout>

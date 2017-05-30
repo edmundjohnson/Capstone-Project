@@ -1,5 +1,6 @@
 package uk.jumpingmouse.moviecompanion.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import uk.jumpingmouse.moviecompanion.R;
@@ -42,6 +44,20 @@ public class ViewUtils {
 
     //---------------------------------------------------------------------
     // Utility methods
+
+    /**
+     * Dismisses the keyboard if it is currently being displayed.
+     * @param activity the current activity
+     */
+    public void dismissKeyboard(@Nullable Activity activity) {
+        if (activity != null) {
+            View view = activity.getWindow().getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        }
+    }
 
     /**
      * Sets the visibility of a view to VISIBLE.

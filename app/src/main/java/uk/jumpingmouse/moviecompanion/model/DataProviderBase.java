@@ -13,7 +13,6 @@ import android.support.annotation.Nullable;
 import java.util.List;
 
 import timber.log.Timber;
-
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 
@@ -260,11 +259,11 @@ public abstract class DataProviderBase extends ContentProvider {
                 movie.getId(),
                 movie.getImdbId(),
                 movie.getTitle(),
-                movie.getGenre(),
-                movie.getRuntime(),
-                movie.getPosterUrl(),
                 movie.getYear(),
-                movie.getReleased()
+                movie.getReleased(),
+                movie.getRuntime(),
+                movie.getGenre(),
+                movie.getPoster()
         };
     }
 
