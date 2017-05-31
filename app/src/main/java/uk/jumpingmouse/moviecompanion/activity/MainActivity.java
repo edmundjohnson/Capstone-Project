@@ -70,11 +70,9 @@ public class MainActivity extends AppCompatActivity {
 
 //        mFilmAdapter.clear();
 //        mAwardAdapter.clear();
-//        mCriticAdapter.clear();
 
 //        detachDatabaseReadListener(mDatabaseReferenceFilms, mChildEventListenerFilms);
 //        detachDatabaseReadListener(mDatabaseReferenceAwards, mChildEventListenerAwards);
-//        detachDatabaseReadListener(mDatabaseReferenceCritics, mChildEventListenerCritics);
 
         super.onPause();
     }

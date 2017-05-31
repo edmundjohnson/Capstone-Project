@@ -3,7 +3,7 @@
 
     <!-- These dimensions are for a phone in portrait mode. -->
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_margin_horizontal">16dp</dimen>
+    <!-- <dimen name="activity_margin_horizontal">16dp</dimen> -->
     <dimen name="activity_margin_vertical">16dp</dimen>
 
 </resources>

@@ -21,6 +21,11 @@ repositories {
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
+
+    // Load the properties in local.properties, so we can add them to resources below
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file("local.properties").newDataInputStream())
+
     defaultConfig {
         applicationId "uk.jumpingmouse.moviecompanion"
         minSdkVersion 17
@@ -28,6 +33,10 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        // Add the required local.properties to the resources
+        // OMDb API key
+        resValue "string", "omdbapi_key", properties.getProperty("omdbapi.key", "")
 
         // See:
         //   https://developer.android.com/studio/preview/features/new-android-plugin-migration.html

@@ -48,24 +48,20 @@ public class OmdbUtils {
 
     /**
      * Fetches and returns a movie from the Omdb.
+     * @param omdbApiKey the OMDb API key
      * @param imdbId the movie's IMDb id
      * @return the movie with the specified IMDb id.
      */
     @Nullable
     @WorkerThread
-    public Movie fetchMovie(@Nullable String imdbId) {
-        if (imdbId == null || imdbId.isEmpty()) {
+    public Movie fetchMovie(@Nullable String omdbApiKey, @Nullable String imdbId) {
+        if (omdbApiKey == null || imdbId == null || imdbId.isEmpty()) {
             return null;
         }
-        if (imdbId.equals("null")) {
-            return null;
-        }
-
         // Create a client to read the OMDb API
         OmdbClient client = OmdbServiceGenerator.createService(OmdbClient.class);
         // Create a call to read the JSON
-        // TODO Hide key in build.settings (?)
-        Call<OmdbMovie> call = client.movieByImdbIdCall("71092249", imdbId);
+        Call<OmdbMovie> call = client.movieByImdbIdCall(omdbApiKey, imdbId);
 
         try {
             // Execute the call to obtain the data from the server
@@ -128,7 +124,7 @@ public class OmdbUtils {
      * @param omdbRuntime the OMDb runtime, e.g. "144 min"
      * @return the runtime as an int, e.g. 144
      */
-    public static int toIntOmdbRuntime(@Nullable String omdbRuntime) {
+    static int toIntOmdbRuntime(@Nullable String omdbRuntime) {
         if (omdbRuntime != null) {
             String[] split = omdbRuntime.split(" ", 2);
             // split.length is always at least 1

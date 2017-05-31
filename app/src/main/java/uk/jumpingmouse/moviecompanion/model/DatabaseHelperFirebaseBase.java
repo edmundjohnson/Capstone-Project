@@ -173,9 +173,10 @@ abstract class DatabaseHelperFirebaseBase implements DatabaseHelper {
                             databaseError.getDetails(), databaseError.getMessage());
                     Timber.e(message);
 
-                    // For admin function failures, display detailed error message
+                    // For admin function failures, display a detailed error message.
+                    // Display it as a long duration toast, as a dialog will not work from a background task
                     if (isAdminFunction) {
-                        getViewUtils().displayErrorMessage(context, message);
+                        getViewUtils().displayInfoMessage(context, message, true);
                     }
                 }
             }

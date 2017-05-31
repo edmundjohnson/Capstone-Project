@@ -22,7 +22,7 @@
 
     <!-- Can this be removed for admin product flavour ? -->
     <!-- The main activity -->
-    <activity android:name=".activity.MainActivity" >
+    <activity android:name=".activity.MainActivity">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
@@ -30,7 +30,7 @@
     </activity>
 
     <!-- The add movie activity -->
-    <activity android:name=".activity.AddMovieActivity" >
+    <activity android:name=".activity.AddMovieActivity">
     </activity>
 
 </application>

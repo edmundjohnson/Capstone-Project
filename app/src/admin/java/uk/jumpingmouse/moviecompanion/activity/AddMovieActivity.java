@@ -126,8 +126,13 @@ public class AddMovieActivity extends AppCompatActivity {
         if (imdbId.trim().isEmpty()) {
             return;
         }
-
-        new FetchMovieTask(this).execute(imdbId, null, null);
+        // Get the OMDb API key from the local.properties file
+        String omdbApiKey = getString(R.string.omdbapi_key);
+        if (omdbApiKey.trim().isEmpty()) {
+            getViewUtils().displayErrorMessage(this, R.string.omdbapi_key_missing);
+            return;
+        }
+        new FetchMovieTask(this).execute(imdbId, omdbApiKey);
     }
 
     /**
@@ -174,7 +179,7 @@ public class AddMovieActivity extends AppCompatActivity {
                     getString(R.string.movie_not_saved, mMovie.getImdbId()));
         } else {
             getViewUtils().displayInfoMessage(view.getContext(),
-                    getString(R.string.movie_saved, mMovie.getTitle()));
+                     getString(R.string.saving_movie, mMovie.getTitle()));
             clearMovie();
         }
 
@@ -308,12 +313,15 @@ public class AddMovieActivity extends AppCompatActivity {
         @WorkerThread
         @Nullable
         protected Movie doInBackground(@Nullable final String... args) {
-            if (args != null && args.length > 0) {
-                String imdbId = args[0];
-                if (imdbId != null && !imdbId.isEmpty()) {
-                    // fetch and return the Movie
-                    return getOmdbUtils().fetchMovie(imdbId);
-                }
+            if (mActivity == null || args == null || args.length < 2) {
+                return null;
+            }
+            String imdbId = args[0];
+            String omdbApiKey = args[1];
+            if (imdbId != null && !imdbId.isEmpty()
+                    && omdbApiKey != null && !omdbApiKey.isEmpty()) {
+                // fetch and return the Movie
+                return getOmdbUtils().fetchMovie(omdbApiKey, imdbId);
             }
             return null;
         }

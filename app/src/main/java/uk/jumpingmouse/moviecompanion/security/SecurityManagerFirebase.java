@@ -1,19 +1,17 @@
 package uk.jumpingmouse.moviecompanion.security;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 
 import com.firebase.ui.auth.AuthUI;
-
-import timber.log.Timber;
-
-import uk.jumpingmouse.moviecompanion.ObjectFactory;
-import uk.jumpingmouse.moviecompanion.model.DatabaseHelper;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
+
+import timber.log.Timber;
+import uk.jumpingmouse.moviecompanion.ObjectFactory;
+import uk.jumpingmouse.moviecompanion.model.DatabaseHelper;
 
 /**
  * A Firebase implementation of SecurityManager.
@@ -145,9 +143,8 @@ public class SecurityManagerFirebase implements SecurityManager {
         getDatabaseHelper().onSignedOut();
 
         // TODO: Implement adapter sign out processing - pass adapters in?
-//        mFilmAdapter.clear();
+//        mMovieAdapter.clear();
 //        mAwardAdapter.clear();
-//        mCriticAdapter.clear();
     }
 
 
