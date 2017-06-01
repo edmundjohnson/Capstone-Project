@@ -11,7 +11,6 @@ import java.util.List;
 import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
-import uk.jumpingmouse.moviecompanion.omdb.OmdbManager;
 
 /**
  * Class for model utilities.
@@ -32,38 +31,38 @@ public final class ModelUtils {
     @Nullable
     public static Movie toMovie(@NonNull final ContentValues values) {
         // if any mandatory attribute is missing, return null
-        String id = (String) values.get(DataContract.MovieEntry.COLUMN_ID);
+        String id = values.getAsString(DataContract.MovieEntry.COLUMN_ID);
         if (id == null) {
             Timber.w("toMovie: missing id");
             return null;
         }
-        String imdbId = (String) values.get(DataContract.MovieEntry.COLUMN_IMDB_ID);
+        String imdbId = values.getAsString(DataContract.MovieEntry.COLUMN_IMDB_ID);
         if (imdbId == null) {
             Timber.w("toMovie: missing imdbId");
             return null;
         }
-        String title = (String) values.get(DataContract.MovieEntry.COLUMN_TITLE);
+        String title = values.getAsString(DataContract.MovieEntry.COLUMN_TITLE);
         if (title == null) {
             Timber.w("toMovie: missing title");
             return null;
         }
 
-        // Convert runtime from String to int
-        String strRuntime = (String) values.get(DataContract.MovieEntry.COLUMN_RUNTIME);
-        int runtime = getOmdbManager().toIntOmdbRuntime(strRuntime);
         // Convert released from String to Date
-        String strReleased = (String) values.get(DataContract.MovieEntry.COLUMN_RELEASED);
-        long released = getOmdbManager().toLongOmdbReleased(strReleased);
+        //String strReleased = (String) values.get(DataContract.MovieEntry.COLUMN_RELEASED);
+        //long released = getOmdbManager().toLongOmdbReleased(strReleased);
+        // Convert runtime from String to int
+        //String strRuntime = (String) values.get(DataContract.MovieEntry.COLUMN_RUNTIME);
+        //int runtime = getOmdbManager().toIntOmdbRuntime(strRuntime);
 
         return Movie.builder()
                 .id(id)
                 .imdbId(imdbId)
                 .title(title)
-                .year((String) values.get(DataContract.MovieEntry.COLUMN_YEAR))
-                .released(released)
-                .runtime(runtime)
-                .genre((String) values.get(DataContract.MovieEntry.COLUMN_GENRE))
-                .poster((String) values.get(DataContract.MovieEntry.COLUMN_POSTER))
+                .year(values.getAsString(DataContract.MovieEntry.COLUMN_YEAR))
+                .released(values.getAsLong(DataContract.MovieEntry.COLUMN_RELEASED))
+                .runtime(values.getAsInteger(DataContract.MovieEntry.COLUMN_RUNTIME))
+                .genre(values.getAsString(DataContract.MovieEntry.COLUMN_GENRE))
+                .poster(values.getAsString(DataContract.MovieEntry.COLUMN_POSTER))
                 .build();
     }
 
@@ -143,18 +142,6 @@ public final class ModelUtils {
             }
         }
         return movieList;
-    }
-
-    //---------------------------------------------------------------------
-    // Getters
-
-    /**
-     * Convenience method which returns a reference to an OmdbManager object.
-     * @return a reference to an OmdbManager object
-     */
-    @NonNull
-    private static OmdbManager getOmdbManager() {
-        return OmdbManager.getInstance();
     }
 
 }

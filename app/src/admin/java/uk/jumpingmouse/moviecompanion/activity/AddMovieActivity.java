@@ -304,10 +304,12 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
         values.put(DataContract.MovieEntry.COLUMN_IMDB_ID, movie.getImdbId());
         values.put(DataContract.MovieEntry.COLUMN_TITLE, movie.getTitle());
         values.put(DataContract.MovieEntry.COLUMN_YEAR, movie.getYear());
-        values.put(DataContract.MovieEntry.COLUMN_RELEASED,
-                getOmdbManager().toStringOmdbReleased(movie.getReleased()));
-        values.put(DataContract.MovieEntry.COLUMN_RUNTIME,
-                getOmdbManager().toStringOmdbRuntime(movie.getRuntime()));
+        //values.put(DataContract.MovieEntry.COLUMN_RELEASED,
+        //        getOmdbManager().toStringOmdbReleased(movie.getReleased()));
+        values.put(DataContract.MovieEntry.COLUMN_RELEASED, movie.getReleased());
+        //values.put(DataContract.MovieEntry.COLUMN_RUNTIME,
+        //        getOmdbManager().toStringOmdbRuntime(movie.getRuntime()));
+        values.put(DataContract.MovieEntry.COLUMN_RUNTIME, movie.getRuntime());
         values.put(DataContract.MovieEntry.COLUMN_GENRE, movie.getGenre());
         values.put(DataContract.MovieEntry.COLUMN_POSTER, movie.getPoster());
 
