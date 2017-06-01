@@ -10,7 +10,6 @@ import uk.jumpingmouse.moviecompanion.security.SecurityManager;
 import uk.jumpingmouse.moviecompanion.security.SecurityManagerFirebase;
 import uk.jumpingmouse.moviecompanion.utils.NavUtils;
 import uk.jumpingmouse.moviecompanion.utils.NavUtilsImpl;
-import uk.jumpingmouse.moviecompanion.utils.OmdbUtils;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
 /**
@@ -68,15 +67,6 @@ public class ObjectFactory {
     @NonNull
     public static NavUtils getNavUtils() {
         return NavUtilsImpl.getInstance();
-    }
-
-    /**
-     * Returns a reference to an OmdbUtils object.
-     * @return a reference to an OmdbUtils object
-     */
-    @NonNull
-    public static OmdbUtils getOmdbUtils() {
-        return OmdbUtils.getInstance();
     }
 
 }

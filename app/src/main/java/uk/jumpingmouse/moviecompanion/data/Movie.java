@@ -1,13 +1,9 @@
 package uk.jumpingmouse.moviecompanion.data;
 
-import android.content.ContentValues;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.Comparator;
-
-import uk.jumpingmouse.moviecompanion.model.DataContract;
-import uk.jumpingmouse.moviecompanion.utils.OmdbUtils;
 
 /**
  * The Movie model class.
@@ -225,31 +221,6 @@ public class Movie {
                     this.genre,
                     this.poster);
         }
-    }
-
-    //---------------------------------------------------------------
-    // Util methods
-
-    /**
-     * Returns a set of ContentValues corresponding to the movie.
-     * @return the set of ContentValues corresponding to the movie
-     */
-    @NonNull
-    public ContentValues toContentValues() {
-        ContentValues values = new ContentValues();
-
-        values.put(DataContract.MovieEntry.COLUMN_ID, this.getId());
-        values.put(DataContract.MovieEntry.COLUMN_IMDB_ID, this.getImdbId());
-        values.put(DataContract.MovieEntry.COLUMN_TITLE, this.getTitle());
-        values.put(DataContract.MovieEntry.COLUMN_YEAR, this.getYear());
-        values.put(DataContract.MovieEntry.COLUMN_RELEASED,
-                OmdbUtils.toStringOmdbReleased(this.getReleased()));
-        values.put(DataContract.MovieEntry.COLUMN_RUNTIME,
-                OmdbUtils.toStringOmdbRuntime(this.getRuntime()));
-        values.put(DataContract.MovieEntry.COLUMN_GENRE, this.getGenre());
-        values.put(DataContract.MovieEntry.COLUMN_POSTER, this.getPoster());
-
-        return values;
     }
 
     //---------------------------------------------------------------

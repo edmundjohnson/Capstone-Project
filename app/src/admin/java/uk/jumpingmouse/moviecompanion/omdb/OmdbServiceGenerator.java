@@ -1,4 +1,4 @@
-package uk.jumpingmouse.moviecompanion.net;
+package uk.jumpingmouse.moviecompanion.omdb;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * to the OMDb API server.
  * @author Edmund Johnson
  */
-public class OmdbServiceGenerator {
+class OmdbServiceGenerator {
     /** The base URL. */
     private static final String API_BASE_URL = "https://www.omdbapi.com";
     // URL to test a non-XML response (FEED_STATUS_SERVER_DATA_INVALID)
@@ -19,7 +19,7 @@ public class OmdbServiceGenerator {
     // URL to test an error 404 response (FEED_STATUS_SERVER_INVALID)
     //"http://jumpingmouse.uk/nosuchpage";
 
-    public static <S> S createService(Class<S> serviceClass) {
+    static <S> S createService(Class<S> serviceClass) {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
         Retrofit retrofit = new Retrofit.Builder()

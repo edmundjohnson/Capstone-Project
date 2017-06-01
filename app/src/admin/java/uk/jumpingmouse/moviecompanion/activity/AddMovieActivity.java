@@ -1,12 +1,10 @@
 package uk.jumpingmouse.moviecompanion.activity;
 
+import android.content.ContentValues;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.UiThread;
-import android.support.annotation.WorkerThread;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,14 +14,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.lang.ref.WeakReference;
-
+import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
+import uk.jumpingmouse.moviecompanion.omdb.OmdbHandler;
+import uk.jumpingmouse.moviecompanion.omdb.OmdbManager;
+import uk.jumpingmouse.moviecompanion.omdb.OmdbMovie;
 import uk.jumpingmouse.moviecompanion.utils.NavUtils;
-import uk.jumpingmouse.moviecompanion.utils.OmdbUtils;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
 /**
@@ -31,7 +30,7 @@ import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
  * Note that this is an admin activity, not a public-facing one.
  * @author Edmund Johnson
  */
-public class AddMovieActivity extends AppCompatActivity {
+public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
 
     // Screen fields
     private EditText mTxtImdbId;
@@ -43,6 +42,7 @@ public class AddMovieActivity extends AppCompatActivity {
     private Button mBtnSave;
 
     // Movie fetched from OMDb
+    //private Movie mMovie;
     private Movie mMovie;
 
     //---------------------------------------------------------------------
@@ -132,19 +132,21 @@ public class AddMovieActivity extends AppCompatActivity {
             getViewUtils().displayErrorMessage(this, R.string.omdbapi_key_missing);
             return;
         }
-        new FetchMovieTask(this).execute(imdbId, omdbApiKey);
+        getOmdbManager().fetchMovie(omdbApiKey, imdbId, this);
     }
 
     /**
      * Handles the completion of a movie being fetched from the server.
-     * @param movie the movie that was fetched
+     * @param omdbMovie the movie that was fetched
      */
-    private void onFetchDetailsCompleted(@Nullable  Movie movie) {
+    @Override
+    public void onFetchMovieCompleted(@Nullable OmdbMovie omdbMovie) {
+        Movie movie = toMovie(omdbMovie);
         if (movie == null) {
             // Display a "Movie not found" error message
             getViewUtils().displayErrorMessage(this, R.string.movie_not_found);
         } else {
-            // Display the fetched movie
+            // Save and display the fetched movie
             mMovie = movie;
             displayMovie(mMovie);
         }
@@ -172,7 +174,7 @@ public class AddMovieActivity extends AppCompatActivity {
         }
 
         Uri uriInserted = getContentResolver().insert(
-                DataContract.MovieEntry.CONTENT_URI, mMovie.toContentValues());
+                DataContract.MovieEntry.CONTENT_URI, toContentValues(mMovie));
 
         if (uriInserted == null) {
             getViewUtils().displayErrorMessage(view.getContext(),
@@ -183,6 +185,38 @@ public class AddMovieActivity extends AppCompatActivity {
             clearMovie();
         }
 
+    }
+
+    /**
+     * Converts an OmdbMovie to a Movie and returns it.
+     * @param omdbMovie the OmdbMovie
+     * @return a Movie corresponding to omdbMovie
+     */
+    private Movie toMovie(OmdbMovie omdbMovie) {
+        if (omdbMovie == null) {
+            Timber.w("toMovie: omdbMovie is null");
+            return null;
+        } else if (omdbMovie.getImdbID() == null) {
+            Timber.w("toMovie: omdbMovie.imdbId is null");
+            return null;
+        } else if (omdbMovie.getTitle() == null) {
+            Timber.w("toMovie: omdbMovie.title is null");
+            return null;
+        }
+
+        // Build and return the movie
+        int runtime = getOmdbManager().toIntOmdbRuntime(omdbMovie.getRuntime());
+        long released = getOmdbManager().toLongOmdbReleased(omdbMovie.getReleased());
+        return Movie.builder()
+                .id(omdbMovie.getImdbID())
+                .imdbId(omdbMovie.getImdbID())
+                .title(omdbMovie.getTitle())
+                .genre(omdbMovie.getGenre())
+                .runtime(runtime)
+                .poster(omdbMovie.getPoster())
+                .year(omdbMovie.getYear())
+                .released(released)
+                .build();
     }
 
     /**
@@ -255,6 +289,31 @@ public class AddMovieActivity extends AppCompatActivity {
         getViewUtils().showView(view);
     }
 
+    //---------------------------------------------------------------
+    // Util methods
+
+    /**
+     * Returns a set of ContentValues corresponding to the movie.
+     * @return the set of ContentValues corresponding to the movie
+     */
+    @NonNull
+    private ContentValues toContentValues(@NonNull Movie movie) {
+        ContentValues values = new ContentValues();
+
+        values.put(DataContract.MovieEntry.COLUMN_ID, movie.getId());
+        values.put(DataContract.MovieEntry.COLUMN_IMDB_ID, movie.getImdbId());
+        values.put(DataContract.MovieEntry.COLUMN_TITLE, movie.getTitle());
+        values.put(DataContract.MovieEntry.COLUMN_YEAR, movie.getYear());
+        values.put(DataContract.MovieEntry.COLUMN_RELEASED,
+                getOmdbManager().toStringOmdbReleased(movie.getReleased()));
+        values.put(DataContract.MovieEntry.COLUMN_RUNTIME,
+                getOmdbManager().toStringOmdbRuntime(movie.getRuntime()));
+        values.put(DataContract.MovieEntry.COLUMN_GENRE, movie.getGenre());
+        values.put(DataContract.MovieEntry.COLUMN_POSTER, movie.getPoster());
+
+        return values;
+    }
+
     //---------------------------------------------------------------------
     // Getters
 
@@ -277,69 +336,12 @@ public class AddMovieActivity extends AppCompatActivity {
     }
 
     /**
-     * Convenience method which returns a reference to a OmdbUtils object.
-     * @return a reference to a OmdbUtils object
+     * Convenience method which returns a reference to an OmdbManager object.
+     * @return a reference to an OmdbManager object
      */
     @NonNull
-    private static OmdbUtils getOmdbUtils() {
-        return ObjectFactory.getOmdbUtils();
-    }
-
-    //---------------------------------------------------------------------
-    // FetchMovieTask
-
-    /**
-     * A task which fetches a movie from the OMDb and displays it on the screen.
-     */
-    private static class FetchMovieTask extends AsyncTask<String, Integer, Movie> {
-        private final WeakReference<AddMovieActivity> mActivity;
-
-        /**
-         * Constructor.
-         * @param activity the activity which initiated this task
-         */
-        FetchMovieTask(AddMovieActivity activity) {
-            super();
-            mActivity = new WeakReference<>(activity);
-        }
-
-        /**
-         * Fetches the movie from the OMDb and returns it.
-         * This is run in the background thread.
-         * @param args the arguments passed to the background task, the first is the IMDb id
-         * @return the movie with the specified IMDb id, or null if movie not found
-         */
-        @Override
-        @WorkerThread
-        @Nullable
-        protected Movie doInBackground(@Nullable final String... args) {
-            if (mActivity == null || args == null || args.length < 2) {
-                return null;
-            }
-            String imdbId = args[0];
-            String omdbApiKey = args[1];
-            if (imdbId != null && !imdbId.isEmpty()
-                    && omdbApiKey != null && !omdbApiKey.isEmpty()) {
-                // fetch and return the Movie
-                return getOmdbUtils().fetchMovie(omdbApiKey, imdbId);
-            }
-            return null;
-        }
-
-        /**
-         * This is run in the UI thread when doInBackground() has completed.
-         * @param movie the movie that was fetched in the background
-         */
-        @Override
-        @UiThread
-        protected void onPostExecute(final Movie movie) {
-            if (mActivity != null && mActivity.get() != null) {
-                AddMovieActivity activity = mActivity.get();
-
-                activity.onFetchDetailsCompleted(movie);
-            }
-        }
-
+    private static OmdbManager getOmdbManager() {
+        return OmdbManager.getInstance();
     }
 
 }

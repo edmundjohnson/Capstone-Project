@@ -11,6 +11,7 @@ import java.util.List;
 import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
+import uk.jumpingmouse.moviecompanion.omdb.OmdbManager;
 
 /**
  * Class for model utilities.
@@ -49,10 +50,10 @@ public final class ModelUtils {
 
         // Convert runtime from String to int
         String strRuntime = (String) values.get(DataContract.MovieEntry.COLUMN_RUNTIME);
-        int runtime = OmdbUtils.toIntOmdbRuntime(strRuntime);
+        int runtime = getOmdbManager().toIntOmdbRuntime(strRuntime);
         // Convert released from String to Date
         String strReleased = (String) values.get(DataContract.MovieEntry.COLUMN_RELEASED);
-        long released = DateUtils.toLongOmdbReleased(strReleased);
+        long released = getOmdbManager().toLongOmdbReleased(strReleased);
 
         return Movie.builder()
                 .id(id)
@@ -142,6 +143,18 @@ public final class ModelUtils {
             }
         }
         return movieList;
+    }
+
+    //---------------------------------------------------------------------
+    // Getters
+
+    /**
+     * Convenience method which returns a reference to an OmdbManager object.
+     * @return a reference to an OmdbManager object
+     */
+    @NonNull
+    private static OmdbManager getOmdbManager() {
+        return OmdbManager.getInstance();
     }
 
 }

@@ -1,14 +1,19 @@
 package uk.jumpingmouse.moviecompanion.data;
 
+import android.support.annotation.NonNull;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import uk.jumpingmouse.moviecompanion.utils.DateUtils;
+import uk.jumpingmouse.moviecompanion.omdb.OmdbManager;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test class for the Movie data class.
@@ -36,7 +41,7 @@ public class MovieTest {
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
                 .year("2017")
-                .released(DateUtils.toLongOmdbReleased("01 Jun 2017"))
+                .released(getOmdbManager().toLongOmdbReleased("01 Jun 2017"))
                 .runtime(144)
                 .genre("Drama, Mystery, Romance")
                 .poster(POSTER)
@@ -70,7 +75,7 @@ public class MovieTest {
         assertEquals("tt4016934", mMovie.getImdbId());
         assertEquals("The Handmaiden", mMovie.getTitle());
         assertEquals("2017", mMovie.getYear());
-        assertEquals(DateUtils.toLongOmdbReleased("01 Jun 2017"), mMovie.getReleased());
+        assertEquals(getOmdbManager().toLongOmdbReleased("01 Jun 2017"), mMovie.getReleased());
         assertEquals(144, mMovie.getRuntime());
         assertEquals("Drama, Mystery, Romance", mMovie.getGenre());
         assertEquals(POSTER, mMovie.getPoster());
@@ -104,7 +109,7 @@ public class MovieTest {
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
                 .year("2017")
-                .released(DateUtils.toLongOmdbReleased("01 Jun 2017"))
+                .released(getOmdbManager().toLongOmdbReleased("01 Jun 2017"))
                 .runtime(144)
                 .genre("Drama, Mystery, Romance")
                 .poster(POSTER)
@@ -126,7 +131,7 @@ public class MovieTest {
                 .imdbId(null)
                 .title("The Handmaiden")
                 .year("2017")
-                .released(DateUtils.toLongOmdbReleased("01 Jun 2017"))
+                .released(getOmdbManager().toLongOmdbReleased("01 Jun 2017"))
                 .runtime(144)
                 .genre("Drama, Mystery, Romance")
                 .poster(POSTER)
@@ -148,7 +153,7 @@ public class MovieTest {
                 .imdbId("tt4016934")
                 .title(null)
                 .year("2017")
-                .released(DateUtils.toLongOmdbReleased("01 Jun 2017"))
+                .released(getOmdbManager().toLongOmdbReleased("01 Jun 2017"))
                 .runtime(144)
                 .genre("Drama, Mystery, Romance")
                 .poster(POSTER)
@@ -171,7 +176,7 @@ public class MovieTest {
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
                 .year("2017")
-                .released(DateUtils.toLongOmdbReleased("01 Jun 2017"))
+                .released(getOmdbManager().toLongOmdbReleased("01 Jun 2017"))
                 .runtime(144)
                 .genre("Drama, Mystery, Romance")
                 .poster(POSTER)
@@ -197,7 +202,7 @@ public class MovieTest {
                 .imdbId("tt4016935")
                 .title("The Handmaiden")
                 .year("2017")
-                .released(DateUtils.toLongOmdbReleased("01 Jun 2017"))
+                .released(getOmdbManager().toLongOmdbReleased("01 Jun 2017"))
                 .runtime(144)
                 .genre("Drama, Mystery, Romance")
                 .poster(POSTER)
@@ -215,10 +220,22 @@ public class MovieTest {
     public void testToString() {
         assertEquals(
                 "Movie{id=tt4016934, imdbId=tt4016934, title=The Handmaiden" +
-                        ", year=2017, released=" + DateUtils.toLongOmdbReleased("01 Jun 2017") +
+                        ", year=2017, released=" + getOmdbManager().toLongOmdbReleased("01 Jun 2017") +
                         ", runtime=144, genre=Drama, Mystery, Romance, poster=" + POSTER +
                         "}",
                 mMovie.toString());
+    }
+
+    //---------------------------------------------------------------------
+    // Getters
+
+    /**
+     * Convenience method which returns a reference to an OmdbManager object.
+     * @return a reference to an OmdbManager object
+     */
+    @NonNull
+    private static OmdbManager getOmdbManager() {
+        return OmdbManager.getInstance();
     }
 
 }
