@@ -1,4 +1,4 @@
-package uk.jumpingmouse.moviecompanion.omdb;
+package uk.jumpingmouse.moviecompanion.omdbapi;
 
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;

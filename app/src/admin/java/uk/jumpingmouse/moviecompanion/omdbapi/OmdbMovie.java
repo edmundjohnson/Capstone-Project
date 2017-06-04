@@ -1,4 +1,4 @@
-package uk.jumpingmouse.moviecompanion.omdb;
+package uk.jumpingmouse.moviecompanion.omdbapi;
 
 import android.support.annotation.Nullable;
 
@@ -7,6 +7,9 @@ import android.support.annotation.Nullable;
  * @author Edmund Johnson
  */
 public class OmdbMovie {
+    public static final int RUNTIME_UNKNOWN = -1;
+    public static final int RELEASED_UNKNOWN = -1;
+
     // Many attribute names must have a leading uppercase letter to match the JSON
     // returned by the OMDb API.
 

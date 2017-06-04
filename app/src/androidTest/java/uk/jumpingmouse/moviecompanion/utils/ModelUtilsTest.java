@@ -3,7 +3,6 @@ package uk.jumpingmouse.moviecompanion.utils;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.MatrixCursor;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -14,7 +13,7 @@ import java.util.List;
 
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
-import uk.jumpingmouse.moviecompanion.omdb.OmdbManager;
+import uk.jumpingmouse.moviecompanion.omdbapi.OmdbApi;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -38,7 +37,7 @@ public class ModelUtilsTest {
             "https://images-na.ssl-images-amazon.com/images/M/MV5BYTBjYjllZTctMTdkMy00MmE5LTllYjctYzg3OTc1MTFjZGYzXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg";
     private static final String MOVIE_YEAR = "2011";
     private static final String MOVIE_RELEASED_STR = "01 Jun 2011";
-    private static final long MOVIE_RELEASED_LNG = getOmdbManager().toLongOmdbReleased(MOVIE_RELEASED_STR);
+    private static final long MOVIE_RELEASED_LNG = OmdbApi.toLongOmdbReleased(MOVIE_RELEASED_STR);
     private static final String MOVIE_RELEASED_INVALID = "this is not a date";
 
     private static final ContentValues VALUES_FIELDS_SET;
@@ -410,14 +409,5 @@ public class ModelUtilsTest {
 
     //---------------------------------------------------------------------
     // Getters
-
-    /**
-     * Convenience method which returns a reference to an OmdbManager object.
-     * @return a reference to an OmdbManager object
-     */
-    @NonNull
-    private static OmdbManager getOmdbManager() {
-        return OmdbManager.getInstance();
-    }
 
 }

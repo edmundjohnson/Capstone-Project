@@ -47,13 +47,6 @@ public final class ModelUtils {
             return null;
         }
 
-        // Convert released from String to Date
-        //String strReleased = (String) values.get(DataContract.MovieEntry.COLUMN_RELEASED);
-        //long released = getOmdbManager().toLongOmdbReleased(strReleased);
-        // Convert runtime from String to int
-        //String strRuntime = (String) values.get(DataContract.MovieEntry.COLUMN_RUNTIME);
-        //int runtime = getOmdbManager().toIntOmdbRuntime(strRuntime);
-
         return Movie.builder()
                 .id(id)
                 .imdbId(imdbId)
@@ -98,7 +91,7 @@ public final class ModelUtils {
         }
         // if the released date is invalid set it to unknown
         long released = cursor.getLong(DataContract.MovieEntry.COL_RELEASED);
-        if (released < 0) {
+        if (released <= 0) {
             Timber.w("toMovie(Cursor): invalid released");
             released = Movie.RELEASED_UNKNOWN;
         }

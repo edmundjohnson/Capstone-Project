@@ -19,7 +19,7 @@ import java.util.List;
 
 import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.data.Movie;
-import uk.jumpingmouse.moviecompanion.omdb.OmdbManager;
+import uk.jumpingmouse.moviecompanion.omdbapi.OmdbApi;
 import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 
 import static junit.framework.Assert.assertEquals;
@@ -57,7 +57,7 @@ public class DataProviderTest {
                 .imdbId("tt9999991")
                 .title("Test Movie 1")
                 .year("2011")
-                .released(getOmdbManager().toLongOmdbReleased("01 Jun 2011"))
+                .released(OmdbApi.toLongOmdbReleased("01 Jun 2011"))
                 .runtime(111)
                 .genre("Drama, Mystery, Romance")
                 .poster(TEST_POSTER)
@@ -67,7 +67,7 @@ public class DataProviderTest {
                 .imdbId("tt9999991")
                 .title("Test Movie 1 modified")
                 .year("2012")
-                .released(getOmdbManager().toLongOmdbReleased("01 Jun 2012"))
+                .released(OmdbApi.toLongOmdbReleased("01 Jun 2012"))
                 .runtime(121)
                 .genre("Comedy")
                 .poster(TEST_POSTER + ".modified")
@@ -77,7 +77,7 @@ public class DataProviderTest {
                 .imdbId("tt9999992")
                 .title("Test Movie 2")
                 .year("2012")
-                .released(getOmdbManager().toLongOmdbReleased("01 Jun 2012"))
+                .released(OmdbApi.toLongOmdbReleased("01 Jun 2012"))
                 .runtime(122)
                 .genre("Drama, Mystery, Romance")
                 .poster(TEST_POSTER)
@@ -88,7 +88,7 @@ public class DataProviderTest {
                 // Do not change the 0 to a 3! 0 is required for query order test.
                 .title("Test Movie 0")
                 .year("2013")
-                .released(getOmdbManager().toLongOmdbReleased("01 Jun 2013"))
+                .released(OmdbApi.toLongOmdbReleased("01 Jun 2013"))
                 .runtime(133)
                 .genre("Drama, Mystery, Romance")
                 .poster(TEST_POSTER)
@@ -751,14 +751,5 @@ public class DataProviderTest {
 
     //---------------------------------------------------------------------
     // Getters
-
-    /**
-     * Convenience method which returns a reference to an OmdbManager object.
-     * @return a reference to an OmdbManager object
-     */
-    @NonNull
-    private static OmdbManager getOmdbManager() {
-        return OmdbManager.getInstance();
-    }
 
 }

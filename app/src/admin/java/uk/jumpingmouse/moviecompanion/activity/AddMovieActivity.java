@@ -19,9 +19,9 @@ import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
-import uk.jumpingmouse.moviecompanion.omdb.OmdbHandler;
-import uk.jumpingmouse.moviecompanion.omdb.OmdbManager;
-import uk.jumpingmouse.moviecompanion.omdb.OmdbMovie;
+import uk.jumpingmouse.moviecompanion.omdbapi.OmdbHandler;
+import uk.jumpingmouse.moviecompanion.omdbapi.OmdbApi;
+import uk.jumpingmouse.moviecompanion.omdbapi.OmdbMovie;
 import uk.jumpingmouse.moviecompanion.utils.NavUtils;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
@@ -132,7 +132,7 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
             getViewUtils().displayErrorMessage(this, R.string.omdbapi_key_missing);
             return;
         }
-        getOmdbManager().fetchMovie(omdbApiKey, imdbId, this);
+        getOmdbApi().fetchMovie(omdbApiKey, imdbId, this);
     }
 
     /**
@@ -205,8 +205,8 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
         }
 
         // Build and return the movie
-        int runtime = getOmdbManager().toIntOmdbRuntime(omdbMovie.getRuntime());
-        long released = getOmdbManager().toLongOmdbReleased(omdbMovie.getReleased());
+        int runtime = OmdbApi.toIntOmdbRuntime(omdbMovie.getRuntime());
+        long released = OmdbApi.toLongOmdbReleased(omdbMovie.getReleased());
         return Movie.builder()
                 .id(omdbMovie.getImdbID())
                 .imdbId(omdbMovie.getImdbID())
@@ -304,11 +304,7 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
         values.put(DataContract.MovieEntry.COLUMN_IMDB_ID, movie.getImdbId());
         values.put(DataContract.MovieEntry.COLUMN_TITLE, movie.getTitle());
         values.put(DataContract.MovieEntry.COLUMN_YEAR, movie.getYear());
-        //values.put(DataContract.MovieEntry.COLUMN_RELEASED,
-        //        getOmdbManager().toStringOmdbReleased(movie.getReleased()));
         values.put(DataContract.MovieEntry.COLUMN_RELEASED, movie.getReleased());
-        //values.put(DataContract.MovieEntry.COLUMN_RUNTIME,
-        //        getOmdbManager().toStringOmdbRuntime(movie.getRuntime()));
         values.put(DataContract.MovieEntry.COLUMN_RUNTIME, movie.getRuntime());
         values.put(DataContract.MovieEntry.COLUMN_GENRE, movie.getGenre());
         values.put(DataContract.MovieEntry.COLUMN_POSTER, movie.getPoster());
@@ -338,12 +334,12 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
     }
 
     /**
-     * Convenience method which returns a reference to an OmdbManager object.
-     * @return a reference to an OmdbManager object
+     * Convenience method which returns a reference to an OmdbApi object.
+     * @return a reference to an OmdbApi object
      */
     @NonNull
-    private static OmdbManager getOmdbManager() {
-        return OmdbManager.getInstance();
+    private static OmdbApi getOmdbApi() {
+        return OmdbApi.getInstance();
     }
 
 }

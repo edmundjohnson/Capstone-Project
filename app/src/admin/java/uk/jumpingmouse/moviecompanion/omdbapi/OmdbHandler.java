@@ -1,4 +1,4 @@
-package uk.jumpingmouse.moviecompanion.omdb;
+package uk.jumpingmouse.moviecompanion.omdbapi;
 
 import android.support.annotation.Nullable;
 

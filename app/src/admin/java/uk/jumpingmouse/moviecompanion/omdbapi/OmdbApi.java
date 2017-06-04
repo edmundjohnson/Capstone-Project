@@ -1,4 +1,4 @@
-package uk.jumpingmouse.moviecompanion.omdb;
+package uk.jumpingmouse.moviecompanion.omdbapi;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,10 +11,10 @@ import java.security.InvalidParameterException;
  * Clients of this library can only call methods in this class.
  * @author Edmund Johnson
  */
-public class OmdbManager {
+public class OmdbApi {
 
     /** The singleton instance of this class. */
-    private static OmdbManager sOmdbManager = null;
+    private static OmdbApi sOmdbApi = null;
 
     //---------------------------------------------------------------------
     // Instance handling methods
@@ -24,15 +24,15 @@ public class OmdbManager {
      * @return an instance of this class
      */
     @NonNull
-    public static OmdbManager getInstance() {
-        if (sOmdbManager == null) {
-            sOmdbManager = new OmdbManager();
+    public static OmdbApi getInstance() {
+        if (sOmdbApi == null) {
+            sOmdbApi = new OmdbApi();
         }
-        return sOmdbManager;
+        return sOmdbApi;
     }
 
     /** Private default constructor, to prevent instantiation from outside this class. */
-    private OmdbManager() {
+    private OmdbApi() {
     }
 
     //---------------------------------------------------------------------
@@ -62,55 +62,35 @@ public class OmdbManager {
     }
 
     /**
-     * Returns an OMDb runtime as an int, e.g. returns "144 min" as 144
+     * Returns an OMDb 'runtime' String as an int, e.g. returns "144 min" as 144
      * @param omdbRuntime the OMDb runtime, e.g. "144 min"
-     * @return the runtime as an int, e.g. 144
+     * @return the runtime as an int, e.g. 144,
+     *         or OmdbMovie.RUNTIME_UNKNOWN if omdbRuntime could not be converted to an int
      */
-    public int toIntOmdbRuntime(@Nullable String omdbRuntime) {
-        return getOmdbUtils().toIntOmdbRuntime(omdbRuntime);
-    }
-
-    /**
-     * Returns an OMDb-formatted runtime string representing a number of minutes.
-     * @param runtime the runtime in minutes
-     * @return an OMDb-formatted runtime string corresponding to the runtime,
-     *         or an empty String if runtime indicates an unknown runtime
-     */
-    @NonNull
-    public String toStringOmdbRuntime(final int runtime) {
-        return getOmdbUtils().toStringOmdbRuntime(runtime);
+    public static int toIntOmdbRuntime(@Nullable String omdbRuntime) {
+        return OmdbUtils.toIntOmdbRuntime(omdbRuntime);
     }
 
     /**
      * Returns a long representing an OMDb-formatted released date as a number of milliseconds.
      * @param omdbReleased an OMDb released date, formatted as "dd MMM yyyy"
-     * @return a long object representing omdbReleased as a number of milliseconds,
-     *         or RELEASED_UNKNOWN if omdbReleased could not be converted to a long
+     * @return a long representing omdbReleased as a number of milliseconds,
+     *         or OmdbMovie.RELEASED_UNKNOWN if omdbReleased could not be converted to a long
      */
-    public long toLongOmdbReleased(@Nullable final String omdbReleased) {
-        return getOmdbUtils().toLongOmdbReleased(omdbReleased);
+    public static long toLongOmdbReleased(@Nullable final String omdbReleased) {
+        return OmdbUtils.toLongOmdbReleased(omdbReleased);
     }
 
-    /**
-     * Returns an OMDb-formatted released date string representing a number of milliseconds.
-     * @param released a release date as a number of milliseconds
-     * @return an OMDb-formatted released date string corresponding to released, e.g. "21 Apr 2017",
-     *         or an empty String if released indicates an unknown release date
-     */
-    @NonNull
-    public String toStringOmdbReleased(final long released) {
-        return getOmdbUtils().toStringOmdbReleased(released);
-    }
     //---------------------------------------------------------------------
     // Getters
 
-    /**
-     * Convenience method which returns a reference to a OmdbUtils object.
-     * @return a reference to a OmdbUtils object
-     */
-    @NonNull
-    private static OmdbUtils getOmdbUtils() {
-        return OmdbUtils.getInstance();
-    }
+//    /**
+//     * Convenience method which returns a reference to a OmdbUtils object.
+//     * @return a reference to a OmdbUtils object
+//     */
+//    @NonNull
+//    private static OmdbUtils getOmdbUtils() {
+//        return OmdbUtils.getInstance();
+//    }
 
 }
