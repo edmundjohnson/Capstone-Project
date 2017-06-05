@@ -26,5 +26,7 @@
     <string name="movie_not_saved">Movie not saved: %s</string>
     <string name="movie_not_found">Movie not found</string>
 
+    <!-- Add Award -->
+    <string name="title_add_award">Add Award</string>
 
 </resources>

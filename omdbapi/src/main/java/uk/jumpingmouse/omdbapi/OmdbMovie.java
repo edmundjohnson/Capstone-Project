@@ -1,4 +1,4 @@
-package uk.jumpingmouse.moviecompanion.omdbapi;
+package uk.jumpingmouse.omdbapi;
 
 import android.support.annotation.Nullable;
 
@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
  * A class representing a movie as returned by the OMDb API.
  * @author Edmund Johnson
  */
-public class OmdbMovie {
+public final class OmdbMovie {
     public static final int RUNTIME_UNKNOWN = -1;
     public static final int RELEASED_UNKNOWN = -1;
 

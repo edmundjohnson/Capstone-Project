@@ -15,24 +15,22 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import timber.log.Timber;
-
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.moviecompanion.utils.NavUtils;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
-
 import uk.jumpingmouse.omdbapi.OmdbApi;
 import uk.jumpingmouse.omdbapi.OmdbHandler;
 import uk.jumpingmouse.omdbapi.OmdbMovie;
 
 /**
- * The add movie activity.
+ * The add award activity.
  * Note that this is an admin activity, not a public-facing one.
  * @author Edmund Johnson
  */
-public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
+public class AddAwardActivity extends AppCompatActivity implements OmdbHandler {
 
     // Screen fields
     private EditText mTxtImdbId;
@@ -59,7 +57,7 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_movie);
+        setContentView(R.layout.activity_add_award);
 
         mTxtImdbId = (EditText) findViewById(R.id.txtImdbId);
         mLabelTitle = (TextView) findViewById(R.id.labelTitle);
@@ -159,11 +157,11 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
      * @param view the view that was clicked
      */
     public void onCancel(@Nullable View view) {
-        clearMovie();
-        if (view != null) {
-            getViewUtils().displayInfoMessage(view.getContext(),
-                    getString(R.string.movie_not_saved, mTxtTitle.getText()));
-        }
+        clearAward();
+//        if (view != null) {
+//            getViewUtils().displayInfoMessage(view.getContext(),
+//                    getString(R.string.movie_not_saved, mTxtTitle.getText()));
+//        }
     }
 
     /**
@@ -184,7 +182,7 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
         } else {
             getViewUtils().displayInfoMessage(view.getContext(),
                      getString(R.string.saving_movie, mMovie.getTitle()));
-            clearMovie();
+            clearAward();
         }
 
     }
@@ -237,7 +235,7 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
     /**
      * Clears the displayed movie from the screen.
      */
-    private void clearMovie() {
+    private void clearAward() {
         clearValueFields();
         hideValueFields();
     }

@@ -2,37 +2,41 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="uk.jumpingmouse.moviecompanion">
 
-<application
-    android:allowBackup="true"
-    android:icon="@mipmap/ic_launcher"
-    android:label="@string/app_name"
-    android:roundIcon="@mipmap/ic_launcher_round"
-    android:supportsRtl="true"
-    android:theme="@style/AppTheme" >
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme" >
 
-    <!-- Can this be removed for admin product flavour ? -->
-    <!-- Android v7 requires the android:authorities to be specified literally,
-         i.e. NOT using a reference to a string/resource -->
-    <provider
-        android:authorities="@string/content_authority"
-        android:name=".model.DataProvider"
-        android:enabled="true"
-        android:exported="false"
-        android:syncable="true" />
+        <!-- Can this be removed for admin product flavour ? -->
+        <!-- Android v7 requires the android:authorities to be specified literally,
+             i.e. NOT using a reference to a string/resource -->
+        <provider
+            android:authorities="@string/content_authority"
+            android:name=".model.DataProvider"
+            android:enabled="true"
+            android:exported="false"
+            android:syncable="true" />
 
-    <!-- Can this be removed for admin product flavour ? -->
-    <!-- The main activity -->
-    <activity android:name=".activity.MainActivity">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
+        <!-- Can this be removed for admin product flavour ? -->
+        <!-- The main activity -->
+        <activity android:name=".activity.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
-    <!-- The add movie activity -->
-    <activity android:name=".activity.AddMovieActivity">
-    </activity>
+        <!-- The add movie activity -->
+        <activity android:name=".activity.AddMovieActivity">
+        </activity>
 
-</application>
+        <!-- The add award activity -->
+        <activity android:name=".activity.AddAwardActivity">
+        </activity>
+
+    </application>
 
 </manifest>

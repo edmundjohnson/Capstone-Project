@@ -19,8 +19,8 @@ import java.util.List;
 
 import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.data.Movie;
-import uk.jumpingmouse.moviecompanion.omdbapi.OmdbApi;
 import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
+import uk.jumpingmouse.omdbapi.OmdbApi;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;

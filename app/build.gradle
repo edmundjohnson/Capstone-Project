@@ -82,7 +82,7 @@ android {
             versionNameSuffix "-dev"
 
             // To avoid using legacy multidex, set minSdkVersion to 21 or higher.
-            minSdkVersion 21
+            //minSdkVersion 21
             // The following configuration limits the "dev" flavour to using
             // English string resources and xxhdpi screen-density resources.
             resConfigs "en", "xxhdpi"
@@ -110,8 +110,6 @@ ext {
     FIREBASE_VERSION = '10.2.0'
     //FIREBASE_VERSION = '10.2.6'
     FIREBASE_UI_VERSION = '1.2.0'
-
-    RETROFIT_VERSION = '2.2.0'
 }
 
 dependencies {
@@ -128,12 +126,11 @@ dependencies {
     // Firebase UI Auth
     compile "com.firebaseui:firebase-ui-auth:$FIREBASE_UI_VERSION"
 
-    // Retrofit
-    compile "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
-    compile "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
-
     // Timber
     compile 'com.jakewharton.timber:timber:4.5.1'
+
+    // OmdbApi
+    compile project(':omdbapi')
 
     // test
     testCompile 'junit:junit:4.12'

@@ -1,4 +1,4 @@
-package uk.jumpingmouse.moviecompanion.omdbapi;
+package uk.jumpingmouse.omdbapi;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,7 +11,7 @@ import java.security.InvalidParameterException;
  * Clients of this library can only call methods in this class.
  * @author Edmund Johnson
  */
-public class OmdbApi {
+public final class OmdbApi {
 
     /** The singleton instance of this class. */
     private static OmdbApi sOmdbApi = null;

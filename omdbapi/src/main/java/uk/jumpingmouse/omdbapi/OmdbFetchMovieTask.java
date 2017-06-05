@@ -1,10 +1,11 @@
-package uk.jumpingmouse.moviecompanion.omdbapi;
+package uk.jumpingmouse.omdbapi;
 
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.annotation.WorkerThread;
+import android.util.Log;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -12,13 +13,14 @@ import java.net.HttpURLConnection;
 
 import retrofit2.Call;
 import retrofit2.Response;
-import timber.log.Timber;
 
 /**
  * A task which fetches a movie from the OMDb and displays it on the screen.
  * @author Edmund Johnson
  */
-class OmdbFetchMovieTask extends AsyncTask<String, Integer, OmdbMovie> {
+final class OmdbFetchMovieTask extends AsyncTask<String, Integer, OmdbMovie> {
+    private static final String TAG = OmdbFetchMovieTask.class.getSimpleName();
+
     private final WeakReference<OmdbHandler> mOmdbHandler;
 
     //---------------------------------------------------------------------
@@ -78,11 +80,11 @@ class OmdbFetchMovieTask extends AsyncTask<String, Integer, OmdbMovie> {
     @WorkerThread
     private OmdbMovie fetchMovie(@Nullable String omdbApiKey, @Nullable String imdbId) {
         if (omdbApiKey == null || omdbApiKey.isEmpty()) {
-            Timber.e("omdbApiKey is null or empty");
+            Log.e(TAG, "omdbApiKey is null or empty");
             return null;
         }
         if (imdbId == null || imdbId.isEmpty()) {
-            Timber.e("imdbId is null or empty");
+            Log.e(TAG, "imdbId is null or empty");
             return null;
         }
         // Create a client to read the OMDb API
@@ -95,17 +97,17 @@ class OmdbFetchMovieTask extends AsyncTask<String, Integer, OmdbMovie> {
             // Execute the call to obtain the data from OMDb
             response = call.execute();
         } catch (IOException e) {
-            Timber.e("ERROR: IOException while fetching movie from OMDb: ", e);
+            Log.e(TAG, "ERROR: IOException while fetching movie from OMDb: ", e);
             return null;
         } catch (Exception e) {
-            Timber.e("ERROR: Exception while fetching movie from OMDb: ", e);
+            Log.e(TAG, "ERROR: Exception while fetching movie from OMDb: ", e);
             return null;
         }
 
         try {
             if (!response.isSuccessful()) {
                 // Handle any connection errors
-                Timber.e("Response code from OMDb indicates a failure: " + response.code());
+                Log.e(TAG, "Response code from OMDb indicates a failure: " + response.code());
                 switch (response.code()) {
                     case HttpURLConnection.HTTP_BAD_REQUEST:
                     case HttpURLConnection.HTTP_NOT_FOUND:
@@ -118,12 +120,12 @@ class OmdbFetchMovieTask extends AsyncTask<String, Integer, OmdbMovie> {
             } else {
                 // Response received successfully, parse it to get the OMDb API data
                 if (!(response.body() instanceof OmdbMovie)) {
-                    Timber.e("Response body received from OMDb did not contain an OmdbMovie");
+                    Log.e(TAG, "Response body received from OMDb did not contain an OmdbMovie");
                     return null;
                 }
                 OmdbMovie omdbMovie = (OmdbMovie) response.body();
                 if (omdbMovie == null) {
-                    Timber.w("Response body from OMDb did not contain an OmdbMovie: \""
+                    Log.w(TAG, "Response body from OMDb did not contain an OmdbMovie: \""
                             + response.body().toString() + "\"");
                 }
                 //if (omdbMovie == null) {
@@ -137,7 +139,7 @@ class OmdbFetchMovieTask extends AsyncTask<String, Integer, OmdbMovie> {
         } catch (Exception e) {
             // This is probably an error parsing the JSON into the OmdbMovie object
             //getPrefUtils().setOmdbApiStatus(context, PrefUtils.STATUS_SERVER_DATA_INVALID);
-            Timber.e("ERROR: Exception while fetching OmdbMovie from OMDb: ", e);
+            Log.e(TAG, "ERROR: Exception while fetching OmdbMovie from OMDb: ", e);
             return null;
         }
     }

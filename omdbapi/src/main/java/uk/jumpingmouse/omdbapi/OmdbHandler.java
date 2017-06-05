@@ -1,9 +1,9 @@
-package uk.jumpingmouse.moviecompanion.omdbapi;
+package uk.jumpingmouse.omdbapi;
 
 import android.support.annotation.Nullable;
 
 /**
- * Interface which must be implemented by activities which use the OMDb
+ * Interface which must be implemented by classes which use the OMDb
  * 'library' to interact with the OMDb API.
  * @author Edmund Johnson
  */

@@ -1,20 +1,21 @@
-package uk.jumpingmouse.moviecompanion.omdbapi;
+package uk.jumpingmouse.omdbapi;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import timber.log.Timber;
-
 /**
  * Class containing utility methods related to the open movie database API.
  * @author Edmund Johnson
  */
-class OmdbUtils {
+final class OmdbUtils {
+    private static final String TAG = OmdbUtils.class.getSimpleName();
+
     /** The date format used by the OMDb API, e.g. "01 Jun 2016". */
     private static final String DATE_FORMAT_OMDB_RELEASED = "dd MMM yyyy";
 
@@ -44,7 +45,7 @@ class OmdbUtils {
 //    }
 
     //---------------------------------------------------------------------
-    // Movie runtime field
+    // 'runtime' field
 
     /**
      * Returns an OMDb runtime as an int, e.g. returns "144 min" as 144
@@ -59,7 +60,7 @@ class OmdbUtils {
             try {
                 return Integer.decode(split[0]);
             } catch (NumberFormatException e) {
-                Timber.w(String.format(
+                Log.w(TAG, String.format(
                         "NumberFormatException while attempting to decode OMDb runtime to int: \"%s\"",
                         omdbRuntime));
             }
@@ -68,9 +69,9 @@ class OmdbUtils {
     }
 
 //    /**
-//     * Returns an OMDb-formatted runtime string representing a number of minutes.
-//     * @param runtime the runtime in minutes
-//     * @return an OMDb-formatted runtime string corresponding to the runtime,
+//     * Returns an OMDb-formatted runtime string representing a number of minutes, e.g. "144 min".
+//     * @param runtime the runtime in minutes, e.g. 144
+//     * @return an OMDb-formatted runtime string corresponding to runtime,
 //     *         or an empty String if runtime indicates an unknown runtime
 //     */
 //    @NonNull
@@ -82,32 +83,7 @@ class OmdbUtils {
 //    }
 
     //---------------------------------------------------------------------
-    // Movie released field
-
-//    /**
-//     * Returns an OMDb-formatted released date string representing a number of milliseconds.
-//     * @param released a release date as a number of milliseconds
-//     * @return an OMDb-formatted released date string corresponding to released,
-//     *         or an empty String if released indicates an unknown release date
-//     */
-//    @NonNull
-//    String toStringOmdbReleased(final long released) {
-//        if (released == OmdbMovie.RELEASED_UNKNOWN || released < 0) {
-//            return "";
-//        }
-//        Date dateReleased = new Date(released);
-//        return toStringOmdbReleased(dateReleased);
-//    }
-
-//    /**
-//     * Returns a Date as a String in the OMDb released date format, e.g. "12 Jun 2017".
-//     * @param date the date
-//     * @return the date in the OMDb released date string format
-//     */
-//    @NonNull
-//    private String toStringOmdbReleased(@NonNull final Date date) {
-//        return toString(getDateFormatOmdbReleased(), date);
-//    }
+    // 'released' field
 
     /**
      * Returns a long representing an OMDb-formatted released date as a number of milliseconds.
@@ -135,6 +111,34 @@ class OmdbUtils {
         return toDate(getDateFormatOmdbReleased(), strDate);
     }
 
+//    /**
+//     * Returns an OMDb-formatted released date string representing a number of milliseconds.
+//     * @param released a release date as a number of milliseconds
+//     * @return an OMDb-formatted released date string corresponding to released,
+//     *         or an empty String if released indicates an unknown release date
+//     */
+//    @NonNull
+//    String toStringOmdbReleased(final long released) {
+//        if (released == OmdbMovie.RELEASED_UNKNOWN || released < 0) {
+//            return "";
+//        }
+//        Date dateReleased = new Date(released);
+//        return toStringOmdbReleased(dateReleased);
+//    }
+
+//    /**
+//     * Returns a Date as a String in the OMDb released date format, e.g. "12 Jun 2017".
+//     * @param date the date
+//     * @return the date in the OMDb released date string format
+//     */
+//    @NonNull
+//    private String toStringOmdbReleased(@NonNull final Date date) {
+//        return toString(getDateFormatOmdbReleased(), date);
+//    }
+
+    //---------------------------------------------------------------------
+    // Date utilities
+
     /**
      * Returns a SimpleDateFormat object for OMDb released dates.
      * @return a SimpleDateFormat object for OMDb released dates
@@ -146,9 +150,6 @@ class OmdbUtils {
         }
         return sDateFormatOmdbReleased;
     }
-
-    //---------------------------------------------------------------------
-    // Date utilities
 
     /**
      * Returns a Date object representing a supplied String.
@@ -165,7 +166,7 @@ class OmdbUtils {
         try {
             return format.parse(strDate);
         } catch (ParseException e) {
-            Timber.e("toDate: Cannot parse String \"" + strDate + "\" to a Date using format: \""
+            Log.e(TAG, "toDate: Cannot parse String \"" + strDate + "\" to a Date using format: \""
                     + format + "\"", e);
             return null;
         }

@@ -10,8 +10,8 @@ buildscript {
     }
     dependencies {
         //classpath 'com.android.tools.build:gradle:2.3.2'
-        //classpath 'com.android.tools.build:gradle:3.0.0-alpha2'
-        classpath 'com.android.tools.build:gradle:3.0.0-alpha2'
+        //classpath 'com.android.tools.build:gradle:3.0.0-alpha3'
+        classpath 'com.android.tools.build:gradle:3.0.0-alpha3'
 
         // Required for Firebase
         classpath 'com.google.gms:google-services:3.0.0'

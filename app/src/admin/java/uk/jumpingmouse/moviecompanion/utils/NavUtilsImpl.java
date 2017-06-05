@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.MenuItem;
 
 import uk.jumpingmouse.moviecompanion.R;
+import uk.jumpingmouse.moviecompanion.activity.AddAwardActivity;
 import uk.jumpingmouse.moviecompanion.activity.AddMovieActivity;
 
 /**
@@ -72,6 +73,14 @@ public class NavUtilsImpl extends NavUtils {
      */
     private void displayAddMovie(@Nullable Context context) {
         displayActivity(context, AddMovieActivity.class);
+    }
+
+    /**
+     * Displays the add award screen.
+     * @param context the context
+     */
+    private void displayAddAward(@Nullable Context context) {
+        displayActivity(context, AddAwardActivity.class);
     }
 
     /**

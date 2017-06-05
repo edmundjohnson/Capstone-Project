@@ -1,4 +1,4 @@
-package uk.jumpingmouse.moviecompanion.omdbapi;
+package uk.jumpingmouse.omdbapi;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * to the OMDb API server.
  * @author Edmund Johnson
  */
-class OmdbServiceGenerator {
+final class OmdbServiceGenerator {
     /** The base URL. */
     private static final String API_BASE_URL = "https://www.omdbapi.com";
     // URL to test a non-XML response (FEED_STATUS_SERVER_DATA_INVALID)

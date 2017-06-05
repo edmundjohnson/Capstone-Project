@@ -13,7 +13,7 @@ import java.util.List;
 
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
-import uk.jumpingmouse.moviecompanion.omdbapi.OmdbApi;
+import uk.jumpingmouse.omdbapi.OmdbApi;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
