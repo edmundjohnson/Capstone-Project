@@ -9,7 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import timber.log.Timber;
-
+import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 
 /**
@@ -57,13 +57,13 @@ public class LocalDatabaseInMemory implements LocalDatabase {
      */
     @Override
     public int addMovie(@NonNull Movie movie) {
-        String id = movie.getId();
-        // This cannot happen due to previous checks, but the compiler requires it
-        //noinspection ConstantConditions
-        if (id == null) {
-            Timber.w("addMovie: Cannot add a movie whose id is null");
-            return 0;
-        }
+        int id = movie.getId();
+//        //This cannot happen due to previous checks, but the compiler requires it
+//        noinspection ConstantConditions
+//        if (id <= 0) {
+//            Timber.w("addMovie: Cannot add a movie whose id is zero or negative");
+//            return 0;
+//        }
         // remove the movie if it already exists
         Movie existingMovie = selectMovieById(id);
         if (existingMovie != null) {
@@ -80,7 +80,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
      * @return the number of rows deleted
      */
     @Override
-    public int deleteMovie(@NonNull String id) {
+    public int deleteMovie(int id) {
         Movie existingMovie = selectMovieById(id);
         if (existingMovie == null) {
             Timber.w("deleteMovie: Movie not found with id: " + id);
@@ -100,9 +100,9 @@ public class LocalDatabaseInMemory implements LocalDatabase {
      */
     @Override
     @Nullable
-    public Movie selectMovieById(@NonNull String id) {
+    public Movie selectMovieById(int id) {
         for (Movie movie : mMovieList) {
-            if (id.equals(movie.getId())) {
+            if (id == movie.getId()) {
                 return movie;
             }
         }
@@ -175,6 +175,33 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         Collections.sort(mMovieList, comparator);
         return mMovieList;
     }
+
+    //---------------------------------------------------------------------
+    // Movie modification methods
+
+    /**
+     * Adds an award's details to the database.
+     * If the award does not exist in the database, it is inserted.
+     * If it already exists in the database, it is updated.
+     * @param award the award to insert or update
+     * @return the number of rows inserted or updated
+     */
+    @Override
+    public int addMovie(@NonNull Award award) {
+        String id = award.getId();
+        int movieId = award.getMovieId();
+        // remove the award if it already exists
+        Award existingAward = selectAwardById(movieId, id);
+        if (existingAward != null) {
+            mAwardList.remove(existingAward);
+        }
+        // add the new award
+        mAwardList.get(movieId).add(award);
+        return 1;
+    }
+
+    //---------------------------------------------------------------------
+    // Utility methods
 
     /**
      * Returns the sort column from a sort order.

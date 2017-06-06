@@ -18,11 +18,13 @@ public class Award {
     // id is a unique identifier for award
     private String id;
     // movieId is a "foreign key" to Movie
-    private String movieId;
+    private int movieId;
     // awardDate is formatted as "YYMMDD"
     private String awardDate;
     // categoryId is one of CATEGORY_MOVIE, CATEGORY_DVD
     private String category;
+    // displayOrder determines the displayed order of awards for a movie
+    private int displayOrder;
     // free text
     private String review;
 
@@ -31,15 +33,16 @@ public class Award {
 
     private Award(
             @Nullable String id,
-            @Nullable String movieId,
+            int movieId,
             @Nullable String awardDate,
             @Nullable String category,
-            @Nullable String review) {
+            @Nullable String review,
+            int displayOrder) {
         if (id == null) {
             throw new NullPointerException("Null id");
         }
-        if (movieId == null) {
-            throw new NullPointerException("Null movieId");
+        if (movieId <= 0) {
+            throw new NullPointerException("Invalid movieId");
         }
         if (awardDate == null) {
             throw new NullPointerException("Null awardDate");
@@ -50,11 +53,15 @@ public class Award {
         if (review == null) {
             throw new NullPointerException("Null review");
         }
+        if (displayOrder <= 0) {
+            throw new NullPointerException("Invalid displayOrder");
+        }
         this.id = id;
         this.movieId = movieId;
         this.awardDate = awardDate;
         this.category = category;
         this.review = review;
+        this.displayOrder = displayOrder;
     }
 
     //---------------------------------------------------------------
@@ -65,8 +72,7 @@ public class Award {
         return id;
     }
 
-    @NonNull
-    public String getMovieId() {
+    public int getMovieId() {
         return movieId;
     }
 
@@ -85,6 +91,10 @@ public class Award {
         return review;
     }
 
+    public int getDisplayOrder() {
+        return displayOrder;
+    }
+
     //---------------------------------------------------------------
     // Builders
 
@@ -93,11 +103,12 @@ public class Award {
      * <blockquote><pre>
      * {@code
      *   Award award = Award.builder()
-     *         .id("???")
-     *         .movieId("tt4016934")
+     *         .id([push_id])
+     *         .movieId(4016934)
      *         .awardDate("170512")
      *         .category(Award.CATEGORY_MOVIE)
      *         .review("A great movie")
+     *         .displayOrder(2)
      *        .build();
      * }
      * </pre></blockquote>
@@ -110,10 +121,11 @@ public class Award {
     @SuppressWarnings("WeakerAccess")
     public static final class Builder {
         private String id;
-        private String movieId;
+        private int movieId;
         private String awardDate;
         private String category;
         private String review;
+        private int displayOrder;
 
         Builder() {
         }
@@ -124,6 +136,7 @@ public class Award {
             this.awardDate = source.awardDate;
             this.category = source.category;
             this.review = source.review;
+            this.displayOrder = source.displayOrder;
         }
 
         public Award.Builder id(@NonNull String id) {
@@ -131,7 +144,7 @@ public class Award {
             return this;
         }
 
-        public Award.Builder movieId(@NonNull String movieId) {
+        public Award.Builder movieId(int movieId) {
             this.movieId = movieId;
             return this;
         }
@@ -150,13 +163,19 @@ public class Award {
             this.review = review;
             return this;
         }
+
+        public Award.Builder displayOrder(int displayOrder) {
+            this.displayOrder = displayOrder;
+            return this;
+        }
+
         /** Builds and returns an object of this class. */
         public Award build() {
             String missing = "";
             if (id == null) {
                 missing += " id";
             }
-            if (movieId == null) {
+            if (movieId <= 0) {
                 missing += " movieId";
             }
             if (awardDate == null) {
@@ -168,6 +187,9 @@ public class Award {
             if (review == null) {
                 missing += " review";
             }
+            if (displayOrder <= 0) {
+                missing += " displayOrder";
+            }
             if (!missing.isEmpty()) {
                 throw new IllegalStateException("Missing required properties:" + missing);
             }
@@ -176,7 +198,8 @@ public class Award {
                     this.movieId,
                     this.awardDate,
                     this.category,
-                    this.review);
+                    this.review,
+                    this.displayOrder);
         }
     }
 
@@ -186,11 +209,12 @@ public class Award {
     @Override
     public String toString() {
         return "Award{"
-                + "id=" + id + ", "
-                + "movieId=" + movieId + ", "
-                + "awardDate=" + awardDate + ", "
-                + "category=" + category + ", "
-                + "review=" + review
+                + "id=" + id
+                + ", movieId=" + movieId
+                + ", awardDate=" + awardDate
+                + ", category=" + category
+                + ", review=" + review
+                + ", displayOrder=" + displayOrder
                 + "}";
     }
 
@@ -202,10 +226,11 @@ public class Award {
         if (o instanceof Award) {
             Award that = (Award) o;
             return (this.id.equals(that.id))
-                    && (this.movieId.equals(that.movieId))
+                    && (this.movieId == that.movieId)
                     && (this.awardDate.equals(that.awardDate))
                     && (this.category.equals(that.category))
-                    && (this.review.equals(that.review));
+                    && (this.review.equals(that.review))
+                    && (this.displayOrder == that.displayOrder);
         }
         return false;
     }
@@ -216,13 +241,15 @@ public class Award {
         h *= 1000003;
         h ^= this.id.hashCode();
         h *= 1000003;
-        h ^= this.movieId.hashCode();
+        h ^= this.movieId;
         h *= 1000003;
         h ^= this.awardDate.hashCode();
         h *= 1000003;
         h ^= this.category.hashCode();
         h *= 1000003;
         h ^= this.review.hashCode();
+        h *= 1000003;
+        h ^= this.displayOrder;
         return h;
     }
 

@@ -32,7 +32,7 @@ public final class DataContract {
      * ContentProvider hasn't been given any information on what to do with "give-me-root".
      */
     static final String URI_PATH_MOVIE = "movie";
-    //static final String URI_PATH_AWARD = "award";
+    static final String URI_PATH_AWARD = "award";
     //static final String URI_PATH_USER = "user";
 
     // Query parameters
@@ -119,14 +119,14 @@ public final class DataContract {
 
         /**
          * Build and return the URI for a movie identified by its id.
-         * e.g. "content://uk.jumpingmouse.moviecompanion/movie/tt4016934"
-         * @param id the id of the movie, e.g. "tt4016934"
+         * e.g. "content://uk.jumpingmouse.moviecompanion/movie/4016934"
+         * @param id the id of the movie, e.g. 4016934
          * @return the URI for obtaining the specific movie
          */
         @NonNull
-        static Uri buildUriForRowById(final String id) {
+        public static Uri buildUriForRowById(final int id) {
             return CONTENT_URI.buildUpon()
-                    .appendPath(id)
+                    .appendPath(Integer.toString(id))
                     .build();
         }
 
@@ -157,6 +157,83 @@ public final class DataContract {
 //                    .appendPath(String.valueOf(limit))
 //                    .build();
 //        }
+
+    }
+
+    /** Inner class that defines the contents of the award node. */
+    public static final class AwardEntry implements BaseColumns {
+
+        static final String CONTENT_DIR_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + URI_PATH_AWARD;
+        static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + URI_PATH_AWARD;
+
+        // Database
+
+        static final String ROOT_NODE = "awards";
+
+        public static final String COLUMN_ID = MovieEntry._ID;
+        public static final String COLUMN_MOVIE_ID = "movieId";
+        public static final String COLUMN_AWARD_DATE = "awardDate";
+        public static final String COLUMN_CATEGORY = "category";
+        public static final String COLUMN_REVIEW = "review";
+        public static final String COLUMN_DISPLAY_ORDER = "displayOrder";
+
+        // Note: arrays are mutable, so ALL_COLUMNS should not be public.
+        // See Effective Java, Item 13.
+        private static final String[] ALL_COLUMNS = {
+                COLUMN_ID,
+                COLUMN_MOVIE_ID,
+                COLUMN_AWARD_DATE,
+                COLUMN_CATEGORY,
+                COLUMN_REVIEW,
+                COLUMN_DISPLAY_ORDER
+        };
+        public static String[] getAllColumns() {
+            return ALL_COLUMNS.clone();
+        }
+
+        static final int COL_ID = 0;
+        static final int COL_MOVIE_ID = COL_ID + 1;
+        static final int COL_AWARD_DATE = COL_MOVIE_ID + 1;
+        static final int COL_CATEGORY = COL_AWARD_DATE + 1;
+        static final int COL_REVIEW = COL_CATEGORY + 1;
+        static final int COL_DISPLAY_ORDER = COL_REVIEW + 1;
+
+        // URIs
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(URI_PATH_AWARD).build();
+
+        /**
+         * Build and return the URI for an award identified by its id.
+         * e.g. "content://uk.jumpingmouse.moviecompanion/award/4016934/[push_id]"
+         * @param movieId the id of the movie, e.g. "tt4016934"
+         * @param awardId the id of the award, e.g. "[push_id]"
+         * @return the URI for obtaining the specific award
+         */
+        @NonNull
+        public static Uri buildUriForRowById(final int movieId,
+                                             @NonNull final String awardId) {
+            return CONTENT_URI.buildUpon()
+                    .appendPath(Integer.toString(movieId))
+                    .appendPath(awardId)
+                    .build();
+        }
+
+        /**
+         * Create and return a URI for querying all the awards for a movie.
+         * i.e. "content://uk.jumpingmouse.moviecompanion/award/4016934/all".
+         * @param movieId the id of the movie, e.g. 4016934
+         * @return the URI for querying all awards for the movie
+         */
+        @NonNull
+        static Uri buildUriForAllRowsForMovie(final int movieId) {
+            return CONTENT_URI.buildUpon()
+                    .appendPath(Integer.toString(movieId))
+                    .appendPath(PARAM_ALL)
+                    .build();
+        }
 
     }
 

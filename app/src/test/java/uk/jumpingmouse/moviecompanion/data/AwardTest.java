@@ -16,7 +16,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class AwardTest {
     private static final String ID = "award_pk_1";
-    private static final String MOVIE_ID = "tt4016934";
+    private static final int MOVIE_ID = 4016934;
     private static final String AWARD_DATE_1 = "170512";
     private static final String AWARD_DATE_2 = "170519";
     private static final String REVIEW =
@@ -55,7 +55,7 @@ public class AwardTest {
         assertEquals(ID, mAward.getId());
         assertEquals(MOVIE_ID, mAward.getMovieId());
         assertEquals(AWARD_DATE_1, mAward.getAwardDate());
-        assertEquals(Award.CATEGORY_MOVIE, mAward.getCategory());
+        assertEquals(Award.CATEGORY_MOVIE, mAward.getAwardCategory());
         assertEquals(REVIEW, mAward.getReview());
     }
 
@@ -71,7 +71,7 @@ public class AwardTest {
         @SuppressWarnings({"unused", "UnusedAssignment", "ConstantConditions"})
         Award award = Award.builder()
                 .id(null)
-                .movieId(null)
+                .movieId(Movie.ID_UNKNOWN)
                 .awardDate(null)
                 .category(null)
                 .review(null)

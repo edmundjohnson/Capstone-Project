@@ -15,25 +15,27 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:text="@string/title_add_award" />
+
     <EditText
         android:id="@+id/txtImdbId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="text"
-        android:hint="@string/hint_imdb_id" />
+        android:hint="@string/hint_imdb_id"
+        style="@style/FieldEditStyle"
+        tools:text="tt1234567" />
 
-    <!--
     <Button
         android:id="@+id/btnFetchDetails"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:text="@string/button_label_fetch_details"
-        android:onClick="onFetchDetails" />
-        -->
+        android:text="@string/button_label_fetch_movie_details"
+        android:onClick="onFetchMovieDetails" />
 
     <!-- The remaining fields are hidden until the movie has been fetched. -->
 
@@ -55,24 +57,114 @@
         tools:text="Colossal"
         tools:visibility="visible" />
 
-    <!-- Genre -->
-    <TextView
-        android:id="@+id/labelGenre"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:text="@string/label_genre"
-        style="@style/LabelStyle"
-        tools:visibility="visible" />
-    <TextView
-        android:id="@+id/txtGenre"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        style="@style/FieldValueStyle"
-        tools:text="Action, Comedy, Drama"
-        tools:visibility="visible" />
+        android:orientation="vertical"
+        android:layout_marginTop="8dp">
 
+        <!-- Award Date -->
+        <TextView
+            android:id="@+id/labelAwardDate"
+            android:labelFor="@id/txtAwardDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="@string/label_award_date"
+            style="@style/LabelStyle"
+            tools:visibility="visible" />
+        <EditText
+            android:id="@+id/txtAwardDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:inputType="text|number"
+            android:hint="@string/hint_award_date"
+            style="@style/FieldEditStyle"
+            tools:text="161231"
+            tools:visibility="visible"
+            tools:ignore="TextFields" />
+
+        <!-- Category -->
+        <TextView
+            android:id="@+id/labelCategory"
+            android:labelFor="@id/radioCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="@string/label_category"
+            style="@style/LabelStyle"
+            tools:visibility="visible" />
+
+        <RadioGroup
+            android:id="@+id/radioCategory"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            tools:visibility="visible">
+            <RadioButton
+                android:id="@+id/radioCategoryMovie"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/category_movie_text"
+                android:value="@string/category_movie_value"
+                android:onClick="onCategoryClicked"/>
+            <RadioButton android:id="@+id/radioCategoryDvd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/category_dvd_text"
+                android:value="@string/category_dvd_value"
+                android:onClick="onCategoryClicked"/>
+        </RadioGroup>
+
+        <!-- Review -->
+        <TextView
+            android:id="@+id/labelReview"
+            android:labelFor="@id/txtReview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="@string/label_review"
+            style="@style/LabelStyle"
+            tools:visibility="visible" />
+        <EditText
+            android:id="@+id/txtReview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:inputType="textMultiLine"
+            android:lines="5"
+            style="@style/FieldEditStyle"
+            tools:text="1"
+            tools:visibility="visible"
+            tools:ignore="TextFields" />
+
+        <!-- Award Display Order -->
+        <TextView
+            android:id="@+id/labelDisplayOrder"
+            android:labelFor="@id/txtDisplayOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="@string/label_display_order"
+            style="@style/LabelStyle"
+            tools:visibility="visible" />
+        <EditText
+            android:id="@+id/txtDisplayOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:inputType="text|number"
+            android:text="@string/display_order_default"
+            style="@style/FieldEditStyle"
+            tools:text="1"
+            tools:visibility="visible"
+            tools:ignore="TextFields" />
+
+    </LinearLayout>
+
+    <!-- Save / Cancel buttons -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

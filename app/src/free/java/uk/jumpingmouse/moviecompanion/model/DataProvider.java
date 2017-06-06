@@ -46,7 +46,7 @@ public class DataProvider extends DataProviderBase {
                 // inserting a movie requires admin privileges
                 throw new UnsupportedOperationException("Insufficient privileges for insert: " + uri);
             default:
-                throw new UnsupportedOperationException("Unknown URI for insert: " + uri);
+                throw new UnsupportedOperationException("Unsupported URI for insert: " + uri);
         }
         //notifyChange(context, uri, null);
 
@@ -94,7 +94,7 @@ public class DataProvider extends DataProviderBase {
                 // updating a movie requires admin privileges
                 throw new UnsupportedOperationException("Insufficient privileges for update: " + uri);
             default:
-                throw new UnsupportedOperationException("Unknown URI for update: " + uri);
+                throw new UnsupportedOperationException("Unsupported URI for update: " + uri);
         }
         //// Notify the listeners.
         //if (rowsUpdated != 0) {
@@ -149,7 +149,7 @@ public class DataProvider extends DataProviderBase {
                 // deleting a movie requires admin privileges
                 throw new UnsupportedOperationException("Insufficient privileges for delete: " + uri);
             default:
-                throw new UnsupportedOperationException("Unknown URI for delete: " + uri);
+                throw new UnsupportedOperationException("Unsupported URI for delete: " + uri);
         }
 
         // Notify the URI listeners (using the content resolver) if the rowsDeleted != 0.

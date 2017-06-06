@@ -80,7 +80,7 @@ abstract class DatabaseHelperFirebaseBase implements DatabaseHelper {
      * @return the number of rows deleted
      */
     @Override
-    public int deleteMovie(@Nullable Context context, @NonNull String id) {
+    public int deleteMovie(@Nullable Context context, int id) {
         throw new UnsupportedOperationException("Insufficient privileges for delete movie");
     }
 
@@ -194,7 +194,7 @@ abstract class DatabaseHelperFirebaseBase implements DatabaseHelper {
      */
     @Override
     @Nullable
-    public Movie selectMovieById(@NonNull String id) {
+    public Movie selectMovieById(int id) {
         return getLocalDatabase().selectMovieById(id);
     }
 

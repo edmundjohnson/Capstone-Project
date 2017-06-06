@@ -55,6 +55,11 @@ public class NavUtilsImpl extends NavUtils {
                 displayAddMovie(activity);
                 return true;
 
+            // add award
+            case R.id.menu_option_add_award:
+                displayAddAward(activity);
+                return true;
+
             // sign out
             case R.id.menu_option_sign_out:
                 getSecurityManager().signOut(activity);

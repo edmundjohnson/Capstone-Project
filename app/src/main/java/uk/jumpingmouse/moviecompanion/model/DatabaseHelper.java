@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 
 import java.util.List;
 
+import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 
 /**
@@ -48,24 +49,24 @@ public interface DatabaseHelper {
     /**
      * Deletes a movie from the database.
      * @param context the context
-     * @param imdbId the imdbId of the movie to be deleted
+     * @param id the id of the movie to be deleted
      * @return the number of rows deleted
      */
     int deleteMovie(
             // context is used, but analyser gets confused by product flavours
             @SuppressWarnings("UnusedParameters") @Nullable Context context,
-            @NonNull String imdbId);
+            int id);
 
     //---------------------------------------------------------------------
     // Movie query methods
 
     /**
      * Returns the movie with a specified IMDb id.
-     * @param imdbId the imdbId of the movie to be returned
+     * @param id the id of the movie to be returned
      * @return the movie with the specified IMDb id
      */
     @Nullable
-    Movie selectMovieById(@NonNull String imdbId);
+    Movie selectMovieById(int id);
 
     /**
      * Returns a list of movies in the database.
@@ -84,5 +85,21 @@ public interface DatabaseHelper {
     List<Movie> selectMovies(
             @Nullable final String[] projection, @Nullable final String selection,
             @Nullable final String[] selectionArgs, @Nullable final String sortOrder);
+
+    //---------------------------------------------------------------------
+    // Award modification methods
+
+    /**
+     * Adds an award's details to the database.
+     * If the award does not exist in the database, it is inserted.
+     * If it already exists in the database, it is updated.
+     * @param context the context
+     * @param award the award to insert or update
+     * @return the number of rows inserted or updated
+     */
+    int addAward(
+            // context is used - analyser confused by product flavours
+            @SuppressWarnings("UnusedParameters") @Nullable final Context context,
+            @NonNull final Award award);
 
 }

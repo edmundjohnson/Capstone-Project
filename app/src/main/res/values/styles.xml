@@ -25,4 +25,8 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
     </style>
 
+    <style name="FieldEditStyle">
+        <item name="android:paddingTop">0dp</item>
+    </style>
+
 </resources>

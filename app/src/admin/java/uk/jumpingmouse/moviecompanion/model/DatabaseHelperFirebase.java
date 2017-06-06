@@ -48,7 +48,7 @@ public class DatabaseHelperFirebase extends DatabaseHelperFirebaseBase {
      */
     @Override
     public int addMovie(@Nullable final Context context, @NonNull final Movie movie) {
-        return addNode(context, DataContract.MovieEntry.ROOT_NODE, movie.getId(), movie);
+        return addNode(context, DataContract.MovieEntry.ROOT_NODE, Integer.toString(movie.getId()), movie);
     }
 
     /**
@@ -58,8 +58,8 @@ public class DatabaseHelperFirebase extends DatabaseHelperFirebaseBase {
      * @return the number of rows deleted
      */
     @Override
-    public int deleteMovie(@Nullable Context context, @NonNull String id) {
-        return deleteNode(context, DataContract.MovieEntry.ROOT_NODE, id);
+    public int deleteMovie(@Nullable Context context, int id) {
+        return deleteNode(context, DataContract.MovieEntry.ROOT_NODE, Integer.toString(id));
     }
 
     //---------------------------------------------------------------------

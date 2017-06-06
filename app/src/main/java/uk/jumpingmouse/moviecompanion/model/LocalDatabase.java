@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 
 import java.util.List;
 
+import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 
 /**
@@ -33,7 +34,7 @@ public interface LocalDatabase {
      * @param id the id of the movie to be deleted
      * @return the number of rows deleted
      */
-    int deleteMovie(@NonNull String id);
+    int deleteMovie(int id);
 
     /**
      * Returns the movie with a specified id.
@@ -41,7 +42,7 @@ public interface LocalDatabase {
      * @return the movie with the specified id
      */
     @Nullable
-    Movie selectMovieById(@NonNull String id);
+    Movie selectMovieById(int id);
 
     /**
      * Returns a list of movies in the database.
@@ -60,5 +61,17 @@ public interface LocalDatabase {
     List<Movie> selectMovies(
             @Nullable final String[] projection, @Nullable final String selection,
             @Nullable final String[] selectionArgs, @Nullable final String sortOrder);
+
+    //---------------------------------------------------------------------
+    // Award methods
+
+    /**
+     * Adds an award's details to the database.
+     * If the award does not exist in the database, it is inserted.
+     * If it already exists in the database, it is updated.
+     * @param award the award to insert or update
+     * @return the number of rows inserted or updated
+     */
+    int addAward(@NonNull Award award);
 
 }

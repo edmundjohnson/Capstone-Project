@@ -73,7 +73,7 @@ class DatabaseHelperLocal implements DatabaseHelper {
      * @param id the id of the movie to be deleted
      * @return the number of rows deleted
      */
-    public int deleteMovie(@Nullable Context context, @NonNull String id) {
+    public int deleteMovie(@Nullable Context context, int id) {
         return getLocalDatabase().deleteMovie(id);
     }
 
@@ -87,7 +87,7 @@ class DatabaseHelperLocal implements DatabaseHelper {
      */
     @Override
     @Nullable
-    public Movie selectMovieById(@NonNull String id) {
+    public Movie selectMovieById(int id) {
         return getLocalDatabase().selectMovieById(id);
     }
 

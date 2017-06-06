@@ -15,29 +15,34 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:text="@string/title_add_movie" />
+
     <EditText
         android:id="@+id/txtImdbId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="text"
-        android:hint="@string/hint_imdb_id" />
+        android:hint="@string/hint_imdb_id"
+        style="@style/FieldEditStyle"
+        tools:text="tt1234567" />
 
     <Button
         android:id="@+id/btnFetchDetails"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="@string/button_label_fetch_details"
-        android:onClick="onFetchDetails" />
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/button_label_fetch_movie_details"
+        android:onClick="onFetchMovieDetails" />
 
     <!-- The remaining fields are hidden until the movie has been fetched. -->
 
     <!-- Title -->
     <TextView
         android:id="@+id/labelTitle"
+        android:labelFor="@id/txtTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
@@ -56,6 +61,7 @@
     <!-- Genre -->
     <TextView
         android:id="@+id/labelGenre"
+        android:labelFor="@id/txtGenre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"

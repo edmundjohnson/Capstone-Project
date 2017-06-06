@@ -3,40 +3,44 @@ package uk.jumpingmouse.moviecompanion.data;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.security.InvalidParameterException;
 import java.util.Comparator;
 
 /**
  * The Movie model class.
- * The imdbId is entered by an admin user.
- * The remainder of the Movie information is obtained from the Open Movie Database.
+ * This is similar to the OmdbMovie class, which contains unprocessed data from the
+ * Open Movie Database.  However, this class stores data in a more useful form,
+ * e.g. runtime is stored as an int (e.g. 144), rather than a String (e.g. "144 min").
  * @author Edmund Johnson
  */
 public class Movie {
+    public static final int ID_UNKNOWN = -1;
     public static final int RUNTIME_UNKNOWN = -1;
     public static final int RELEASED_UNKNOWN = -1;
 
-    // The unique identifier of the movie. For now, this has the same value as imdbId.
-    private String id;
-    // e.g. "tt4016934"
+    // The unique identifier of the movie, e.g. 4016934.
+    // This is the numeric part of the imdbId.
+    private int id;
+    // The IMDb id, e.g. "tt4016934"
     private String imdbId;
-    // e.g. "The Handmaiden"
+    // The title, e.g. "The Handmaiden"
     private String title;
     // The year of the movie's release (not the year of this award), e.g. "2017"
     private String year;
     // The release date, as a millisecond value
     private long released;
-    // length in minutes
+    // The length in minutes
     private int runtime;
-    // a comma-separated list of genres, e.g. "Drama, Mystery, Romance"
+    // A comma-separated list of genres, e.g. "Drama, Mystery, Romance"
     private String genre;
-    // We may not have a poster URL, the view must take this into account
+    // The URL of the poster image
     private String poster;
 
     private Movie() {
     }
 
     private Movie(
-            @Nullable String id,
+            int id,
             @Nullable String imdbId,
             @Nullable String title,
             @Nullable String year,
@@ -44,8 +48,8 @@ public class Movie {
             int runtime,
             @Nullable String genre,
             @Nullable String poster) {
-        if (id == null) {
-            throw new NullPointerException("Null id");
+        if (id <= 0) {
+            throw new InvalidParameterException("id zero or negative");
         }
         if (imdbId == null) {
             throw new NullPointerException("Null imdbId");
@@ -66,9 +70,8 @@ public class Movie {
     //---------------------------------------------------------------
     // Getters
 
-    /** Returns the unique id. */
-    @NonNull
-    public String getId() {
+    /** Returns the unique id, e.g. 4016934. */
+    public int getId() {
         return id;
     }
 
@@ -135,7 +138,7 @@ public class Movie {
 
     @SuppressWarnings("WeakerAccess")
     public static final class Builder {
-        private String id;
+        private int id;
         private String imdbId;
         private String title;
         private String year;
@@ -158,7 +161,7 @@ public class Movie {
             this.poster = source.poster;
         }
 
-        public Movie.Builder id(@NonNull String id) {
+        public Movie.Builder id(int id) {
             this.id = id;
             return this;
         }
@@ -193,7 +196,7 @@ public class Movie {
         /** Builds and returns an object of this class. */
         public Movie build() {
             String missing = "";
-            if (id == null) {
+            if (id <= 0) {
                 missing += " id";
             }
             if (imdbId == null) {
@@ -247,7 +250,7 @@ public class Movie {
         }
         if (o instanceof Movie) {
             Movie that = (Movie) o;
-            return (this.id.equals(that.id))
+            return (this.id == that.id)
                     && (this.imdbId.equals(that.imdbId))
                     && (this.title.equals(that.title))
                     && ((this.year == null) ? (that.year == null) : this.year.equals(that.year))
@@ -264,7 +267,7 @@ public class Movie {
     public int hashCode() {
         int h = 1;
         h *= 1000003;
-        h ^= this.id.hashCode();
+        h ^= this.id;
         h *= 1000003;
         h ^= this.imdbId.hashCode();
         h *= 1000003;

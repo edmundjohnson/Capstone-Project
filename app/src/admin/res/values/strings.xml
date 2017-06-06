@@ -11,22 +11,39 @@
 
     <!-- Menu -->
     <string name="menu_option_add_movie">Add Movie</string>
+    <string name="menu_option_add_award">Add Award</string>
 
     <!-- Admin Screens -->
-    <string name="button_label_fetch_details">Fetch Details</string>
+    <string name="button_label_fetch_movie_details">Fetch Movie Details</string>
     <string name="button_label_save">Save</string>
     <string name="button_label_cancel">Cancel</string>
 
-    <!-- Add Movie -->
-    <string name="title_add_movie">Add Movie</string>
+    <!-- Add Movie + Award -->
     <string name="hint_imdb_id">IMDb id</string>
     <string name="label_title">Title</string>
+    <string name="movie_not_found">Movie not found</string>
+    <string name="movie_data_not_found">Data found did not represent a Movie</string>
+
+    <!-- Add Movie -->
     <string name="label_genre">Genre</string>
+    <string name="title_add_movie">Add Movie</string>
     <string name="saving_movie">Saving movie: %s …</string>
     <string name="movie_not_saved">Movie not saved: %s</string>
-    <string name="movie_not_found">Movie not found</string>
 
     <!-- Add Award -->
     <string name="title_add_award">Add Award</string>
+    <string name="label_award_date">Award Date (YYMMDD)</string>
+    <string name="hint_award_date">YYMMDD</string>
+    <string name="label_category">Category</string>
+    <string name="category_movie_text">Movie of the week</string>
+    <string name="category_dvd_text">DVD of the week</string>
+    <string name="category_movie_value" translatable="false">M</string>
+    <string name="category_dvd_value" translatable="false">D</string>
+    <string name="label_review">Review</string>
+    <string name="label_display_order">Award Display Order</string>
+    <string name="display_order_default" translatable="false">1</string>
+    <string name="multiple_matching_movies">More than one movie matches this id</string>
+    <string name="saving_award">Saving award: %s …</string>
+    <string name="award_not_saved">Award not saved: %s</string>
 
 </resources>

@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import timber.log.Timber;
-
+import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 
@@ -49,8 +49,16 @@ public class DataProvider extends DataProviderBase {
                 }
                 returnUri = DataContract.MovieEntry.buildUriForRowById(movie.getId());
                 break;
+            case AWARD:
+                Award award = insertAward(context, values);
+                if (award == null) {
+                    Timber.w("Failed to insert award using ContentValues: ", values);
+                    return null;
+                }
+                returnUri = DataContract.AwardEntry.buildUriForRowById(award.getMovieId(), award.getId());
+                break;
             default:
-                throw new UnsupportedOperationException("Unknown URI for insert: " + uri);
+                throw new UnsupportedOperationException("Unsupported URI for insert: " + uri);
         }
         notifyChange(context, uri, null);
 
@@ -93,11 +101,16 @@ public class DataProvider extends DataProviderBase {
 //                rowsUpdated = updateAllMovies(context, values);
 //                break;
             case MOVIE_ID:
-                String id = uri.getLastPathSegment();
-                rowsUpdated = updateMovie(context, id, values);
+                int id = ModelUtils.idToMovieId(uri.getLastPathSegment());
+                if (id == Movie.ID_UNKNOWN) {
+                    Timber.w("Could not obtain movie id from URI: " + uri);
+                    rowsUpdated = 0;
+                } else {
+                    rowsUpdated = updateMovie(context, id, values);
+                }
                 break;
             default:
-                throw new UnsupportedOperationException("Unknown URI for update: " + uri);
+                throw new UnsupportedOperationException("Unsupported URI for update: " + uri);
         }
         // Notify the listeners.
         if (rowsUpdated != 0) {
@@ -147,11 +160,16 @@ public class DataProvider extends DataProviderBase {
 //                rowsDeleted = deleteAllMovies(context, values);
 //                break;
             case MOVIE_ID:
-                String id = uri.getLastPathSegment();
-                rowsDeleted = deleteMovie(context, id);
+                int id = ModelUtils.idToMovieId(uri.getLastPathSegment());
+                if (id == Movie.ID_UNKNOWN) {
+                    Timber.e("Could not obtain movie id from URI: " + uri);
+                    rowsDeleted = 0;
+                } else {
+                    rowsDeleted = deleteMovie(context, id);
+                }
                 break;
             default:
-                throw new UnsupportedOperationException("Unknown URI for delete: " + uri);
+                throw new UnsupportedOperationException("Unsupported URI for delete: " + uri);
         }
 
         // Notify the URI listeners (using the content resolver) if the rowsDeleted != 0.
@@ -196,7 +214,7 @@ public class DataProvider extends DataProviderBase {
      * @param values the new values to use for the movie
      * @return the number of rows updated
      */
-    private int updateMovie(@Nullable Context context, @NonNull final String id,
+    private int updateMovie(@Nullable Context context, final int id,
                             @Nullable final ContentValues values) {
         if (values == null) {
             return 0;
@@ -204,7 +222,7 @@ public class DataProvider extends DataProviderBase {
         Movie movie = ModelUtils.toMovie(values);
         if (movie == null) {
             return 0;
-        } else if (!id.equals(movie.getId())) {
+        } else if (id != movie.getId()) {
             throw new UnsupportedOperationException("Id mismatch between URL and body of update request");
         }
         return getDatabaseHelper().addMovie(context, movie);
@@ -216,8 +234,31 @@ public class DataProvider extends DataProviderBase {
      * @param id the movie's id
      * @return the number of rows deleted
      */
-    private int deleteMovie(@Nullable Context context, @NonNull final String id) {
+    private int deleteMovie(@Nullable Context context, final int id) {
         return getDatabaseHelper().deleteMovie(context, id);
+    }
+
+    /**
+     * Inserts an award into the database.
+     * @param context the context
+     * @param values the values to use for the new award
+     * @return the inserted award
+     */
+    @Nullable
+    private Award insertAward(@Nullable Context context, @Nullable final ContentValues values) {
+        if (values == null) {
+            return null;
+        }
+        Award award = ModelUtils.toAward(values);
+        if (award == null) {
+            return null;
+        }
+        int rowsAdded = getDatabaseHelper().addAward(context, award);
+        if (rowsAdded == 0) {
+            return null;
+        } else {
+            return award;
+        }
     }
 
     //---------------------------------------------------------------------

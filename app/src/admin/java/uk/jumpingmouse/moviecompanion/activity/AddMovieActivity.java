@@ -14,15 +14,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import timber.log.Timber;
-
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
+import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 import uk.jumpingmouse.moviecompanion.utils.NavUtils;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
-
 import uk.jumpingmouse.omdbapi.OmdbApi;
 import uk.jumpingmouse.omdbapi.OmdbHandler;
 import uk.jumpingmouse.omdbapi.OmdbMovie;
@@ -120,10 +118,10 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
     // Action methods
 
     /**
-     * Handles the user clicking the "Fetch Details" button.
+     * Handles the user clicking the "Fetch Movie Details" button.
      * @param view the view that was clicked
      */
-    public void onFetchDetails(@Nullable  View view) {
+    public void onFetchMovieDetails(@Nullable  View view) {
         String imdbId = mTxtImdbId.getText().toString();
         if (imdbId.trim().isEmpty()) {
             return;
@@ -143,10 +141,10 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
      */
     @Override
     public void onFetchMovieCompleted(@Nullable OmdbMovie omdbMovie) {
-        Movie movie = toMovie(omdbMovie);
+        Movie movie = ModelUtils.toMovie(omdbMovie);
         if (movie == null) {
-            // Display a "Movie not found" error message
-            getViewUtils().displayErrorMessage(this, R.string.movie_not_found);
+            // Display a "Data found did not represent a Movie" error message
+            getViewUtils().displayErrorMessage(this, R.string.movie_data_not_found);
         } else {
             // Save and display the fetched movie
             mMovie = movie;
@@ -187,38 +185,6 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
             clearMovie();
         }
 
-    }
-
-    /**
-     * Converts an OmdbMovie to a Movie and returns it.
-     * @param omdbMovie the OmdbMovie
-     * @return a Movie corresponding to omdbMovie
-     */
-    private Movie toMovie(OmdbMovie omdbMovie) {
-        if (omdbMovie == null) {
-            Timber.w("toMovie: omdbMovie is null");
-            return null;
-        } else if (omdbMovie.getImdbID() == null) {
-            Timber.w("toMovie: omdbMovie.imdbId is null");
-            return null;
-        } else if (omdbMovie.getTitle() == null) {
-            Timber.w("toMovie: omdbMovie.title is null");
-            return null;
-        }
-
-        // Build and return the movie
-        int runtime = OmdbApi.toIntOmdbRuntime(omdbMovie.getRuntime());
-        long released = OmdbApi.toLongOmdbReleased(omdbMovie.getReleased());
-        return Movie.builder()
-                .id(omdbMovie.getImdbID())
-                .imdbId(omdbMovie.getImdbID())
-                .title(omdbMovie.getTitle())
-                .genre(omdbMovie.getGenre())
-                .runtime(runtime)
-                .poster(omdbMovie.getPoster())
-                .year(omdbMovie.getYear())
-                .released(released)
-                .build();
     }
 
     /**

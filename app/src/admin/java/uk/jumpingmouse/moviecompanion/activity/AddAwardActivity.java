@@ -1,6 +1,7 @@
 package uk.jumpingmouse.moviecompanion.activity;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,38 +13,45 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
+import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
+import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 import uk.jumpingmouse.moviecompanion.utils.NavUtils;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 import uk.jumpingmouse.omdbapi.OmdbApi;
-import uk.jumpingmouse.omdbapi.OmdbHandler;
-import uk.jumpingmouse.omdbapi.OmdbMovie;
 
 /**
  * The add award activity.
  * Note that this is an admin activity, not a public-facing one.
  * @author Edmund Johnson
  */
-public class AddAwardActivity extends AppCompatActivity implements OmdbHandler {
+public class AddAwardActivity extends AppCompatActivity {
 
     // Screen fields
     private EditText mTxtImdbId;
     private TextView mLabelTitle;
     private TextView mTxtTitle;
-    private TextView mLabelGenre;
-    private TextView mTxtGenre;
+    private TextView mLabelAwardDate;
+    private EditText mTxtAwardDate;
+    private TextView mLabelAwardCategory;
+    private RadioGroup mRadioAwardCategory;
+    private TextView mLabelReview;
+    private EditText mTxtReview;
+    private TextView mLabelAwardDisplayOrder;
+    private EditText mTxtAwardDisplayOrder;
     private Button mBtnCancel;
     private Button mBtnSave;
 
     // Movie fetched from OMDb
-    //private Movie mMovie;
     private Movie mMovie;
+    // Award
+    private Award mAward;
 
     //---------------------------------------------------------------------
     // Lifecycle methods
@@ -62,8 +70,14 @@ public class AddAwardActivity extends AppCompatActivity implements OmdbHandler {
         mTxtImdbId = (EditText) findViewById(R.id.txtImdbId);
         mLabelTitle = (TextView) findViewById(R.id.labelTitle);
         mTxtTitle = (TextView) findViewById(R.id.txtTitle);
-        mLabelGenre = (TextView) findViewById(R.id.labelGenre);
-        mTxtGenre = (TextView) findViewById(R.id.txtGenre);
+        mLabelAwardDate = (TextView) findViewById(R.id.labelAwardDate);
+        mTxtAwardDate = (EditText) findViewById(R.id.txtAwardDate);
+        mLabelAwardCategory = (TextView) findViewById(R.id.labelCategory);
+        mRadioAwardCategory = (RadioGroup) findViewById(R.id.radioCategory);
+        mLabelReview = (TextView) findViewById(R.id.labelReview);
+        mTxtReview = (EditText) findViewById(R.id.txtReview);
+        mLabelAwardDisplayOrder = (TextView) findViewById(R.id.labelDisplayOrder);
+        mTxtAwardDisplayOrder = (EditText) findViewById(R.id.txtDisplayOrder);
         mBtnCancel = (Button) findViewById(R.id.btnCancel);
         mBtnSave = (Button) findViewById(R.id.btnSave);
     }
@@ -118,38 +132,42 @@ public class AddAwardActivity extends AppCompatActivity implements OmdbHandler {
     // Action methods
 
     /**
-     * Handles the user clicking the "Fetch Details" button.
+     * Handles the user clicking the "Fetch Movie Details" button.
      * @param view the view that was clicked
      */
-    public void onFetchDetails(@Nullable  View view) {
+    public void onFetchMovieDetails(@Nullable View view) {
         String imdbId = mTxtImdbId.getText().toString();
         if (imdbId.trim().isEmpty()) {
             return;
         }
-        // Get the OMDb API key from the local.properties file
-        String omdbApiKey = getString(R.string.omdbapi_key);
-        if (omdbApiKey.trim().isEmpty()) {
-            getViewUtils().displayErrorMessage(this, R.string.omdbapi_key_missing);
-            return;
+        int id = ModelUtils.imdbIdToMovieId(imdbId);
+        Uri uri = DataContract.MovieEntry.buildUriForRowById(id);
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        if (cursor == null || cursor.getCount() == 0) {
+            // Display a "Movie not found" error message
+            getViewUtils().displayErrorMessage(this, R.string.movie_not_found);
+        } else if (cursor.getCount() > 1) {
+            // Display a "Multiple movies found" error message
+            getViewUtils().displayErrorMessage(this, R.string.multiple_matching_movies);
+        } else {
+            cursor.moveToFirst();
+            Movie movie = ModelUtils.toMovie(cursor);
+            if (movie == null) {
+                // Display a "Data found did not represent a Movie" error message
+                getViewUtils().displayErrorMessage(this, R.string.movie_data_not_found);
+            } else {
+                displayMovie(movie);
+            }
+            cursor.close();
         }
-        getOmdbApi().fetchMovie(omdbApiKey, imdbId, this);
     }
 
     /**
-     * Handles the completion of a movie being fetched from the server.
-     * @param omdbMovie the movie that was fetched
+     * Handles the user clicking one of the "Award Category" radio buttons (Movie/DVD of the week).
+     * @param view the view that was clicked
      */
-    @Override
-    public void onFetchMovieCompleted(@Nullable OmdbMovie omdbMovie) {
-        Movie movie = toMovie(omdbMovie);
-        if (movie == null) {
-            // Display a "Movie not found" error message
-            getViewUtils().displayErrorMessage(this, R.string.movie_not_found);
-        } else {
-            // Save and display the fetched movie
-            mMovie = movie;
-            displayMovie(mMovie);
-        }
+    public void onCategoryClicked(View view) {
+        // TODO - probably remove this and handle with the Save button
     }
 
     /**
@@ -158,10 +176,10 @@ public class AddAwardActivity extends AppCompatActivity implements OmdbHandler {
      */
     public void onCancel(@Nullable View view) {
         clearAward();
-//        if (view != null) {
-//            getViewUtils().displayInfoMessage(view.getContext(),
-//                    getString(R.string.movie_not_saved, mTxtTitle.getText()));
-//        }
+        if (view != null) {
+            getViewUtils().displayInfoMessage(view.getContext(),
+                    getString(R.string.award_not_saved, mTxtTitle.getText()));
+        }
     }
 
     /**
@@ -174,11 +192,11 @@ public class AddAwardActivity extends AppCompatActivity implements OmdbHandler {
         }
 
         Uri uriInserted = getContentResolver().insert(
-                DataContract.MovieEntry.CONTENT_URI, toContentValues(mMovie));
+                DataContract.AwardEntry.CONTENT_URI, toContentValues(mAward));
 
         if (uriInserted == null) {
             getViewUtils().displayErrorMessage(view.getContext(),
-                    getString(R.string.movie_not_saved, mMovie.getImdbId()));
+                    getString(R.string.award_not_saved, mMovie.getTitle()));
         } else {
             getViewUtils().displayInfoMessage(view.getContext(),
                      getString(R.string.saving_movie, mMovie.getTitle()));
@@ -188,47 +206,12 @@ public class AddAwardActivity extends AppCompatActivity implements OmdbHandler {
     }
 
     /**
-     * Converts an OmdbMovie to a Movie and returns it.
-     * @param omdbMovie the OmdbMovie
-     * @return a Movie corresponding to omdbMovie
-     */
-    private Movie toMovie(OmdbMovie omdbMovie) {
-        if (omdbMovie == null) {
-            Timber.w("toMovie: omdbMovie is null");
-            return null;
-        } else if (omdbMovie.getImdbID() == null) {
-            Timber.w("toMovie: omdbMovie.imdbId is null");
-            return null;
-        } else if (omdbMovie.getTitle() == null) {
-            Timber.w("toMovie: omdbMovie.title is null");
-            return null;
-        }
-
-        // Build and return the movie
-        int runtime = OmdbApi.toIntOmdbRuntime(omdbMovie.getRuntime());
-        long released = OmdbApi.toLongOmdbReleased(omdbMovie.getReleased());
-        return Movie.builder()
-                .id(omdbMovie.getImdbID())
-                .imdbId(omdbMovie.getImdbID())
-                .title(omdbMovie.getTitle())
-                .genre(omdbMovie.getGenre())
-                .runtime(runtime)
-                .poster(omdbMovie.getPoster())
-                .year(omdbMovie.getYear())
-                .released(released)
-                .build();
-    }
-
-    /**
      * Displays a movie on the screen.
      * @param movie the movie to display
      */
     private void displayMovie(@NonNull Movie movie) {
         getViewUtils().dismissKeyboard(this);
-
         mTxtTitle.setText(movie.getTitle());
-        mTxtGenre.setText(movie.getGenre());
-
         showValueFields();
     }
 
@@ -246,7 +229,9 @@ public class AddAwardActivity extends AppCompatActivity implements OmdbHandler {
     private void clearValueFields() {
         mTxtImdbId.setText(null);
         mTxtTitle.setText(null);
-        mTxtGenre.setText(null);
+        mTxtAwardDate.setText(null);
+        mRadioAwardCategory.clearCheck();
+        mTxtAwardDisplayOrder.setText(null);
     }
 
     /**
@@ -255,8 +240,14 @@ public class AddAwardActivity extends AppCompatActivity implements OmdbHandler {
     private void hideValueFields() {
         hideView(mLabelTitle);
         hideView(mTxtTitle);
-        hideView(mLabelGenre);
-        hideView(mTxtGenre);
+        hideView(mLabelAwardDate);
+        hideView(mTxtAwardDate);
+        hideView(mLabelAwardCategory);
+        hideView(mRadioAwardCategory);
+        hideView(mLabelReview);
+        hideView(mTxtReview);
+        hideView(mLabelAwardDisplayOrder);
+        hideView(mTxtAwardDisplayOrder);
         hideView(mBtnCancel);
         hideView(mBtnSave);
     }
@@ -267,8 +258,14 @@ public class AddAwardActivity extends AppCompatActivity implements OmdbHandler {
     private void showValueFields() {
         showView(mLabelTitle);
         showView(mTxtTitle);
-        showView(mLabelGenre);
-        showView(mTxtGenre);
+        showView(mLabelAwardDate);
+        showView(mTxtAwardDate);
+        showView(mLabelAwardCategory);
+        showView(mRadioAwardCategory);
+        showView(mLabelAwardDisplayOrder);
+        showView(mTxtAwardDisplayOrder);
+        showView(mLabelReview);
+        showView(mTxtReview);
         showView(mBtnCancel);
         showView(mBtnSave);
     }
@@ -293,21 +290,20 @@ public class AddAwardActivity extends AppCompatActivity implements OmdbHandler {
     // Util methods
 
     /**
-     * Returns a set of ContentValues corresponding to the movie.
-     * @return the set of ContentValues corresponding to the movie
+     * Returns a set of ContentValues corresponding to an award.
+     * @param award the award
+     * @return the set of ContentValues corresponding to the award
      */
     @NonNull
-    private ContentValues toContentValues(@NonNull Movie movie) {
+    private ContentValues toContentValues(@NonNull Award award) {
         ContentValues values = new ContentValues();
 
-        values.put(DataContract.MovieEntry.COLUMN_ID, movie.getId());
-        values.put(DataContract.MovieEntry.COLUMN_IMDB_ID, movie.getImdbId());
-        values.put(DataContract.MovieEntry.COLUMN_TITLE, movie.getTitle());
-        values.put(DataContract.MovieEntry.COLUMN_YEAR, movie.getYear());
-        values.put(DataContract.MovieEntry.COLUMN_RELEASED, movie.getReleased());
-        values.put(DataContract.MovieEntry.COLUMN_RUNTIME, movie.getRuntime());
-        values.put(DataContract.MovieEntry.COLUMN_GENRE, movie.getGenre());
-        values.put(DataContract.MovieEntry.COLUMN_POSTER, movie.getPoster());
+        values.put(DataContract.AwardEntry.COLUMN_ID, award.getId());
+        values.put(DataContract.AwardEntry.COLUMN_MOVIE_ID, award.getMovieId());
+        values.put(DataContract.AwardEntry.COLUMN_AWARD_DATE, award.getAwardDate());
+        values.put(DataContract.AwardEntry.COLUMN_CATEGORY, award.getCategory());
+        values.put(DataContract.AwardEntry.COLUMN_REVIEW, award.getReview());
+        values.put(DataContract.AwardEntry.COLUMN_DISPLAY_ORDER, award.getDisplayOrder());
 
         return values;
     }

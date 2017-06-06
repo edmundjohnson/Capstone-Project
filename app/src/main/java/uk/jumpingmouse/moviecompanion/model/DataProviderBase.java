@@ -15,6 +15,7 @@ import java.util.List;
 import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.data.Movie;
+import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 
 /**
  * The base class for the content provider, containing the content provider elements which
@@ -29,6 +30,9 @@ public abstract class DataProviderBase extends ContentProvider {
     static final int MOVIE = 100;
     static final int MOVIE_ID = 101;
     private static final int MOVIE_ALL = 102;
+    static final int AWARD = 200;
+    static final int MOVIE_AWARD_ID = 201;
+    private static final int MOVIE_AWARD_ALL = 202;
 
     //---------------------------------------------------------------------
     // URI matcher
@@ -45,6 +49,8 @@ public abstract class DataProviderBase extends ContentProvider {
 
         // 2) Use the addURI function to match each of the types.  Use the constants from
         // DataContract to help define the types to the UriMatcher.
+
+        // movie
         uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
                 DataContract.URI_PATH_MOVIE,
                 MOVIE);
@@ -54,6 +60,17 @@ public abstract class DataProviderBase extends ContentProvider {
         uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
                 DataContract.URI_PATH_MOVIE + "/*",
                 MOVIE_ID);
+
+        // award
+        uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
+                DataContract.URI_PATH_AWARD,
+                AWARD);
+        uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
+                DataContract.URI_PATH_AWARD + "/*/" + DataContract.PARAM_ALL,
+                MOVIE_AWARD_ALL);
+        uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
+                DataContract.URI_PATH_AWARD + "/*/*",
+                MOVIE_AWARD_ID);
 
         // 3) Return the new matcher!
         return uriMatcher;
@@ -98,8 +115,14 @@ public abstract class DataProviderBase extends ContentProvider {
                 return DataContract.MovieEntry.CONTENT_ITEM_TYPE;
             case MOVIE_ALL:
                 return DataContract.MovieEntry.CONTENT_DIR_TYPE;
+            case AWARD:
+                return DataContract.AwardEntry.CONTENT_DIR_TYPE;
+            case MOVIE_AWARD_ID:
+                return DataContract.AwardEntry.CONTENT_ITEM_TYPE;
+            case MOVIE_AWARD_ALL:
+                return DataContract.AwardEntry.CONTENT_DIR_TYPE;
             default:
-                throw new UnsupportedOperationException("Unknown URI: " + uri);
+                throw new UnsupportedOperationException("Unsupported URI for getType: " + uri);
         }
     }
 
@@ -151,16 +174,16 @@ public abstract class DataProviderBase extends ContentProvider {
                 break;
             // "movie/*"
             case MOVIE_ID:
-                String id = uri.getLastPathSegment();
-                // id can never be null because the MOVIE case would be executed
-                if (id == null) {
+                int id = ModelUtils.idToMovieId(uri.getLastPathSegment());
+                if (id == Movie.ID_UNKNOWN) {
+                    Timber.w("Could not obtain movie id from URI" + uri);
                     cursor = null;
                 } else {
                     cursor = selectMovieById(id);
                 }
                 break;
             default:
-                throw new UnsupportedOperationException("Unknown URI for query: " + uri);
+                throw new UnsupportedOperationException("Unsupported URI for query: " + uri);
         }
         if (cursor != null && getContext() != null) {
             cursor.setNotificationUri(getContext().getContentResolver(), uri);
@@ -177,7 +200,7 @@ public abstract class DataProviderBase extends ContentProvider {
      * @return a cursor whose first row is the row with the specified id
      */
     @Nullable
-    private Cursor selectMovieById(@NonNull final String id) {
+    private Cursor selectMovieById(final int id) {
         Movie movie = getDatabaseHelper().selectMovieById(id);
         if (movie == null) {
             Timber.w("", "Movie not found with id: " + id);
