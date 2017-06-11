@@ -27,10 +27,13 @@ import uk.jumpingmouse.omdbapi.OmdbMovie;
 
 /**
  * The add movie activity.
- * Note that this is an admin activity, not a public-facing one.
+ * This is an admin activity, not a public-facing one, so the UI can be fairly basic.
  * @author Edmund Johnson
  */
 public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
+
+    // Bundle keys, e.g. for use when saving and restoring state
+    private static final String KEY_MOVIE = "KEY_MOVIE";
 
     // Screen fields
     private EditText mTxtImdbId;
@@ -42,7 +45,6 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
     private Button mBtnSave;
 
     // Movie fetched from OMDb
-    //private Movie mMovie;
     private Movie mMovie;
 
     //---------------------------------------------------------------------
@@ -66,9 +68,55 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
         mTxtGenre = (TextView) findViewById(R.id.txtGenre);
         mBtnCancel = (Button) findViewById(R.id.btnCancel);
         mBtnSave = (Button) findViewById(R.id.btnSave);
+
+        if (savedInstanceState != null) {
+            mMovie = savedInstanceState.getParcelable(KEY_MOVIE);
+            if (mMovie != null) {
+                displayMovie(mMovie);
+            }
+        }
+    }
+
+    /**
+     * Called to retrieve per-instance state from an activity before being killed so that the
+     * state can be restored in onCreate(Bundle) or onRestoreInstanceState(Bundle).
+     * @param outState the Bundle populated by this method
+     */
+    @Override
+    public final void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelable(KEY_MOVIE, mMovie);
     }
 
 //    /**
+//     * This method is called after {@link #onStart} when the activity is
+//     * being re-initialised from a previously saved state, given here in
+//     * <var>savedInstanceState</var>.  Most implementations will simply use {@link #onCreate}
+//     * to restore their state, but it is sometimes convenient to do it here
+//     * after all of the initialization has been done or to allow subclasses to
+//     * decide whether to use your default implementation.  The default
+//     * implementation of this method performs a restore of any view state that
+//     * had previously been frozen by {@link #onSaveInstanceState}.
+//     * <p>
+//     * <p>This method is called between {@link #onStart} and
+//     * {@link #onPostCreate}.
+//     *
+//     * @param savedInstanceState the data most recently supplied in {@link #onSaveInstanceState}.
+//     * @see #onCreate
+//     * @see #onPostCreate
+//     * @see #onResume
+//     * @see #onSaveInstanceState
+//     */
+//    @Override
+//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+//        if (savedInstanceState != null) {
+//            mMovie = savedInstanceState.getParcelable(KEY_MOVIE);
+//        }
+//        super.onRestoreInstanceState(savedInstanceState);
+//    }
+
+    //    /**
 //     * Perform processing required when the activity becomes able to interact with the user.
 //     */
 //    @Override
@@ -194,6 +242,9 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
     private void displayMovie(@NonNull Movie movie) {
         getViewUtils().dismissKeyboard(this);
 
+        // First, disable modification of movie until Save or Cancel clicked
+        mTxtImdbId.setEnabled(false);
+
         mTxtTitle.setText(movie.getTitle());
         mTxtGenre.setText(movie.getGenre());
 
@@ -204,8 +255,13 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
      * Clears the displayed movie from the screen.
      */
     private void clearMovie() {
+        mMovie = null;
+
         clearValueFields();
         hideValueFields();
+
+        // Enable entry of a new movie
+        mTxtImdbId.setEnabled(true);
     }
 
     /**
@@ -233,6 +289,7 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
      * Shows the movie value fields.
      */
     private void showValueFields() {
+        // Display the movie details and Save/Cancel buttons
         showView(mLabelTitle);
         showView(mTxtTitle);
         showView(mLabelGenre);

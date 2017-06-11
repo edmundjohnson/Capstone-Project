@@ -53,7 +53,7 @@ public interface DatabaseHelper {
      * @return the number of rows deleted
      */
     int deleteMovie(
-            // context is used, but analyser gets confused by product flavours
+            // context is used, but lint gets confused by product flavours
             @SuppressWarnings("UnusedParameters") @Nullable Context context,
             int id);
 
@@ -61,9 +61,9 @@ public interface DatabaseHelper {
     // Movie query methods
 
     /**
-     * Returns the movie with a specified IMDb id.
+     * Returns the movie with a specified id.
      * @param id the id of the movie to be returned
-     * @return the movie with the specified IMDb id
+     * @return the movie with the specified id
      */
     @Nullable
     Movie selectMovieById(int id);
@@ -101,5 +101,24 @@ public interface DatabaseHelper {
             // context is used - analyser confused by product flavours
             @SuppressWarnings("UnusedParameters") @Nullable final Context context,
             @NonNull final Award award);
+
+    /**
+     * Deletes an award from the database.
+     * @param context the context
+     * @param id the id of the award to be deleted
+     * @return the number of rows deleted
+     */
+    int deleteAward(
+            // context is used, but lint gets confused by product flavours
+            @SuppressWarnings("UnusedParameters") @Nullable Context context,
+            @Nullable String id);
+
+    /**
+     * Returns the award with a specified id.
+     * @param id the id of the award to be returned
+     * @return the award with the specified id
+     */
+    @Nullable
+    Award selectAwardById(@Nullable String id);
 
 }

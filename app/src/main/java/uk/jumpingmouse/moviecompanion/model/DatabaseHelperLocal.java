@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import java.util.List;
 
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
+import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 
 /**
@@ -110,6 +111,45 @@ class DatabaseHelperLocal implements DatabaseHelper {
             @Nullable final String[] projection, @Nullable final String selection,
             @Nullable final String[] selectionArgs, @Nullable final String sortOrder) {
         return getLocalDatabase().selectMovies(projection, selection, selectionArgs, sortOrder);
+    }
+
+    //---------------------------------------------------------------------
+    // Award modification methods
+
+    /**
+     * Adds an award's details to the database.
+     * If the award does not exist in the database, it is inserted.
+     * If it already exists in the database, it is updated.
+     * @param context the context
+     * @param award the award to insert or update
+     * @return the number of rows inserted or updated
+     */
+    public int addAward(@Nullable final Context context, @NonNull final Award award) {
+        return getLocalDatabase().addAward(award);
+    }
+
+    /**
+     * Deletes an award from the database.
+     * @param context the context
+     * @param id the id of the award to be deleted
+     * @return the number of rows deleted
+     */
+    public int deleteAward(@Nullable Context context, @NonNull String id) {
+        return getLocalDatabase().deleteAward(id);
+    }
+
+    //---------------------------------------------------------------------
+    // Award query methods
+
+    /**
+     * Returns the award with a specified id.
+     * @param id the id of the award to be returned
+     * @return the award with the specified id
+     */
+    @Override
+    @Nullable
+    public Award selectAwardById(@Nullable String id) {
+        return getLocalDatabase().selectAwardById(id);
     }
 
     //---------------------------------------------------------------------

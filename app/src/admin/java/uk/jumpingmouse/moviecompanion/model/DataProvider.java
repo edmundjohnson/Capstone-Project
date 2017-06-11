@@ -55,7 +55,7 @@ public class DataProvider extends DataProviderBase {
                     Timber.w("Failed to insert award using ContentValues: ", values);
                     return null;
                 }
-                returnUri = DataContract.AwardEntry.buildUriForRowById(award.getMovieId(), award.getId());
+                returnUri = DataContract.AwardEntry.buildUriForRowById(award.getId());
                 break;
             default:
                 throw new UnsupportedOperationException("Unsupported URI for insert: " + uri);
@@ -101,13 +101,17 @@ public class DataProvider extends DataProviderBase {
 //                rowsUpdated = updateAllMovies(context, values);
 //                break;
             case MOVIE_ID:
-                int id = ModelUtils.idToMovieId(uri.getLastPathSegment());
-                if (id == Movie.ID_UNKNOWN) {
+                int movieId = ModelUtils.idToMovieId(uri.getLastPathSegment());
+                if (movieId == Movie.ID_UNKNOWN) {
                     Timber.w("Could not obtain movie id from URI: " + uri);
                     rowsUpdated = 0;
                 } else {
-                    rowsUpdated = updateMovie(context, id, values);
+                    rowsUpdated = updateMovie(context, movieId, values);
                 }
+                break;
+            case AWARD_ID:
+                String awardId = uri.getLastPathSegment();
+                rowsUpdated = updateAward(context, awardId, values);
                 break;
             default:
                 throw new UnsupportedOperationException("Unsupported URI for update: " + uri);
@@ -223,7 +227,8 @@ public class DataProvider extends DataProviderBase {
         if (movie == null) {
             return 0;
         } else if (id != movie.getId()) {
-            throw new UnsupportedOperationException("Id mismatch between URL and body of update request");
+            throw new UnsupportedOperationException(
+                    "Id mismatch between URL and body of update movie request");
         }
         return getDatabaseHelper().addMovie(context, movie);
     }
@@ -259,6 +264,38 @@ public class DataProvider extends DataProviderBase {
         } else {
             return award;
         }
+    }
+
+    /**
+     * Updates an award in the database.
+     * @param context the context
+     * @param id the award's id
+     * @param values the new values to use for the award
+     * @return the number of rows updated
+     */
+    private int updateAward(@Nullable Context context, @Nullable final String id,
+                            @Nullable final ContentValues values) {
+        if (id == null || values == null) {
+            return 0;
+        }
+        Award award = ModelUtils.toAward(values);
+        if (award == null) {
+            return 0;
+        } else if (!id.equals(award.getId())) {
+            throw new UnsupportedOperationException(
+                    "Id mismatch between URL and body of update award request");
+        }
+        return getDatabaseHelper().addAward(context, award);
+    }
+
+    /**
+     * Deletes an award from the database.
+     * @param context the context
+     * @param id the award's id
+     * @return the number of rows deleted
+     */
+    private int deleteAward(@Nullable Context context, @Nullable final String id) {
+        return getDatabaseHelper().deleteAward(context, id);
     }
 
     //---------------------------------------------------------------------

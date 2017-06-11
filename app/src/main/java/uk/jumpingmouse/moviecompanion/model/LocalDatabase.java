@@ -74,4 +74,19 @@ public interface LocalDatabase {
      */
     int addAward(@NonNull Award award);
 
+    /**
+     * Deletes an award from the database.
+     * @param id the id of the award to be deleted
+     * @return the number of rows deleted
+     */
+    int deleteAward(@Nullable String id);
+
+    /**
+     * Returns the award with a specified id.
+     * @param id the id of the award to be returned
+     * @return the award with the specified id
+     */
+    @Nullable
+    Award selectAwardById(@Nullable String id);
+
 }

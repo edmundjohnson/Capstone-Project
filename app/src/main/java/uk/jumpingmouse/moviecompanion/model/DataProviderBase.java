@@ -14,6 +14,7 @@ import java.util.List;
 
 import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
+import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 
@@ -31,8 +32,8 @@ public abstract class DataProviderBase extends ContentProvider {
     static final int MOVIE_ID = 101;
     private static final int MOVIE_ALL = 102;
     static final int AWARD = 200;
-    static final int MOVIE_AWARD_ID = 201;
-    private static final int MOVIE_AWARD_ALL = 202;
+    static final int AWARD_ID = 201;
+    private static final int AWARD_ALL = 202;
 
     //---------------------------------------------------------------------
     // URI matcher
@@ -66,11 +67,11 @@ public abstract class DataProviderBase extends ContentProvider {
                 DataContract.URI_PATH_AWARD,
                 AWARD);
         uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
-                DataContract.URI_PATH_AWARD + "/*/" + DataContract.PARAM_ALL,
-                MOVIE_AWARD_ALL);
+                DataContract.URI_PATH_AWARD + DataContract.PARAM_ALL,
+                AWARD_ALL);
         uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
-                DataContract.URI_PATH_AWARD + "/*/*",
-                MOVIE_AWARD_ID);
+                DataContract.URI_PATH_AWARD + "/*",
+                AWARD_ID);
 
         // 3) Return the new matcher!
         return uriMatcher;
@@ -117,9 +118,9 @@ public abstract class DataProviderBase extends ContentProvider {
                 return DataContract.MovieEntry.CONTENT_DIR_TYPE;
             case AWARD:
                 return DataContract.AwardEntry.CONTENT_DIR_TYPE;
-            case MOVIE_AWARD_ID:
+            case AWARD_ID:
                 return DataContract.AwardEntry.CONTENT_ITEM_TYPE;
-            case MOVIE_AWARD_ALL:
+            case AWARD_ALL:
                 return DataContract.AwardEntry.CONTENT_DIR_TYPE;
             default:
                 throw new UnsupportedOperationException("Unsupported URI for getType: " + uri);
@@ -287,6 +288,58 @@ public abstract class DataProviderBase extends ContentProvider {
                 movie.getRuntime(),
                 movie.getGenre(),
                 movie.getPoster()
+        };
+    }
+
+    //---------------------------------------------------------------------
+    // Award query methods
+
+    /**
+     * Return a cursor whose first row is the award with a specified id.
+     * @param id the id of the required row
+     * @return a cursor whose first row is the row with the specified id
+     */
+    @Nullable
+    private Cursor selectAwardById(final @Nullable String id) {
+        Award award = getDatabaseHelper().selectAwardById(id);
+        if (award == null) {
+            Timber.w("", "Award not found with id: " + id);
+            return null;
+        }
+        return toCursor(award);
+    }
+
+    /**
+     * Returns a one-row cursor containing an award.
+     * @param award the award
+     * @return a one-row cursor containing the award
+     */
+    @NonNull
+    private Cursor toCursor(@NonNull Award award) {
+        // Create a cursor containing the award columns
+        String[] columns = DataContract.AwardEntry.getAllColumns();
+        MatrixCursor matrixCursor = new MatrixCursor(columns);
+
+        // populate the cursor with the movie
+        matrixCursor.addRow(toObjectArray(award));
+
+        return matrixCursor;
+    }
+
+    /**
+     * Returns a award as an object array, one element per field value.
+     * @param award the award
+     * @return the award as an Object array
+     */
+    private Object[] toObjectArray(Award award) {
+        return new Object[] {
+                // This must match the order of columns in DataContract.AwardEntry.getAllColumns().
+                award.getId(),
+                award.getMovieId(),
+                award.getAwardDate(),
+                award.getCategory(),
+                award.getReview(),
+                award.getDisplayOrder()
         };
     }
 

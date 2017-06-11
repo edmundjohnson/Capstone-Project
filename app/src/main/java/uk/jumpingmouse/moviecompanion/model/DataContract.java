@@ -208,15 +208,12 @@ public final class DataContract {
         /**
          * Build and return the URI for an award identified by its id.
          * e.g. "content://uk.jumpingmouse.moviecompanion/award/4016934/[push_id]"
-         * @param movieId the id of the movie, e.g. "tt4016934"
          * @param awardId the id of the award, e.g. "[push_id]"
          * @return the URI for obtaining the specific award
          */
         @NonNull
-        public static Uri buildUriForRowById(final int movieId,
-                                             @NonNull final String awardId) {
+        public static Uri buildUriForRowById(@NonNull final String awardId) {
             return CONTENT_URI.buildUpon()
-                    .appendPath(Integer.toString(movieId))
                     .appendPath(awardId)
                     .build();
         }

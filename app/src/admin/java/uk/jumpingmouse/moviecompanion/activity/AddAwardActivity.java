@@ -28,7 +28,7 @@ import uk.jumpingmouse.omdbapi.OmdbApi;
 
 /**
  * The add award activity.
- * Note that this is an admin activity, not a public-facing one.
+ * This is an admin activity, not a public-facing one, so the UI can be fairly basic.
  * @author Edmund Johnson
  */
 public class AddAwardActivity extends AppCompatActivity {
@@ -156,19 +156,19 @@ public class AddAwardActivity extends AppCompatActivity {
                 // Display a "Data found did not represent a Movie" error message
                 getViewUtils().displayErrorMessage(this, R.string.movie_data_not_found);
             } else {
-                displayMovie(movie);
+                mMovie = movie;
+                displayMovie(mMovie);
             }
             cursor.close();
         }
     }
 
-    /**
-     * Handles the user clicking one of the "Award Category" radio buttons (Movie/DVD of the week).
-     * @param view the view that was clicked
-     */
-    public void onCategoryClicked(View view) {
-        // TODO - probably remove this and handle with the Save button
-    }
+//    /**
+//     * Handles the user clicking one of the "Award Category" radio buttons (Movie/DVD of the week).
+//     * @param view the view that was clicked
+//     */
+//    public void onCategoryClicked(View view) {
+//    }
 
     /**
      * Handles the user clicking the "Cancel" button.
@@ -191,6 +191,17 @@ public class AddAwardActivity extends AppCompatActivity {
             return;
         }
 
+        String category = mRadioAwardCategory.getCheckedRadioButtonId() ==
+                R.id.radioCategoryMovie ? Award.CATEGORY_MOVIE : Award.CATEGORY_DVD;
+
+        mAward = Award.builder()
+                .id(null)
+                .movieId(mMovie.getId())
+                .awardDate(mTxtAwardDate.getText().toString())
+                .category(category)
+                .review(mTxtReview.getText().toString())
+                .displayOrder(Integer.parseInt(mTxtAwardDisplayOrder.getText().toString()))
+                .build();
         Uri uriInserted = getContentResolver().insert(
                 DataContract.AwardEntry.CONTENT_URI, toContentValues(mAward));
 

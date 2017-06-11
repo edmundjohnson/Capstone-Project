@@ -1,5 +1,7 @@
 package uk.jumpingmouse.moviecompanion.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -11,8 +13,8 @@ import android.support.annotation.Nullable;
  * The Movie-Award relationship is one-many.
  * @author Edmund Johnson
  */
-public class Award {
-    static final String CATEGORY_MOVIE = "M";
+public class Award implements Parcelable {
+    public static final String CATEGORY_MOVIE = "M";
     public static final String CATEGORY_DVD = "D";
 
     // id is a unique identifier for award
@@ -23,10 +25,10 @@ public class Award {
     private String awardDate;
     // categoryId is one of CATEGORY_MOVIE, CATEGORY_DVD
     private String category;
-    // displayOrder determines the displayed order of awards for a movie
-    private int displayOrder;
     // free text
     private String review;
+    // displayOrder determines the displayed order of awards for a movie
+    private int displayOrder;
 
     private Award() {
     }
@@ -38,9 +40,7 @@ public class Award {
             @Nullable String category,
             @Nullable String review,
             int displayOrder) {
-        if (id == null) {
-            throw new NullPointerException("Null id");
-        }
+        // id can be null for inserting a new award
         if (movieId <= 0) {
             throw new NullPointerException("Invalid movieId");
         }
@@ -67,7 +67,7 @@ public class Award {
     //---------------------------------------------------------------
     // Getters
 
-    @NonNull
+    @Nullable
     public String getId() {
         return id;
     }
@@ -96,14 +96,78 @@ public class Award {
     }
 
     //---------------------------------------------------------------
-    // Builders
+    // Parcelable implementation
+
+    /**
+     * Private constructor to create an object of this class from a parcel.
+     * @param in a Parcel containing the object
+     */
+    private Award(@NonNull final Parcel in) {
+        id = in.readString();
+        movieId = in.readInt();
+        awardDate = in.readString();
+        category = in.readString();
+        review = in.readString();
+        displayOrder = in.readInt();
+    }
+
+    /**
+     * Flatten this object into a Parcel.
+     * @param dest  The Parcel in which the object should be written.
+     * @param flags Additional flags about how the object should be written.
+     *              May be 0 or {@link #PARCELABLE_WRITE_RETURN_VALUE}.
+     */
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeInt(movieId);
+        dest.writeString(awardDate);
+        dest.writeString(category);
+        dest.writeString(review);
+        dest.writeInt(displayOrder);
+    }
+
+    /**
+     * Parcel creator object.
+     */
+    public static final Parcelable.Creator<Award> CREATOR =
+            new Parcelable.Creator<Award>() {
+                @NonNull
+                public Award createFromParcel(@NonNull final Parcel in) {
+                    return new Award(in);
+                }
+
+                @NonNull
+                public Award[] newArray(final int size) {
+                    return new Award[size];
+                }
+            };
+
+    /**
+     * Describe the kinds of special objects contained in this Parcelable
+     * instance's marshalled representation. For example, if the object will
+     * include a file descriptor in the output of {@link #writeToParcel(Parcel, int)},
+     * the return value of this method must include the
+     * {@link #CONTENTS_FILE_DESCRIPTOR} bit.
+     *
+     * @return a bitmask indicating the set of special object types marshalled
+     * by this Parcelable object instance.
+     * @see #CONTENTS_FILE_DESCRIPTOR
+     */
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    //---------------------------------------------------------------
+    // Builder implementation
 
     /**
      * Builder for this class.  Usage:
      * <blockquote><pre>
      * {@code
      *   Award award = Award.builder()
-     *         .id([push_id])
+     *         .id([null or push_id])
      *         .movieId(4016934)
      *         .awardDate("170512")
      *         .category(Award.CATEGORY_MOVIE)
@@ -139,7 +203,8 @@ public class Award {
             this.displayOrder = source.displayOrder;
         }
 
-        public Award.Builder id(@NonNull String id) {
+        // id is nullable for inserting a new award
+        public Award.Builder id(@Nullable String id) {
             this.id = id;
             return this;
         }
@@ -172,9 +237,7 @@ public class Award {
         /** Builds and returns an object of this class. */
         public Award build() {
             String missing = "";
-            if (id == null) {
-                missing += " id";
-            }
+            // id can be null for inserting a new award
             if (movieId <= 0) {
                 missing += " movieId";
             }

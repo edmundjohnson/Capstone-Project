@@ -19,6 +19,7 @@ import java.util.Map;
 import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
+import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
@@ -85,6 +86,34 @@ abstract class DatabaseHelperFirebaseBase implements DatabaseHelper {
     }
 
     //---------------------------------------------------------------------
+    // Firebase database award modification methods.
+    // By default, not allowed.
+
+    /**
+     * Adds a award's details to the Firebase database.
+     * If the award does not exist in the database, it is inserted.
+     * If it already exists in the database, it is updated.
+     * @param context the context
+     * @param award the award to insert or update
+     * @return the number of rows inserted or updated
+     */
+    @Override
+    public int addAward(@Nullable final Context context, @NonNull final Award award) {
+        throw new UnsupportedOperationException("Insufficient privileges for add award");
+    }
+
+    /**
+     * Deletes an award from the Firebase database.
+     * @param context the context
+     * @param id the id of the award to be deleted
+     * @return the number of rows deleted
+     */
+    @Override
+    public int deleteAward(@Nullable Context context, @Nullable String id) {
+        throw new UnsupportedOperationException("Insufficient privileges for delete award");
+    }
+
+    //---------------------------------------------------------------------
     // Database changes initiated on the local device
 
     /**
@@ -112,6 +141,41 @@ abstract class DatabaseHelperFirebaseBase implements DatabaseHelper {
         getDatabaseReference(targetNode).updateChildren(mapValue,
                 getDatabaseOperationCompletionListener(context, R.string.databaseOperationAddNode,
                         targetNode, nodeKey, true));
+
+        // We don't know whether the add will succeed - assume it will
+        return 1;
+    }
+
+    /**
+     * Pushes an object to the Firebase database.
+     * If the object does not exist in the database, it is inserted.
+     * If it already exists in the database, it is updated.
+     * The object is added to the LOCAL database separately, by a listener attached
+     * to the Firebase database.
+     * @param context the context
+     * @param targetNode the node to which the new node is to be added
+     * @param nodeValue the value of the new node to insert or update
+     * @return the number of rows inserted or updated
+     */
+    int pushNode(@Nullable final Context context, @NonNull final String targetNode,
+                @NonNull final Object nodeValue) {
+        if (context == null) {
+            return 0;
+        }
+//        // Create the node to add to the database.
+//        Map<String, Object> mapValue = new HashMap<>(1);
+//        mapValue.put(nodeKey, nodeValue);
+
+//        // Add the new node to the database target node.
+//        getDatabaseReference(targetNode).updateChildren(mapValue,
+//                getDatabaseOperationCompletionListener(context, R.string.databaseOperationAddNode,
+//                        targetNode, nodeKey, true));
+
+        // Push the new node to the database target node.
+        // TODO: Improve "push_id" !
+        getDatabaseReference(targetNode).push().setValue(nodeValue,
+                getDatabaseOperationCompletionListener(context, R.string.databaseOperationAddNode,
+                        targetNode, "push_id", true));
 
         // We don't know whether the add will succeed - assume it will
         return 1;
@@ -218,6 +282,17 @@ abstract class DatabaseHelperFirebaseBase implements DatabaseHelper {
             @Nullable final String[] projection, @Nullable final String selection,
             @Nullable final String[] selectionArgs, @Nullable final String sortOrder) {
         return getLocalDatabase().selectMovies(projection, selection, selectionArgs, sortOrder);
+    }
+
+    /**
+     * Returns the award with a specified id.
+     * @param id the id of the award to be returned
+     * @return the award with the specified id
+     */
+    @Override
+    @Nullable
+    public Award selectAwardById(@Nullable String id) {
+        return getLocalDatabase().selectAwardById(id);
     }
 
     //---------------------------------------------------------------------

@@ -24,6 +24,8 @@ public class LocalDatabaseInMemory implements LocalDatabase {
 
     /** The list of movies. */
     private final List<Movie> mMovieList;
+    /** The list of awards. */
+    private final List<Award> mAwardList;
 
     //---------------------------------------------------------------------
     // Instance handling methods
@@ -43,6 +45,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
     /** Private default constructor to prevent instantiation from outside this class. */
     private LocalDatabaseInMemory() {
         mMovieList = new ArrayList<>();
+        mAwardList = new ArrayList<>();
     }
 
     //---------------------------------------------------------------------
@@ -96,7 +99,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
     /**
      * Returns the movie with a specified id.
      * @param id the movie's id
-     * @return the movie with the specified id, or null if there are no matching movies
+     * @return the movie with the specified id, or null if there is no matching movie
      */
     @Override
     @Nullable
@@ -177,7 +180,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
     }
 
     //---------------------------------------------------------------------
-    // Movie modification methods
+    // Award modification methods
 
     /**
      * Adds an award's details to the database.
@@ -187,17 +190,56 @@ public class LocalDatabaseInMemory implements LocalDatabase {
      * @return the number of rows inserted or updated
      */
     @Override
-    public int addMovie(@NonNull Award award) {
+    public int addAward(@NonNull Award award) {
         String id = award.getId();
         int movieId = award.getMovieId();
         // remove the award if it already exists
-        Award existingAward = selectAwardById(movieId, id);
+        Award existingAward = selectAwardById(id);
         if (existingAward != null) {
             mAwardList.remove(existingAward);
         }
         // add the new award
-        mAwardList.get(movieId).add(award);
+        mAwardList.add(award);
         return 1;
+    }
+
+    /**
+     * Deletes an award from the database.
+     * @param id the id of the award to be deleted
+     * @return the number of rows deleted
+     */
+    @Override
+    public int deleteAward(@Nullable String id) {
+        Award existingAward = selectAwardById(id);
+        if (existingAward == null) {
+            Timber.w("deleteAward: Award not found with id: " + id);
+            return 0;
+        }
+        mAwardList.remove(existingAward);
+        return 1;
+    }
+
+    //---------------------------------------------------------------------
+    // Award query methods
+
+    /**
+     * Returns the award with a specified id.
+     * @param id the award's id
+     * @return the award with the specified id, or null if there is no matching award
+     */
+    @Override
+    @Nullable
+    public Award selectAwardById(@Nullable String id) {
+        if (id == null) {
+            return null;
+        }
+        for (Award award : mAwardList) {
+            if (id.equals(award.getId())) {
+                return award;
+            }
+        }
+        Timber.d("selectAwardById: No awards found with matching id: " + id);
+        return null;
     }
 
     //---------------------------------------------------------------------

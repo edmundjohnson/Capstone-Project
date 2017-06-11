@@ -1,5 +1,7 @@
 package uk.jumpingmouse.moviecompanion.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -13,7 +15,7 @@ import java.util.Comparator;
  * e.g. runtime is stored as an int (e.g. 144), rather than a String (e.g. "144 min").
  * @author Edmund Johnson
  */
-public class Movie {
+public class Movie implements Parcelable {
     public static final int ID_UNKNOWN = -1;
     public static final int RUNTIME_UNKNOWN = -1;
     public static final int RELEASED_UNKNOWN = -1;
@@ -116,7 +118,75 @@ public class Movie {
     }
 
     //---------------------------------------------------------------
-    // Builders
+    // Parcelable implementation
+
+    /**
+     * Private constructor to create an object of this class from a parcel.
+     * @param in a Parcel containing the object
+     */
+    private Movie(@NonNull final Parcel in) {
+        id = in.readInt();
+        imdbId = in.readString();
+        title = in.readString();
+        year = in.readString();
+        released = in.readLong();
+        runtime = in.readInt();
+        genre = in.readString();
+        poster = in.readString();
+    }
+
+    /**
+     * Flatten this object into a Parcel.
+     * @param dest  The Parcel in which the object should be written.
+     * @param flags Additional flags about how the object should be written.
+     *              May be 0 or {@link #PARCELABLE_WRITE_RETURN_VALUE}.
+     */
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(imdbId);
+        dest.writeString(title);
+        dest.writeString(year);
+        dest.writeLong(released);
+        dest.writeInt(runtime);
+        dest.writeString(genre);
+        dest.writeString(poster);
+    }
+
+    /**
+     * Parcel creator object.
+     */
+    public static final Parcelable.Creator<Movie> CREATOR =
+            new Parcelable.Creator<Movie>() {
+                @NonNull
+                public Movie createFromParcel(@NonNull final Parcel in) {
+                    return new Movie(in);
+                }
+
+                @NonNull
+                public Movie[] newArray(final int size) {
+                    return new Movie[size];
+                }
+            };
+
+    /**
+     * Describe the kinds of special objects contained in this Parcelable
+     * instance's marshalled representation. For example, if the object will
+     * include a file descriptor in the output of {@link #writeToParcel(Parcel, int)},
+     * the return value of this method must include the
+     * {@link #CONTENTS_FILE_DESCRIPTOR} bit.
+     *
+     * @return a bitmask indicating the set of special object types marshalled
+     * by this Parcelable object instance.
+     * @see #CONTENTS_FILE_DESCRIPTOR
+     */
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    //---------------------------------------------------------------
+    // Builder implementation
 
     /**
      * Builder for this class.  Usage:
@@ -135,6 +205,7 @@ public class Movie {
     public static Builder builder() {
         return new Movie.Builder();
     }
+
 
     @SuppressWarnings("WeakerAccess")
     public static final class Builder {

@@ -21,6 +21,7 @@ public class AwardTest {
     private static final String AWARD_DATE_2 = "170519";
     private static final String REVIEW =
             "A really smart satire on what's been referred to as post-racial America.";
+    private static final int DISPLAY_ORDER = 2;
 
     private Award mAward;
 
@@ -38,6 +39,7 @@ public class AwardTest {
                 .awardDate(AWARD_DATE_1)
                 .category(Award.CATEGORY_MOVIE)
                 .review(REVIEW)
+                .displayOrder(DISPLAY_ORDER)
                 .build();
     }
 
@@ -55,8 +57,9 @@ public class AwardTest {
         assertEquals(ID, mAward.getId());
         assertEquals(MOVIE_ID, mAward.getMovieId());
         assertEquals(AWARD_DATE_1, mAward.getAwardDate());
-        assertEquals(Award.CATEGORY_MOVIE, mAward.getAwardCategory());
+        assertEquals(Award.CATEGORY_MOVIE, mAward.getCategory());
         assertEquals(REVIEW, mAward.getReview());
+        assertEquals(DISPLAY_ORDER, mAward.getDisplayOrder());
     }
 
     /**
@@ -75,6 +78,7 @@ public class AwardTest {
                 .awardDate(null)
                 .category(null)
                 .review(null)
+                .displayOrder(0)
                 .build();
     }
 
@@ -98,6 +102,7 @@ public class AwardTest {
                 .awardDate(AWARD_DATE_1)
                 .category(Award.CATEGORY_MOVIE)
                 .review(REVIEW)
+                .displayOrder(DISPLAY_ORDER)
                 .build()
                 .equals(mAward));
 
@@ -108,6 +113,7 @@ public class AwardTest {
                 .awardDate(AWARD_DATE_2)
                 .category(Award.CATEGORY_MOVIE)
                 .review(REVIEW)
+                .displayOrder(DISPLAY_ORDER)
                 .build()
                 .equals(mAward));
     }
@@ -122,6 +128,7 @@ public class AwardTest {
                 .awardDate(AWARD_DATE_2)
                 .category(Award.CATEGORY_MOVIE)
                 .review(REVIEW)
+                .displayOrder(DISPLAY_ORDER)
                 .build()
                 .hashCode());
     }
@@ -133,7 +140,9 @@ public class AwardTest {
                         ", movieId=" + MOVIE_ID +
                         ", awardDate=" + AWARD_DATE_1 +
                         ", category=" + Award.CATEGORY_MOVIE +
-                        ", review=" + REVIEW + "}",
+                        ", review=" + REVIEW +
+                        ", displayOrder=" + DISPLAY_ORDER +
+                        "}",
                 mAward.toString());
     }
 

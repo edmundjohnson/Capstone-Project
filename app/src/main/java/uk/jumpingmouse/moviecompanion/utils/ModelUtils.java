@@ -251,10 +251,10 @@ public final class ModelUtils {
         // id
         String id;
         try {
+            // id can be null when inserting a new award
             id = values.getAsString(DataContract.AwardEntry.COLUMN_ID);
             if (id == null) {
-                Timber.w("toAward: id is null in ContentValues");
-                return null;
+                Timber.d("toAward: id is null in ContentValues");
             }
         } catch (NullPointerException e) {
             Timber.e("toAward: id is missing from ContentValues", e);
