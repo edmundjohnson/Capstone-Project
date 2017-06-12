@@ -34,6 +34,7 @@ public class DataProvider extends DataProviderBase {
      *               This must not be {@code null}.
      * @return The URI for the newly inserted item.
      */
+    @Nullable
     @Override
     public Uri insert(@NonNull final Uri uri, @Nullable final ContentValues values) {
         Uri returnUri;
@@ -44,7 +45,7 @@ public class DataProvider extends DataProviderBase {
             case MOVIE:
                 Movie movie = insertMovie(context, values);
                 if (movie == null) {
-                    Timber.w("Failed to insert movie using ContentValues: ", values);
+                    Timber.w("insert: Failed to insert movie using ContentValues: ", values);
                     return null;
                 }
                 returnUri = DataContract.MovieEntry.buildUriForRowById(movie.getId());
@@ -52,7 +53,10 @@ public class DataProvider extends DataProviderBase {
             case AWARD:
                 Award award = insertAward(context, values);
                 if (award == null) {
-                    Timber.w("Failed to insert award using ContentValues: ", values);
+                    Timber.w("insert: Failed to insert award using ContentValues: ", values);
+                    return null;
+                } else if (award.getId() == null) {
+                    Timber.w("insert: award id is null, ContentValues: ", values);
                     return null;
                 }
                 returnUri = DataContract.AwardEntry.buildUriForRowById(award.getId());

@@ -45,6 +45,7 @@
     <string name="label_display_order">Award Display Order</string>
     <string name="display_order_default" translatable="false">1</string>
     <string name="multiple_matching_movies">More than one movie matches this id</string>
+    <string name="saving_award">Saving award: %s …</string>
     <string name="award_not_saved">Award not saved: %s</string>
 
 </resources>

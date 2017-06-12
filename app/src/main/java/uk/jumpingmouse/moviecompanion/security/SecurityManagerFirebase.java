@@ -1,6 +1,7 @@
 package uk.jumpingmouse.moviecompanion.security;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 
 import com.firebase.ui.auth.AuthUI;
@@ -52,7 +53,7 @@ public class SecurityManagerFirebase implements SecurityManager {
      * @param activity the activity being created
      */
     @Override
-    public void onCreateActivity(final FragmentActivity activity) {
+    public void onCreateActivity(@NonNull final FragmentActivity activity) {
         // Initialise Firebase variables
         mFirebaseAuth = FirebaseAuth.getInstance();
 
@@ -152,8 +153,10 @@ public class SecurityManagerFirebase implements SecurityManager {
     // Security methods
 
     @Override
-    public void signOut(FragmentActivity activity) {
-        AuthUI.getInstance().signOut(activity);
+    public void signOut(@Nullable FragmentActivity activity) {
+        if (activity != null) {
+            AuthUI.getInstance().signOut(activity);
+        }
     }
 
     //---------------------------------------------------------------------

@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         getSecurityManager().onCreateActivity(this);
-
     }
 
     /**
@@ -58,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         getSecurityManager().onResumeActivity();
-
     }
 
     /**

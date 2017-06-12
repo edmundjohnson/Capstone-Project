@@ -1,5 +1,7 @@
 package uk.jumpingmouse.moviecompanion.security;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 
 /**
@@ -15,7 +17,7 @@ public interface SecurityManager {
      * Perform security processing required when creating activity.
      * @param activity the activity being created
      */
-    void onCreateActivity(FragmentActivity activity);
+    void onCreateActivity(@NonNull FragmentActivity activity);
 
     /**
      * Perform security processing required when resuming activity.
@@ -31,6 +33,6 @@ public interface SecurityManager {
      * Sign the user out.
      * @param activity the current activity
      */
-    void signOut(FragmentActivity activity);
+    void signOut(@Nullable FragmentActivity activity);
 
 }

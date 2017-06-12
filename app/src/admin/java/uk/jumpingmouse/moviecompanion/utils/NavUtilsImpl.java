@@ -1,6 +1,5 @@
 package uk.jumpingmouse.moviecompanion.utils;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,6 +9,8 @@ import android.view.MenuItem;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.activity.AddAwardActivity;
 import uk.jumpingmouse.moviecompanion.activity.AddMovieActivity;
+
+import static uk.jumpingmouse.moviecompanion.security.SecurityManager.RC_SIGN_IN;
 
 /**
  * Class containing utility methods related to navigation.
@@ -74,29 +75,32 @@ public class NavUtilsImpl extends NavUtils {
 
     /**
      * Displays the add movie screen.
-     * @param context the context
+     * @param activity the activity invoking the activity to be displayed
      */
-    private void displayAddMovie(@Nullable Context context) {
-        displayActivity(context, AddMovieActivity.class);
+    private void displayAddMovie(@Nullable FragmentActivity activity) {
+        displayActivity(activity, AddMovieActivity.class);
     }
 
     /**
      * Displays the add award screen.
-     * @param context the context
+     * @param activity the activity invoking the activity to be displayed
      */
-    private void displayAddAward(@Nullable Context context) {
-        displayActivity(context, AddAwardActivity.class);
+    private void displayAddAward(@Nullable FragmentActivity activity) {
+        displayActivity(activity, AddAwardActivity.class);
     }
 
     /**
      * Displays an activity.
-     * @param context the context
+     * @param activity the activity invoking the activity to be displayed
      * @param activityClass the class of the activity, e.g. AddMovieActivity.class
      */
-    private void displayActivity(@Nullable Context context, @NonNull Class activityClass) {
-        if (context != null) {
-            Intent intent = new Intent(context, activityClass);
-            context.startActivity(intent);
+    private void displayActivity(@Nullable FragmentActivity activity, @NonNull Class activityClass) {
+        if (activity != null) {
+            Intent intent = new Intent(activity, activityClass);
+            // We always do a startActivityForResult(...) because we could sign out
+            // on any activity, and then all activities on the stack must be able
+            // to detect this and finish (in onActivityResult(...)).
+            activity.startActivityForResult(intent, RC_SIGN_IN);
         }
     }
 

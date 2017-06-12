@@ -134,7 +134,7 @@ class DatabaseHelperLocal implements DatabaseHelper {
      * @param id the id of the award to be deleted
      * @return the number of rows deleted
      */
-    public int deleteAward(@Nullable Context context, @NonNull String id) {
+    public int deleteAward(@Nullable Context context, @Nullable String id) {
         return getLocalDatabase().deleteAward(id);
     }
 

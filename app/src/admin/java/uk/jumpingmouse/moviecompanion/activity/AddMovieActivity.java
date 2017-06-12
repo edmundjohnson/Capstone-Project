@@ -1,6 +1,7 @@
 package uk.jumpingmouse.moviecompanion.activity;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,6 +19,7 @@ import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
+import uk.jumpingmouse.moviecompanion.security.SecurityManager;
 import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 import uk.jumpingmouse.moviecompanion.utils.NavUtils;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
@@ -72,7 +74,57 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
         if (savedInstanceState != null) {
             mMovie = savedInstanceState.getParcelable(KEY_MOVIE);
             if (mMovie != null) {
-                displayMovie(mMovie);
+                displayData(mMovie);
+            }
+        }
+
+        getSecurityManager().onCreateActivity(this);
+    }
+
+    /**
+     * Perform processing required when the activity becomes able to interact with the user.
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        getSecurityManager().onResumeActivity();
+    }
+
+    /**
+     * Perform processing required when the activity becomes unable to interact with the user.
+     */
+    @Override
+    protected void onPause() {
+        getSecurityManager().onPauseActivity();
+
+        super.onPause();
+    }
+
+    /**
+     * Check whether the user has clicked the back button from the sign-in screen.
+     * If so, exit the app rather than displaying the sign-in screen again.
+     * Note that this method is called before onResume(), which displays the sign-in screen
+     * if the user is not signed in.
+     * @param requestCode the request code
+     * @param resultCode the result code
+     * @param data the returned data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Are we returning from the sign-in screen?
+        if (requestCode == SecurityManager.RC_SIGN_IN) {
+            if (resultCode == RESULT_OK) {
+                // The user signed in successfully
+                //IdpResponse idpResponse = IdpResponse.fromResultIntent(data);
+                getViewUtils().displayInfoMessage(this, R.string.sign_in_ok);
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user cancelled the sign-in, e.g. they hit the back button
+                getViewUtils().displayInfoMessage(this, R.string.sign_in_cancelled);
+                // finish the activity
+                finish();
             }
         }
     }
@@ -88,51 +140,6 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
 
         outState.putParcelable(KEY_MOVIE, mMovie);
     }
-
-//    /**
-//     * This method is called after {@link #onStart} when the activity is
-//     * being re-initialised from a previously saved state, given here in
-//     * <var>savedInstanceState</var>.  Most implementations will simply use {@link #onCreate}
-//     * to restore their state, but it is sometimes convenient to do it here
-//     * after all of the initialization has been done or to allow subclasses to
-//     * decide whether to use your default implementation.  The default
-//     * implementation of this method performs a restore of any view state that
-//     * had previously been frozen by {@link #onSaveInstanceState}.
-//     * <p>
-//     * <p>This method is called between {@link #onStart} and
-//     * {@link #onPostCreate}.
-//     *
-//     * @param savedInstanceState the data most recently supplied in {@link #onSaveInstanceState}.
-//     * @see #onCreate
-//     * @see #onPostCreate
-//     * @see #onResume
-//     * @see #onSaveInstanceState
-//     */
-//    @Override
-//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-//        if (savedInstanceState != null) {
-//            mMovie = savedInstanceState.getParcelable(KEY_MOVIE);
-//        }
-//        super.onRestoreInstanceState(savedInstanceState);
-//    }
-
-    //    /**
-//     * Perform processing required when the activity becomes able to interact with the user.
-//     */
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//    }
-
-//    /**
-//     * Perform processing required when the activity becomes unable to interact with the user.
-//     */
-//    @Override
-//    protected void onPause() {
-//
-//
-//        super.onPause();
-//    }
 
     //---------------------------------------------------------------------
     // Navigation methods
@@ -196,7 +203,7 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
         } else {
             // Save and display the fetched movie
             mMovie = movie;
-            displayMovie(mMovie);
+            displayData(mMovie);
         }
     }
 
@@ -205,7 +212,7 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
      * @param view the view that was clicked
      */
     public void onCancel(@Nullable View view) {
-        clearMovie();
+        resetData();
         if (view != null) {
             getViewUtils().displayInfoMessage(view.getContext(),
                     getString(R.string.movie_not_saved, mTxtTitle.getText()));
@@ -230,31 +237,29 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
         } else {
             getViewUtils().displayInfoMessage(view.getContext(),
                      getString(R.string.saving_movie, mMovie.getTitle()));
-            clearMovie();
+            resetData();
         }
 
     }
 
     /**
-     * Displays a movie on the screen.
+     * Displays movie data on the screen.
      * @param movie the movie to display
      */
-    private void displayMovie(@NonNull Movie movie) {
+    private void displayData(@NonNull Movie movie) {
         getViewUtils().dismissKeyboard(this);
 
-        // First, disable modification of movie until Save or Cancel clicked
+        // disable data entry until Save or Cancel clicked
         mTxtImdbId.setEnabled(false);
 
-        mTxtTitle.setText(movie.getTitle());
-        mTxtGenre.setText(movie.getGenre());
-
+        setValueFields(movie);
         showValueFields();
     }
 
     /**
-     * Clears the displayed movie from the screen.
+     * Resets the screen, leaving it ready for input.
      */
-    private void clearMovie() {
+    private void resetData() {
         mMovie = null;
 
         clearValueFields();
@@ -265,28 +270,16 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
     }
 
     /**
-     * Clears the contents of the movie fields.
+     * Sets the contents of the data value fields.
+     * @param movie the movie whose data is to be displayed
      */
-    private void clearValueFields() {
-        mTxtImdbId.setText(null);
-        mTxtTitle.setText(null);
-        mTxtGenre.setText(null);
+    private void setValueFields(@NonNull Movie movie) {
+        mTxtTitle.setText(movie.getTitle());
+        mTxtGenre.setText(movie.getGenre());
     }
 
     /**
-     * Hides the movie value fields.
-     */
-    private void hideValueFields() {
-        hideView(mLabelTitle);
-        hideView(mTxtTitle);
-        hideView(mLabelGenre);
-        hideView(mTxtGenre);
-        hideView(mBtnCancel);
-        hideView(mBtnSave);
-    }
-
-    /**
-     * Shows the movie value fields.
+     * Shows the data value fields.
      */
     private void showValueFields() {
         // Display the movie details and Save/Cancel buttons
@@ -299,12 +292,28 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
     }
 
     /**
-     * Hides a view.
-     * @param view the view
+     * Clears the contents of the data value fields.
      */
-    private void hideView(View view) {
-        getViewUtils().hideView(view);
+    private void clearValueFields() {
+        mTxtImdbId.setText(null);
+        mTxtTitle.setText(null);
+        mTxtGenre.setText(null);
     }
+
+    /**
+     * Hides the data value fields.
+     */
+    private void hideValueFields() {
+        hideView(mLabelTitle);
+        hideView(mTxtTitle);
+        hideView(mLabelGenre);
+        hideView(mTxtGenre);
+        hideView(mBtnCancel);
+        hideView(mBtnSave);
+    }
+
+    //---------------------------------------------------------------
+    // Util methods
 
     /**
      * Shows a view.
@@ -314,8 +323,13 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
         getViewUtils().showView(view);
     }
 
-    //---------------------------------------------------------------
-    // Util methods
+    /**
+     * Hides a view.
+     * @param view the view
+     */
+    private void hideView(View view) {
+        getViewUtils().hideView(view);
+    }
 
     /**
      * Returns a set of ContentValues corresponding to the movie.
@@ -339,6 +353,15 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
 
     //---------------------------------------------------------------------
     // Getters
+
+    /**
+     * Convenience method which returns a SecurityManager.
+     * @return a SecurityManager
+     */
+    @NonNull
+    private static SecurityManager getSecurityManager() {
+        return ObjectFactory.getSecurityManager();
+    }
 
     /**
      * Convenience method which returns a reference to a ViewUtils object.

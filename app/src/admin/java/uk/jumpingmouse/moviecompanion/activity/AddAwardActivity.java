@@ -1,6 +1,7 @@
 package uk.jumpingmouse.moviecompanion.activity;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
+import uk.jumpingmouse.moviecompanion.security.SecurityManager;
 import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 import uk.jumpingmouse.moviecompanion.utils.NavUtils;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
@@ -32,6 +34,10 @@ import uk.jumpingmouse.omdbapi.OmdbApi;
  * @author Edmund Johnson
  */
 public class AddAwardActivity extends AppCompatActivity {
+
+    // Bundle keys, e.g. for use when saving and restoring state
+    private static final String KEY_MOVIE = "KEY_MOVIE";
+    private static final String KEY_AWARD = "KEY_AWARD";
 
     // Screen fields
     private EditText mTxtImdbId;
@@ -80,25 +86,78 @@ public class AddAwardActivity extends AppCompatActivity {
         mTxtAwardDisplayOrder = (EditText) findViewById(R.id.txtDisplayOrder);
         mBtnCancel = (Button) findViewById(R.id.btnCancel);
         mBtnSave = (Button) findViewById(R.id.btnSave);
+
+        if (savedInstanceState != null) {
+            mMovie = savedInstanceState.getParcelable(KEY_MOVIE);
+            mAward = savedInstanceState.getParcelable(KEY_AWARD);
+            if (mMovie != null) {
+                displayData(mMovie);
+            }
+        }
+
+        getSecurityManager().onCreateActivity(this);
     }
 
-//    /**
-//     * Perform processing required when the activity becomes able to interact with the user.
-//     */
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//    }
+    /**
+     * Perform processing required when the activity becomes able to interact with the user.
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-//    /**
-//     * Perform processing required when the activity becomes unable to interact with the user.
-//     */
-//    @Override
-//    protected void onPause() {
-//
-//
-//        super.onPause();
-//    }
+        getSecurityManager().onResumeActivity();
+    }
+
+    /**
+     * Perform processing required when the activity becomes unable to interact with the user.
+     */
+    @Override
+    protected void onPause() {
+        getSecurityManager().onPauseActivity();
+
+        super.onPause();
+    }
+
+    /**
+     * Check whether the user has clicked the back button from the sign-in screen.
+     * If so, exit the app rather than displaying the sign-in screen again.
+     * Note that this method is called before onResume(), which displays the sign-in screen
+     * if the user is not signed in.
+     * @param requestCode the request code
+     * @param resultCode the result code
+     * @param data the returned data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Are we returning from the sign-in screen?
+        if (requestCode == SecurityManager.RC_SIGN_IN) {
+            if (resultCode == RESULT_OK) {
+                // The user signed in successfully
+                //IdpResponse idpResponse = IdpResponse.fromResultIntent(data);
+                getViewUtils().displayInfoMessage(this, R.string.sign_in_ok);
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user cancelled the sign-in, e.g. they hit the back button
+                getViewUtils().displayInfoMessage(this, R.string.sign_in_cancelled);
+                // finish the activity
+                finish();
+            }
+        }
+    }
+
+    /**
+     * Called to retrieve per-instance state from an activity before being killed so that the
+     * state can be restored in onCreate(Bundle) or onRestoreInstanceState(Bundle).
+     * @param outState the Bundle populated by this method
+     */
+    @Override
+    public final void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelable(KEY_MOVIE, mMovie);
+        outState.putParcelable(KEY_AWARD, mAward);
+    }
 
     //---------------------------------------------------------------------
     // Navigation methods
@@ -157,7 +216,7 @@ public class AddAwardActivity extends AppCompatActivity {
                 getViewUtils().displayErrorMessage(this, R.string.movie_data_not_found);
             } else {
                 mMovie = movie;
-                displayMovie(mMovie);
+                displayData(mMovie);
             }
             cursor.close();
         }
@@ -175,7 +234,7 @@ public class AddAwardActivity extends AppCompatActivity {
      * @param view the view that was clicked
      */
     public void onCancel(@Nullable View view) {
-        clearAward();
+        resetData();
         if (view != null) {
             getViewUtils().displayInfoMessage(view.getContext(),
                     getString(R.string.award_not_saved, mTxtTitle.getText()));
@@ -210,43 +269,84 @@ public class AddAwardActivity extends AppCompatActivity {
                     getString(R.string.award_not_saved, mMovie.getTitle()));
         } else {
             getViewUtils().displayInfoMessage(view.getContext(),
-                     getString(R.string.saving_movie, mMovie.getTitle()));
-            clearAward();
+                     getString(R.string.saving_award, mMovie.getTitle()));
+            resetData();
         }
 
     }
 
     /**
-     * Displays a movie on the screen.
+     * Displays movie data on the screen.
      * @param movie the movie to display
      */
-    private void displayMovie(@NonNull Movie movie) {
+    private void displayData(@NonNull Movie movie) {
         getViewUtils().dismissKeyboard(this);
-        mTxtTitle.setText(movie.getTitle());
+
+        // disable data entry until Save or Cancel clicked
+        mTxtImdbId.setEnabled(false);
+
+        setValueFields(movie);
         showValueFields();
     }
 
     /**
-     * Clears the displayed movie from the screen.
+     * Resets the screen, leaving it ready for input.
      */
-    private void clearAward() {
+    private void resetData() {
+        mMovie = null;
+        mAward = null;
+
         clearValueFields();
         hideValueFields();
+
+        // Enable entry of a new movie
+        mTxtImdbId.setEnabled(true);
     }
 
     /**
-     * Clears the contents of the movie fields.
+     * Sets the contents of the data value fields.
+     * @param movie the movie whose data is to be displayed
+     */
+    private void setValueFields(@NonNull Movie movie) {
+        mTxtTitle.setText(movie.getTitle());
+    }
+
+    /**
+     * Shows the data value fields.
+     */
+    private void showValueFields() {
+        showView(mLabelTitle);
+        showView(mTxtTitle);
+        showView(mLabelAwardDate);
+        showView(mTxtAwardDate);
+        showView(mLabelAwardCategory);
+        showView(mRadioAwardCategory);
+        showView(mLabelReview);
+        showView(mTxtReview);
+        showView(mLabelAwardDisplayOrder);
+        showView(mTxtAwardDisplayOrder);
+
+        showView(mBtnCancel);
+        showView(mBtnSave);
+    }
+
+    /**
+     * Clears the contents of the data value fields.
      */
     private void clearValueFields() {
+        // movie fields
         mTxtImdbId.setText(null);
+
+        // award fields
         mTxtTitle.setText(null);
         mTxtAwardDate.setText(null);
         mRadioAwardCategory.clearCheck();
+        mTxtReview.setText(null);
         mTxtAwardDisplayOrder.setText(null);
     }
 
     /**
-     * Hides the movie value fields.
+     * Hides the data value fields.
      */
     private void hideValueFields() {
         hideView(mLabelTitle);
@@ -263,23 +363,8 @@ public class AddAwardActivity extends AppCompatActivity {
         hideView(mBtnSave);
     }
 
-    /**
-     * Shows the movie value fields.
-     */
-    private void showValueFields() {
-        showView(mLabelTitle);
-        showView(mTxtTitle);
-        showView(mLabelAwardDate);
-        showView(mTxtAwardDate);
-        showView(mLabelAwardCategory);
-        showView(mRadioAwardCategory);
-        showView(mLabelAwardDisplayOrder);
-        showView(mTxtAwardDisplayOrder);
-        showView(mLabelReview);
-        showView(mTxtReview);
-        showView(mBtnCancel);
-        showView(mBtnSave);
-    }
+    //---------------------------------------------------------------
+    // Util methods
 
     /**
      * Hides a view.
@@ -296,9 +381,6 @@ public class AddAwardActivity extends AppCompatActivity {
     private void showView(View view) {
         getViewUtils().showView(view);
     }
-
-    //---------------------------------------------------------------
-    // Util methods
 
     /**
      * Returns a set of ContentValues corresponding to an award.
@@ -321,6 +403,15 @@ public class AddAwardActivity extends AppCompatActivity {
 
     //---------------------------------------------------------------------
     // Getters
+
+    /**
+     * Convenience method which returns a SecurityManager.
+     * @return a SecurityManager
+     */
+    @NonNull
+    private static SecurityManager getSecurityManager() {
+        return ObjectFactory.getSecurityManager();
+    }
 
     /**
      * Convenience method which returns a reference to a ViewUtils object.

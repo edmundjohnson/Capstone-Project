@@ -112,14 +112,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/category_movie_text"
-                    android:checked="true"
-                    android:onClick="onCategoryClicked"/>
+                    android:checked="true" />
                 <RadioButton
                     android:id="@+id/radioCategoryDvd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/category_dvd_text"
-                    android:onClick="onCategoryClicked"/>
+                    android:text="@string/category_dvd_text" />
             </RadioGroup>
 
             <!-- Review -->
