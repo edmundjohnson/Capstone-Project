@@ -70,9 +70,10 @@ public interface LocalDatabase {
      * If the award does not exist in the database, it is inserted.
      * If it already exists in the database, it is updated.
      * @param award the award to insert or update
-     * @return the number of rows inserted or updated
+     * @return the id of the added award
      */
-    int addAward(@NonNull Award award);
+    @Nullable
+    String addAward(@NonNull Award award);
 
     /**
      * Deletes an award from the database.

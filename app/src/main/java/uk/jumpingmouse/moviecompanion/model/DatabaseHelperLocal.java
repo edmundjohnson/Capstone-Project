@@ -122,9 +122,10 @@ class DatabaseHelperLocal implements DatabaseHelper {
      * If it already exists in the database, it is updated.
      * @param context the context
      * @param award the award to insert or update
-     * @return the number of rows inserted or updated
+     * @return the id of the added award
      */
-    public int addAward(@Nullable final Context context, @NonNull final Award award) {
+    @Nullable
+    public String addAward(@Nullable final Context context, @NonNull final Award award) {
         return getLocalDatabase().addAward(award);
     }
 

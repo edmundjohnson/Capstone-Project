@@ -94,10 +94,11 @@ public interface DatabaseHelper {
      * If the award does not exist in the database, it is inserted.
      * If it already exists in the database, it is updated.
      * @param context the context
-     * @param award the award to insert or update
-     * @return the number of rows inserted or updated
+     * @param award the award to insert or update; the id field may not be set
+     * @return the id of the award, or null if the award was not added
      */
-    int addAward(
+    @Nullable
+    String addAward(
             // context is used - analyser confused by product flavours
             @SuppressWarnings("UnusedParameters") @Nullable final Context context,
             @NonNull final Award award);

@@ -67,15 +67,16 @@ public class DatabaseHelperFirebase extends DatabaseHelperFirebaseBase {
     // Firebase database award modification methods
 
     /**
-     * Adds a movie's details to the Firebase database.
-     * If the movie does not exist in the database, it is inserted.
+     * Adds an award's details to the Firebase database.
+     * If the award does not exist in the database, it is inserted.
      * If it already exists in the database, it is updated.
      * @param context the context
-     * @param award the award to insert or update
-     * @return the number of rows inserted or updated
+     * @param award the award to insert or update; the id field may not be set
+     * @return the id of the award, or null if the award was not added
      */
+    @Nullable
     @Override
-    public int addAward(@Nullable final Context context, @NonNull final Award award) {
+    public String addAward(@Nullable final Context context, @NonNull final Award award) {
         return pushNode(context,
                 DataContract.AwardEntry.ROOT_NODE + "/" + award.getMovieId(),
                 award);

@@ -114,19 +114,7 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Are we returning from the sign-in screen?
-        if (requestCode == SecurityManager.RC_SIGN_IN) {
-            if (resultCode == RESULT_OK) {
-                // The user signed in successfully
-                //IdpResponse idpResponse = IdpResponse.fromResultIntent(data);
-                getViewUtils().displayInfoMessage(this, R.string.sign_in_ok);
-            } else if (resultCode == RESULT_CANCELED) {
-                // The user cancelled the sign-in, e.g. they hit the back button
-                getViewUtils().displayInfoMessage(this, R.string.sign_in_cancelled);
-                // finish the activity
-                finish();
-            }
-        }
+        getSecurityManager().onActivityResult(this, requestCode, resultCode, data);
     }
 
     /**

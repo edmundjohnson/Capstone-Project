@@ -94,11 +94,12 @@ abstract class DatabaseHelperFirebaseBase implements DatabaseHelper {
      * If the award does not exist in the database, it is inserted.
      * If it already exists in the database, it is updated.
      * @param context the context
-     * @param award the award to insert or update
-     * @return the number of rows inserted or updated
+     * @param award the award to insert or update; the id field may not be set
+     * @return the id of the award, or null if the award was not added
      */
+    @Nullable
     @Override
-    public int addAward(@Nullable final Context context, @NonNull final Award award) {
+    public String addAward(@Nullable final Context context, @NonNull final Award award) {
         throw new UnsupportedOperationException("Insufficient privileges for add award");
     }
 
@@ -155,12 +156,13 @@ abstract class DatabaseHelperFirebaseBase implements DatabaseHelper {
      * @param context the context
      * @param targetNode the node to which the new node is to be added
      * @param nodeValue the value of the new node to insert or update
-     * @return the number of rows inserted or updated
+     * @return the key of the created node, or null if no node was created
      */
-    int pushNode(@Nullable final Context context, @NonNull final String targetNode,
+    @Nullable
+    String pushNode(@Nullable final Context context, @NonNull final String targetNode,
                 @NonNull final Object nodeValue) {
         if (context == null) {
-            return 0;
+            return null;
         }
 //        // Create the node to add to the database.
 //        Map<String, Object> mapValue = new HashMap<>(1);
@@ -172,13 +174,12 @@ abstract class DatabaseHelperFirebaseBase implements DatabaseHelper {
 //                        targetNode, nodeKey, true));
 
         // Push the new node to the database target node.
-        // TODO: Improve "push_id" !
-        getDatabaseReference(targetNode).push().setValue(nodeValue,
+        DatabaseReference newNode = getDatabaseReference(targetNode).push();
+        String newNodeKey = newNode.getKey();
+        newNode.setValue(nodeValue,
                 getDatabaseOperationCompletionListener(context, R.string.databaseOperationAddNode,
-                        targetNode, "push_id", true));
-
-        // We don't know whether the add will succeed - assume it will
-        return 1;
+                        targetNode, newNodeKey, true));
+        return newNodeKey;
     }
 
     /**

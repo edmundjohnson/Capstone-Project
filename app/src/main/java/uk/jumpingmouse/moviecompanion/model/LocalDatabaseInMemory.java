@@ -187,20 +187,22 @@ public class LocalDatabaseInMemory implements LocalDatabase {
      * If the award does not exist in the database, it is inserted.
      * If it already exists in the database, it is updated.
      * @param award the award to insert or update
-     * @return the number of rows inserted or updated
+     * @return the id of the added award
      */
+    @Nullable
     @Override
-    public int addAward(@NonNull Award award) {
+    public String addAward(@NonNull Award award) {
         String id = award.getId();
-        int movieId = award.getMovieId();
-        // remove the award if it already exists
-        Award existingAward = selectAwardById(id);
-        if (existingAward != null) {
-            mAwardList.remove(existingAward);
+        if (id != null) {
+            // remove the award if it already exists
+            Award existingAward = selectAwardById(id);
+            if (existingAward != null) {
+                mAwardList.remove(existingAward);
+            }
+            // add the new award
+            mAwardList.add(award);
         }
-        // add the new award
-        mAwardList.add(award);
-        return 1;
+        return id;
     }
 
     /**

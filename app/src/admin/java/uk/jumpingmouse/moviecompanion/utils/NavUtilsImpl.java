@@ -9,8 +9,7 @@ import android.view.MenuItem;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.activity.AddAwardActivity;
 import uk.jumpingmouse.moviecompanion.activity.AddMovieActivity;
-
-import static uk.jumpingmouse.moviecompanion.security.SecurityManager.RC_SIGN_IN;
+import uk.jumpingmouse.moviecompanion.security.SecurityManager;
 
 /**
  * Class containing utility methods related to navigation.
@@ -78,7 +77,7 @@ public class NavUtilsImpl extends NavUtils {
      * @param activity the activity invoking the activity to be displayed
      */
     private void displayAddMovie(@Nullable FragmentActivity activity) {
-        displayActivity(activity, AddMovieActivity.class);
+        displayActivity(activity, AddMovieActivity.class, SecurityManager.RC_ADD_MOVIE);
     }
 
     /**
@@ -86,7 +85,7 @@ public class NavUtilsImpl extends NavUtils {
      * @param activity the activity invoking the activity to be displayed
      */
     private void displayAddAward(@Nullable FragmentActivity activity) {
-        displayActivity(activity, AddAwardActivity.class);
+        displayActivity(activity, AddAwardActivity.class, SecurityManager.RC_ADD_AWARD);
     }
 
     /**
@@ -94,13 +93,14 @@ public class NavUtilsImpl extends NavUtils {
      * @param activity the activity invoking the activity to be displayed
      * @param activityClass the class of the activity, e.g. AddMovieActivity.class
      */
-    private void displayActivity(@Nullable FragmentActivity activity, @NonNull Class activityClass) {
+    private void displayActivity(@Nullable FragmentActivity activity, @NonNull Class activityClass,
+                                 int requestCode) {
         if (activity != null) {
             Intent intent = new Intent(activity, activityClass);
             // We always do a startActivityForResult(...) because we could sign out
             // on any activity, and then all activities on the stack must be able
             // to detect this and finish (in onActivityResult(...)).
-            activity.startActivityForResult(intent, RC_SIGN_IN);
+            activity.startActivityForResult(intent, requestCode);
         }
     }
 

@@ -6,7 +6,7 @@
 
     <!-- Security -->
     <string name="sign_in_ok">Signed in!</string>
-    <string name="sign_in_cancelled">Sign-in cancelled</string>
+    <!-- <string name="sign_in_cancelled">Sign-in cancelled</string> -->
 
     <!-- Menu -->
     <string name="menu_option_sign_out">Sign Out</string>
