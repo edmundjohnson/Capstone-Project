@@ -4,19 +4,16 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import java.util.List;
-
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 
 /**
- * Interface for database helper classes.
- * The database helper classes access:
- * - the master database for database modification methods
- * - the local database for database queries.
+ * Interface for implementations of the master database.
+ * The master database is the one which is updated and may be remote,
+ * whereas queries are done against a LocalDatabase.
  * @author Edmund Johnson
  */
-public interface DatabaseHelper {
+public interface MasterDatabase {
 
     String MOVIE_SORT_COLUMN_DEFAULT = DataContract.MovieEntry.COLUMN_TITLE;
     boolean MOVIE_SORT_ASCENDING_DEFAULT = true;
@@ -60,31 +57,31 @@ public interface DatabaseHelper {
     //---------------------------------------------------------------------
     // Movie query methods
 
-    /**
-     * Returns the movie with a specified id.
-     * @param id the id of the movie to be returned
-     * @return the movie with the specified id
-     */
-    @Nullable
-    Movie selectMovieById(int id);
+//    /**
+//     * Returns the movie with a specified id.
+//     * @param id the id of the movie to be returned
+//     * @return the movie with the specified id
+//     */
+//    @Nullable
+//    Movie selectMovieById(int id);
 
-    /**
-     * Returns a list of movies in the database.
-     * @param projection The list of columns to put into the cursor.
-     *                   If this is {@code null} all columns are included.
-     * @param selection A selection criteria to apply when filtering rows.
-     *                  If this is {@code null} then all rows are included.
-     * @param selectionArgs Any ?s included in selection will be replaced by
-     *      the values from selectionArgs, in the order that they appear in the selection.
-     *      The values will be bound as Strings.
-     * @param sortOrder How the rows in the cursor should be sorted.
-     *      If this is {@code null}, the sort order is undefined.
-     * @return a list of movies in the database
-     */
-    @Nullable
-    List<Movie> selectMovies(
-            @Nullable final String[] projection, @Nullable final String selection,
-            @Nullable final String[] selectionArgs, @Nullable final String sortOrder);
+//    /**
+//     * Returns a list of movies in the database.
+//     * @param projection The list of columns to put into the cursor.
+//     *                   If this is {@code null} all columns are included.
+//     * @param selection A selection criteria to apply when filtering rows.
+//     *                  If this is {@code null} then all rows are included.
+//     * @param selectionArgs Any ?s included in selection will be replaced by
+//     *      the values from selectionArgs, in the order that they appear in the selection.
+//     *      The values will be bound as Strings.
+//     * @param sortOrder How the rows in the cursor should be sorted.
+//     *      If this is {@code null}, the sort order is undefined.
+//     * @return a list of movies in the database
+//     */
+//    @Nullable
+//    List<Movie> selectMovies(
+//            @Nullable final String[] projection, @Nullable final String selection,
+//            @Nullable final String[] selectionArgs, @Nullable final String sortOrder);
 
     //---------------------------------------------------------------------
     // Award modification methods
@@ -114,12 +111,12 @@ public interface DatabaseHelper {
             @SuppressWarnings("UnusedParameters") @Nullable Context context,
             @Nullable String id);
 
-    /**
-     * Returns the award with a specified id.
-     * @param id the id of the award to be returned
-     * @return the award with the specified id
-     */
-    @Nullable
-    Award selectAwardById(@Nullable String id);
+//    /**
+//     * Returns the award with a specified id.
+//     * @param id the id of the award to be returned
+//     * @return the award with the specified id
+//     */
+//    @Nullable
+//    Award selectAwardById(@Nullable String id);
 
 }

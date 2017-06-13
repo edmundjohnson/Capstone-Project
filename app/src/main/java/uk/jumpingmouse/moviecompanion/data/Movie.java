@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import java.security.InvalidParameterException;
 import java.util.Comparator;
 
+import uk.jumpingmouse.omdbapi.OmdbMovie;
+
 /**
  * The Movie model class.
  * This is similar to the OmdbMovie class, which contains unprocessed data from the
@@ -17,8 +19,8 @@ import java.util.Comparator;
  */
 public class Movie implements Parcelable {
     public static final int ID_UNKNOWN = -1;
-    public static final int RUNTIME_UNKNOWN = -1;
-    public static final int RELEASED_UNKNOWN = -1;
+    public static final int RUNTIME_UNKNOWN = OmdbMovie.RUNTIME_UNKNOWN;
+    public static final int RELEASED_UNKNOWN = OmdbMovie.RELEASED_UNKNOWN;
 
     // The unique identifier of the movie, e.g. 4016934.
     // This is the numeric part of the imdbId.

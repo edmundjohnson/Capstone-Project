@@ -15,7 +15,7 @@ import java.util.Arrays;
 import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
-import uk.jumpingmouse.moviecompanion.model.DatabaseHelper;
+import uk.jumpingmouse.moviecompanion.model.MasterDatabase;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
 /**
@@ -234,8 +234,8 @@ public class SecurityManagerFirebase implements SecurityManager {
      * @return a reference to the database helper
      */
     @NonNull
-    private static DatabaseHelper getDatabaseHelper() {
-        return ObjectFactory.getDatabaseHelper();
+    private static MasterDatabase getDatabaseHelper() {
+        return ObjectFactory.getMasterDatabase();
     }
 
 }

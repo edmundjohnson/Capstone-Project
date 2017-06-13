@@ -56,17 +56,10 @@ public class LocalDatabaseInMemory implements LocalDatabase {
      * If the movie does not exist in the database, it is inserted.
      * If it already exists in the database, it is updated.
      * @param movie the movie to insert or update
-     * @return the number of rows inserted or updated
      */
     @Override
-    public int addMovie(@NonNull Movie movie) {
+    public void addMovie(@NonNull Movie movie) {
         int id = movie.getId();
-//        //This cannot happen due to previous checks, but the compiler requires it
-//        noinspection ConstantConditions
-//        if (id <= 0) {
-//            Timber.w("addMovie: Cannot add a movie whose id is zero or negative");
-//            return 0;
-//        }
         // remove the movie if it already exists
         Movie existingMovie = selectMovieById(id);
         if (existingMovie != null) {
@@ -74,23 +67,20 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         }
         // add the new movie
         mMovieList.add(movie);
-        return 1;
     }
 
     /**
      * Deletes a movie from the database.
      * @param id the id of the movie to be deleted
-     * @return the number of rows deleted
      */
     @Override
-    public int deleteMovie(int id) {
+    public void deleteMovie(int id) {
         Movie existingMovie = selectMovieById(id);
         if (existingMovie == null) {
             Timber.w("deleteMovie: Movie not found with id: " + id);
-            return 0;
+        } else {
+            mMovieList.remove(existingMovie);
         }
-        mMovieList.remove(existingMovie);
-        return 1;
     }
 
     //---------------------------------------------------------------------
@@ -187,11 +177,9 @@ public class LocalDatabaseInMemory implements LocalDatabase {
      * If the award does not exist in the database, it is inserted.
      * If it already exists in the database, it is updated.
      * @param award the award to insert or update
-     * @return the id of the added award
      */
-    @Nullable
     @Override
-    public String addAward(@NonNull Award award) {
+    public void addAward(@NonNull Award award) {
         String id = award.getId();
         if (id != null) {
             // remove the award if it already exists
@@ -202,23 +190,20 @@ public class LocalDatabaseInMemory implements LocalDatabase {
             // add the new award
             mAwardList.add(award);
         }
-        return id;
     }
 
     /**
      * Deletes an award from the database.
      * @param id the id of the award to be deleted
-     * @return the number of rows deleted
      */
     @Override
-    public int deleteAward(@Nullable String id) {
+    public void deleteAward(@Nullable String id) {
         Award existingAward = selectAwardById(id);
         if (existingAward == null) {
             Timber.w("deleteAward: Award not found with id: " + id);
-            return 0;
+        } else {
+            mAwardList.remove(existingAward);
         }
-        mAwardList.remove(existingAward);
-        return 1;
     }
 
     //---------------------------------------------------------------------

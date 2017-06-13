@@ -12,10 +12,10 @@ import uk.jumpingmouse.moviecompanion.data.Movie;
  * This class contains methods available only to the admin product flavour.
  * @author Edmund Johnson
  */
-public class DatabaseHelperFirebase extends DatabaseHelperFirebaseBase {
+public class MasterDatabaseFirebaseAdmin extends MasterDatabaseFirebase {
 
     // The singleton instance of this class.
-    private static DatabaseHelper sDatabaseHelper = null;
+    private static MasterDatabase sMasterDatabase = null;
 
     //---------------------------------------------------------------------
     // Instance handling methods
@@ -25,11 +25,11 @@ public class DatabaseHelperFirebase extends DatabaseHelperFirebaseBase {
      * @return an instance of this class
      */
     @NonNull
-    public static DatabaseHelper getInstance() {
-        if (sDatabaseHelper == null) {
-            sDatabaseHelper = new DatabaseHelperFirebase();
+    public static MasterDatabase getInstance() {
+        if (sMasterDatabase == null) {
+            sMasterDatabase = new MasterDatabaseFirebaseAdmin();
         }
-        return sDatabaseHelper;
+        return sMasterDatabase;
     }
 
     //---------------------------------------------------------------------

@@ -202,7 +202,7 @@ public abstract class DataProviderBase extends ContentProvider {
      */
     @Nullable
     private Cursor selectMovieById(final int id) {
-        Movie movie = getDatabaseHelper().selectMovieById(id);
+        Movie movie = getLocalDatabase().selectMovieById(id);
         if (movie == null) {
             Timber.w("", "Movie not found with id: " + id);
             return null;
@@ -227,7 +227,7 @@ public abstract class DataProviderBase extends ContentProvider {
     private Cursor selectMovies(
             @Nullable final String[] projection, @Nullable final String selection,
             @Nullable final String[] selectionArgs, @Nullable final String sortOrder) {
-        return toCursor(getDatabaseHelper().selectMovies(projection, selection, selectionArgs, sortOrder));
+        return toCursor(getLocalDatabase().selectMovies(projection, selection, selectionArgs, sortOrder));
     }
 
     /**
@@ -301,7 +301,7 @@ public abstract class DataProviderBase extends ContentProvider {
      */
     @Nullable
     private Cursor selectAwardById(final @Nullable String id) {
-        Award award = getDatabaseHelper().selectAwardById(id);
+        Award award = getLocalDatabase().selectAwardById(id);
         if (award == null) {
             Timber.w("", "Award not found with id: " + id);
             return null;
@@ -393,12 +393,20 @@ public abstract class DataProviderBase extends ContentProvider {
     // Getters
 
     /**
+     * Convenience method which returns a reference to a local database.
+     * @return a reference to a local database
+     */
+    private static LocalDatabase getLocalDatabase() {
+        return ObjectFactory.getLocalDatabase();
+    }
+
+    /**
      * Convenience method for returning a reference to the database helper.
      * @return a reference to the database helper
      */
     @NonNull
-    static DatabaseHelper getDatabaseHelper() {
-        return ObjectFactory.getDatabaseHelper();
+    static MasterDatabase getMasterDatabase() {
+        return ObjectFactory.getMasterDatabase();
     }
 
 }

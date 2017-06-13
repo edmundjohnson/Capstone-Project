@@ -12,7 +12,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -27,21 +26,25 @@ import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
  * Superclass for helper classes for accessing the Firebase Realtime Database.
  * @author Edmund Johnson
  */
-abstract class DatabaseHelperFirebaseBase implements DatabaseHelper {
+abstract class MasterDatabaseFirebase implements MasterDatabase {
 
     // The Firebase Realtime Database.
     private static FirebaseDatabase sFirebaseDatabase;
     // A database reference to the "/movies" node.
     private static DatabaseReference sDatabaseReferenceMovies;
+    // A database reference to the "/awards" node.
+    private static DatabaseReference sDatabaseReferenceAwards;
 
     // A listener which listens for database events at the "/movies" node.
     private ChildEventListener mChildEventListenerMovies;
+    // A listener which listens for database events at the "/awards" node.
+    private ChildEventListener mChildEventListenerAwards;
 
     //---------------------------------------------------------------------
     // Instance handling methods
 
     /** Default constructor. */
-    DatabaseHelperFirebaseBase() {
+    MasterDatabaseFirebase() {
     }
 
     //---------------------------------------------------------------------
@@ -50,11 +53,13 @@ abstract class DatabaseHelperFirebaseBase implements DatabaseHelper {
     /** Performs processing required when a user has signed in. */
     public void onSignedIn() {
         attachDatabaseEventListenerMovies();
+        attachDatabaseEventListenerAwards();
     }
 
     /** Performs processing required when a user has signed out. */
     public void onSignedOut() {
         detachDatabaseEventListenerMovies();
+        detachDatabaseEventListenerAwards();
     }
 
     //---------------------------------------------------------------------
@@ -70,9 +75,7 @@ abstract class DatabaseHelperFirebaseBase implements DatabaseHelper {
      * @return the number of rows inserted or updated
      */
     @Override
-    public int addMovie(@Nullable final Context context, @NonNull final Movie movie) {
-        throw new UnsupportedOperationException("Insufficient privileges for add movie");
-    }
+    public abstract int addMovie(@Nullable final Context context, @NonNull final Movie movie);
 
     /**
      * Deletes a movie from the Firebase database.
@@ -81,16 +84,14 @@ abstract class DatabaseHelperFirebaseBase implements DatabaseHelper {
      * @return the number of rows deleted
      */
     @Override
-    public int deleteMovie(@Nullable Context context, int id) {
-        throw new UnsupportedOperationException("Insufficient privileges for delete movie");
-    }
+    public abstract int deleteMovie(@Nullable Context context, int id);
 
     //---------------------------------------------------------------------
     // Firebase database award modification methods.
     // By default, not allowed.
 
     /**
-     * Adds a award's details to the Firebase database.
+     * Adds an award's details to the Firebase database.
      * If the award does not exist in the database, it is inserted.
      * If it already exists in the database, it is updated.
      * @param context the context
@@ -99,9 +100,7 @@ abstract class DatabaseHelperFirebaseBase implements DatabaseHelper {
      */
     @Nullable
     @Override
-    public String addAward(@Nullable final Context context, @NonNull final Award award) {
-        throw new UnsupportedOperationException("Insufficient privileges for add award");
-    }
+    public abstract String addAward(@Nullable final Context context, @NonNull final Award award);
 
     /**
      * Deletes an award from the Firebase database.
@@ -110,9 +109,7 @@ abstract class DatabaseHelperFirebaseBase implements DatabaseHelper {
      * @return the number of rows deleted
      */
     @Override
-    public int deleteAward(@Nullable Context context, @Nullable String id) {
-        throw new UnsupportedOperationException("Insufficient privileges for delete award");
-    }
+    public abstract int deleteAward(@Nullable Context context, @Nullable String id);
 
     //---------------------------------------------------------------------
     // Database changes initiated on the local device
@@ -249,54 +246,6 @@ abstract class DatabaseHelperFirebaseBase implements DatabaseHelper {
     }
 
     //---------------------------------------------------------------------
-    // Query methods.
-    // Queries are performed using the local database.
-
-    /**
-     * Returns the movie with a specified id.
-     * @param id the id of the movie to be returned
-     * @return the movie with the specified id
-     */
-    @Override
-    @Nullable
-    public Movie selectMovieById(int id) {
-        return getLocalDatabase().selectMovieById(id);
-    }
-
-    /**
-     * Returns a list of movies in the database, filtered and sorted according
-     * to specified criteria.
-     * @param projection The list of columns to put into the cursor.
-     *                   If this is {@code null} all columns are included.
-     * @param selection A selection criteria to apply when filtering rows.
-     *                  If this is {@code null} then all rows are included.
-     * @param selectionArgs Any ?s included in selection will be replaced by
-     *      the values from selectionArgs, in the order that they appear in the selection.
-     *      The values will be bound as Strings.
-     * @param sortOrder How the rows in the cursor should be sorted.
-     *      If this is {@code null}, the sort order is undefined.
-     * @return a list of movies in the database
-     */
-    @Override
-    @Nullable
-    public List<Movie> selectMovies(
-            @Nullable final String[] projection, @Nullable final String selection,
-            @Nullable final String[] selectionArgs, @Nullable final String sortOrder) {
-        return getLocalDatabase().selectMovies(projection, selection, selectionArgs, sortOrder);
-    }
-
-    /**
-     * Returns the award with a specified id.
-     * @param id the id of the award to be returned
-     * @return the award with the specified id
-     */
-    @Override
-    @Nullable
-    public Award selectAwardById(@Nullable String id) {
-        return getLocalDatabase().selectAwardById(id);
-    }
-
-    //---------------------------------------------------------------------
     // Database event listeners
 
     /** Attach a ChildEventListener to the "/movies" node. */
@@ -344,11 +293,64 @@ abstract class DatabaseHelperFirebaseBase implements DatabaseHelper {
         }
     }
 
+    /** Attach a ChildEventListener to the "/award" node. */
+    private void attachDatabaseEventListenerAwards() {
+        if (mChildEventListenerAwards == null) {
+            mChildEventListenerAwards = new ChildEventListener() {
+                // This is called for each existing child when the listener is attached
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    Award award = dataSnapshot.getValue(Award.class);
+                    getLocalDatabase().addAward(award);
+                    //mAwardAdapter.add(award);
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    Award award = dataSnapshot.getValue(Award.class);
+                    getLocalDatabase().addAward(award);
+                    //mAwardAdapter.add(award);
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    Award award = dataSnapshot.getValue(Award.class);
+                    getLocalDatabase().deleteAward(award.getId());
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    Timber.e("Unexpected operation detected at \"/awards\" node: onChildMoved(...)");
+                }
+
+                // Called if an error occurs while attempting a database operation
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Timber.e(String.format(Locale.getDefault(),
+                            "Unexpected operation detected at node \"%s\": onCancelled(...)."
+                                    + "Error code: %d, details: %s, message: %s",
+                            "/awards", databaseError.getCode(),
+                            databaseError.getDetails(), databaseError.getMessage()));
+                }
+            };
+
+            getDatabaseReferenceAwards().addChildEventListener(mChildEventListenerAwards);
+        }
+    }
+
     /** Detach the ChildEventListener from the "/movies" node. */
     private void detachDatabaseEventListenerMovies() {
         if (mChildEventListenerMovies != null) {
             getDatabaseReferenceMovies().removeEventListener(mChildEventListenerMovies);
             mChildEventListenerMovies = null;
+        }
+    }
+
+    /** Detach the ChildEventListener from the "/awards" node. */
+    private void detachDatabaseEventListenerAwards() {
+        if (mChildEventListenerAwards != null) {
+            getDatabaseReferenceAwards().removeEventListener(mChildEventListenerAwards);
+            mChildEventListenerAwards = null;
         }
     }
 
@@ -377,6 +379,18 @@ abstract class DatabaseHelperFirebaseBase implements DatabaseHelper {
             sDatabaseReferenceMovies = getDatabaseReference(DataContract.MovieEntry.ROOT_NODE);
         }
         return sDatabaseReferenceMovies;
+    }
+
+    /**
+     * Returns a reference to the "awards" part of the database.
+     * @return a reference to the "awards" part of the database
+     */
+    @NonNull
+    private DatabaseReference getDatabaseReferenceAwards() {
+        if (sDatabaseReferenceAwards == null) {
+            sDatabaseReferenceAwards = getDatabaseReference(DataContract.AwardEntry.ROOT_NODE);
+        }
+        return sDatabaseReferenceAwards;
     }
 
     /**

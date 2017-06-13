@@ -204,7 +204,7 @@ public class DataProvider extends DataProviderBase {
         if (movie == null) {
             return null;
         }
-        int rowsAdded = getDatabaseHelper().addMovie(context, movie);
+        int rowsAdded = getMasterDatabase().addMovie(context, movie);
         if (rowsAdded == 0) {
             return null;
         } else {
@@ -231,7 +231,7 @@ public class DataProvider extends DataProviderBase {
             throw new UnsupportedOperationException(
                     "Id mismatch between URL and body of update movie request");
         }
-        return getDatabaseHelper().addMovie(context, movie);
+        return getMasterDatabase().addMovie(context, movie);
     }
 
     /**
@@ -241,7 +241,7 @@ public class DataProvider extends DataProviderBase {
      * @return the number of rows deleted
      */
     private int deleteMovie(@Nullable Context context, final int id) {
-        return getDatabaseHelper().deleteMovie(context, id);
+        return getMasterDatabase().deleteMovie(context, id);
     }
 
     /**
@@ -260,7 +260,7 @@ public class DataProvider extends DataProviderBase {
         if (award == null) {
             return null;
         }
-        return getDatabaseHelper().addAward(context, award);
+        return getMasterDatabase().addAward(context, award);
     }
 
     /**
@@ -282,7 +282,7 @@ public class DataProvider extends DataProviderBase {
             throw new UnsupportedOperationException(
                     "Id mismatch between URL and body of update award request");
         }
-        String awardId = getDatabaseHelper().addAward(context, award);
+        String awardId = getMasterDatabase().addAward(context, award);
         return awardId == null ? 0 : 1;
     }
 
@@ -293,7 +293,7 @@ public class DataProvider extends DataProviderBase {
      * @return the number of rows deleted
      */
     private int deleteAward(@Nullable Context context, @Nullable final String id) {
-        return getDatabaseHelper().deleteAward(context, id);
+        return getMasterDatabase().deleteAward(context, id);
     }
 
     //---------------------------------------------------------------------

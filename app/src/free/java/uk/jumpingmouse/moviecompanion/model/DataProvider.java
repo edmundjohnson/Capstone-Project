@@ -42,9 +42,11 @@ public class DataProvider extends DataProviderBase {
         // Perform the insert.  Hard-coded strings are used for errors because a) they are
         // system errors, and b) context may be null
         switch (match) {
+            // inserting a movie or award requires admin privileges
             case MOVIE:
-                // inserting a movie requires admin privileges
+            case AWARD:
                 throw new UnsupportedOperationException("Insufficient privileges for insert: " + uri);
+
             default:
                 throw new UnsupportedOperationException("Unsupported URI for insert: " + uri);
         }
@@ -86,12 +88,9 @@ public class DataProvider extends DataProviderBase {
         // Perform the update.  Hard-coded strings are used for errors because a) they are
         // system errors, and b) context may be null
         switch (match) {
-//            case MOVIE:
-//                // A null id updates all rows
-//                rowsUpdated = updateAllMovies(context, values);
-//                break;
+            // updating a movie or award requires admin privileges
             case MOVIE_ID:
-                // updating a movie requires admin privileges
+            case AWARD_ID:
                 throw new UnsupportedOperationException("Insufficient privileges for update: " + uri);
             default:
                 throw new UnsupportedOperationException("Unsupported URI for update: " + uri);
@@ -145,8 +144,10 @@ public class DataProvider extends DataProviderBase {
 //            case MOVIE:
 //                rowsDeleted = deleteAllMovies(context, values);
 //                break;
+
+            // deleting a movie or award requires admin privileges
             case MOVIE_ID:
-                // deleting a movie requires admin privileges
+            case AWARD_ID:
                 throw new UnsupportedOperationException("Insufficient privileges for delete: " + uri);
             default:
                 throw new UnsupportedOperationException("Unsupported URI for delete: " + uri);

@@ -2,8 +2,6 @@ package uk.jumpingmouse.moviecompanion;
 
 import android.support.annotation.NonNull;
 
-import uk.jumpingmouse.moviecompanion.model.DatabaseHelper;
-import uk.jumpingmouse.moviecompanion.model.DatabaseHelperFirebase;
 import uk.jumpingmouse.moviecompanion.model.LocalDatabase;
 import uk.jumpingmouse.moviecompanion.model.LocalDatabaseInMemory;
 import uk.jumpingmouse.moviecompanion.security.SecurityManager;
@@ -14,10 +12,11 @@ import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
 /**
  * A factory class which generates implementations of objects used in the app.
+ * This is the superclass containing factory methods common to all product flavours.
  * Dependency injection could be used with this class at some point.
  * @author Edmund Johnson
  */
-public class ObjectFactory {
+public abstract class ObjectFactoryBase {
 
     /**
      * Returns an implementation of SecurityManager.
@@ -29,15 +28,15 @@ public class ObjectFactory {
         return SecurityManagerFirebase.getInstance();
     }
 
-    /**
-     * Returns an implementation of DatabaseHelper.
-     * Currently, the Firebase implementation is returned.
-     * @return an implementation of DatabaseHelper
-     */
-    @NonNull
-    public static DatabaseHelper getDatabaseHelper() {
-        return DatabaseHelperFirebase.getInstance();
-    }
+//    /**
+//     * Returns an implementation of MasterDatabase.
+//     * Currently, the Firebase implementation is returned.
+//     * @return an implementation of MasterDatabase
+//     */
+//    @NonNull
+//    public static MasterDatabase getMasterDatabase() {
+//        return MasterDatabaseFirebase.getInstance();
+//    }
 
     /**
      * Returns an implementation of LocalDatabase.

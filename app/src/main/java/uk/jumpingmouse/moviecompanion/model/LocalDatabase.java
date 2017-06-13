@@ -25,16 +25,14 @@ public interface LocalDatabase {
      * If the movie does not exist in the database, it is inserted.
      * If it already exists in the database, it is updated.
      * @param movie the movie to insert or update
-     * @return the number of rows inserted or updated
      */
-    int addMovie(@NonNull Movie movie);
+    void addMovie(@NonNull Movie movie);
 
     /**
      * Deletes a movie from the database.
      * @param id the id of the movie to be deleted
-     * @return the number of rows deleted
      */
-    int deleteMovie(int id);
+    void deleteMovie(int id);
 
     /**
      * Returns the movie with a specified id.
@@ -70,17 +68,14 @@ public interface LocalDatabase {
      * If the award does not exist in the database, it is inserted.
      * If it already exists in the database, it is updated.
      * @param award the award to insert or update
-     * @return the id of the added award
      */
-    @Nullable
-    String addAward(@NonNull Award award);
+    void addAward(@NonNull Award award);
 
     /**
      * Deletes an award from the database.
      * @param id the id of the award to be deleted
-     * @return the number of rows deleted
      */
-    int deleteAward(@Nullable String id);
+    void deleteAward(@Nullable String id);
 
     /**
      * Returns the award with a specified id.
