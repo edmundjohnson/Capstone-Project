@@ -46,6 +46,10 @@ public class MainActivity extends AppCompatActivity {
         //    Timber.plant(new CrashReportingTree());
         }
 
+        // Initialise the app bar
+        getViewUtils().initialiseActionBar(this, R.id.tbActionBar, getString(R.string.app_name));
+
+        // Initialise the security manager
         getSecurityManager().onCreateActivity(this);
     }
 

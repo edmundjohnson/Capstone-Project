@@ -114,7 +114,7 @@ public final class ModelUtils {
         try {
             id = values.getAsInteger(DataContract.MovieEntry.COLUMN_ID);
             if (id <= 0) {
-                Timber.w("toMovie: invalid id");
+                Timber.e("toMovie: invalid id");
                 return null;
             }
         } catch (NullPointerException e) {
@@ -127,7 +127,7 @@ public final class ModelUtils {
         try {
             imdbId = values.getAsString(DataContract.MovieEntry.COLUMN_IMDB_ID);
             if (imdbId == null) {
-                Timber.w("toMovie: missing imdbId");
+                Timber.e("toMovie: missing imdbId");
                 return null;
             }
         } catch (NullPointerException e) {
@@ -140,7 +140,7 @@ public final class ModelUtils {
         try {
             title = values.getAsString(DataContract.MovieEntry.COLUMN_TITLE);
             if (title == null) {
-                Timber.w("toMovie: missing title");
+                Timber.e("toMovie: missing title");
                 return null;
             }
         } catch (NullPointerException e) {
@@ -177,28 +177,28 @@ public final class ModelUtils {
 
         // if the id mandatory attribute is missing, return null
         if (id <= 0) {
-            Timber.w("toMovie(Cursor): invalid id");
+            Timber.e("toMovie(Cursor): invalid id");
             return null;
         }
         // if the imdbId mandatory attribute is missing, return null
         if (imdbId == null) {
-            Timber.w("toMovie(Cursor): missing imdbId");
+            Timber.e("toMovie(Cursor): missing imdbId");
             return null;
         }
         // if the title mandatory attribute is missing, return null
         if (title == null) {
-            Timber.w("toMovie(Cursor): missing title");
+            Timber.e("toMovie(Cursor): missing title");
             return null;
         }
         // if the released date is invalid set it to unknown
         long released = cursor.getLong(DataContract.MovieEntry.COL_RELEASED);
-        if (released <= 0) {
+        if (released <= 0 && released != Movie.RELEASED_UNKNOWN) {
             Timber.w("toMovie(Cursor): invalid released");
             released = Movie.RELEASED_UNKNOWN;
         }
         // if the runtime is invalid set it to unknown
         int runtime = cursor.getInt(DataContract.MovieEntry.COL_RUNTIME);
-        if (runtime < 1) {
+        if (runtime < 1 && runtime != Movie.RUNTIME_UNKNOWN) {
             Timber.w("toMovie(Cursor): invalid runtime");
             runtime = Movie.RUNTIME_UNKNOWN;
         }
@@ -251,10 +251,10 @@ public final class ModelUtils {
         // id
         String id;
         try {
-            // id can be null when inserting a new award
             id = values.getAsString(DataContract.AwardEntry.COLUMN_ID);
             if (id == null) {
-                Timber.d("toAward: id is null in ContentValues");
+                Timber.e("toAward: id is null in ContentValues");
+                return null;
             }
         } catch (NullPointerException e) {
             Timber.e("toAward: id is missing from ContentValues", e);
@@ -266,7 +266,7 @@ public final class ModelUtils {
         try {
             movieId = values.getAsInteger(DataContract.AwardEntry.COLUMN_MOVIE_ID);
             if (movieId <= 0) {
-                Timber.w("toAward: invalid movieId in ContentValues");
+                Timber.e("toAward: invalid movieId in ContentValues");
                 return null;
             }
         } catch (NullPointerException e) {
@@ -279,7 +279,7 @@ public final class ModelUtils {
         try {
             awardDate = values.getAsString(DataContract.AwardEntry.COLUMN_AWARD_DATE);
             if (awardDate == null) {
-                Timber.w("toAward: awardDate is null in ContentValues");
+                Timber.e("toAward: awardDate is null in ContentValues");
                 return null;
             }
         } catch (NullPointerException e) {
@@ -292,7 +292,7 @@ public final class ModelUtils {
         try {
             category = values.getAsString(DataContract.AwardEntry.COLUMN_CATEGORY);
             if (category == null) {
-                Timber.w("toAward: category is null in ContentValues");
+                Timber.e("toAward: category is null in ContentValues");
                 return null;
             }
         } catch (NullPointerException e) {
@@ -305,7 +305,7 @@ public final class ModelUtils {
         try {
             review = values.getAsString(DataContract.AwardEntry.COLUMN_REVIEW);
             if (review == null) {
-                Timber.w("toAward: review is null in ContentValues");
+                Timber.e("toAward: review is null in ContentValues");
                 return null;
             }
         } catch (NullPointerException e) {
@@ -318,7 +318,7 @@ public final class ModelUtils {
         try {
             displayOrder = values.getAsInteger(DataContract.AwardEntry.COLUMN_DISPLAY_ORDER);
             if (displayOrder <= 0) {
-                Timber.w("toAward: invalid displayOrder in ContentValues");
+                Timber.e("toAward: invalid displayOrder in ContentValues");
                 return null;
             }
         } catch (NullPointerException e) {

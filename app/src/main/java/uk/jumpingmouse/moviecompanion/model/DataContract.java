@@ -34,6 +34,7 @@ public final class DataContract {
     static final String URI_PATH_MOVIE = "movie";
     static final String URI_PATH_AWARD = "award";
     //static final String URI_PATH_USER = "user";
+    static final String URI_PATH_VIEW_AWARD = "viewAward";
 
     // Query parameters
     static final String PARAM_ALL = "all";
@@ -193,7 +194,7 @@ public final class DataContract {
             return ALL_COLUMNS.clone();
         }
 
-        static final int COL_ID = 0;
+        public static final int COL_ID = 0;
         static final int COL_MOVIE_ID = COL_ID + 1;
         static final int COL_AWARD_DATE = COL_MOVIE_ID + 1;
         static final int COL_CATEGORY = COL_AWARD_DATE + 1;
@@ -228,6 +229,76 @@ public final class DataContract {
         static Uri buildUriForAllRowsForMovie(final int movieId) {
             return CONTENT_URI.buildUpon()
                     .appendPath(Integer.toString(movieId))
+                    .appendPath(PARAM_ALL)
+                    .build();
+        }
+
+    }
+
+    /** Inner class that defines the contents of a ViewAward. */
+    public static final class ViewAwardEntry implements BaseColumns {
+
+        static final String CONTENT_DIR_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + URI_PATH_VIEW_AWARD;
+        static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + URI_PATH_VIEW_AWARD;
+
+        // Database
+
+        public static final String COLUMN_ID = ViewAwardEntry._ID;
+        public static final String COLUMN_MOVIE_ID = "movieId";
+        public static final String COLUMN_AWARD_DATE = "awardDate";
+        public static final String COLUMN_CATEGORY = "category";
+        public static final String COLUMN_DISPLAY_ORDER = "displayOrder";
+        public static final String COLUMN_TITLE = "title";
+
+        // Note: arrays are mutable, so ALL_COLUMNS should not be public.
+        // See Effective Java, Item 13.
+        public static final String[] ALL_COLUMNS = {
+                COLUMN_ID,
+                COLUMN_MOVIE_ID,
+                COLUMN_AWARD_DATE,
+                COLUMN_CATEGORY,
+                COLUMN_DISPLAY_ORDER,
+                COLUMN_TITLE
+        };
+        public static String[] getAllColumns() {
+            return ALL_COLUMNS.clone();
+        }
+
+        public static final int COL_ID = 0;
+        public static final int COL_MOVIE_ID = COL_ID + 1;
+        public static final int COL_AWARD_DATE = COL_MOVIE_ID + 1;
+        public static final int COL_CATEGORY = COL_AWARD_DATE + 1;
+        public static final int COL_DISPLAY_ORDER = COL_CATEGORY + 1;
+        public static final int COL_TITLE = COL_DISPLAY_ORDER + 1;
+
+        // URIs
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(URI_PATH_VIEW_AWARD).build();
+
+        /**
+         * Build and return the URI for a view award identified by its id.
+         * e.g. "content://uk.jumpingmouse.moviecompanion/viewAward/4016934/[push_id]"
+         * @param awardId the id of the award, e.g. "[push_id]"
+         * @return the URI for obtaining the specific award
+         */
+        @NonNull
+        public static Uri buildUriForRowById(@NonNull final String awardId) {
+            return CONTENT_URI.buildUpon()
+                    .appendPath(awardId)
+                    .build();
+        }
+
+        /**
+         * Create and return a URI for querying all the view awards.
+         * i.e. "content://uk.jumpingmouse.moviecompanion/viewAward/all".
+         * @return the URI for querying all awards for the movie
+         */
+        @NonNull
+        public static Uri buildUriForAllRows() {
+            return CONTENT_URI.buildUpon()
                     .appendPath(PARAM_ALL)
                     .build();
         }

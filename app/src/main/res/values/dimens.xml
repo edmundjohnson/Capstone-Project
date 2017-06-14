@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- These dimensions are for a phone in portrait mode. -->
+    <!-- These dimensions are intended for a phone in portrait mode. -->
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <!-- <dimen name="activity_margin_horizontal">16dp</dimen> -->
+    <dimen name="activity_margin_horizontal">16dp</dimen>
     <dimen name="activity_margin_vertical">16dp</dimen>
+
+    <!-- ACTION BAR -->
+    <!-- To overcome a bug in Android, we need to add extra padding on wider screens -->
+    <dimen name="actionbar_padding_horizontal">0dp</dimen>
+    <dimen name="text_size_actionbar_title">20dp</dimen>
+
+    <!-- LIST SCREEN -->
+    <dimen name="text_size_list_item_movie_title">18sp</dimen>
+    <dimen name="text_size_list_item_award_date">14sp</dimen>
+    <!-- <dimen name="touch_raise">8dp</dimen> -->
 
 </resources>

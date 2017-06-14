@@ -3,10 +3,14 @@ package uk.jumpingmouse.moviecompanion.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -22,6 +26,46 @@ public class ViewUtils {
 
     /** The singleton instance of this class. */
     private static ViewUtils sViewUtils = null;
+
+    //---------------------------------------------------------------------
+    // Action bar
+
+    /**
+     * Initialise the app bar for an AppCompatActivity which is using a Toolbar.
+     * @param activity the activity for which the app bar is displayed
+     * @param toolbarResId the resource identifier of the toolbar View, e.g. R.id.tbAppBar
+     * @param titleText the app bar title text, e.g. "Daily Benefit Settings"
+     */
+    public void initialiseActionBar(@NonNull final AppCompatActivity activity,
+                                    @SuppressWarnings("SameParameterValue") @IdRes final int toolbarResId,
+                                    @Nullable final String titleText) {
+        // Set the app bar to be the toolbar
+        Toolbar toolbar = initialiseToolbar(activity, toolbarResId, titleText);
+        activity.setSupportActionBar(toolbar);
+
+        // If required, display the up arrow in the app bar
+        ActionBar appBar = activity.getSupportActionBar();
+    }
+
+    /**
+     * Initialises and returns a toolbar, i.e. sets its title text and font.
+     * @param activity the activity containing the toolbar
+     * @param toolbarResId the resource identifier of the toolbar View, e.g. R.id.tbAppBar
+     * @param titleText the title text
+     * @return the initialised toolbar
+     */
+    @Nullable
+    private Toolbar initialiseToolbar(@NonNull final Activity activity, @IdRes final int toolbarResId,
+                                      @Nullable final String titleText) {
+        // Find the toolbar
+        Toolbar toolbar = (Toolbar) activity.findViewById(toolbarResId);
+        if (toolbar != null) {
+            // Set the title text
+            toolbar.setTitle(titleText);
+        }
+        return toolbar;
+    }
+
 
     //---------------------------------------------------------------------
     // Instance handling methods

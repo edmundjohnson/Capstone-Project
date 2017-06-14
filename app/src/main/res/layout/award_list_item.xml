@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The FrameLayout and the RelativeLayout are required to get the correct styling,
+     see styles.xml. -->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutPostListItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+<!--
+    style="@style/AwardListItemContainerOuter"
+-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?android:attr/listPreferredItemHeight"
+        android:orientation="horizontal"
+        >
+<!--
+        android:paddingStart="@dimen/activity_margin_horizontal"
+        android:paddingLeft="@dimen/activity_margin_horizontal"
+        android:paddingEnd="@dimen/activity_margin_horizontal"
+        android:paddingRight="@dimen/activity_margin_horizontal"
+        style="@style/AwardListItemContainerInner"
+-->
+
+
+        <TextView
+            android:id="@+id/txtMovieTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/txtAwardDate"
+            tools:text="@string/example_movie_title"
+            />
+        <!--
+            android:textSize="@dimen/text_size_list_item_movie_title"
+        -->
+
+        <TextView
+            android:id="@+id/txtAwardDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="16dp"
+            tools:text="@string/example_award_date"
+            />
+        <!--
+            android:textSize="@dimen/text_size_list_item_award_date"
+        -->
+
+    </RelativeLayout>
+
+</FrameLayout>

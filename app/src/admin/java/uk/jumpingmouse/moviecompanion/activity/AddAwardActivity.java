@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -47,6 +48,8 @@ public class AddAwardActivity extends AppCompatActivity {
     private EditText mTxtAwardDate;
     private TextView mLabelAwardCategory;
     private RadioGroup mRadioAwardCategory;
+    private RadioButton mRadioAwardCategoryMovie;
+    private RadioButton mRadioAwardCategoryDvd;
     private TextView mLabelReview;
     private EditText mTxtReview;
     private TextView mLabelAwardDisplayOrder;
@@ -73,6 +76,9 @@ public class AddAwardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_award);
 
+        // Initialise the app bar
+        getViewUtils().initialiseActionBar(this, R.id.tbActionBar, getString(R.string.app_name));
+
         mTxtImdbId = (EditText) findViewById(R.id.txtImdbId);
         mLabelTitle = (TextView) findViewById(R.id.labelTitle);
         mTxtTitle = (TextView) findViewById(R.id.txtTitle);
@@ -80,6 +86,8 @@ public class AddAwardActivity extends AppCompatActivity {
         mTxtAwardDate = (EditText) findViewById(R.id.txtAwardDate);
         mLabelAwardCategory = (TextView) findViewById(R.id.labelCategory);
         mRadioAwardCategory = (RadioGroup) findViewById(R.id.radioCategory);
+        mRadioAwardCategoryMovie = (RadioButton) findViewById(R.id.radioCategoryMovie);
+        mRadioAwardCategoryDvd = (RadioButton) findViewById(R.id.radioCategoryDvd);
         mLabelReview = (TextView) findViewById(R.id.labelReview);
         mTxtReview = (EditText) findViewById(R.id.txtReview);
         mLabelAwardDisplayOrder = (TextView) findViewById(R.id.labelDisplayOrder);
@@ -238,16 +246,21 @@ public class AddAwardActivity extends AppCompatActivity {
             return;
         }
 
+        int movieId = mMovie.getId();
+        String awardDate = mTxtAwardDate.getText().toString();
         String category = mRadioAwardCategory.getCheckedRadioButtonId() ==
                 R.id.radioCategoryMovie ? Award.CATEGORY_MOVIE : Award.CATEGORY_DVD;
+        int displayOrder = Integer.parseInt(mTxtAwardDisplayOrder.getText().toString());
+        // Generate the unique award id, e.g. "3666024_170522_M"
+        String id = movieId + "_" + awardDate + "_" + category;
 
         mAward = Award.builder()
-                .id(null)
-                .movieId(mMovie.getId())
-                .awardDate(mTxtAwardDate.getText().toString())
+                .id(id)
+                .movieId(movieId)
+                .awardDate(awardDate)
                 .category(category)
                 .review(mTxtReview.getText().toString())
-                .displayOrder(Integer.parseInt(mTxtAwardDisplayOrder.getText().toString()))
+                .displayOrder(displayOrder)
                 .build();
         Uri uriInserted = getContentResolver().insert(
                 DataContract.AwardEntry.CONTENT_URI, toContentValues(mAward));
@@ -309,10 +322,13 @@ public class AddAwardActivity extends AppCompatActivity {
         showView(mTxtAwardDate);
         showView(mLabelAwardCategory);
         showView(mRadioAwardCategory);
+        mRadioAwardCategoryMovie.setChecked(true);
+        mRadioAwardCategoryDvd.setChecked(false);
         showView(mLabelReview);
         showView(mTxtReview);
         showView(mLabelAwardDisplayOrder);
         showView(mTxtAwardDisplayOrder);
+        mTxtAwardDisplayOrder.setText(R.string.display_order_default);
 
         showView(mBtnCancel);
         showView(mBtnSave);
@@ -328,7 +344,8 @@ public class AddAwardActivity extends AppCompatActivity {
         // award fields
         mTxtTitle.setText(null);
         mTxtAwardDate.setText(null);
-        mRadioAwardCategory.clearCheck();
+        mRadioAwardCategoryMovie.setChecked(false);
+        mRadioAwardCategoryDvd.setChecked(false);
         mTxtReview.setText(null);
         mTxtAwardDisplayOrder.setText(null);
     }

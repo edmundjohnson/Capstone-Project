@@ -18,6 +18,7 @@ import java.util.Map;
 import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
+import uk.jumpingmouse.moviecompanion.adapter.ViewAwardAdapter;
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
@@ -39,6 +40,8 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
     private ChildEventListener mChildEventListenerMovies;
     // A listener which listens for database events at the "/awards" node.
     private ChildEventListener mChildEventListenerAwards;
+
+    private ViewAwardAdapter mViewAwardAdapter;
 
     //---------------------------------------------------------------------
     // Instance handling methods
@@ -95,12 +98,11 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
      * If the award does not exist in the database, it is inserted.
      * If it already exists in the database, it is updated.
      * @param context the context
-     * @param award the award to insert or update; the id field may not be set
-     * @return the id of the award, or null if the award was not added
+     * @param award the award to insert or update
+     * @return the number of rows inserted or updated
      */
-    @Nullable
     @Override
-    public abstract String addAward(@Nullable final Context context, @NonNull final Award award);
+    public abstract int addAward(@Nullable final Context context, @NonNull final Award award);
 
     /**
      * Deletes an award from the Firebase database.
@@ -115,8 +117,8 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
     // Database changes initiated on the local device
 
     /**
-     * Adds an object to the Firebase database.
-     * If the object does not exist in the database, it is inserted.
+     * Sets the value of a node in the Firebase database.
+     * If the node does not exist in the database, it is created.
      * If it already exists in the database, it is updated.
      * The object is added to the LOCAL database separately, by a listener attached
      * to the Firebase database.
@@ -126,8 +128,8 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
      * @param nodeValue the value of the new node to insert or update
      * @return the number of rows inserted or updated
      */
-    int addNode(@Nullable final Context context, @NonNull final String targetNode,
-                        @NonNull String nodeKey, @NonNull final Object nodeValue) {
+    int setNode(@Nullable final Context context, @NonNull final String targetNode,
+                @NonNull String nodeKey, @NonNull final Object nodeValue) {
         if (context == null) {
             return 0;
         }
@@ -135,7 +137,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
         Map<String, Object> mapValue = new HashMap<>(1);
         mapValue.put(nodeKey, nodeValue);
 
-        // Add the new node to the database target node.
+        // Add or update the new node at the database target node.
         getDatabaseReference(targetNode).updateChildren(mapValue,
                 getDatabaseOperationCompletionListener(context, R.string.databaseOperationAddNode,
                         targetNode, nodeKey, true));
@@ -161,15 +163,6 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
         if (context == null) {
             return null;
         }
-//        // Create the node to add to the database.
-//        Map<String, Object> mapValue = new HashMap<>(1);
-//        mapValue.put(nodeKey, nodeValue);
-
-//        // Add the new node to the database target node.
-//        getDatabaseReference(targetNode).updateChildren(mapValue,
-//                getDatabaseOperationCompletionListener(context, R.string.databaseOperationAddNode,
-//                        targetNode, nodeKey, true));
-
         // Push the new node to the database target node.
         DatabaseReference newNode = getDatabaseReference(targetNode).push();
         String newNodeKey = newNode.getKey();
@@ -191,7 +184,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
         if (context == null) {
             return 0;
         }
-        // Add the new node to the database target node.
+        // Delete the node from the target node.
         getDatabaseReference(targetNode).child(nodeKey).removeValue(
                 getDatabaseOperationCompletionListener(context, R.string.databaseOperationDeleteNode,
                         targetNode, nodeKey, true));
@@ -293,7 +286,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
         }
     }
 
-    /** Attach a ChildEventListener to the "/award" node. */
+    /** Attach a ChildEventListener to the "/awards" node. */
     private void attachDatabaseEventListenerAwards() {
         if (mChildEventListenerAwards == null) {
             mChildEventListenerAwards = new ChildEventListener() {
@@ -302,14 +295,12 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     Award award = dataSnapshot.getValue(Award.class);
                     getLocalDatabase().addAward(award);
-                    //mAwardAdapter.add(award);
                 }
 
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                     Award award = dataSnapshot.getValue(Award.class);
                     getLocalDatabase().addAward(award);
-                    //mAwardAdapter.add(award);
                 }
 
                 @Override

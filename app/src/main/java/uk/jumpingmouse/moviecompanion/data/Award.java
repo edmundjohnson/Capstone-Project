@@ -5,9 +5,10 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.Comparator;
+
 /**
  * The Award model class.
- * An Award is uniquely identified by the combination of awardDate, category and id.
  * An example of an award is "Movie of the Week" for 12/05/17.
  * Note that there could be more than one Movie of the Week for a given week.
  * The Movie-Award relationship is one-many.
@@ -40,7 +41,9 @@ public class Award implements Parcelable {
             @Nullable String category,
             @Nullable String review,
             int displayOrder) {
-        // id can be null for inserting a new award
+        if (id == null) {
+            throw new NullPointerException("Null id");
+        }
         if (movieId <= 0) {
             throw new NullPointerException("Invalid movieId");
         }
@@ -67,7 +70,7 @@ public class Award implements Parcelable {
     //---------------------------------------------------------------
     // Getters
 
-    @Nullable
+    @NonNull
     public String getId() {
         return id;
     }
@@ -203,8 +206,7 @@ public class Award implements Parcelable {
             this.displayOrder = source.displayOrder;
         }
 
-        // id is nullable for inserting a new award
-        public Award.Builder id(@Nullable String id) {
+        public Award.Builder id(@NonNull String id) {
             this.id = id;
             return this;
         }
@@ -237,7 +239,9 @@ public class Award implements Parcelable {
         /** Builds and returns an object of this class. */
         public Award build() {
             String missing = "";
-            // id can be null for inserting a new award
+            if (id == null) {
+                missing += " id";
+            }
             if (movieId <= 0) {
                 missing += " movieId";
             }
@@ -315,5 +319,37 @@ public class Award implements Parcelable {
         h ^= this.displayOrder;
         return h;
     }
+
+    //---------------------------------------------------------------
+    // Comparators
+
+    /** Comparator for ordering by movie id. */
+    public static final Comparator<Award> AwardComparatorMovieId
+            = new Comparator<Award>() {
+        public int compare(Award award1, Award award2) {
+            // ascending order
+            if (award1.movieId == award2.movieId) {
+                // movieId, then awardDate, then reverse category ("M" > "D")
+                if (award1.awardDate.equals(award2.awardDate)) {
+                    return award2.category.compareTo(award1.category);
+                }
+                return award1.awardDate.compareTo(award2.awardDate);
+            }
+            return award1.movieId - award2.movieId;
+        }
+    };
+
+    /** Comparator for ordering by award date. */
+    public static final Comparator<Award> AwardComparatorAwardDate
+            = new Comparator<Award>() {
+        public int compare(Award award1, Award award2) {
+            // ascending order
+            if (award1.awardDate.equals(award2.awardDate)) {
+                // awardDate, then reverse category ("M" > "D")
+                return award2.category.compareTo(award1.category);
+            }
+            return award1.awardDate.compareTo(award2.awardDate);
+        }
+    };
 
 }

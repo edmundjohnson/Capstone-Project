@@ -182,7 +182,7 @@ public class SecurityManagerFirebase implements SecurityManager {
     private void onSignedInInitialise() {
         Timber.d("onSignedInInitialise");
 
-        getDatabaseHelper().onSignedIn();
+        getMasterDatabase().onSignedIn();
     }
 
     /**
@@ -191,7 +191,7 @@ public class SecurityManagerFirebase implements SecurityManager {
     private void onSignedOutCleanup() {
         Timber.d("onSignedOutCleanup");
 
-        getDatabaseHelper().onSignedOut();
+        getMasterDatabase().onSignedOut();
 
         // TODO: Implement adapter sign out processing - pass adapters in?
 //        mMovieAdapter.clear();
@@ -230,11 +230,11 @@ public class SecurityManagerFirebase implements SecurityManager {
     }
 
     /**
-     * Convenience method for returning a reference to the database helper.
-     * @return a reference to the database helper
+     * Convenience method for returning a reference to the master database.
+     * @return a reference to the master database
      */
     @NonNull
-    private static MasterDatabase getDatabaseHelper() {
+    private static MasterDatabase getMasterDatabase() {
         return ObjectFactory.getMasterDatabase();
     }
 

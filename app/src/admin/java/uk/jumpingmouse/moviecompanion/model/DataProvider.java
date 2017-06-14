@@ -51,12 +51,12 @@ public class DataProvider extends DataProviderBase {
                 returnUri = DataContract.MovieEntry.buildUriForRowById(movie.getId());
                 break;
             case AWARD:
-                String awardId = insertAward(context, values);
-                if (awardId == null) {
+                Award award = insertAward(context, values);
+                if (award == null) {
                     Timber.w("insert: Failed to insert award using ContentValues: ", values);
                     return null;
                 }
-                returnUri = DataContract.AwardEntry.buildUriForRowById(awardId);
+                returnUri = DataContract.AwardEntry.buildUriForRowById(award.getId());
                 break;
             default:
                 throw new UnsupportedOperationException("Unsupported URI for insert: " + uri);
@@ -198,14 +198,17 @@ public class DataProvider extends DataProviderBase {
     @Nullable
     private Movie insertMovie(@Nullable Context context, @Nullable final ContentValues values) {
         if (values == null) {
+            Timber.e("insertMovie: values are null");
             return null;
         }
         Movie movie = ModelUtils.toMovie(values);
         if (movie == null) {
+            Timber.e("insertMovie: unable to create Movie from values: " + values);
             return null;
         }
         int rowsAdded = getMasterDatabase().addMovie(context, movie);
         if (rowsAdded == 0) {
+            Timber.e("insertMovie: unable to add movie to database: " + movie);
             return null;
         } else {
             return movie;
@@ -248,19 +251,26 @@ public class DataProvider extends DataProviderBase {
      * Inserts an award into the database.
      * @param context the context
      * @param values the values to use for the new award
-     * @return the id of the inserted award
+     * @return the inserted award, or null if the award could not be inserted
      */
     @Nullable
-    private String insertAward(@Nullable Context context, @Nullable final ContentValues values) {
+    private Award insertAward(@Nullable Context context, @Nullable final ContentValues values) {
         if (values == null) {
+            Timber.e("insertAward: values are null");
             return null;
         }
-        // Note: the id field in this award object is not set
         Award award = ModelUtils.toAward(values);
         if (award == null) {
+            Timber.e("insertAward: unable to create Award from values: " + values);
             return null;
         }
-        return getMasterDatabase().addAward(context, award);
+        int rowsAdded = getMasterDatabase().addAward(context, award);
+        if (rowsAdded == 0) {
+            Timber.e("insertAward: unable to add award to database: " + award);
+            return null;
+        } else {
+            return award;
+        }
     }
 
     /**
@@ -282,8 +292,7 @@ public class DataProvider extends DataProviderBase {
             throw new UnsupportedOperationException(
                     "Id mismatch between URL and body of update award request");
         }
-        String awardId = getMasterDatabase().addAward(context, award);
-        return awardId == null ? 0 : 1;
+        return getMasterDatabase().addAward(context, award);
     }
 
     /**

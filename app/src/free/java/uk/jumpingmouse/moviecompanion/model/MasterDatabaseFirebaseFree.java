@@ -3,14 +3,14 @@ package uk.jumpingmouse.moviecompanion.model;
 import android.support.annotation.NonNull;
 
 /**
- * Database helper class for accessing the Firebase Realtime Database.
+ * Class for accessing the Firebase Realtime Database.
  * This class contains methods available only to the free product flavour.
  * @author Edmund Johnson
  */
-public class DatabaseHelperFirebaseFree extends DatabaseHelperFirebaseBase {
+public class MasterDatabaseFirebaseFree extends MasterDatabaseFirebaseBase {
 
     // The singleton instance of this class.
-    private static DatabaseHelperFirebaseFree sDatabaseHelper = null;
+    private static MasterDatabaseFirebaseFree sMasterDatabase = null;
 
     //---------------------------------------------------------------------
     // Instance handling methods
@@ -20,11 +20,11 @@ public class DatabaseHelperFirebaseFree extends DatabaseHelperFirebaseBase {
      * @return an instance of this class
      */
     @NonNull
-    public static DatabaseHelper getInstance() {
-        if (sDatabaseHelper == null) {
-            sDatabaseHelper = new DatabaseHelperFirebaseFree();
+    public static MasterDatabase getInstance() {
+        if (sMasterDatabase == null) {
+            sMasterDatabase = new MasterDatabaseFirebaseFree();
         }
-        return sDatabaseHelper;
+        return sMasterDatabase;
     }
 
     //---------------------------------------------------------------------
@@ -64,7 +64,7 @@ public class DatabaseHelperFirebaseFree extends DatabaseHelperFirebaseBase {
      * If the award does not exist in the database, it is inserted.
      * If it already exists in the database, it is updated.
      * @param context the context
-     * @param award the award to insert or update; the id field may not be set
+     * @param award the award to insert or update
      * @return the id of the award, or null if the award was not added
      */
     @Nullable

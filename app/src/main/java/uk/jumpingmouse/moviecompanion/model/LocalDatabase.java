@@ -7,6 +7,7 @@ import java.util.List;
 
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
+import uk.jumpingmouse.moviecompanion.data.ViewAward;
 
 /**
  * Interface for database implementation classes.
@@ -43,7 +44,7 @@ public interface LocalDatabase {
     Movie selectMovieById(int id);
 
     /**
-     * Returns a list of movies in the database.
+     * Returns a list of movies from the database.
      * @param projection The list of columns to put into the cursor.
      *                   If this is {@code null} all columns are included.
      * @param selection A selection criteria to apply when filtering rows.
@@ -53,7 +54,7 @@ public interface LocalDatabase {
      *      The values will be bound as Strings.
      * @param sortOrder How the rows in the cursor should be sorted.
      *      If this is {@code null}, the sort order is undefined.
-     * @return a list of movies in the database
+     * @return a list of movies from the database
      */
     @Nullable
     List<Movie> selectMovies(
@@ -84,5 +85,52 @@ public interface LocalDatabase {
      */
     @Nullable
     Award selectAwardById(@Nullable String id);
+
+    /**
+     * Returns a list of awards from the database.
+     * @param projection The list of columns to put into the cursor.
+     *                   If this is {@code null} all columns are included.
+     * @param selection A selection criteria to apply when filtering rows.
+     *                  If this is {@code null} then all rows are included.
+     * @param selectionArgs Any ?s included in selection will be replaced by
+     *      the values from selectionArgs, in the order that they appear in the selection.
+     *      The values will be bound as Strings.
+     * @param sortOrder How the rows in the cursor should be sorted.
+     *      If this is {@code null}, the sort order is undefined.
+     * @return a list of awards from the database
+     */
+    @Nullable
+    List<Award> selectAwards(
+            @Nullable final String[] projection, @Nullable final String selection,
+            @Nullable final String[] selectionArgs, @Nullable final String sortOrder);
+
+    //---------------------------------------------------------------------
+    // View Award methods
+
+    /**
+     * Returns the view award with a specified id.
+     * @param id the id of the view award to be returned
+     * @return the award with the specified id
+     */
+    @Nullable
+    ViewAward selectViewAwardById(@Nullable String id);
+
+    /**
+     * Returns a list of view awards from the database.
+     * @param projection The list of columns to put into the cursor.
+     *                   If this is {@code null} all columns are included.
+     * @param selection A selection criteria to apply when filtering rows.
+     *                  If this is {@code null} then all rows are included.
+     * @param selectionArgs Any ?s included in selection will be replaced by
+     *      the values from selectionArgs, in the order that they appear in the selection.
+     *      The values will be bound as Strings.
+     * @param sortOrder How the rows in the cursor should be sorted.
+     *      If this is {@code null}, the sort order is undefined.
+     * @return a list of view awards from the database
+     */
+    @Nullable
+    List<ViewAward> selectViewAwards(
+            @Nullable final String[] projection, @Nullable final String selection,
+            @Nullable final String[] selectionArgs, @Nullable final String sortOrder);
 
 }

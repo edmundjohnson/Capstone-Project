@@ -11,6 +11,7 @@ import java.util.List;
 import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
+import uk.jumpingmouse.moviecompanion.data.ViewAward;
 
 /**
  * Class giving access to a local copy of the database.
@@ -104,7 +105,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
     }
 
     /**
-     * Returns a list of all the movies in the database in the default order.
+     * Returns a list of movies from the database.
      * @param projection The list of columns to put into the cursor.
      *                   If this is {@code null} all columns are included.
      * @param selection A selection criteria to apply when filtering rows.
@@ -114,7 +115,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
      *      The values will be bound as Strings.
      * @param sortOrder How the rows in the cursor should be sorted.
      *      If this is {@code null}, the sort order is undefined.
-     * @return a list of all the movies in the database in the default order
+     * @return a list of movies from the database
      */
     @Override
     @NonNull
@@ -134,10 +135,10 @@ public class LocalDatabaseInMemory implements LocalDatabase {
     }
 
     /**
-     * Returns a list of all the movies in the mock database ordered by a specified column.
+     * Returns a list of all the movies in the local database ordered by a specified column.
      * @param sortColumn the column to sort by
      * @param sortAscending whether the sort is ascending
-     * @return a list of all the movies in the mock database ordered by the specified column
+     * @return a list of all the movies in the local database ordered by the specified column
      */
     @NonNull
     private List<Movie> selectMovies(@NonNull String sortColumn, boolean sortAscending) {
@@ -181,15 +182,13 @@ public class LocalDatabaseInMemory implements LocalDatabase {
     @Override
     public void addAward(@NonNull Award award) {
         String id = award.getId();
-        if (id != null) {
-            // remove the award if it already exists
-            Award existingAward = selectAwardById(id);
-            if (existingAward != null) {
-                mAwardList.remove(existingAward);
-            }
-            // add the new award
-            mAwardList.add(award);
+        // remove the award if it already exists
+        Award existingAward = selectAwardById(id);
+        if (existingAward != null) {
+            mAwardList.remove(existingAward);
         }
+        // add the new award
+        mAwardList.add(award);
     }
 
     /**
@@ -227,6 +226,169 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         }
         Timber.d("selectAwardById: No awards found with matching id: " + id);
         return null;
+    }
+
+    /**
+     * Returns a list of awards from the database.
+     * @param projection The list of columns to put into the cursor.
+     *                   If this is {@code null} all columns are included.
+     * @param selection A selection criteria to apply when filtering rows.
+     *                  If this is {@code null} then all rows are included.
+     * @param selectionArgs Any ?s included in selection will be replaced by
+     *      the values from selectionArgs, in the order that they appear in the selection.
+     *      The values will be bound as Strings.
+     * @param sortOrder How the rows in the cursor should be sorted.
+     *      If this is {@code null}, the sort order is undefined.
+     * @return a list of awards from the database
+     */
+    @Override
+    @NonNull
+    public List<Award> selectAwards(
+            @Nullable final String[] projection, @Nullable final String selection,
+            @Nullable final String[] selectionArgs, @Nullable final String sortOrder) {
+        if (projection != null) {
+            Timber.d("selectAwards: projection is currently not supported");
+        }
+        if (selection != null) {
+            Timber.d("selectAwards: selection is currently not supported");
+        }
+        if (selectionArgs != null) {
+            Timber.d("selectAwards: selectionArgs is currently not supported");
+        }
+        return selectAwards(getSortColumn(sortOrder), isSortAscending(sortOrder));
+    }
+
+    /**
+     * Returns a list of all the awards in the local database ordered by a specified column.
+     * @param sortColumn the column to sort by
+     * @param sortAscending whether the sort is ascending
+     * @return a list of all the movies in the local database ordered by the specified column
+     */
+    @NonNull
+    private List<Award> selectAwards(@NonNull String sortColumn, boolean sortAscending) {
+        Timber.d(String.format("selectAwards: sortColumn = %s, sortAscending = %b",
+                sortColumn, sortAscending));
+
+        Comparator<Award> comparator;
+        // code coverage: sortColumn cannot be null
+        switch (sortColumn) {
+            // A bit of a fiddle, but it works for now
+            case DataContract.AwardEntry.COLUMN_MOVIE_ID:
+                comparator = Award.AwardComparatorMovieId;
+                break;
+            case DataContract.AwardEntry.COLUMN_AWARD_DATE:
+                comparator = Award.AwardComparatorAwardDate;
+                break;
+            // code coverage: default case cannot happen due to earlier checks
+            default:
+                comparator = Award.AwardComparatorAwardDate;
+                break;
+        }
+        if (!sortAscending) {
+            comparator = Collections.reverseOrder(comparator);
+        }
+        Collections.sort(mAwardList, comparator);
+        return mAwardList;
+    }
+
+    //---------------------------------------------------------------------
+    // View Award query methods
+
+    /**
+     * Returns the view award with a specified award id.
+     * @param id the view award's id
+     * @return the view award with the specified id, or null if there is no matching view award
+     */
+    @Override
+    @Nullable
+    public ViewAward selectViewAwardById(@Nullable String id) {
+        if (id == null) {
+            return null;
+        }
+        Award award = selectAwardById(id);
+        if (award == null) {
+            Timber.d("selectViewAwardById: Award not found with id: " + id);
+            return null;
+        }
+        Movie movie = selectMovieById(award.getMovieId());
+        if (movie == null) {
+            Timber.d("selectViewAwardById: Movie not found with id: " + award.getMovieId());
+            return null;
+        }
+        return new ViewAward(award, movie);
+    }
+
+    /**
+     * Returns a list of view awards from the database.
+     * @param projection The list of columns to put into the cursor.
+     *                   If this is {@code null} all columns are included.
+     * @param selection A selection criteria to apply when filtering rows.
+     *                  If this is {@code null} then all rows are included.
+     * @param selectionArgs Any ?s included in selection will be replaced by
+     *      the values from selectionArgs, in the order that they appear in the selection.
+     *      The values will be bound as Strings.
+     * @param sortOrder How the rows in the cursor should be sorted.
+     *      If this is {@code null}, the sort order is undefined.
+     * @return a list of view awards from the database
+     */
+    @Override
+    @NonNull
+    public List<ViewAward> selectViewAwards(
+            @Nullable final String[] projection, @Nullable final String selection,
+            @Nullable final String[] selectionArgs, @Nullable final String sortOrder) {
+        if (projection != null) {
+            Timber.d("selectViewAwards: projection is currently not supported");
+        }
+        if (selection != null) {
+            Timber.d("selectViewAwards: selection is currently not supported");
+        }
+        if (selectionArgs != null) {
+            Timber.d("selectViewAwards: selectionArgs is currently not supported");
+        }
+        return selectViewAwards(getSortColumn(sortOrder), isSortAscending(sortOrder));
+    }
+
+    /**
+     * Returns a list of all the view awards in the local database ordered by a specified column.
+     * @param sortColumn the column to sort by
+     * @param sortAscending whether the sort is ascending
+     * @return a list of all the view movies in the local database ordered by the specified column
+     */
+    @NonNull
+    private List<ViewAward> selectViewAwards(@NonNull String sortColumn, boolean sortAscending) {
+        Timber.d(String.format("selectViewAwards: sortColumn = %s, sortAscending = %b",
+                sortColumn, sortAscending));
+
+        List<ViewAward> viewAwardList = new ArrayList<>();
+
+        for (Award award : mAwardList) {
+            Movie movie = selectMovieById(award.getMovieId());
+            if (movie != null) {
+                ViewAward viewAward = new ViewAward(award, movie);
+                viewAwardList.add(viewAward);
+            }
+        }
+
+        Comparator<ViewAward> comparator;
+        // code coverage: sortColumn cannot be null
+        switch (sortColumn) {
+            // A bit of a fiddle, but it works for now
+            case DataContract.ViewAwardEntry.COLUMN_MOVIE_ID:
+                comparator = ViewAward.ViewAwardComparatorMovieId;
+                break;
+            case DataContract.ViewAwardEntry.COLUMN_AWARD_DATE:
+                comparator = ViewAward.ViewAwardComparatorAwardDate;
+                break;
+            // code coverage: default case cannot happen due to earlier checks
+            default:
+                comparator = ViewAward.ViewAwardComparatorAwardDate;
+                break;
+        }
+        if (!sortAscending) {
+            comparator = Collections.reverseOrder(comparator);
+        }
+        Collections.sort(viewAwardList, comparator);
+        return viewAwardList;
     }
 
     //---------------------------------------------------------------------

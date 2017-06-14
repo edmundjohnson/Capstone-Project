@@ -37,7 +37,7 @@ public class MasterDatabaseFirebaseAdmin extends MasterDatabaseFirebase {
     // Use defaults.
 
     //---------------------------------------------------------------------
-    // Firebase database movie modification methods
+    // Movie modification methods
 
     /**
      * Adds a movie's details to the Firebase database.
@@ -49,7 +49,9 @@ public class MasterDatabaseFirebaseAdmin extends MasterDatabaseFirebase {
      */
     @Override
     public int addMovie(@Nullable final Context context, @NonNull final Movie movie) {
-        return addNode(context, DataContract.MovieEntry.ROOT_NODE, Integer.toString(movie.getId()), movie);
+        return setNode(context,
+                DataContract.MovieEntry.ROOT_NODE, Integer.toString(movie.getId()),
+                movie);
     }
 
     /**
@@ -60,25 +62,27 @@ public class MasterDatabaseFirebaseAdmin extends MasterDatabaseFirebase {
      */
     @Override
     public int deleteMovie(@Nullable Context context, int id) {
+        if (id == Movie.ID_UNKNOWN) {
+            return 0;
+        }
         return deleteNode(context, DataContract.MovieEntry.ROOT_NODE, Integer.toString(id));
     }
 
     //---------------------------------------------------------------------
-    // Firebase database award modification methods
+    // Award modification methods
 
     /**
      * Adds an award's details to the Firebase database.
      * If the award does not exist in the database, it is inserted.
      * If it already exists in the database, it is updated.
      * @param context the context
-     * @param award the award to insert or update; the id field may not be set
-     * @return the id of the award, or null if the award was not added
+     * @param award the award to insert or update
+     * @return the number of rows inserted or updated
      */
-    @Nullable
     @Override
-    public String addAward(@Nullable final Context context, @NonNull final Award award) {
-        return pushNode(context,
-                DataContract.AwardEntry.ROOT_NODE + "/" + award.getMovieId(),
+    public int addAward(@Nullable final Context context, @NonNull final Award award) {
+        return setNode(context,
+                DataContract.AwardEntry.ROOT_NODE, award.getId(),
                 award);
     }
 

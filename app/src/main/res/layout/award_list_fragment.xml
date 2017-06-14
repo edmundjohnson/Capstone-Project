@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.AwardListFragment"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:text="Award Fragment" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/viewPostList"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/award_list_item"
+        />
+
+    <!-- empty view for when there are no items, use same padding as elsewhere -->
+    <TextView
+        android:id="@+id/viewAwardListEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        tools:text="@string/no_awards_available"
+        />
+    <!--
+        android:background="@color/award_list_item_default"
+        android:textSize="@dimen/text_size_list_item_movie_title"
+    -->
+
+</FrameLayout>

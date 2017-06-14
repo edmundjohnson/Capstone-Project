@@ -63,6 +63,9 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_movie);
 
+        // Initialise the app bar
+        getViewUtils().initialiseActionBar(this, R.id.tbActionBar, getString(R.string.app_name));
+
         mTxtImdbId = (EditText) findViewById(R.id.txtImdbId);
         mLabelTitle = (TextView) findViewById(R.id.labelTitle);
         mTxtTitle = (TextView) findViewById(R.id.txtTitle);

@@ -20,4 +20,11 @@
     <!-- Validation -->
     <string name="error_title">Error</string>
 
+    <!-- Tool data for layout design view -->
+    <string name="example_movie_title">The Handmaiden</string>
+    <string name="example_award_date">02 June 17</string>
+
+    <!-- Award List -->
+    <string name="no_awards_available">There are no awards matching your criteria</string>
+
 </resources>

@@ -16,6 +16,7 @@ import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
+import uk.jumpingmouse.moviecompanion.data.ViewAward;
 import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 
 /**
@@ -34,6 +35,9 @@ public abstract class DataProviderBase extends ContentProvider {
     static final int AWARD = 200;
     static final int AWARD_ID = 201;
     private static final int AWARD_ALL = 202;
+    private static final int VIEW_AWARD = 300;
+    private static final int VIEW_AWARD_ID = 301;
+    private static final int VIEW_AWARD_ALL = 302;
 
     //---------------------------------------------------------------------
     // URI matcher
@@ -67,11 +71,22 @@ public abstract class DataProviderBase extends ContentProvider {
                 DataContract.URI_PATH_AWARD,
                 AWARD);
         uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
-                DataContract.URI_PATH_AWARD + DataContract.PARAM_ALL,
+                DataContract.URI_PATH_AWARD + "/" + DataContract.PARAM_ALL,
                 AWARD_ALL);
         uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
                 DataContract.URI_PATH_AWARD + "/*",
                 AWARD_ID);
+
+        // view award
+        uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
+                DataContract.URI_PATH_VIEW_AWARD,
+                VIEW_AWARD);
+        uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
+                DataContract.URI_PATH_VIEW_AWARD + "/" + DataContract.PARAM_ALL,
+                VIEW_AWARD_ALL);
+        uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
+                DataContract.URI_PATH_VIEW_AWARD + "/*",
+                VIEW_AWARD_ID);
 
         // 3) Return the new matcher!
         return uriMatcher;
@@ -175,13 +190,31 @@ public abstract class DataProviderBase extends ContentProvider {
                 break;
             // "movie/*"
             case MOVIE_ID:
-                int id = ModelUtils.idToMovieId(uri.getLastPathSegment());
-                if (id == Movie.ID_UNKNOWN) {
+                int movieId = ModelUtils.idToMovieId(uri.getLastPathSegment());
+                if (movieId == Movie.ID_UNKNOWN) {
                     Timber.w("Could not obtain movie id from URI" + uri);
                     cursor = null;
                 } else {
-                    cursor = selectMovieById(id);
+                    cursor = selectMovieById(movieId);
                 }
+                break;
+            // "award/all"
+            case AWARD_ALL:
+                cursor = selectAwards(projection, selection, selectionArgs, sortOrder);
+                break;
+            // "award/*"
+            case AWARD_ID:
+                String awardId = uri.getLastPathSegment();
+                if (awardId == null) {
+                    Timber.w("Could not obtain movie id from URI" + uri);
+                    cursor = null;
+                } else {
+                    cursor = selectAwardById(awardId);
+                }
+                break;
+            // "viewAward/all"
+            case VIEW_AWARD_ALL:
+                cursor = selectViewAwards(projection, selection, selectionArgs, sortOrder);
                 break;
             default:
                 throw new UnsupportedOperationException("Unsupported URI for query: " + uri);
@@ -211,7 +244,7 @@ public abstract class DataProviderBase extends ContentProvider {
     }
 
     /**
-     * Return a cursor which contains all of the movies in the database, in the default order.
+     * Return a cursor which contains selected movies from the database.
      * @param projection The list of columns to put into the cursor.
      *                   If this is {@code null} all columns are included.
      * @param selection A selection criteria to apply when filtering rows.
@@ -221,13 +254,13 @@ public abstract class DataProviderBase extends ContentProvider {
      *      The values will be bound as Strings.
      * @param sortOrder How the rows in the cursor should be sorted.
      *      If this is {@code null}, the sort order is undefined.
-     * @return a cursor which contains all of the movies in the database in the default order
+     * @return a cursor which contains selected movies from the database
      */
     @Nullable
     private Cursor selectMovies(
             @Nullable final String[] projection, @Nullable final String selection,
             @Nullable final String[] selectionArgs, @Nullable final String sortOrder) {
-        return toCursor(getLocalDatabase().selectMovies(projection, selection, selectionArgs, sortOrder));
+        return toCursorMovies(getLocalDatabase().selectMovies(projection, selection, selectionArgs, sortOrder));
     }
 
     /**
@@ -253,7 +286,7 @@ public abstract class DataProviderBase extends ContentProvider {
      * @return a multi-row cursor containing the list of movies
      */
     @Nullable
-    private Cursor toCursor(@Nullable List<Movie> movies) {
+    private Cursor toCursorMovies(@Nullable List<Movie> movies) {
         if (movies == null) {
             // This path can only be executed if no movies match a query, i.e. it requires
             // an empty database or query filters which currently do not exist.
@@ -310,6 +343,26 @@ public abstract class DataProviderBase extends ContentProvider {
     }
 
     /**
+     * Return a cursor which contains selected awards from the database.
+     * @param projection The list of columns to put into the cursor.
+     *                   If this is {@code null} all columns are included.
+     * @param selection A selection criteria to apply when filtering rows.
+     *                  If this is {@code null} then all rows are included.
+     * @param selectionArgs Any ?s included in selection will be replaced by
+     *      the values from selectionArgs, in the order that they appear in the selection.
+     *      The values will be bound as Strings.
+     * @param sortOrder How the rows in the cursor should be sorted.
+     *      If this is {@code null}, the sort order is undefined.
+     * @return a cursor which contains selected awards from the database
+     */
+    @Nullable
+    private Cursor selectAwards(
+            @Nullable final String[] projection, @Nullable final String selection,
+            @Nullable final String[] selectionArgs, @Nullable final String sortOrder) {
+        return toCursorAwards(getLocalDatabase().selectAwards(projection, selection, selectionArgs, sortOrder));
+    }
+
+    /**
      * Returns a one-row cursor containing an award.
      * @param award the award
      * @return a one-row cursor containing the award
@@ -320,8 +373,33 @@ public abstract class DataProviderBase extends ContentProvider {
         String[] columns = DataContract.AwardEntry.getAllColumns();
         MatrixCursor matrixCursor = new MatrixCursor(columns);
 
-        // populate the cursor with the movie
+        // populate the cursor with the award
         matrixCursor.addRow(toObjectArray(award));
+
+        return matrixCursor;
+    }
+
+    /**
+     * Returns a multi-row cursor containing a list of awards.
+     * @param awards the list of awards
+     * @return a multi-row cursor containing the list of awards
+     */
+    @Nullable
+    private Cursor toCursorAwards(@Nullable List<Award> awards) {
+        if (awards == null) {
+            // This path can only be executed if no awards match a query, i.e. it requires
+            // an empty database or query filters which currently do not exist.
+            // Hence code coverage tests may not include this path.
+            return null;
+        }
+        // Create a cursor containing the award columns
+        String[] columns = DataContract.AwardEntry.getAllColumns();
+        MatrixCursor matrixCursor = new MatrixCursor(columns);
+
+        // populate the cursor with the awards
+        for (Award award : awards) {
+            matrixCursor.addRow(toObjectArray(award));
+        }
 
         return matrixCursor;
     }
@@ -340,6 +418,103 @@ public abstract class DataProviderBase extends ContentProvider {
                 award.getCategory(),
                 award.getReview(),
                 award.getDisplayOrder()
+        };
+    }
+
+    //---------------------------------------------------------------------
+    // View Award query methods
+
+    /**
+     * Return a cursor whose first row is the view award with a specified id.
+     * @param id the id of the required row
+     * @return a cursor whose first row is the row with the specified id
+     */
+    @Nullable
+    private Cursor selectViewAwardById(final @Nullable String id) {
+        ViewAward viewAward = getLocalDatabase().selectViewAwardById(id);
+        if (viewAward == null) {
+            Timber.w("", "ViewAward not found with id: " + id);
+            return null;
+        }
+        return toCursor(viewAward);
+    }
+
+    /**
+     * Return a cursor which contains selected view awards from the database.
+     * @param projection The list of columns to put into the cursor.
+     *                   If this is {@code null} all columns are included.
+     * @param selection A selection criteria to apply when filtering rows.
+     *                  If this is {@code null} then all rows are included.
+     * @param selectionArgs Any ?s included in selection will be replaced by
+     *      the values from selectionArgs, in the order that they appear in the selection.
+     *      The values will be bound as Strings.
+     * @param sortOrder How the rows in the cursor should be sorted.
+     *      If this is {@code null}, the sort order is undefined.
+     * @return a cursor which contains selected view awards from the database
+     */
+    @Nullable
+    private Cursor selectViewAwards(
+            @Nullable final String[] projection, @Nullable final String selection,
+            @Nullable final String[] selectionArgs, @Nullable final String sortOrder) {
+        return toCursorViewAwards(getLocalDatabase().selectViewAwards(projection, selection, selectionArgs, sortOrder));
+    }
+
+    /**
+     * Returns a one-row cursor containing a view award.
+     * @param viewAward the view award
+     * @return a one-row cursor containing the view award
+     */
+    @NonNull
+    private Cursor toCursor(@NonNull ViewAward viewAward) {
+        // Create a cursor containing the award columns
+        String[] columns = DataContract.AwardEntry.getAllColumns();
+        MatrixCursor matrixCursor = new MatrixCursor(columns);
+
+        // populate the cursor with the view award
+        matrixCursor.addRow(toObjectArray(viewAward));
+
+        return matrixCursor;
+    }
+
+    /**
+     * Returns a multi-row cursor containing a list of view awards.
+     * @param viewAwards the list of view awards
+     * @return a multi-row cursor containing the list of view awards
+     */
+    @Nullable
+    private Cursor toCursorViewAwards(@Nullable List<ViewAward> viewAwards) {
+        if (viewAwards == null) {
+            // This path can only be executed if no view awards match a query, i.e. it requires
+            // an empty database or query filters which currently do not exist.
+            // Hence code coverage tests may not include this path.
+            return null;
+        }
+        // Create a cursor containing the view award columns
+        String[] columns = DataContract.ViewAwardEntry.getAllColumns();
+        MatrixCursor matrixCursor = new MatrixCursor(columns);
+
+        // populate the cursor with the view awards
+        for (ViewAward viewAward : viewAwards) {
+            matrixCursor.addRow(toObjectArray(viewAward));
+        }
+
+        return matrixCursor;
+    }
+
+    /**
+     * Returns a view award as an object array, one element per field value.
+     * @param viewAward the view award
+     * @return the view award as an Object array
+     */
+    private Object[] toObjectArray(ViewAward viewAward) {
+        return new Object[] {
+                // This must match the order of columns in DataContract.ViewAwardEntry.getAllColumns().
+                viewAward.getId(),
+                viewAward.getMovieId(),
+                viewAward.getAwardDate(),
+                viewAward.getCategory(),
+                viewAward.getDisplayOrder(),
+                viewAward.getTitle()
         };
     }
 
