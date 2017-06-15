@@ -48,7 +48,7 @@ final class DateUtils {
      *         or null if the String could not be parsed as a date
      */
     @Nullable
-    private static Date toDate(@NonNull SimpleDateFormat format, @Nullable final String strDate) {
+    public static Date toDate(@NonNull SimpleDateFormat format, @Nullable final String strDate) {
         if (strDate == null) {
             return null;
         }
@@ -68,7 +68,7 @@ final class DateUtils {
      * @return the Date as a String
      */
     @NonNull
-    private static String toString(@NonNull SimpleDateFormat format, @NonNull final Date date) {
+    public static String toString(@NonNull SimpleDateFormat format, @NonNull final Date date) {
         return format.format(date);
     }
 

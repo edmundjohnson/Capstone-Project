@@ -1,6 +1,6 @@
 package uk.jumpingmouse.moviecompanion.activity;
 
-import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -23,6 +23,7 @@ import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
+import uk.jumpingmouse.moviecompanion.model.MasterDatabase;
 import uk.jumpingmouse.moviecompanion.security.SecurityManager;
 import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 import uk.jumpingmouse.moviecompanion.utils.NavUtils;
@@ -250,6 +251,7 @@ public class AddAwardActivity extends AppCompatActivity {
         String awardDate = mTxtAwardDate.getText().toString();
         String category = mRadioAwardCategory.getCheckedRadioButtonId() ==
                 R.id.radioCategoryMovie ? Award.CATEGORY_MOVIE : Award.CATEGORY_DVD;
+        // TODO catch Exception
         int displayOrder = Integer.parseInt(mTxtAwardDisplayOrder.getText().toString());
         // Generate the unique award id, e.g. "3666024_170522_M"
         String id = movieId + "_" + awardDate + "_" + category;
@@ -262,14 +264,14 @@ public class AddAwardActivity extends AppCompatActivity {
                 .review(mTxtReview.getText().toString())
                 .displayOrder(displayOrder)
                 .build();
-        Uri uriInserted = getContentResolver().insert(
-                DataContract.AwardEntry.CONTENT_URI, toContentValues(mAward));
 
-        if (uriInserted == null) {
-            getViewUtils().displayErrorMessage(view.getContext(),
+        Context context = view.getContext();
+        int rowsAdded = getMasterDatabase().addAward(context, mAward);
+        if (rowsAdded == 0) {
+            getViewUtils().displayErrorMessage(context,
                     getString(R.string.award_not_saved, mMovie.getTitle()));
         } else {
-            getViewUtils().displayInfoMessage(view.getContext(),
+            getViewUtils().displayInfoMessage(context,
                      getString(R.string.saving_award, mMovie.getTitle()));
             resetData();
         }
@@ -387,27 +389,17 @@ public class AddAwardActivity extends AppCompatActivity {
         getViewUtils().showView(view);
     }
 
-    /**
-     * Returns a set of ContentValues corresponding to an award.
-     * @param award the award
-     * @return the set of ContentValues corresponding to the award
-     */
-    @NonNull
-    private ContentValues toContentValues(@NonNull Award award) {
-        ContentValues values = new ContentValues();
-
-        values.put(DataContract.AwardEntry.COLUMN_ID, award.getId());
-        values.put(DataContract.AwardEntry.COLUMN_MOVIE_ID, award.getMovieId());
-        values.put(DataContract.AwardEntry.COLUMN_AWARD_DATE, award.getAwardDate());
-        values.put(DataContract.AwardEntry.COLUMN_CATEGORY, award.getCategory());
-        values.put(DataContract.AwardEntry.COLUMN_REVIEW, award.getReview());
-        values.put(DataContract.AwardEntry.COLUMN_DISPLAY_ORDER, award.getDisplayOrder());
-
-        return values;
-    }
-
     //---------------------------------------------------------------------
     // Getters
+
+    /**
+     * Convenience method for returning a reference to the database helper.
+     * @return a reference to the database helper
+     */
+    @NonNull
+    private static MasterDatabase getMasterDatabase() {
+        return ObjectFactory.getMasterDatabase();
+    }
 
     /**
      * Convenience method which returns a SecurityManager.

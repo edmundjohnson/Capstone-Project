@@ -1,6 +1,7 @@
 package uk.jumpingmouse.moviecompanion.security;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -86,7 +87,7 @@ public class SecurityManagerFirebase implements SecurityManager {
 //                            displayName = userInfo.getDisplayName();
 //                        }
 //                    }
-                    onSignedInInitialise();
+                    onSignedInInitialise(activity);
 
                 } else {
                     // user has just signed out
@@ -178,11 +179,12 @@ public class SecurityManagerFirebase implements SecurityManager {
 
     /**
      * Performs processing required on user sign in.
+     * @param context the context
      */
-    private void onSignedInInitialise() {
+    private void onSignedInInitialise(@Nullable Context context) {
         Timber.d("onSignedInInitialise");
 
-        getMasterDatabase().onSignedIn();
+        getMasterDatabase().onSignedIn(context);
     }
 
     /**

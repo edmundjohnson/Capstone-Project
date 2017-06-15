@@ -1,8 +1,8 @@
 package uk.jumpingmouse.moviecompanion.activity;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,6 +19,7 @@ import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
+import uk.jumpingmouse.moviecompanion.model.MasterDatabase;
 import uk.jumpingmouse.moviecompanion.security.SecurityManager;
 import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 import uk.jumpingmouse.moviecompanion.utils.NavUtils;
@@ -219,14 +220,14 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
             return;
         }
 
-        Uri uriInserted = getContentResolver().insert(
-                DataContract.MovieEntry.CONTENT_URI, toContentValues(mMovie));
+        Context context = view.getContext();
+        int rowsAdded = getMasterDatabase().addMovie(context, mMovie);
 
-        if (uriInserted == null) {
-            getViewUtils().displayErrorMessage(view.getContext(),
+        if (rowsAdded == 0) {
+            getViewUtils().displayErrorMessage(context,
                     getString(R.string.movie_not_saved, mMovie.getImdbId()));
         } else {
-            getViewUtils().displayInfoMessage(view.getContext(),
+            getViewUtils().displayInfoMessage(context,
                      getString(R.string.saving_movie, mMovie.getTitle()));
             resetData();
         }
@@ -345,6 +346,14 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
     //---------------------------------------------------------------------
     // Getters
 
+    /**
+     * Convenience method for returning a reference to the database helper.
+     * @return a reference to the database helper
+     */
+    @NonNull
+    private static MasterDatabase getMasterDatabase() {
+        return ObjectFactory.getMasterDatabase();
+    }
     /**
      * Convenience method which returns a SecurityManager.
      * @return a SecurityManager

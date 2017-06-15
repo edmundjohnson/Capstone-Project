@@ -1,5 +1,6 @@
 package uk.jumpingmouse.moviecompanion.data;
 
+import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.support.annotation.Nullable;
 import java.security.InvalidParameterException;
 import java.util.Comparator;
 
+import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.omdbapi.OmdbMovie;
 
 /**
@@ -37,7 +39,7 @@ public class Movie implements Parcelable {
     private int runtime;
     // A comma-separated list of genres, e.g. "Drama, Mystery, Romance"
     private String genre;
-    // The URL of the poster image
+    // The URL of the movie poster image
     private String poster;
 
     private Movie() {
@@ -117,6 +119,44 @@ public class Movie implements Parcelable {
     @Nullable
     public String getPoster() {
         return poster;
+    }
+
+    /**
+     * Returns a set of ContentValues corresponding to the movie.
+     * @return the set of ContentValues corresponding to the movie
+     */
+    @NonNull
+    public ContentValues toContentValues() {
+        ContentValues values = new ContentValues();
+
+        values.put(DataContract.MovieEntry.COLUMN_ID, getId());
+        values.put(DataContract.MovieEntry.COLUMN_IMDB_ID, getImdbId());
+        values.put(DataContract.MovieEntry.COLUMN_TITLE, getTitle());
+        values.put(DataContract.MovieEntry.COLUMN_YEAR, getYear());
+        values.put(DataContract.MovieEntry.COLUMN_RELEASED, getReleased());
+        values.put(DataContract.MovieEntry.COLUMN_RUNTIME, getRuntime());
+        values.put(DataContract.MovieEntry.COLUMN_GENRE, getGenre());
+        values.put(DataContract.MovieEntry.COLUMN_POSTER, getPoster());
+
+        return values;
+    }
+
+    /**
+     * Returns a movie as an object array, one element per field value.
+     * @return the movie as an Object array
+     */
+    public Object[] toObjectArray() {
+        return new Object[] {
+                // This must match the order of columns in DataContract.MovieEntry.getAllColumns().
+                getId(),
+                getImdbId(),
+                getTitle(),
+                getYear(),
+                getReleased(),
+                getRuntime(),
+                getGenre(),
+                getPoster()
+        };
     }
 
     //---------------------------------------------------------------

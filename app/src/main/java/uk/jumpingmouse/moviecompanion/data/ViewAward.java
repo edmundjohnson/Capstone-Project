@@ -1,6 +1,7 @@
 package uk.jumpingmouse.moviecompanion.data;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.Comparator;
 
@@ -24,6 +25,8 @@ public class ViewAward {
     private int displayOrder;
     // The movie title, e.g. "The Handmaiden"
     private String title;
+    // The URL of the movie poster image
+    private String poster;
 
     private ViewAward() {
     }
@@ -35,42 +38,61 @@ public class ViewAward {
         this.category = award.getCategory();
         this.displayOrder = award.getDisplayOrder();
         this.title = movie.getTitle();
+        this.poster = movie.getPoster();
     }
 
     //---------------------------------------------------------------
     // Getters
 
     @NonNull
-    public String getId() {
+    private String getId() {
         return id;
     }
 
-    public int getMovieId() {
+    private int getMovieId() {
         return movieId;
     }
 
     @NonNull
-    public String getAwardDate() {
+    private String getAwardDate() {
         return awardDate;
     }
 
     @NonNull
-    public String getCategory() {
+    private String getCategory() {
         return category;
     }
 
-    public int getDisplayOrder() {
+    private int getDisplayOrder() {
         return displayOrder;
     }
 
     @NonNull
-    public String getTitle() {
+    private String getTitle() {
         return title;
     }
 
-    //---------------------------------------------------------------
-    // Parcelable implementation
+    @Nullable
+    private String getPoster() {
+        return poster;
+    }
 
+    /**
+     * Returns a view award as an object array, one element per field value.
+     * @return the view award as an Object array
+     */
+    public Object[] toObjectArray() {
+        return new Object[] {
+                // This must match the order of columns in DataContract.ViewAwardEntry.getAllColumns().
+                getId(),
+                getMovieId(),
+                getAwardDate(),
+                getCategory(),
+                getDisplayOrder(),
+                getTitle(),
+                getPoster()
+        };
+    }
 
     //---------------------------------------------------------------
     // Override object methods
@@ -84,6 +106,7 @@ public class ViewAward {
                 + ", category=" + category
                 + ", displayOrder=" + displayOrder
                 + ", title=" + title
+                + ", poster=" + poster
                 + "}";
     }
 
@@ -99,7 +122,8 @@ public class ViewAward {
                     && (this.awardDate.equals(that.awardDate))
                     && (this.category.equals(that.category))
                     && (this.displayOrder == that.displayOrder)
-                    && (this.title.equals(that.title));
+                    && (this.title.equals(that.title))
+                    && (this.poster.equals(that.poster));
         }
         return false;
     }
@@ -119,6 +143,8 @@ public class ViewAward {
         h ^= this.displayOrder;
         h *= 1000003;
         h ^= this.title.hashCode();
+        h *= 1000003;
+        h ^= this.poster.hashCode();
         return h;
     }
 

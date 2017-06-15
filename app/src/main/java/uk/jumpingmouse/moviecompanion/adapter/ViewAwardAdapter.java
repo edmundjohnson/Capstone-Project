@@ -9,11 +9,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.activity.AwardListFragment;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
+import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
 /**
  * The adapter for the award list.
@@ -109,14 +114,19 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
         // Extract the award info from the cursor
         String awardId = mCursor.getString(DataContract.ViewAwardEntry.COL_ID);
         int movieId = mCursor.getInt(DataContract.ViewAwardEntry.COL_MOVIE_ID);
-        String awardDate = mCursor.getString(DataContract.ViewAwardEntry.COL_AWARD_DATE);
-        String category = mCursor.getString(DataContract.ViewAwardEntry.COL_CATEGORY);
+        String awardDate = getViewUtils().getAwardDateDisplayable(
+                mCursor.getString(DataContract.ViewAwardEntry.COL_AWARD_DATE));
+        String category = getViewUtils().getCategoryDisplayable(mContext,
+                mCursor.getString(DataContract.ViewAwardEntry.COL_CATEGORY));
         int displayOrder = mCursor.getInt(DataContract.ViewAwardEntry.COL_DISPLAY_ORDER);
         String movieTitle = mCursor.getString(DataContract.ViewAwardEntry.COL_TITLE);
+        String poster = mCursor.getString(DataContract.ViewAwardEntry.COL_POSTER);
 
         // replace the contents of the item view with the data for the award
-        viewHolder.getTxtAwardDate().setText(awardDate);
+        Picasso.with(mContext).load(poster).into(viewHolder.getImgPoster());
         viewHolder.getTxtMovieTitle().setText(movieTitle);
+        viewHolder.getTxtCategory().setText(category);
+        viewHolder.getTxtAwardDate().setText(awardDate);
     }
 
     /**
@@ -155,52 +165,6 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
     public interface AdapterOnClickHandler {
         void onClick(int movieId, int selectedPosition);
     }
-
-    /**
-     * ViewHolder class, which provides a cache of the children views for an award list item.
-     */
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        /** The view containing the award date. */
-        private final TextView txtAwardDate;
-        /** The view containing the movie title. */
-        private final TextView txtMovieTitle;
-
-        /**
-         * Constructor.
-         * @param view the view containing the item
-         */
-        public ViewHolder(final View view) {
-            super(view);
-            txtAwardDate = (TextView) view.findViewById(R.id.txtAwardDate);
-            txtMovieTitle = (TextView) view.findViewById(R.id.txtMovieTitle);
-
-            view.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-            int position = getAdapterPosition();
-            if (mCursor.moveToPosition(position)) {
-                int movieId = mCursor.getInt(DataContract.ViewAwardEntry.COL_MOVIE_ID);
-                mClickHandler.onClick(movieId, position);
-            }
-        }
-
-        // Getters
-
-        @NonNull
-        public final TextView getTxtMovieTitle() {
-            return txtMovieTitle;
-        }
-
-        @NonNull
-        public final TextView getTxtAwardDate() {
-            return txtAwardDate;
-        }
-    }
-
-
-
 
     /**
      * Handler method invoked when an item is clicked.
@@ -246,6 +210,74 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
     }
     private void setSelectedPosition(final int selectedPosition) {
         mSelectedPosition = selectedPosition;
+    }
+
+    /**
+     * Convenience method which returns a reference to a ViewUtils object.
+     * @return a reference to a ViewUtils object
+     */
+    @NonNull
+    private static ViewUtils getViewUtils() {
+        return ObjectFactory.getViewUtils();
+    }
+
+    /**
+     * The ViewHolder class, which provides a cache of the views within a list item.
+     */
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        /** The image view containing the poster. */
+        private final ImageView imgPoster;
+        /** The view containing the movie title. */
+        private final TextView txtMovieTitle;
+        /** The view containing the category. */
+        private final TextView txtCategory;
+        /** The view containing the award date. */
+        private final TextView txtAwardDate;
+
+        /**
+         * Constructor.
+         * @param view the view containing the item
+         */
+        ViewHolder(final View view) {
+            super(view);
+            imgPoster = (ImageView) view.findViewById(R.id.imgPoster);
+            txtMovieTitle = (TextView) view.findViewById(R.id.txtMovieTitle);
+            txtCategory = (TextView) view.findViewById(R.id.txtCategory);
+            txtAwardDate = (TextView) view.findViewById(R.id.txtAwardDate);
+
+            view.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            int position = getAdapterPosition();
+            if (mCursor.moveToPosition(position)) {
+                int movieId = mCursor.getInt(DataContract.ViewAwardEntry.COL_MOVIE_ID);
+                mClickHandler.onClick(movieId, position);
+            }
+        }
+
+        // Getters
+
+        @NonNull
+        final ImageView getImgPoster() {
+            return imgPoster;
+        }
+
+        @NonNull
+        final TextView getTxtMovieTitle() {
+            return txtMovieTitle;
+        }
+
+        @NonNull
+        final TextView getTxtCategory() {
+            return txtCategory;
+        }
+
+        @NonNull
+        final TextView getTxtAwardDate() {
+            return txtAwardDate;
+        }
     }
 
 }

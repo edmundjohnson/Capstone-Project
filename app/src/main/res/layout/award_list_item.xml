@@ -4,7 +4,7 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layoutPostListItem"
+    android:id="@+id/layoutAwardListItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     >
@@ -12,47 +12,71 @@
     style="@style/AwardListItemContainerOuter"
 -->
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="?android:attr/listPreferredItemHeight"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
+        android:minHeight="?android:attr/listPreferredItemHeight"
+        android:paddingStart="?android:listPreferredItemPaddingStart"
+        android:paddingEnd="?android:listPreferredItemPaddingEnd"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         >
-<!--
-        android:paddingStart="@dimen/activity_margin_horizontal"
-        android:paddingLeft="@dimen/activity_margin_horizontal"
-        android:paddingEnd="@dimen/activity_margin_horizontal"
-        android:paddingRight="@dimen/activity_margin_horizontal"
-        style="@style/AwardListItemContainerInner"
--->
-
-
-        <TextView
-            android:id="@+id/txtMovieTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentStart="true"
-            android:layout_toStartOf="@+id/txtAwardDate"
-            tools:text="@string/example_movie_title"
-            />
         <!--
-            android:textSize="@dimen/text_size_list_item_movie_title"
+                style="@style/AwardListItemContainerInner"
         -->
 
-        <TextView
-            android:id="@+id/txtAwardDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="16dp"
-            tools:text="@string/example_award_date"
-            />
-        <!--
-            android:textSize="@dimen/text_size_list_item_award_date"
-        -->
+        <ImageView
+            android:id="@+id/imgPoster"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:padding="0dp"
+            android:scaleType="centerInside"
+            android:contentDescription="@string/poster_description"
+            tools:src="@mipmap/ic_launcher"/>
 
-    </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="?android:listPreferredItemPaddingStart"
+            >
+
+            <TextView
+                android:id="@+id/txtMovieTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@android:style/TextAppearance.Medium"
+                tools:text="@string/example_movie_title"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:id="@+id/txtCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    tools:text="@string/category_text_movie"
+                    />
+
+                <TextView
+                    android:id="@+id/txtAwardDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    tools:text="@string/example_award_date"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </FrameLayout>

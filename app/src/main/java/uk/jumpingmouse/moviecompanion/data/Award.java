@@ -1,11 +1,14 @@
 package uk.jumpingmouse.moviecompanion.data;
 
+import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.Comparator;
+
+import uk.jumpingmouse.moviecompanion.model.DataContract;
 
 /**
  * The Award model class.
@@ -98,6 +101,39 @@ public class Award implements Parcelable {
         return displayOrder;
     }
 
+    /**
+     * Returns a set of ContentValues corresponding to an award.
+     * @return the set of ContentValues corresponding to the award
+     */
+    @NonNull
+    public ContentValues toContentValues() {
+        ContentValues values = new ContentValues();
+
+        values.put(DataContract.AwardEntry.COLUMN_ID, getId());
+        values.put(DataContract.AwardEntry.COLUMN_MOVIE_ID, getMovieId());
+        values.put(DataContract.AwardEntry.COLUMN_AWARD_DATE, getAwardDate());
+        values.put(DataContract.AwardEntry.COLUMN_CATEGORY, getCategory());
+        values.put(DataContract.AwardEntry.COLUMN_REVIEW, getReview());
+        values.put(DataContract.AwardEntry.COLUMN_DISPLAY_ORDER, getDisplayOrder());
+
+        return values;
+    }
+
+    /**
+     * Returns an award as an object array, one element per field value.
+     * @return the award as an Object array
+     */
+    public Object[] toObjectArray() {
+        return new Object[] {
+                // This must match the order of columns in DataContract.AwardEntry.getAllColumns().
+                getId(),
+                getMovieId(),
+                getAwardDate(),
+                getCategory(),
+                getReview(),
+                getDisplayOrder()
+        };
+    }
     //---------------------------------------------------------------
     // Parcelable implementation
 

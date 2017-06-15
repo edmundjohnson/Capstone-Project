@@ -19,9 +19,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 
+import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.adapter.ViewAwardAdapter;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
+import uk.jumpingmouse.moviecompanion.model.LocalDatabase;
 
 /**
  * The fragment class for the list of posts.
@@ -29,7 +31,8 @@ import uk.jumpingmouse.moviecompanion.model.DataContract;
  */
 public class AwardListFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor>,
-            SharedPreferences.OnSharedPreferenceChangeListener {
+            SharedPreferences.OnSharedPreferenceChangeListener,
+            LocalDatabase.LocalDatabaseViewAwardListener {
 
     /** The cursor loader id. */
     private static  final int AWARD_LIST_LOADER_ID = 1;
@@ -100,6 +103,8 @@ public class AwardListFragment extends Fragment
             mSelectedPosition = savedInstanceState.getInt(KEY_POSITION);
         }
 
+        getLocalDatabase().setLocalDatabaseViewAwardListener(this);
+
         return rootView;
     }
 
@@ -130,6 +135,10 @@ public class AwardListFragment extends Fragment
         super.onResume();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         prefs.registerOnSharedPreferenceChangeListener(this);
+
+        // TODO Make this more efficient - try commenting it off
+        // Refresh data on every resume - a bit OTT. Maybe see if data has changed first?
+        onDataChanged();
     }
 
     @Override
@@ -292,13 +301,20 @@ public class AwardListFragment extends Fragment
     /**
      * Perform processing required when the list data has changed, i.e. restart the loader.
      */
-    public void onDataChanged() {
+    private void onDataChanged() {
         // Maybe update the list data via syncImmediately, as per nd-sunshine-2 ???
         getLoaderManager().restartLoader(AWARD_LIST_LOADER_ID, null, this);
     }
 //    public void onDataChanged(Bundle bundle) {
 //        getLoaderManager().restartLoader(AWARD_LIST_LOADER_ID, bundle, this);
 //    }
+
+    //--------------------------------------------------------------
+    // LocalDatabase.LocalDatabaseViewAwardListener listener
+
+    public void onLocalDatabaseViewAwardModified() {
+        onDataChanged();
+    }
 
     //--------------------------------------------------------------
     // SharedPreference listener
@@ -356,25 +372,16 @@ public class AwardListFragment extends Fragment
 //        }
 //    }
 
-    /**
-     * A callback interface that all activities containing this fragment must
-     * implement. This mechanism allows activities to be notified of item
-     * selections, for example.
-     */
-    public interface ListFragmentContainer {
-        /**
-         * Callback for when an item has been selected.
-         * @param context the context
-         * @param uri the URI of the selected list item
-         */
-        void onItemSelected(Context context, Uri uri);
-    }
-
-    //--------------------------------------------------------------------------
-    // Getters
-
     public RecyclerView getRecyclerView() {
         return mViewAwardList;
+    }
+
+    /**
+     * Convenience method which returns a reference to a local database.
+     * @return a reference to a local database
+     */
+    private static LocalDatabase getLocalDatabase() {
+        return ObjectFactory.getLocalDatabase();
     }
 
 //    /**
@@ -392,5 +399,21 @@ public class AwardListFragment extends Fragment
 //    private PrefUtils getPrefUtils() {
 //        return PrefUtils.getInstance();
 //    }
+
+    //--------------------------------------------------------------------------
+
+    /**
+     * A callback interface that all activities containing this fragment must
+     * implement. This mechanism allows activities to be notified of item
+     * selections, for example.
+     */
+    public interface ListFragmentContainer {
+        /**
+         * Callback for when an item has been selected.
+         * @param context the context
+         * @param uri the URI of the selected list item
+         */
+        void onItemSelected(Context context, Uri uri);
+    }
 
 }

@@ -16,7 +16,12 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import uk.jumpingmouse.moviecompanion.R;
+import uk.jumpingmouse.moviecompanion.data.Award;
 
 /**
  * Class containing utility methods related to the view.
@@ -26,6 +31,32 @@ public class ViewUtils {
 
     /** The singleton instance of this class. */
     private static ViewUtils sViewUtils = null;
+
+    /** The date format in which award dates are stored in the database, e.g. "170602". */
+    private static final SimpleDateFormat AWARD_DATE_FORMAT_STORED =
+            new SimpleDateFormat("yyMMdd", Locale.getDefault());
+    /** The date format in which award dates are displayed, e.g. "02 Jun 17. */
+    private static final SimpleDateFormat AWARD_DATE_FORMAT_DISPLAYED =
+            new SimpleDateFormat("dd MMM yy", Locale.getDefault());
+
+    //---------------------------------------------------------------------
+    // Instance handling methods
+
+    /**
+     * Returns an instance of this class.
+     * @return an instance of this class
+     */
+    @NonNull
+    public static ViewUtils getInstance() {
+        if (sViewUtils == null) {
+            sViewUtils = new ViewUtils();
+        }
+        return sViewUtils;
+    }
+
+    /** Private default constructor to prevent instantiation from outside this class. */
+    private ViewUtils() {
+    }
 
     //---------------------------------------------------------------------
     // Action bar
@@ -64,26 +95,6 @@ public class ViewUtils {
             toolbar.setTitle(titleText);
         }
         return toolbar;
-    }
-
-
-    //---------------------------------------------------------------------
-    // Instance handling methods
-
-    /**
-     * Returns an instance of this class.
-     * @return an instance of this class
-     */
-    @NonNull
-    public static ViewUtils getInstance() {
-        if (sViewUtils == null) {
-            sViewUtils = new ViewUtils();
-        }
-        return sViewUtils;
-    }
-
-    /** Private default constructor to prevent instantiation from outside this class. */
-    private ViewUtils() {
     }
 
     //---------------------------------------------------------------------
@@ -131,6 +142,46 @@ public class ViewUtils {
 //        }
 //    }
 
+    //---------------------------------------------------------------------
+    // Conversion of field values into displayable strings
+
+    /**
+     * Returns the displayable category text corresponding to a category code.
+     * @param context the context
+     * @param categoryCode the category code, e.g. "M"
+     * @return the category text corresponding to the category code, e.g. "Movie of the Week"
+     */
+    public String getCategoryDisplayable(@Nullable Context context, @Nullable String categoryCode) {
+        if (context == null || categoryCode == null) {
+            return "?";
+        }
+        switch (categoryCode) {
+            case Award.CATEGORY_MOVIE:
+                return context.getString(R.string.category_text_movie);
+            case Award.CATEGORY_DVD:
+                return context.getString(R.string.category_text_dvd);
+            default:
+                return context.getString(R.string.category_text_unknown);
+        }
+    }
+
+    /**
+     * Returns the award date in a displayable format.
+     * @param awardDate the award date as stored in the database, e.g. "170602"
+     * @return the award date in a displayable format, e.g. "02 Jun 17"
+     */
+    public String getAwardDateDisplayable(@Nullable String awardDate) {
+        if (awardDate == null) {
+            return "?";
+        }
+        Date dateAwardDate = DateUtils.toDate(AWARD_DATE_FORMAT_STORED, awardDate);
+        return dateAwardDate == null ? "?" :
+                DateUtils.toString(AWARD_DATE_FORMAT_DISPLAYED, dateAwardDate);
+    }
+
+    //---------------------------------------------------------------------
+    // Message display methods
+
     /**
      * Display an informational message as a toast.
      * @param context the context
@@ -148,7 +199,7 @@ public class ViewUtils {
      *                    otherwise a short duration one
      */
     private void displayInfoMessage(@Nullable Context context, @StringRes int messageResId,
-                                   boolean longDuration) {
+                                    @SuppressWarnings("SameParameterValue") boolean longDuration) {
         if (context != null) {
             displayToast(context, context.getString(messageResId), longDuration);
         }

@@ -1,6 +1,7 @@
 package uk.jumpingmouse.moviecompanion.model;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -53,10 +54,13 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
     //---------------------------------------------------------------------
     // Event-related methods
 
-    /** Performs processing required when a user has signed in. */
-    public void onSignedIn() {
-        attachDatabaseEventListenerMovies();
-        attachDatabaseEventListenerAwards();
+    /**
+     * Performs processing required when a user has signed in.
+     * @param context the context
+     */
+    public void onSignedIn(@Nullable Context context) {
+        attachDatabaseEventListenerMovies(context);
+        attachDatabaseEventListenerAwards(context);
     }
 
     /** Performs processing required when a user has signed out. */
@@ -241,29 +245,41 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
     //---------------------------------------------------------------------
     // Database event listeners
 
-    /** Attach a ChildEventListener to the "/movies" node. */
-    private void attachDatabaseEventListenerMovies() {
+    /**
+     * Attach a ChildEventListener to the "/movies" node.
+     * @param context the context
+     */
+    private void attachDatabaseEventListenerMovies(@Nullable final Context context) {
         if (mChildEventListenerMovies == null) {
             mChildEventListenerMovies = new ChildEventListener() {
                 // This is called for each existing child when the listener is attached
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     Movie movie = dataSnapshot.getValue(Movie.class);
-                    getLocalDatabase().addMovie(movie);
-                    //mMovieAdapter.add(movie);
+                    if (movie != null && context != null) {
+                        Uri uriInserted = context.getContentResolver().insert(
+                                DataContract.MovieEntry.CONTENT_URI, movie.toContentValues());
+                    }
                 }
 
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                     Movie movie = dataSnapshot.getValue(Movie.class);
-                    getLocalDatabase().addMovie(movie);
-                    //mMovieAdapter.add(movie);
+                    if (movie != null && context != null) {
+                        int rowsUpdated = context.getContentResolver().update(
+                                DataContract.MovieEntry.buildUriForRowById(movie.getId()),
+                                movie.toContentValues(), null, null);
+                    }
                 }
 
                 @Override
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
                     Movie movie = dataSnapshot.getValue(Movie.class);
-                    getLocalDatabase().deleteMovie(movie.getId());
+                    if (movie != null && context != null) {
+                        int rowsDeleted = context.getContentResolver().delete(
+                                DataContract.MovieEntry.buildUriForRowById(movie.getId()),
+                                null, null);
+                    }
                 }
 
                 @Override
@@ -286,27 +302,41 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
         }
     }
 
-    /** Attach a ChildEventListener to the "/awards" node. */
-    private void attachDatabaseEventListenerAwards() {
+    /**
+     * Attach a ChildEventListener to the "/awards" node.
+     * @param context the context
+     */
+    private void attachDatabaseEventListenerAwards(@Nullable final Context context) {
         if (mChildEventListenerAwards == null) {
             mChildEventListenerAwards = new ChildEventListener() {
                 // This is called for each existing child when the listener is attached
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     Award award = dataSnapshot.getValue(Award.class);
-                    getLocalDatabase().addAward(award);
+                    if (award != null && context != null) {
+                        Uri uriInserted = context.getContentResolver().insert(
+                                DataContract.AwardEntry.CONTENT_URI, award.toContentValues());
+                    }
                 }
 
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                     Award award = dataSnapshot.getValue(Award.class);
-                    getLocalDatabase().addAward(award);
+                    if (award != null && context != null) {
+                        int rowsUpdated = context.getContentResolver().update(
+                                DataContract.AwardEntry.buildUriForRowById(award.getId()),
+                                award.toContentValues(), null, null);
+                    }
                 }
 
                 @Override
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
                     Award award = dataSnapshot.getValue(Award.class);
-                    getLocalDatabase().deleteAward(award.getId());
+                    if (award != null && context != null) {
+                        int rowsDeleted = context.getContentResolver().delete(
+                                DataContract.AwardEntry.buildUriForRowById(award.getId()),
+                                null, null);
+                    }
                 }
 
                 @Override

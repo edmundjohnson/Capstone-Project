@@ -1,5 +1,6 @@
 package uk.jumpingmouse.moviecompanion.model;
 
+import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -17,6 +18,10 @@ public interface LocalDatabase {
 
     String MOVIE_SORT_COLUMN_DEFAULT = DataContract.MovieEntry.COLUMN_TITLE;
     boolean MOVIE_SORT_ASCENDING_DEFAULT = true;
+    String AWARD_SORT_COLUMN_DEFAULT = DataContract.AwardEntry.COLUMN_AWARD_DATE;
+    boolean AWARD_SORT_ASCENDING_DEFAULT = false;
+    String VIEW_AWARD_SORT_COLUMN_DEFAULT = DataContract.ViewAwardEntry.COLUMN_AWARD_DATE;
+    boolean VIEW_AWARD_SORT_ASCENDING_DEFAULT = false;
 
     //---------------------------------------------------------------------
     // Movie methods
@@ -26,14 +31,16 @@ public interface LocalDatabase {
      * If the movie does not exist in the database, it is inserted.
      * If it already exists in the database, it is updated.
      * @param movie the movie to insert or update
+     * @return the number of rows inserted or updated
      */
-    void addMovie(@NonNull Movie movie);
+    int addMovie(@NonNull Movie movie);
 
     /**
      * Deletes a movie from the database.
      * @param id the id of the movie to be deleted
+     * @return the number of rows deleted
      */
-    void deleteMovie(int id);
+    int deleteMovie(int id);
 
     /**
      * Returns the movie with a specified id.
@@ -69,14 +76,16 @@ public interface LocalDatabase {
      * If the award does not exist in the database, it is inserted.
      * If it already exists in the database, it is updated.
      * @param award the award to insert or update
+     * @return the number of rows inserted or updated
      */
-    void addAward(@NonNull Award award);
+    int addAward(@NonNull Award award);
 
     /**
      * Deletes an award from the database.
      * @param id the id of the award to be deleted
+     * @return the number of rows deleted
      */
-    void deleteAward(@Nullable String id);
+    int deleteAward(@Nullable String id);
 
     /**
      * Returns the award with a specified id.
@@ -126,11 +135,26 @@ public interface LocalDatabase {
      *      The values will be bound as Strings.
      * @param sortOrder How the rows in the cursor should be sorted.
      *      If this is {@code null}, the sort order is undefined.
-     * @return a list of view awards from the database
+     * @return a cursor containing a list of view awards from the database
      */
     @Nullable
-    List<ViewAward> selectViewAwards(
+    Cursor selectViewAwards(
             @Nullable final String[] projection, @Nullable final String selection,
             @Nullable final String[] selectionArgs, @Nullable final String sortOrder);
+
+    //---------------------------------------------------------------------
+    // Getters and setters
+
+    LocalDatabaseViewAwardListener getLocalDatabaseViewAwardListener();
+
+    void setLocalDatabaseViewAwardListener(LocalDatabaseViewAwardListener localDatabaseViewAwardListener);
+
+    /**
+     * Listeners which are listening for changes to ViewAwards must implement
+     * this interface.
+     */
+    interface LocalDatabaseViewAwardListener {
+        void onLocalDatabaseViewAwardModified();
+    }
 
 }

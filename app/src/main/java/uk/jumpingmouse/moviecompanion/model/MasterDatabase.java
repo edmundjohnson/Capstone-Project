@@ -21,8 +21,11 @@ public interface MasterDatabase {
     //---------------------------------------------------------------------
     // Event-related methods
 
-    /** Performs processing required when a user has signed in. */
-    void onSignedIn();
+    /**
+     * Performs processing required when a user has signed in.
+     * @param context the context
+     */
+    void onSignedIn(@Nullable Context context);
 
     /** Performs processing required when a user has signed out. */
     void onSignedOut();

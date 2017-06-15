@@ -243,7 +243,7 @@ public final class DataContract {
         static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + URI_PATH_VIEW_AWARD;
 
-        // Database
+        // Data
 
         public static final String COLUMN_ID = ViewAwardEntry._ID;
         public static final String COLUMN_MOVIE_ID = "movieId";
@@ -251,6 +251,7 @@ public final class DataContract {
         public static final String COLUMN_CATEGORY = "category";
         public static final String COLUMN_DISPLAY_ORDER = "displayOrder";
         public static final String COLUMN_TITLE = "title";
+        public static final String COLUMN_POSTER = "poster";
 
         // Note: arrays are mutable, so ALL_COLUMNS should not be public.
         // See Effective Java, Item 13.
@@ -260,8 +261,10 @@ public final class DataContract {
                 COLUMN_AWARD_DATE,
                 COLUMN_CATEGORY,
                 COLUMN_DISPLAY_ORDER,
-                COLUMN_TITLE
+                COLUMN_TITLE,
+                COLUMN_POSTER
         };
+
         public static String[] getAllColumns() {
             return ALL_COLUMNS.clone();
         }
@@ -272,6 +275,7 @@ public final class DataContract {
         public static final int COL_CATEGORY = COL_AWARD_DATE + 1;
         public static final int COL_DISPLAY_ORDER = COL_CATEGORY + 1;
         public static final int COL_TITLE = COL_DISPLAY_ORDER + 1;
+        public static final int COL_POSTER = COL_TITLE + 1;
 
         // URIs
 

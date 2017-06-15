@@ -24,6 +24,12 @@
     <string name="example_movie_title">The Handmaiden</string>
     <string name="example_award_date">02 June 17</string>
 
+    <!-- Award List / Movie -->
+    <string name="category_text_movie">Movie of the Week</string>
+    <string name="category_text_dvd">DVD of the Week</string>
+    <string name="category_text_unknown">unknown</string>
+    <string name="poster_description">Movie poster</string>
+
     <!-- Award List -->
     <string name="no_awards_available">There are no awards matching your criteria</string>
 

@@ -12,8 +12,10 @@
     <dimen name="text_size_actionbar_title">20dp</dimen>
 
     <!-- LIST SCREEN -->
+    <!--
     <dimen name="text_size_list_item_movie_title">18sp</dimen>
     <dimen name="text_size_list_item_award_date">14sp</dimen>
-    <!-- <dimen name="touch_raise">8dp</dimen> -->
+    <dimen name="touch_raise">8dp</dimen>
+    -->
 
 </resources>
