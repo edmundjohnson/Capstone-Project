@@ -9,7 +9,7 @@
     tools:context=".activity.AddMovieActivity"
     >
 
-    <include layout="@layout/actionbar"/>
+    <include layout="@layout/appbar"/>
 
     <ScrollView
         android:layout_width="match_parent"

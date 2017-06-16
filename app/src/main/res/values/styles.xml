@@ -17,17 +17,17 @@
 
     <!-- Action Bar theme. -->
     <!-- Without this, the title becomes black -->
-    <style name="ActionBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:paddingStart">@dimen/actionbar_padding_horizontal</item>
-        <item name="android:paddingLeft">@dimen/actionbar_padding_horizontal</item>
-        <item name="android:paddingEnd">@dimen/actionbar_padding_horizontal</item>
-        <item name="android:paddingRight">@dimen/actionbar_padding_horizontal</item>
+    <style name="AppBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:paddingStart">@dimen/appbar_padding_horizontal</item>
+        <item name="android:paddingLeft">@dimen/appbar_padding_horizontal</item>
+        <item name="android:paddingEnd">@dimen/appbar_padding_horizontal</item>
+        <item name="android:paddingRight">@dimen/appbar_padding_horizontal</item>
     </style>
     <!-- This style works around a bug which causes the app bar title to be too small in
          landscape mode, e.g. on a lollipop Xperia Z3 Compact -->
-    <style name="ActionBarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+    <style name="AppBarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">@dimen/text_size_actionbar_title</item>
+        <item name="android:textSize">@dimen/text_size_appbar_title</item>
     </style>
 
     <style name="ButtonStyle" parent="Widget.AppCompat.Button">

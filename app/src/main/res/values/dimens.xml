@@ -8,8 +8,8 @@
 
     <!-- ACTION BAR -->
     <!-- To overcome a bug in Android, we need to add extra padding on wider screens -->
-    <dimen name="actionbar_padding_horizontal">0dp</dimen>
-    <dimen name="text_size_actionbar_title">20dp</dimen>
+    <dimen name="appbar_padding_horizontal">0dp</dimen>
+    <dimen name="text_size_appbar_title">20dp</dimen>
 
     <!-- LIST SCREEN -->
     <!--

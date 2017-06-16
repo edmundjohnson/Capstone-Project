@@ -67,9 +67,9 @@ public class ViewUtils {
      * @param toolbarResId the resource identifier of the toolbar View, e.g. R.id.tbAppBar
      * @param titleText the app bar title text, e.g. "Daily Benefit Settings"
      */
-    public void initialiseActionBar(@NonNull final AppCompatActivity activity,
-                                    @SuppressWarnings("SameParameterValue") @IdRes final int toolbarResId,
-                                    @Nullable final String titleText) {
+    public void initialiseAppBar(@NonNull final AppCompatActivity activity,
+                                 @SuppressWarnings("SameParameterValue") @IdRes final int toolbarResId,
+                                 @Nullable final String titleText) {
         // Set the app bar to be the toolbar
         Toolbar toolbar = initialiseToolbar(activity, toolbarResId, titleText);
         activity.setSupportActionBar(toolbar);

@@ -173,8 +173,10 @@ public class ViewAward {
         public int compare(ViewAward viewAward1, ViewAward viewAward2) {
             // ascending order
             if (viewAward1.awardDate.equals(viewAward2.awardDate)) {
-                // awardDate, then reverse category ("M" > "D")
-                return viewAward2.category.compareTo(viewAward1.category);
+                // awardDate ascending, then category ("D" before "M")
+                // This unintuitive ordering of category is so that when the comparator is
+                // reversed, as it is by default, Movie comes before DVD
+                return viewAward1.category.compareTo(viewAward2.category);
             }
             return viewAward1.awardDate.compareTo(viewAward2.awardDate);
         }

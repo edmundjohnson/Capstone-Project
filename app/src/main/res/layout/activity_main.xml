@@ -9,7 +9,7 @@
     android:baselineAligned="false"
     tools:context=".activity.MainActivity">
 
-    <include layout="@layout/actionbar"/>
+    <include layout="@layout/appbar"/>
 
     <fragment
         android:id="@+id/fragmentAwardList"

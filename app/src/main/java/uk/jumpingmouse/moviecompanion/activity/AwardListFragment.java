@@ -3,9 +3,11 @@ package uk.jumpingmouse.moviecompanion.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.MainThread;
 import android.support.v4.app.Fragment;
@@ -31,8 +33,7 @@ import uk.jumpingmouse.moviecompanion.model.LocalDatabase;
  */
 public class AwardListFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor>,
-            SharedPreferences.OnSharedPreferenceChangeListener,
-            LocalDatabase.LocalDatabaseViewAwardListener {
+            SharedPreferences.OnSharedPreferenceChangeListener {
 
     /** The cursor loader id. */
     private static  final int AWARD_LIST_LOADER_ID = 1;
@@ -40,15 +41,21 @@ public class AwardListFragment extends Fragment
     // Attributes for saving and restoring the fragment's state
     private static final String KEY_POSITION = "KEY_POSITION";
 
-    /** The number of items to show on the list page. */
-    private static final int LIST_SIZE_MAX = 100;
-    //private static final int LIST_SIZE_MAX = 6;  // Test only !!!
+//    /** The maximum number of items to show on the list page. */
+//    private static final int LIST_SIZE_MAX = 100;
+//    //private static final int LIST_SIZE_MAX = 6;  // Test only !!!
+
+    /** The cursor loader for view awards. */
+    private CursorLoader mViewAwardsCursorLoader;
+
+    /** The content observer for view awards. */
+    private ViewAwardContentObserver mViewAwardContentObserver;
 
     /** The data adapter. */
     private ViewAwardAdapter mViewAwardAdapter;
 
     /** The RecyclerView containing the list of awards. */
-    private RecyclerView mViewAwardList;
+    private RecyclerView mRecyclerView;
     /** The position in the list of the currently selected item. */
     private int mSelectedPosition = RecyclerView.NO_POSITION;
 
@@ -88,13 +95,13 @@ public class AwardListFragment extends Fragment
         mViewAwardAdapter = ViewAwardAdapter.newInstance(getActivity(), clickHandler, emptyListView);
 
         // Get a reference to the RecyclerView, and attach this adapter to it.
-        mViewAwardList = (RecyclerView) rootView.findViewById(R.id.viewPostList);
-        mViewAwardList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mViewAwardList.setAdapter(mViewAwardAdapter);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.viewPostList);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setAdapter(mViewAwardAdapter);
 
         // This setting improves performance as long as changes in content do not change
         // the layout size of the RecyclerView.
-        mViewAwardList.setHasFixedSize(true);
+        mRecyclerView.setHasFixedSize(true);
 
         // Restore any saved state
         if (savedInstanceState != null && savedInstanceState.containsKey(KEY_POSITION)) {
@@ -102,8 +109,6 @@ public class AwardListFragment extends Fragment
             // Actually perform the swap out in onLoadFinished.
             mSelectedPosition = savedInstanceState.getInt(KEY_POSITION);
         }
-
-        getLocalDatabase().setLocalDatabaseViewAwardListener(this);
 
         return rootView;
     }
@@ -133,18 +138,26 @@ public class AwardListFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         prefs.registerOnSharedPreferenceChangeListener(this);
 
-        // TODO Make this more efficient - try commenting it off
-        // Refresh data on every resume - a bit OTT. Maybe see if data has changed first?
-        onDataChanged();
+        // Register a content observer on the ViewAwards URI.
+        // The observer will be notified whenever the view award data changes.
+        getContext().getContentResolver().registerContentObserver(
+                DataContract.ViewAwardEntry.buildUriForAllRows(), true,
+                getViewAwardContentObserver());
     }
 
     @Override
     public void onPause() {
+        // Unregister the view awards content observer.
+        getContext().getContentResolver().unregisterContentObserver(
+                getViewAwardContentObserver());
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         prefs.unregisterOnSharedPreferenceChangeListener(this);
+
         super.onPause();
     }
 
@@ -163,15 +176,17 @@ public class AwardListFragment extends Fragment
         // This is called when a new Loader needs to be created.  This
         // fragment only uses one loader, so we don't care about checking the id.
 
-        // buildUriForAllRows gets a number of awards in descending order of date
+        // buildUriForAllRows gets a number of view awards in descending order of date
         Uri uri = DataContract.ViewAwardEntry.buildUriForAllRows();
 
-        return new CursorLoader(getActivity(),
+        mViewAwardsCursorLoader = new CursorLoader(getActivity(),
                 uri,
                 DataContract.ViewAwardEntry.ALL_COLUMNS,
                 null,
                 null,
                 null);
+
+        return mViewAwardsCursorLoader;
     }
 
     /**
@@ -223,7 +238,7 @@ public class AwardListFragment extends Fragment
         // to restore to, do so now.
         //int selectedPosition = getSelectedPosition();
         if (mSelectedPosition != RecyclerView.NO_POSITION) {
-            mViewAwardList.smoothScrollToPosition(mSelectedPosition);
+            mRecyclerView.smoothScrollToPosition(mSelectedPosition);
 
             // If the device has been rotated in 2-pane mode, the post fragment has been
             // created anew without a saved state. Display the post here.
@@ -238,12 +253,10 @@ public class AwardListFragment extends Fragment
 //                activity.displayPost(activity, uri);
 //            }
 
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-//                RecyclerView.ViewHolder viewHolder = mViewAwardList.
-//                                    findViewHolderForAdapterPosition(getSelectedPosition());
-//                if (viewHolder != null) {
-//                    viewHolder.itemView.setActivated(true);
-//                }
+//            RecyclerView.ViewHolder viewHolder = mRecyclerView.
+//                                findViewHolderForAdapterPosition(getSelectedPosition());
+//            if (viewHolder != null) {
+//                viewHolder.itemView.setActivated(true);
 //            }
 
         }
@@ -298,22 +311,47 @@ public class AwardListFragment extends Fragment
         mViewAwardAdapter.swapCursor(null);
     }
 
-    /**
-     * Perform processing required when the list data has changed, i.e. restart the loader.
-     */
-    private void onDataChanged() {
-        // Maybe update the list data via syncImmediately, as per nd-sunshine-2 ???
-        getLoaderManager().restartLoader(AWARD_LIST_LOADER_ID, null, this);
-    }
+//    /**
+//     * Perform processing required when the list data has changed, i.e. restart the loader.
+//     */
+//    private void onDataChanged() {
+////        // Maybe update the list data via syncImmediately, as per nd-sunshine-2 ???
+////        getLoaderManager().restartLoader(AWARD_LIST_LOADER_ID, null, this);
+//
+//        mViewAwardsCursorLoader.forceLoad();
+//    }
 //    public void onDataChanged(Bundle bundle) {
 //        getLoaderManager().restartLoader(AWARD_LIST_LOADER_ID, bundle, this);
 //    }
 
     //--------------------------------------------------------------
-    // LocalDatabase.LocalDatabaseViewAwardListener listener
+    // ContentObserver
 
-    public void onLocalDatabaseViewAwardModified() {
-        onDataChanged();
+    private ViewAwardContentObserver getViewAwardContentObserver() {
+        if (mViewAwardContentObserver == null) {
+            mViewAwardContentObserver = new ViewAwardContentObserver(new Handler());
+        }
+        return mViewAwardContentObserver;
+    }
+
+    /**
+     * A class whose implementations can be used to observe changes to data at a URI,
+     * and update the cursor loader when there is a change.
+     */
+    public class ViewAwardContentObserver extends ContentObserver {
+
+        /**
+         * Creates a content observer.
+         * @param handler The handler to run {@link #onChange} on, or null if none.
+         */
+        ViewAwardContentObserver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            mViewAwardsCursorLoader.forceLoad();
+        }
     }
 
     //--------------------------------------------------------------
@@ -373,7 +411,7 @@ public class AwardListFragment extends Fragment
 //    }
 
     public RecyclerView getRecyclerView() {
-        return mViewAwardList;
+        return mRecyclerView;
     }
 
     /**

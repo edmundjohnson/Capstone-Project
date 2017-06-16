@@ -28,22 +28,12 @@ public class LocalDatabaseInMemory implements LocalDatabase {
     private static LocalDatabase sLocalDatabase = null;
 
     /** The map of movies. */
-    //private final List<Movie> mMovieList;
     private final Map<Integer, Movie> mMovieMap;
     /** The map of awards. */
-    //private final List<Award> mAwardList;
     private final Map<String, Award> mAwardMap;
-
-    /**
-     * An external listener which listens for changes to ViewAwards.
-     * There should only ever be one of these.
-     */
-    private LocalDatabaseViewAwardListener mLocalDatabaseViewAwardListener;
 
     /** The cursor for the view award list. It is assumed there is only ever one. */
     private Cursor mCursorViewAwards;
-    private String mCursorViewAwardsSortColumn;
-    private boolean mCursorViewAwardsSortAscending;
 
     //---------------------------------------------------------------------
     // Instance handling methods
@@ -62,9 +52,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
 
     /** Private default constructor to prevent instantiation from outside this class. */
     private LocalDatabaseInMemory() {
-        //mMovieList = new ArrayList<>();
         mMovieMap = new HashMap<>();
-        //mAwardList = new ArrayList<>();
         mAwardMap = new HashMap<>();
     }
 
@@ -85,14 +73,10 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         // remove the movie if it already exists
         Movie existingMovie = selectMovieById(id);
         if (existingMovie != null) {
-            //mMovieList.remove(existingMovie);
             mMovieMap.remove(id);
         }
         // add the new movie
-        //mMovieList.add(movie);
         mMovieMap.put(id, movie);
-        // notify any LocalDatabaseViewAwardListener that the data has changed
-        notifyLocalDatabaseViewAwardListener();
 
         return 1;
     }
@@ -109,10 +93,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
             Timber.w("deleteMovie: Movie not found with id: " + id);
             return 0;
         } else {
-            //mMovieList.remove(existingMovie);
             mMovieMap.remove(id);
-            // notify any LocalDatabaseViewAwardListener that the data has changed
-            notifyLocalDatabaseViewAwardListener();
             return 1;
         }
     }
@@ -128,11 +109,6 @@ public class LocalDatabaseInMemory implements LocalDatabase {
     @Override
     @Nullable
     public Movie selectMovieById(int id) {
-//        for (Movie movie : mMovieList) {
-//            if (id == movie.getId()) {
-//                return movie;
-//            }
-//        }
         Movie movie = mMovieMap.get(id);
         if (movie == null) {
             Timber.d("selectMovieById: No movies found with matching id: " + id);
@@ -203,7 +179,6 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         if (!sortAscending) {
             comparator = Collections.reverseOrder(comparator);
         }
-        //Collections.sort(mMovieList, comparator);
         List<Movie> movieList = new ArrayList<>(mMovieMap.values());
         Collections.sort(movieList, comparator);
 
@@ -227,15 +202,10 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         // remove the award if it already exists
         Award existingAward = selectAwardById(id);
         if (existingAward != null) {
-            //mAwardList.remove(existingAward);
             mAwardMap.remove(id);
         }
         // add the new award
-        //mAwardList.add(award);
         mAwardMap.put(id, award);
-        // notify any LocalDatabaseViewAwardListener that the data has changed
-        notifyLocalDatabaseViewAwardListener();
-        refreshCursorViewAwards(mCursorViewAwardsSortColumn, mCursorViewAwardsSortAscending);
         return 1;
     }
 
@@ -251,10 +221,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
             Timber.w("deleteAward: Award not found with id: " + id);
             return 0;
         } else {
-            //mAwardList.remove(existingAward);
             mAwardMap.remove(id);
-            // notify any LocalDatabaseViewAwardListener that the data has changed
-            notifyLocalDatabaseViewAwardListener();
             return 1;
         }
     }
@@ -273,11 +240,6 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         if (id == null) {
             return null;
         }
-//        for (Award award : mAwardList) {
-//            if (id.equals(award.getId())) {
-//                return award;
-//            }
-//        }
         Award award = mAwardMap.get(id);
         if (award == null) {
             Timber.d("selectAwardById: No awards found with matching id: " + id);
@@ -345,7 +307,6 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         if (!sortAscending) {
             comparator = Collections.reverseOrder(comparator);
         }
-        //Collections.sort(mAwardList, comparator);
         List<Award> awardList = new ArrayList<>(mAwardMap.values());
         Collections.sort(awardList, comparator);
 
@@ -407,21 +368,16 @@ public class LocalDatabaseInMemory implements LocalDatabase {
             Timber.d("selectViewAwards: selectionArgs is currently not supported");
         }
 
-        // TODO - make these local variables
-        mCursorViewAwardsSortColumn = getSortColumn(sortOrder, VIEW_AWARD_SORT_COLUMN_DEFAULT);
-        mCursorViewAwardsSortAscending = isSortAscending(sortOrder, VIEW_AWARD_SORT_ASCENDING_DEFAULT);
+        String sortColumn = getSortColumn(sortOrder, VIEW_AWARD_SORT_COLUMN_DEFAULT);
+        boolean sortAscending = isSortAscending(sortOrder, VIEW_AWARD_SORT_ASCENDING_DEFAULT);
 
-        refreshCursorViewAwards(mCursorViewAwardsSortColumn, mCursorViewAwardsSortAscending);
-
-        return mCursorViewAwards;
-    }
-
-    private void refreshCursorViewAwards(@NonNull String sortColumn, boolean sortAscending) {
         if (mCursorViewAwards != null) {
             mCursorViewAwards.close();
         }
         List<ViewAward> viewAwardList = selectViewAwards(sortColumn, sortAscending);
         mCursorViewAwards = toCursorViewAwards(viewAwardList);
+
+        return mCursorViewAwards;
     }
 
     /**
@@ -438,7 +394,6 @@ public class LocalDatabaseInMemory implements LocalDatabase {
 
         List<ViewAward> viewAwardList = new ArrayList<>();
 
-        //for (Award award : mAwardList) {
         for (Award award : mAwardMap.values()) {
             Movie movie = selectMovieById(award.getMovieId());
             if (movie != null) {
@@ -492,15 +447,6 @@ public class LocalDatabaseInMemory implements LocalDatabase {
 
     //---------------------------------------------------------------------
     // Utility methods
-
-    /**
-     * Notify the LocalDatabaseViewAwardListener that the ViewAward data has changed.
-     */
-    private void notifyLocalDatabaseViewAwardListener() {
-        if (mLocalDatabaseViewAwardListener != null) {
-            mLocalDatabaseViewAwardListener.onLocalDatabaseViewAwardModified();
-        }
-    }
 
     /**
      * Returns the sort column from a sort order.
@@ -559,15 +505,5 @@ public class LocalDatabaseInMemory implements LocalDatabase {
 
     //---------------------------------------------------------------------
     // Getters and setters
-
-    @Override
-    public LocalDatabaseViewAwardListener getLocalDatabaseViewAwardListener() {
-        return mLocalDatabaseViewAwardListener;
-    }
-
-    @Override
-    public void setLocalDatabaseViewAwardListener(LocalDatabaseViewAwardListener localDatabaseViewAwardListener) {
-        this.mLocalDatabaseViewAwardListener = localDatabaseViewAwardListener;
-    }
 
 }

@@ -21,10 +21,9 @@ import uk.jumpingmouse.moviecompanion.data.ViewAward;
 import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 
 /**
- * The base class for the content provider, containing the content provider elements which
- * are common to all product flavours (i.e. requiring no special privileges).
+ * The content provider, through which the local database is accessed.
  */
-public abstract class DataProviderBase extends ContentProvider {
+public class DataProvider extends ContentProvider {
 
     /** The URI Matcher used by this content provider. */
     private static final UriMatcher URI_MATCHER = buildUriMatcher();
@@ -162,6 +161,7 @@ public abstract class DataProviderBase extends ContentProvider {
     @Override
     public Uri insert(@NonNull final Uri uri, @Nullable final ContentValues values) {
         Uri returnUri;
+        Context context = getContext();
 
         final int match = URI_MATCHER.match(uri);
         switch (match) {
@@ -184,7 +184,11 @@ public abstract class DataProviderBase extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unsupported URI for insert: " + uri);
         }
-        notifyChange(getContext(), uri, null);
+        // Notify any observers on the movie/award URI
+        notifyChange(context, uri, null);
+        // Notify any observers on the viewAward URI, as ViewAwards are affected by
+        // changes to movies and awards.
+        notifyChange(context, DataContract.ViewAwardEntry.buildUriForAllRows(), null);
 
         return returnUri;
     }
@@ -213,6 +217,7 @@ public abstract class DataProviderBase extends ContentProvider {
     public final int update(@NonNull final Uri uri, @Nullable final ContentValues values,
                             @Nullable final String selection, @Nullable final String[] selectionArgs) {
         int rowsUpdated;
+        Context context = getContext();
 
         // Use the uriMatcher to get the id of the URI being handled.
         // If there is no match, throw an UnsupportedOperationException.
@@ -239,9 +244,13 @@ public abstract class DataProviderBase extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unsupported URI for update: " + uri);
         }
-        // Notify the listeners.
+        // Notify the listeners
         if (rowsUpdated != 0) {
-            notifyChange(getContext(), uri, null);
+            // Notify any observers on the movie/award URI
+            notifyChange(context, uri, null);
+            // Notify any observers on the viewAward URI, as ViewAwards are affected by
+            // changes to movies and awards
+            notifyChange(context, DataContract.ViewAwardEntry.buildUriForAllRows(), null);
         }
 
         // Return the number of rows updated
@@ -310,7 +319,11 @@ public abstract class DataProviderBase extends ContentProvider {
 
         // Notify the URI listeners (using the content resolver) if the rowsDeleted != 0.
         if (rowsDeleted != 0) {
+            // Notify any observers on the movie/award URI
             notifyChange(context, uri, null);
+            // Notify any observers on the viewAward URI, as ViewAwards are affected by
+            // changes to movies and awards
+            notifyChange(context, DataContract.ViewAwardEntry.buildUriForAllRows(), null);
         }
 
         // return the number of rows deleted
@@ -366,6 +379,8 @@ public abstract class DataProviderBase extends ContentProvider {
                     cursor = selectMovieById(movieId);
                 }
                 break;
+            // "award"
+            case AWARD:
             // "award/all"
             case AWARD_ALL:
                 cursor = selectAwards(projection, selection, selectionArgs, sortOrder);
@@ -380,6 +395,8 @@ public abstract class DataProviderBase extends ContentProvider {
                     cursor = selectAwardById(awardId);
                 }
                 break;
+            // "viewAward"
+            case VIEW_AWARD:
             // "viewAward/all"
             case VIEW_AWARD_ALL:
                 cursor = selectViewAwards(projection, selection, selectionArgs, sortOrder);
@@ -387,8 +404,10 @@ public abstract class DataProviderBase extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unsupported URI for query: " + uri);
         }
-        if (cursor != null && getContext() != null) {
-            cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        Context context = getContext();
+        if (cursor != null && context != null) {
+            // register an observer on the URI in the content resolver, through the cursor
+            cursor.setNotificationUri(context.getContentResolver(), uri);
         }
         return cursor;
     }

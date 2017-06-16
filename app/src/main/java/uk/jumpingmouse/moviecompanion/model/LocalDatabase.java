@@ -142,19 +142,4 @@ public interface LocalDatabase {
             @Nullable final String[] projection, @Nullable final String selection,
             @Nullable final String[] selectionArgs, @Nullable final String sortOrder);
 
-    //---------------------------------------------------------------------
-    // Getters and setters
-
-    LocalDatabaseViewAwardListener getLocalDatabaseViewAwardListener();
-
-    void setLocalDatabaseViewAwardListener(LocalDatabaseViewAwardListener localDatabaseViewAwardListener);
-
-    /**
-     * Listeners which are listening for changes to ViewAwards must implement
-     * this interface.
-     */
-    interface LocalDatabaseViewAwardListener {
-        void onLocalDatabaseViewAwardModified();
-    }
-
 }

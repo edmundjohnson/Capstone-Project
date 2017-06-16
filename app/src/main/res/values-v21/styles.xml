@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Action Bar themes -->
-    <style name="ActionBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:paddingStart">@dimen/actionbar_padding_horizontal</item>
-        <item name="android:paddingLeft">@dimen/actionbar_padding_horizontal</item>
-        <item name="android:paddingEnd">@dimen/actionbar_padding_horizontal</item>
-        <item name="android:paddingRight">@dimen/actionbar_padding_horizontal</item>
+    <!-- App Bar themes -->
+    <style name="AppBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:paddingStart">@dimen/appbar_padding_horizontal</item>
+        <item name="android:paddingLeft">@dimen/appbar_padding_horizontal</item>
+        <item name="android:paddingEnd">@dimen/appbar_padding_horizontal</item>
+        <item name="android:paddingRight">@dimen/appbar_padding_horizontal</item>
         <item name="android:popupTheme">@style/AppBarPopupTheme</item>
-        <item name="android:titleTextAppearance">@style/ActionBarTitle</item>
+        <item name="android:titleTextAppearance">@style/AppBarTitle</item>
         <item name="android:elevation">4dp</item>
     </style>
     <style name="AppBarPopupTheme" parent="ThemeOverlay.AppCompat.Light" />
