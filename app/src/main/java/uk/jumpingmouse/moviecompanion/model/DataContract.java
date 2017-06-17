@@ -137,7 +137,7 @@ public final class DataContract {
          * @return the URI for querying all movies
          */
         @NonNull
-        static Uri buildUriForAllRows() {
+        public static Uri buildUriForAllRows() {
             return CONTENT_URI.buildUpon()
                     .appendPath(PARAM_ALL)
                     .build();

@@ -1,10 +1,13 @@
 package uk.jumpingmouse.moviecompanion.data;
 
+import android.support.test.runner.AndroidJUnit4;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 
 import uk.jumpingmouse.omdbapi.OmdbApi;
 
@@ -17,6 +20,7 @@ import static org.junit.Assert.assertTrue;
  * Test class for the Movie data class.
  * @author Edmund Johnson
  */
+@RunWith(AndroidJUnit4.class)
 public class MovieTest {
 
     @SuppressWarnings("SpellCheckingInspection")

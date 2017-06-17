@@ -62,27 +62,27 @@ public final class ModelUtils {
     }
 
     /**
-     * Converts an OmdbMovie to a Movie and returns it.
+     * Creates a Movie from an OmdbMovie and returns it.
      * @param omdbMovie the OmdbMovie
      * @return a Movie corresponding to omdbMovie
      */
     @Nullable
-    public static Movie toMovie(OmdbMovie omdbMovie) {
+    public static Movie newMovie(OmdbMovie omdbMovie) {
         if (omdbMovie == null) {
-            Timber.w("toMovie: omdbMovie is null");
+            Timber.w("newMovie: omdbMovie is null");
             return null;
         } else if (omdbMovie.getImdbID() == null) {
-            Timber.w("toMovie: omdbMovie.imdbId is null");
+            Timber.w("newMovie: omdbMovie.imdbId is null");
             return null;
         } else if (omdbMovie.getTitle() == null) {
-            Timber.w("toMovie: omdbMovie.title is null");
+            Timber.w("newMovie: omdbMovie.title is null");
             return null;
         }
 
         // Build and return the movie
         int id = imdbIdToMovieId(omdbMovie.getImdbID());
         if (id == Movie.ID_UNKNOWN) {
-            Timber.w("toMovie: could not obtain valid id from imdbID: " + omdbMovie.getImdbID());
+            Timber.w("newMovie: could not obtain valid id from imdbID: " + omdbMovie.getImdbID());
             return null;
         }
         int runtime = OmdbApi.toIntOmdbRuntime(omdbMovie.getRuntime());
@@ -100,13 +100,13 @@ public final class ModelUtils {
     }
 
     /**
-     * Creates and returns a Movie object based on a set of ContentValues.
+     * Creates and returns a Movie based on a set of ContentValues.
      * @param values the ContentValues
-     * @return a Movie object corresponding to the ContentValues, or null if the ContentValues
+     * @return a Movie corresponding to the ContentValues, or null if the ContentValues
      *         do not contain values for any of the fields which are mandatory for Movie
      */
     @Nullable
-    public static Movie toMovie(@NonNull final ContentValues values) {
+    public static Movie newMovie(@NonNull final ContentValues values) {
         // if any mandatory attribute is missing, return null
 
         // id
@@ -114,11 +114,11 @@ public final class ModelUtils {
         try {
             id = values.getAsInteger(DataContract.MovieEntry.COLUMN_ID);
             if (id <= 0) {
-                Timber.e("toMovie: invalid id");
+                Timber.e("newMovie: invalid id");
                 return null;
             }
         } catch (NullPointerException e) {
-            Timber.e("toMovie: id is null ContentValues", e);
+            Timber.e("newMovie: id is null ContentValues", e);
             return null;
         }
 
@@ -127,11 +127,11 @@ public final class ModelUtils {
         try {
             imdbId = values.getAsString(DataContract.MovieEntry.COLUMN_IMDB_ID);
             if (imdbId == null) {
-                Timber.e("toMovie: missing imdbId");
+                Timber.e("newMovie: missing imdbId");
                 return null;
             }
         } catch (NullPointerException e) {
-            Timber.e("toMovie: imdbId is null ContentValues", e);
+            Timber.e("newMovie: imdbId is null ContentValues", e);
             return null;
         }
 
@@ -140,11 +140,11 @@ public final class ModelUtils {
         try {
             title = values.getAsString(DataContract.MovieEntry.COLUMN_TITLE);
             if (title == null) {
-                Timber.e("toMovie: missing title");
+                Timber.e("newMovie: missing title");
                 return null;
             }
         } catch (NullPointerException e) {
-            Timber.e("toMovie: title is null ContentValues", e);
+            Timber.e("newMovie: title is null ContentValues", e);
             return null;
         }
 
@@ -161,13 +161,13 @@ public final class ModelUtils {
     }
 
     /**
-     * Creates and returns a movie based on the values of a cursor row.
+     * Creates and returns a Movie based on the values of a cursor row.
      * @param cursor a cursor positioned at the required row
-     * @return a movie based on the values of the cursor row, or null if the cursor row
+     * @return a Movie based on the values of the cursor row, or null if the cursor row
      *         does not contain values for any of the fields which are mandatory for Movie
      */
     @Nullable
-    public static Movie toMovie(@NonNull Cursor cursor) {
+    public static Movie newMovie(@NonNull Cursor cursor) {
         final int id = cursor.getInt(DataContract.MovieEntry.COL_ID);
         final String imdbId = cursor.getString(DataContract.MovieEntry.COL_IMDB_ID);
         final String title = cursor.getString(DataContract.MovieEntry.COL_TITLE);
@@ -177,29 +177,29 @@ public final class ModelUtils {
 
         // if the id mandatory attribute is missing, return null
         if (id <= 0) {
-            Timber.e("toMovie(Cursor): invalid id");
+            Timber.e("newMovie(Cursor): invalid id");
             return null;
         }
         // if the imdbId mandatory attribute is missing, return null
         if (imdbId == null) {
-            Timber.e("toMovie(Cursor): missing imdbId");
+            Timber.e("newMovie(Cursor): missing imdbId");
             return null;
         }
         // if the title mandatory attribute is missing, return null
         if (title == null) {
-            Timber.e("toMovie(Cursor): missing title");
+            Timber.e("newMovie(Cursor): missing title");
             return null;
         }
         // if the released date is invalid set it to unknown
         long released = cursor.getLong(DataContract.MovieEntry.COL_RELEASED);
         if (released <= 0 && released != Movie.RELEASED_UNKNOWN) {
-            Timber.w("toMovie(Cursor): invalid released");
+            Timber.w("newMovie(Cursor): invalid released");
             released = Movie.RELEASED_UNKNOWN;
         }
         // if the runtime is invalid set it to unknown
         int runtime = cursor.getInt(DataContract.MovieEntry.COL_RUNTIME);
         if (runtime < 1 && runtime != Movie.RUNTIME_UNKNOWN) {
-            Timber.w("toMovie(Cursor): invalid runtime");
+            Timber.w("newMovie(Cursor): invalid runtime");
             runtime = Movie.RUNTIME_UNKNOWN;
         }
 
@@ -230,7 +230,7 @@ public final class ModelUtils {
         // The next line is safer if the initial position of the cursor is unknown:
         //for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
         while (cursor.moveToNext()) {
-            Movie movie = toMovie(cursor);
+            Movie movie = newMovie(cursor);
             if (movie != null) {
                 movieList.add(movie);
             }
@@ -245,7 +245,7 @@ public final class ModelUtils {
      *         do not contain values for any of the fields which are mandatory for Award
      */
     @Nullable
-    public static Award toAward(@NonNull final ContentValues values) {
+    public static Award newAward(@NonNull final ContentValues values) {
         // if any mandatory attribute is missing, return null
 
         // id
@@ -253,11 +253,11 @@ public final class ModelUtils {
         try {
             id = values.getAsString(DataContract.AwardEntry.COLUMN_ID);
             if (id == null) {
-                Timber.e("toAward: id is null in ContentValues");
+                Timber.e("newAward: id is null in ContentValues");
                 return null;
             }
         } catch (NullPointerException e) {
-            Timber.e("toAward: id is missing from ContentValues", e);
+            Timber.e("newAward: id is missing from ContentValues", e);
             return null;
         }
 
@@ -266,11 +266,11 @@ public final class ModelUtils {
         try {
             movieId = values.getAsInteger(DataContract.AwardEntry.COLUMN_MOVIE_ID);
             if (movieId <= 0) {
-                Timber.e("toAward: invalid movieId in ContentValues");
+                Timber.e("newAward: invalid movieId in ContentValues");
                 return null;
             }
         } catch (NullPointerException e) {
-            Timber.e("toAward: movieId is missing from ContentValues", e);
+            Timber.e("newAward: movieId is missing from ContentValues", e);
             return null;
         }
 
@@ -279,11 +279,11 @@ public final class ModelUtils {
         try {
             awardDate = values.getAsString(DataContract.AwardEntry.COLUMN_AWARD_DATE);
             if (awardDate == null) {
-                Timber.e("toAward: awardDate is null in ContentValues");
+                Timber.e("newAward: awardDate is null in ContentValues");
                 return null;
             }
         } catch (NullPointerException e) {
-            Timber.e("toAward: awardDate is missing from ContentValues", e);
+            Timber.e("newAward: awardDate is missing from ContentValues", e);
             return null;
         }
 
@@ -292,11 +292,11 @@ public final class ModelUtils {
         try {
             category = values.getAsString(DataContract.AwardEntry.COLUMN_CATEGORY);
             if (category == null) {
-                Timber.e("toAward: category is null in ContentValues");
+                Timber.e("newAward: category is null in ContentValues");
                 return null;
             }
         } catch (NullPointerException e) {
-            Timber.e("toAward: category is missing from ContentValues", e);
+            Timber.e("newAward: category is missing from ContentValues", e);
             return null;
         }
 
@@ -305,11 +305,11 @@ public final class ModelUtils {
         try {
             review = values.getAsString(DataContract.AwardEntry.COLUMN_REVIEW);
             if (review == null) {
-                Timber.e("toAward: review is null in ContentValues");
+                Timber.e("newAward: review is null in ContentValues");
                 return null;
             }
         } catch (NullPointerException e) {
-            Timber.e("toAward: review is missing from ContentValues", e);
+            Timber.e("newAward: review is missing from ContentValues", e);
             return null;
         }
 
@@ -318,11 +318,11 @@ public final class ModelUtils {
         try {
             displayOrder = values.getAsInteger(DataContract.AwardEntry.COLUMN_DISPLAY_ORDER);
             if (displayOrder <= 0) {
-                Timber.e("toAward: invalid displayOrder in ContentValues");
+                Timber.e("newAward: invalid displayOrder in ContentValues");
                 return null;
             }
         } catch (NullPointerException e) {
-            Timber.e("toAward: displayOrder is missing from ContentValues", e);
+            Timber.e("newAward: displayOrder is missing from ContentValues", e);
             return null;
         }
 

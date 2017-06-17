@@ -426,7 +426,7 @@ public class DataProvider extends ContentProvider {
             Timber.e("insertMovie: values are null");
             return null;
         }
-        Movie movie = ModelUtils.toMovie(values);
+        Movie movie = ModelUtils.newMovie(values);
         if (movie == null) {
             Timber.e("insertMovie: unable to create Movie from values: " + values);
             return null;
@@ -450,7 +450,7 @@ public class DataProvider extends ContentProvider {
         if (values == null) {
             return 0;
         }
-        Movie movie = ModelUtils.toMovie(values);
+        Movie movie = ModelUtils.newMovie(values);
         if (movie == null) {
             return 0;
         } else if (id != movie.getId()) {
@@ -563,7 +563,7 @@ public class DataProvider extends ContentProvider {
             Timber.e("insertAward: values are null");
             return null;
         }
-        Award award = ModelUtils.toAward(values);
+        Award award = ModelUtils.newAward(values);
         if (award == null) {
             Timber.e("insertAward: unable to create Award from values: " + values);
             return null;
@@ -587,7 +587,7 @@ public class DataProvider extends ContentProvider {
         if (id == null || values == null) {
             return 0;
         }
-        Award award = ModelUtils.toAward(values);
+        Award award = ModelUtils.newAward(values);
         if (award == null) {
             return 0;
         } else if (!id.equals(award.getId())) {

@@ -188,7 +188,7 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
      */
     @Override
     public void onFetchMovieCompleted(@Nullable OmdbMovie omdbMovie) {
-        Movie movie = ModelUtils.toMovie(omdbMovie);
+        Movie movie = ModelUtils.newMovie(omdbMovie);
         if (movie == null) {
             // Display a "Data found did not represent a Movie" error message
             getViewUtils().displayErrorMessage(this, R.string.movie_data_not_found);

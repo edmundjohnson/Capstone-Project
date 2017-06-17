@@ -311,15 +311,13 @@ public class AwardListFragment extends Fragment
         mViewAwardAdapter.swapCursor(null);
     }
 
-//    /**
-//     * Perform processing required when the list data has changed, i.e. restart the loader.
-//     */
-//    private void onDataChanged() {
-////        // Maybe update the list data via syncImmediately, as per nd-sunshine-2 ???
-////        getLoaderManager().restartLoader(AWARD_LIST_LOADER_ID, null, this);
-//
-//        mViewAwardsCursorLoader.forceLoad();
-//    }
+    /**
+     * Perform processing required when the list data has changed, i.e. reload the loader data,
+     * so that onLoadFinished() can update the adapter data, hence updating the view.
+     */
+    private void onDataChanged() {
+        mViewAwardsCursorLoader.forceLoad();
+    }
 //    public void onDataChanged(Bundle bundle) {
 //        getLoaderManager().restartLoader(AWARD_LIST_LOADER_ID, bundle, this);
 //    }
@@ -350,7 +348,7 @@ public class AwardListFragment extends Fragment
 
         @Override
         public void onChange(boolean selfChange, Uri uri) {
-            mViewAwardsCursorLoader.forceLoad();
+            onDataChanged();
         }
     }
 

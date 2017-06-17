@@ -121,6 +121,9 @@ public class Movie implements Parcelable {
         return poster;
     }
 
+    //---------------------------------------------------------------
+    // Utilities
+
     /**
      * Returns a set of ContentValues corresponding to the movie.
      * @return the set of ContentValues corresponding to the movie

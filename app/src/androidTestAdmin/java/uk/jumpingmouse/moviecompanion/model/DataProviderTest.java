@@ -18,6 +18,7 @@ import org.junit.runner.RunWith;
 import java.util.List;
 
 import timber.log.Timber;
+import uk.jumpingmouse.moviecompanion.AndroidTestUtils;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 import uk.jumpingmouse.omdbapi.OmdbApi;
@@ -183,15 +184,12 @@ public class DataProviderTest {
         closeCursor(cursor);
 
         // insert test rows
-        Uri uriInserted1 = mContentResolver.insert(DataContract.MovieEntry.CONTENT_URI, toContentValues(TEST_MOVIE_1));
-        Uri uriInserted2 = mContentResolver.insert(DataContract.MovieEntry.CONTENT_URI, toContentValues(TEST_MOVIE_2));
-        Uri uriInserted3 = mContentResolver.insert(DataContract.MovieEntry.CONTENT_URI, toContentValues(TEST_MOVIE_3));
+        Uri uriInserted1 = mContentResolver.insert(DataContract.MovieEntry.CONTENT_URI, TEST_MOVIE_1.toContentValues());
+        Uri uriInserted2 = mContentResolver.insert(DataContract.MovieEntry.CONTENT_URI, TEST_MOVIE_2.toContentValues());
+        Uri uriInserted3 = mContentResolver.insert(DataContract.MovieEntry.CONTENT_URI, TEST_MOVIE_3.toContentValues());
         assertNotNull(uriInserted1);
         assertNotNull(uriInserted2);
         assertNotNull(uriInserted3);
-
-//TODO: These fail because the inserts add the movies to the local database asynchronously,
-//      so they are not there yet.
 
         // query for specific movie TEST_MOVIE_1 - should now be there
         cursor = mContentResolver.query(URI_TEST_MOVIE_1, null, null, null, null);
@@ -199,7 +197,7 @@ public class DataProviderTest {
         // The query should return a movie which is equal to TEST_MOVIE_1
         assertEquals("The query should return 1 row", 1, cursor.getCount());
         cursor.moveToFirst();
-        movie = ModelUtils.toMovie(cursor);
+        movie = ModelUtils.newMovie(cursor);
         assertEquals("TEST_MOVIE_1 should be returned by the query", TEST_MOVIE_1, movie);
         closeCursor(cursor);
 
@@ -210,7 +208,7 @@ public class DataProviderTest {
         // The query should return a movie which is equal to TEST_MOVIE_2
         assertEquals("The query should return 1 row", 1, cursor.getCount());
         cursor.moveToFirst();
-        movie = ModelUtils.toMovie(cursor);
+        movie = ModelUtils.newMovie(cursor);
         assertEquals("TEST_MOVIE_2 should be returned by the query", TEST_MOVIE_2, movie);
         closeCursor(cursor);
 
@@ -220,7 +218,7 @@ public class DataProviderTest {
         // The query should return a movie which is equal to TEST_MOVIE_3
         assertEquals("The query should return 1 row", 1, cursor.getCount());
         cursor.moveToFirst();
-        movie = ModelUtils.toMovie(cursor);
+        movie = ModelUtils.newMovie(cursor);
         assertEquals("TEST_MOVIE_3 should be returned by the query", TEST_MOVIE_3, movie);
         closeCursor(cursor);
 
@@ -401,32 +399,30 @@ public class DataProviderTest {
         closeCursor(cursor);
 
         // insert TEST_MOVIE_1
-        Uri uriInserted = mContentResolver.insert(DataContract.MovieEntry.CONTENT_URI, toContentValues(TEST_MOVIE_1));
+        Uri uriInserted = mContentResolver.insert(DataContract.MovieEntry.CONTENT_URI, TEST_MOVIE_1.toContentValues());
         assertNotNull(uriInserted);
         assertTrue(uriInserted.equals(URI_TEST_MOVIE_1));
 
-// This will only work when query is implemented for Firebase
-//        // query for specific movie TEST_MOVIE_1 - should now be there
-//        cursor = mContentResolver.query(URI_TEST_MOVIE_1, null, null, null, null);
-//        assertNotNull(cursor);
-//        // The query should return a movie which is equal to TEST_MOVIE_1
-//        assertEquals("The query should return 1 row", 1, cursor.getCount());
-//        cursor.moveToFirst();
-//        Movie movie = ModelUtils.toMovie(cursor);
-//        assertEquals("TEST_MOVIE_1 should be returned by the query", TEST_MOVIE_1, movie);
-//        closeCursor(cursor);
+        // query for specific movie TEST_MOVIE_1 - should now be there
+        cursor = mContentResolver.query(URI_TEST_MOVIE_1, null, null, null, null);
+        assertNotNull(cursor);
+        // The query should return a movie which is equal to TEST_MOVIE_1
+        assertEquals("The query should return 1 row", 1, cursor.getCount());
+        cursor.moveToFirst();
+        Movie movie = ModelUtils.newMovie(cursor);
+        assertEquals("TEST_MOVIE_1 should be returned by the query", TEST_MOVIE_1, movie);
+        closeCursor(cursor);
 
-// This will only work when delete is implemented for Firebase
-//        // delete the added row
-//        rowsDeleted = mContentResolver.delete(URI_TEST_MOVIE_1, null, null);
-//        assertEquals("rowsDeleted should be 1", 1, rowsDeleted);
-//
-//        // query for specific movie TEST_MOVIE_1 - should no longer be there
-//        cursor = mContentResolver.query(URI_TEST_MOVIE_1, null, null, null, null);
-//        rowsCurrent = cursor == null ? 0 : cursor.getCount();
-//        assertEquals(String.format("Movie \"%s\" should no longer be in database", TEST_MOVIE_1.getId()),
-//                0, rowsCurrent);
-//        closeCursor(cursor);
+        // delete the added row
+        int rowsDeleted = mContentResolver.delete(URI_TEST_MOVIE_1, null, null);
+        assertEquals("rowsDeleted should be 1", 1, rowsDeleted);
+
+        // query for specific movie TEST_MOVIE_1 - should no longer be there
+        cursor = mContentResolver.query(URI_TEST_MOVIE_1, null, null, null, null);
+        rowsCurrent = cursor == null ? 0 : cursor.getCount();
+        assertEquals(String.format("Movie \"%s\" should no longer be in database", TEST_MOVIE_1.getId()),
+                0, rowsCurrent);
+        closeCursor(cursor);
     }
 
     @Test
@@ -443,19 +439,17 @@ public class DataProviderTest {
         closeCursor(cursor);
 
         // insert TEST_MOVIE_1
-        Uri uriInserted = mContentResolver.insert(DataContract.MovieEntry.CONTENT_URI, toContentValues(TEST_MOVIE_1));
+        Uri uriInserted = mContentResolver.insert(DataContract.MovieEntry.CONTENT_URI, TEST_MOVIE_1.toContentValues());
         assertNotNull(uriInserted);
         assertTrue(uriInserted.equals(URI_TEST_MOVIE_1));
 
-//TODO: This fails because the insert adds the movie to the local database asynchronously,
-//      so it's not there yet.
         // query for specific movie TEST_MOVIE_1 - should now be there
         cursor = mContentResolver.query(URI_TEST_MOVIE_1, null, null, null, null);
         assertNotNull(cursor);
         // The query should return a movie which is equal to TEST_MOVIE_1
         assertEquals("The query should return 1 row", 1, cursor.getCount());
         cursor.moveToFirst();
-        Movie movie = ModelUtils.toMovie(cursor);
+        Movie movie = ModelUtils.newMovie(cursor);
         assertEquals("TEST_MOVIE_1 should be returned by the query", TEST_MOVIE_1, movie);
         closeCursor(cursor);
 
@@ -485,7 +479,7 @@ public class DataProviderTest {
      */
     @Test
     public void insertMovieInvalid() {
-        ContentValues values = toContentValues(TEST_MOVIE_1);
+        ContentValues values = TEST_MOVIE_1.toContentValues();
         values.remove(DataContract.MovieEntry.COLUMN_IMDB_ID);
         Uri uriInserted = mContentResolver.insert(DataContract.MovieEntry.CONTENT_URI, values);
         assertNull(uriInserted);
@@ -512,24 +506,22 @@ public class DataProviderTest {
         closeCursor(cursor);
 
         // insert TEST_MOVIE_1
-        Uri uriInserted = mContentResolver.insert(DataContract.MovieEntry.CONTENT_URI, toContentValues(TEST_MOVIE_1));
+        Uri uriInserted = mContentResolver.insert(DataContract.MovieEntry.CONTENT_URI, TEST_MOVIE_1.toContentValues());
         assertNotNull(uriInserted);
 
-//TODO: This fails because the insert adds the movie to the local database asynchronously,
-//      so it's not there yet.
         // query for specific row TEST_MOVIE_1 - should now be there
         cursor = mContentResolver.query(URI_TEST_MOVIE_1, null, null, null, null);
         assertNotNull("TEST_MOVIE_1 should be in database", cursor);
         // The query should return a movie which is equal to TEST_MOVIE_1
         assertEquals("The query should return 1 row", 1, cursor.getCount());
         cursor.moveToFirst();
-        Movie movie = ModelUtils.toMovie(cursor);
+        Movie movie = ModelUtils.newMovie(cursor);
         assertEquals("TEST_MOVIE_1 should be returned by the query", TEST_MOVIE_1, movie);
         closeCursor(cursor);
 
         // update the added row
         rowsUpdated = mContentResolver.update(
-                URI_TEST_MOVIE_1, toContentValues(TEST_MOVIE_1_MODIFIED), null, null);
+                URI_TEST_MOVIE_1, TEST_MOVIE_1_MODIFIED.toContentValues(), null, null);
         assertEquals("rowsUpdated should be 1", 1, rowsUpdated);
 
         // query for specific row TEST_MOVIE_1 - should still be there, with new values
@@ -538,7 +530,7 @@ public class DataProviderTest {
         assertNotNull("TEST_MOVIE_1 should still be in database", cursor);
         assertEquals("TEST_MOVIE_1 should still be in database", 1, cursor.getCount());
         cursor.moveToFirst();
-        Movie movieUpdated = ModelUtils.toMovie(cursor);
+        Movie movieUpdated = ModelUtils.newMovie(cursor);
         assertNotNull(movieUpdated);
         assertEquals("id should be unchanged", TEST_MOVIE_1.getId(), movieUpdated.getId());
         assertEquals("imdbId should be unchanged", TEST_MOVIE_1.getImdbId(), movieUpdated.getImdbId());
@@ -578,19 +570,17 @@ public class DataProviderTest {
                 0, rowsCurrent);
         closeCursor(cursor);
 
-        rowsUpdated = mContentResolver.update(URI_TEST_MOVIE_2, toContentValues(TEST_MOVIE_2), null, null);
+        rowsUpdated = mContentResolver.update(URI_TEST_MOVIE_2, TEST_MOVIE_2.toContentValues(), null, null);
         // update adds the movie if it does not already exist
         assertEquals(1, rowsUpdated);
 
-//TODO: This fails because the 'update' adds the movie to the local database asynchronously,
-//      so it's not there yet.
         // query for specific row TEST_MOVIE_2 - should now be there
         cursor = mContentResolver.query(URI_TEST_MOVIE_2, null, null, null, null);
         assertNotNull("TEST_MOVIE_2 should be in database", cursor);
         // The query should return a movie which is equal to TEST_MOVIE_2
         assertEquals("The query should return 1 row", 1, cursor.getCount());
         cursor.moveToFirst();
-        Movie movie = ModelUtils.toMovie(cursor);
+        Movie movie = ModelUtils.newMovie(cursor);
         assertEquals("TEST_MOVIE_2 should be returned by the query", TEST_MOVIE_2, movie);
         closeCursor(cursor);
 
@@ -620,7 +610,7 @@ public class DataProviderTest {
      */
     @Test
     public void updateMovieNullId() {
-        ContentValues values = toContentValues(TEST_MOVIE_1);
+        ContentValues values = TEST_MOVIE_1.toContentValues();
         values.remove(DataContract.MovieEntry.COLUMN_ID);
         //values.remove(DataContract.MovieEntry.COLUMN_IMDB_ID);
 
@@ -634,10 +624,10 @@ public class DataProviderTest {
     @Test
     public void updateMovieMismatch() {
         thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("Id mismatch between URL and body of update request");
+        thrown.expectMessage("Id mismatch between URL and body of update movie request");
 
         Uri uriUpdate = DataContract.MovieEntry.buildUriForRowById(123);
-        int rowsUpdated = mContentResolver.update(uriUpdate, toContentValues(TEST_MOVIE_1), null, null);
+        int rowsUpdated = mContentResolver.update(uriUpdate, TEST_MOVIE_1.toContentValues(), null, null);
         assertEquals(0, rowsUpdated);
     }
 
@@ -648,22 +638,9 @@ public class DataProviderTest {
     public void deleteMovieNotFound() {
         int initialRows = getMovieCount();
         int rowsDeleted = mContentResolver.delete(URI_TEST_MOVIE_2, null, null);
-        // delete is asynchronous, so 1 is always returned
-        //assertEquals(0, rowsDeleted);
-        assertEquals(1, rowsDeleted);
-        // instead of rowsDeleted being 0, check that the number of movies is unchanged
+        // check that no rows deleted
+        assertEquals(0, rowsDeleted);
         assertEquals(initialRows, getMovieCount());
-    }
-
-    private int getMovieCount() {
-        int count = 0;
-        Cursor cursor = mContentResolver.query(DataContract.MovieEntry.buildUriForAllRows(),
-                null, null, null, null);
-        if (cursor != null) {
-            count = cursor.getCount();
-            closeCursor(cursor);
-        }
-        return count;
     }
 
     /**
@@ -689,7 +666,7 @@ public class DataProviderTest {
         thrown.expectMessage("Unsupported URI for insert: " + DataContract.MovieEntry.buildUriForAllRows().toString());
 
         Uri uriInsert = DataContract.MovieEntry.buildUriForAllRows();
-        Uri uriInserted = mContentResolver.insert(uriInsert, toContentValues(TEST_MOVIE_1));
+        Uri uriInserted = mContentResolver.insert(uriInsert, TEST_MOVIE_1.toContentValues());
         assertNull(uriInserted);
     }
 
@@ -702,7 +679,7 @@ public class DataProviderTest {
         thrown.expectMessage("Unsupported URI for update: " + DataContract.MovieEntry.buildUriForAllRows().toString());
 
         Uri uriUpdate = DataContract.MovieEntry.buildUriForAllRows();
-        int rowsUpdated = mContentResolver.update(uriUpdate, toContentValues(TEST_MOVIE_1), null, null);
+        int rowsUpdated = mContentResolver.update(uriUpdate, TEST_MOVIE_1.toContentValues(), null, null);
         assertEquals(0, rowsUpdated);
     }
 
@@ -722,39 +699,24 @@ public class DataProviderTest {
     //---------------------------------------------------------------------
     // Utility methods
 
-    /**
-     * Returns a set of ContentValues corresponding to a movie.
-     * @param movie the movie
-     * @return the set of ContentValues corresponding to the movie
-     */
-    @NonNull
-    private static ContentValues toContentValues(@NonNull Movie movie) {
-        ContentValues values = new ContentValues();
-
-        values.put(DataContract.MovieEntry.COLUMN_ID, ModelUtils.imdbIdToMovieId(movie.getImdbId()));
-        values.put(DataContract.MovieEntry.COLUMN_IMDB_ID, movie.getImdbId());
-        values.put(DataContract.MovieEntry.COLUMN_TITLE, movie.getTitle());
-        values.put(DataContract.MovieEntry.COLUMN_YEAR, movie.getYear());
-        values.put(DataContract.MovieEntry.COLUMN_RELEASED, movie.getReleased());
-        values.put(DataContract.MovieEntry.COLUMN_RUNTIME, movie.getRuntime());
-        values.put(DataContract.MovieEntry.COLUMN_GENRE, movie.getGenre());
-        values.put(DataContract.MovieEntry.COLUMN_POSTER, movie.getPoster());
-
-        return values;
+    private int getMovieCount() {
+        return getAndroidTestUtils().getMovieCount(mContentResolver);
     }
 
-    /**
-     * Silently close a cursor.
-     * @param cursor the cursor
-     */
     private void closeCursor(@Nullable Cursor cursor) {
-        if (cursor != null) {
-            cursor.close();
-            //cursor = null;
-        }
+        getAndroidTestUtils().closeCursor(cursor);
     }
 
     //---------------------------------------------------------------------
     // Getters
+
+    /**
+     * Convenience method which returns a reference to a AndroidTestUtils object.
+     * @return a reference to a AndroidTestUtils object
+     */
+    @NonNull
+    private static AndroidTestUtils getAndroidTestUtils() {
+        return AndroidTestUtils.getInstance();
+    }
 
 }

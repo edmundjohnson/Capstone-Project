@@ -101,6 +101,9 @@ public class Award implements Parcelable {
         return displayOrder;
     }
 
+    //---------------------------------------------------------------
+    // Utilities
+
     /**
      * Returns a set of ContentValues corresponding to an award.
      * @return the set of ContentValues corresponding to the award

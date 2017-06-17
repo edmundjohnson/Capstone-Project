@@ -207,7 +207,7 @@ public class AddAwardActivity extends AppCompatActivity {
             getViewUtils().displayErrorMessage(this, R.string.multiple_matching_movies);
         } else {
             cursor.moveToFirst();
-            Movie movie = ModelUtils.toMovie(cursor);
+            Movie movie = ModelUtils.newMovie(cursor);
             if (movie == null) {
                 // Display a "Data found did not represent a Movie" error message
                 getViewUtils().displayErrorMessage(this, R.string.movie_data_not_found);
