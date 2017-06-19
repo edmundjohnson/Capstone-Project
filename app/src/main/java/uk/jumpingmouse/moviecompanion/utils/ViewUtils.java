@@ -66,16 +66,18 @@ public class ViewUtils {
      * @param activity the activity for which the app bar is displayed
      * @param toolbarResId the resource identifier of the toolbar View, e.g. R.id.tbAppBar
      * @param titleText the app bar title text, e.g. "Daily Benefit Settings"
+     * @param isUpArrowDisplayed whether the up arrow is to be displayed in the app bar
      */
     public void initialiseAppBar(@NonNull final AppCompatActivity activity,
                                  @SuppressWarnings("SameParameterValue") @IdRes final int toolbarResId,
-                                 @Nullable final String titleText) {
+                                 @Nullable final String titleText, final boolean isUpArrowDisplayed) {
         // Set the app bar to be the toolbar
         Toolbar toolbar = initialiseToolbar(activity, toolbarResId, titleText);
         activity.setSupportActionBar(toolbar);
 
-        // If required, display the up arrow in the app bar
         ActionBar appBar = activity.getSupportActionBar();
+        // If required, display the up arrow in the app bar
+        displayUpArrowInAppBar(appBar, isUpArrowDisplayed);
     }
 
     /**
@@ -95,6 +97,17 @@ public class ViewUtils {
             toolbar.setTitle(titleText);
         }
         return toolbar;
+    }
+
+    /**
+     * If required, display an up arrow in an app bar, for navigating to the parent activity.
+     * @param appBar the app bar
+     * @param isUpArrowDisplayed whether the up arrow is to be displayed in the app bar
+     */
+    private void displayUpArrowInAppBar(@Nullable final ActionBar appBar, final boolean isUpArrowDisplayed) {
+        if (appBar != null) {
+            appBar.setDisplayHomeAsUpEnabled(isUpArrowDisplayed);
+        }
     }
 
     //---------------------------------------------------------------------
@@ -174,9 +187,9 @@ public class ViewUtils {
         if (awardDate == null) {
             return "?";
         }
-        Date dateAwardDate = DateUtils.toDate(AWARD_DATE_FORMAT_STORED, awardDate);
+        Date dateAwardDate = JavaUtils.toDate(AWARD_DATE_FORMAT_STORED, awardDate);
         return dateAwardDate == null ? "?" :
-                DateUtils.toString(AWARD_DATE_FORMAT_DISPLAYED, dateAwardDate);
+                JavaUtils.toString(AWARD_DATE_FORMAT_DISPLAYED, dateAwardDate);
     }
 
     //---------------------------------------------------------------------

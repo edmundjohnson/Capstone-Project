@@ -33,4 +33,9 @@
     <!-- Award List -->
     <string name="no_awards_available">There are no awards matching your criteria</string>
 
+
+    <!-- Movie -->
+    <string name="example_movie_genre">Comedy</string>
+    <string name="example_movie_runtime">114 min</string>
+
 </resources>

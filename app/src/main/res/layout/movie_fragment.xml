@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.MovieActivity">
+
+    <!-- Background Image -->
+    <ImageView
+        android:id="@+id/imgPoster"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/poster_description"
+        tools:src="@mipmap/ic_launcher"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            tools:text="@string/example_movie_title"
+            />
+        <!--
+            android:textColorHighlight="@color/text_highlight"
+            android:textSize="@dimen/text_size_post_title"
+            android:textStyle="bold"
+            android:textIsSelectable="true"
+        -->
+
+        <TextView
+            android:id="@+id/txtGenre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            tools:text="@string/example_movie_genre"
+            />
+
+        <TextView
+            android:id="@+id/txtRuntime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            tools:text="@string/example_movie_runtime"
+            />
+
+    </LinearLayout>
+
+    <!--
+    <ScrollView
+        android:id="@+id/viewMovie"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:background="@color/blue_low_transparency"
+        android:fillViewport="true">
+
+                <LinearLayout
+                    android:id="@+id/layoutPost"
+                    android:layout_width="@dimen/post_layout_width"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/activity_margin_horizontal"
+                    android:paddingRight="@dimen/activity_margin_horizontal"
+                    android:paddingTop="@dimen/activity_margin_vertical"
+                    android:paddingBottom="@dimen/activity_margin_vertical"
+                    tools:gravity="bottom"
+                    >
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/txtTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginTop="8dp"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@+id/txtDate"
+                            android:layout_toStartOf="@+id/txtDate"
+                            android:textColorHighlight="@color/text_highlight"
+                            android:textStyle="bold"
+                            android:textSize="@dimen/text_size_post_title"
+                            android:textIsSelectable="true"
+                            tools:text="@string/example_post_title"
+                            />
+
+                        <TextView
+                            android:id="@+id/txtDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginLeft="@dimen/activity_margin_horizontal"
+                            android:layout_marginStart="@dimen/activity_margin_horizontal"
+                            android:layout_marginRight="@dimen/activity_margin_horizontal"
+                            android:layout_marginEnd="@dimen/activity_margin_horizontal"
+                            android:textColorHighlight="@color/text_highlight"
+                            android:textSize="@dimen/text_size_post_date"
+                            android:textIsSelectable="true"
+                            tools:text="6 June"
+                            />
+
+                    </RelativeLayout>
+
+                    <!- - layout_marginBottom is only really needed when the text is at the
+                         bottom of the screen, but it's tricky to do it programmatically -->
+<!--
+            <TextView
+                android:id="@+id/txtText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="40dp"
+                android:textColorHighlight="@color/text_highlight"
+                android:textSize="@dimen/text_size_post_text"
+                android:textIsSelectable="true"
+                tools:text="@string/example_post_text"
+                />
+
+        </LinearLayout>
+
+    </ScrollView>
+-->
+
+</FrameLayout>

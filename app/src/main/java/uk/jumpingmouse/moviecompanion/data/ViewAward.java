@@ -77,6 +77,9 @@ public class ViewAward {
         return poster;
     }
 
+    //---------------------------------------------------------------
+    // Utilities
+
     /**
      * Returns a view award as an object array, one element per field value.
      * @return the view award as an Object array

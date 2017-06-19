@@ -1,30 +1,23 @@
 package uk.jumpingmouse.moviecompanion.data;
 
-import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.security.InvalidParameterException;
-import java.util.Comparator;
-
-import uk.jumpingmouse.moviecompanion.model.DataContract;
-import uk.jumpingmouse.omdbapi.OmdbMovie;
 
 /**
- * The Movie model class.
- * This is similar to the OmdbMovie class, which contains unprocessed data from the
- * Open Movie Database.  However, this class stores data in a more useful form,
- * e.g. runtime is stored as an int (e.g. 144), rather than a String (e.g. "144 min").
+ * The ViewMovie model class.
+ * This represents a movie as displayed on the movie screen, and contains fields from:
+ * - Movie
+ * - the movie's Awards
+ * - the UserMovie, i.e. whether the movie is on the user's wishlist, see list, favourites, etc.
  * @author Edmund Johnson
  */
-public class Movie implements Parcelable {
-    public static final int ID_UNKNOWN = -1;
-    public static final int RUNTIME_UNKNOWN = OmdbMovie.RUNTIME_UNKNOWN;
-    public static final int RELEASED_UNKNOWN = OmdbMovie.RELEASED_UNKNOWN;
+public class ViewMovie implements Parcelable {
 
-    // The unique identifier of the movie, e.g. 4016934.
+    // The unique identifier of the ViewMovie and the corresponding movie, e.g. 4016934.
     // This is the numeric part of the imdbId.
     private int id;
     // The IMDb id, e.g. "tt4016934"
@@ -42,10 +35,21 @@ public class Movie implements Parcelable {
     // The URL of the movie poster image
     private String poster;
 
-    private Movie() {
+    private ViewMovie() {
     }
 
-    private Movie(
+    public ViewMovie(@NonNull Movie movie) {
+        this.id = movie.getId();
+        this.imdbId = movie.getImdbId();
+        this.title = movie.getTitle();
+        this.year = movie.getYear();
+        this.released = movie.getReleased();
+        this.runtime = movie.getRuntime();
+        this.genre = movie.getGenre();
+        this.poster = movie.getPoster();
+    }
+
+    private ViewMovie(
             int id,
             @Nullable String imdbId,
             @Nullable String title,
@@ -76,7 +80,7 @@ public class Movie implements Parcelable {
     //---------------------------------------------------------------
     // Getters
 
-    /** Returns the unique id, e.g. 4016934. */
+    /** Returns the movie's unique id, e.g. 4016934. */
     public int getId() {
         return id;
     }
@@ -125,32 +129,12 @@ public class Movie implements Parcelable {
     // Utilities
 
     /**
-     * Returns a set of ContentValues corresponding to the movie.
-     * @return the set of ContentValues corresponding to the movie
-     */
-    @NonNull
-    public ContentValues toContentValues() {
-        ContentValues values = new ContentValues();
-
-        values.put(DataContract.MovieEntry.COLUMN_ID, getId());
-        values.put(DataContract.MovieEntry.COLUMN_IMDB_ID, getImdbId());
-        values.put(DataContract.MovieEntry.COLUMN_TITLE, getTitle());
-        values.put(DataContract.MovieEntry.COLUMN_YEAR, getYear());
-        values.put(DataContract.MovieEntry.COLUMN_RELEASED, getReleased());
-        values.put(DataContract.MovieEntry.COLUMN_RUNTIME, getRuntime());
-        values.put(DataContract.MovieEntry.COLUMN_GENRE, getGenre());
-        values.put(DataContract.MovieEntry.COLUMN_POSTER, getPoster());
-
-        return values;
-    }
-
-    /**
-     * Returns the movie as an object array, one element per field value.
-     * @return the movie as an Object array
+     * Returns the ViewMovie as an object array, one element per field value.
+     * @return the ViewMovie as an Object array
      */
     public Object[] toObjectArray() {
         return new Object[] {
-                // This must match the order of columns in DataContract.MovieEntry.getAllColumns().
+                // This must match the order of columns in DataContract.ViewMovieEntry.getAllColumns().
                 getId(),
                 getImdbId(),
                 getTitle(),
@@ -169,7 +153,7 @@ public class Movie implements Parcelable {
      * Private constructor to create an object of this class from a parcel.
      * @param in a Parcel containing the object
      */
-    private Movie(@NonNull final Parcel in) {
+    private ViewMovie(@NonNull final Parcel in) {
         id = in.readInt();
         imdbId = in.readString();
         title = in.readString();
@@ -201,16 +185,16 @@ public class Movie implements Parcelable {
     /**
      * Parcel creator object.
      */
-    public static final Parcelable.Creator<Movie> CREATOR =
-            new Parcelable.Creator<Movie>() {
+    public static final Creator<ViewMovie> CREATOR =
+            new Creator<ViewMovie>() {
                 @NonNull
-                public Movie createFromParcel(@NonNull final Parcel in) {
-                    return new Movie(in);
+                public ViewMovie createFromParcel(@NonNull final Parcel in) {
+                    return new ViewMovie(in);
                 }
 
                 @NonNull
-                public Movie[] newArray(final int size) {
-                    return new Movie[size];
+                public ViewMovie[] newArray(final int size) {
+                    return new ViewMovie[size];
                 }
             };
 
@@ -237,7 +221,7 @@ public class Movie implements Parcelable {
      * Builder for this class.  Usage:
      * <blockquote><pre>
      * {@code
-     *   Movie movie = Movie.builder()
+     *   ViewMovie viewMovie = ViewMovie.builder()
      *         .id("tt4016934")
      *         .imdbId("tt4016934")
      *         .title("The Handmaiden")
@@ -247,8 +231,8 @@ public class Movie implements Parcelable {
      * </pre></blockquote>
      * @return an instance of the Movie class.
      */
-    public static Builder builder() {
-        return new Movie.Builder();
+    public static ViewMovie.Builder builder() {
+        return new ViewMovie.Builder();
     }
 
 
@@ -266,7 +250,7 @@ public class Movie implements Parcelable {
         Builder() {
         }
 
-        Builder(Movie source) {
+        Builder(ViewMovie source) {
             this.id = source.id;
             this.imdbId = source.imdbId;
             this.title = source.title;
@@ -277,40 +261,40 @@ public class Movie implements Parcelable {
             this.poster = source.poster;
         }
 
-        public Movie.Builder id(int id) {
+        public ViewMovie.Builder id(int id) {
             this.id = id;
             return this;
         }
-        public Movie.Builder imdbId(@NonNull String imdbId) {
+        public ViewMovie.Builder imdbId(@NonNull String imdbId) {
             this.imdbId = imdbId;
             return this;
         }
-        public Movie.Builder title(@NonNull String title) {
+        public ViewMovie.Builder title(@NonNull String title) {
             this.title = title;
             return this;
         }
-        public Movie.Builder year(@Nullable String year) {
+        public ViewMovie.Builder year(@Nullable String year) {
             this.year = year;
             return this;
         }
-        public Movie.Builder released(long released) {
+        public ViewMovie.Builder released(long released) {
             this.released = released;
             return this;
         }
-        public Movie.Builder runtime(int runtime) {
+        public ViewMovie.Builder runtime(int runtime) {
             this.runtime = runtime;
             return this;
         }
-        public Movie.Builder genre(@Nullable String genre) {
+        public ViewMovie.Builder genre(@Nullable String genre) {
             this.genre = genre;
             return this;
         }
-        public Movie.Builder poster(@Nullable String poster) {
+        public ViewMovie.Builder poster(@Nullable String poster) {
             this.poster = poster;
             return this;
         }
         /** Builds and returns an object of this class. */
-        public Movie build() {
+        public ViewMovie build() {
             String missing = "";
             if (id <= 0) {
                 missing += " id";
@@ -330,7 +314,7 @@ public class Movie implements Parcelable {
             if (!missing.isEmpty()) {
                 throw new IllegalStateException("Missing required properties:" + missing);
             }
-            return new Movie(
+            return new ViewMovie(
                     this.id,
                     this.imdbId,
                     this.title,
@@ -347,7 +331,7 @@ public class Movie implements Parcelable {
 
     @Override
     public String toString() {
-        return "Movie{"
+        return "ViewMovie{"
                 + "id=" + id
                 + ", imdbId=" + imdbId
                 + ", title=" + title
@@ -364,8 +348,8 @@ public class Movie implements Parcelable {
         if (o == this) {
             return true;
         }
-        if (o instanceof Movie) {
-            Movie that = (Movie) o;
+        if (o instanceof ViewMovie) {
+            ViewMovie that = (ViewMovie) o;
             return (this.id == that.id)
                     && (this.imdbId.equals(that.imdbId))
                     && (this.title.equals(that.title))
@@ -401,29 +385,25 @@ public class Movie implements Parcelable {
         return h;
     }
 
-    //---------------------------------------------------------------
-    // Comparators
-
-    /** Comparator for ordering by imdbId. */
-    public static final Comparator<Movie> MovieComparatorImdbId
-            = new Comparator<Movie>() {
-                public int compare(Movie movie1, Movie movie2) {
-                    // ascending order
-                    return movie1.imdbId.compareTo(movie2.imdbId);
-                    // descending order
-                    //return movie2.imdbId.compareTo(movie1.imdbId);
-                }
-            };
-
-    /** Comparator for ordering by title. */
-    public static final Comparator<Movie> MovieComparatorTitle
-            = new Comparator<Movie>() {
-                public int compare(Movie movie1, Movie movie2) {
-                    // ascending order
-                    return movie1.title.compareTo(movie2.title);
-                    // descending order
-                    //return movie2.title.compareTo(movie1.title);
-                }
-            };
+//    //---------------------------------------------------------------
+//    // Comparators
+//
+//    /** Comparator for ordering by imdbId. */
+//    public static final Comparator<ViewMovie> ViewMovieComparatorImdbId
+//            = new Comparator<ViewMovie>() {
+//                public int compare(ViewMovie viewMovie1, ViewMovie viewMovie2) {
+//                    // ascending order
+//                    return viewMovie1.imdbId.compareTo(viewMovie2.imdbId);
+//                }
+//            };
+//
+//    /** Comparator for ordering by title. */
+//    public static final Comparator<ViewMovie> ViewMovieComparatorTitle
+//            = new Comparator<ViewMovie>() {
+//                public int compare(ViewMovie viewMovie1, ViewMovie viewMovie2) {
+//                    // ascending order
+//                    return viewMovie1.title.compareTo(viewMovie2.title);
+//                }
+//            };
 
 }

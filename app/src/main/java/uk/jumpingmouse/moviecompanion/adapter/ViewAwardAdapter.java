@@ -185,23 +185,23 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
 
         // Callback the list fragment container (i.e. the list activity), so it can
         // display the selected movie
-        Uri uri = DataContract.MovieEntry.buildUriForRowById(movieId);
+        Uri uri = DataContract.ViewMovieEntry.buildUriForRowById(movieId);
         listFragmentContainer.onItemSelected(mContext, uri);
     }
 
-    /**
-     * Select one of the items on the list.
-     * @param selectedPosition the position of the list item to be selected
-     * @param listFragmentContainer the activity containing the fragment in which the list is displayed
-     */
-    public void selectItemAtPosition(final int selectedPosition,
-                         final AwardListFragment.ListFragmentContainer listFragmentContainer) {
-        Cursor cursor = getCursor();
-        if (cursor != null && cursor.moveToPosition(selectedPosition)) {
-            int movieId = cursor.getInt(DataContract.ViewAwardEntry.COL_MOVIE_ID);
-            handleItemClick(movieId, selectedPosition, listFragmentContainer);
-        }
-    }
+//    /**
+//     * Select one of the items on the list.
+//     * @param selectedPosition the position of the list item to be selected
+//     * @param listFragmentContainer the activity containing the fragment in which the list is displayed
+//     */
+//    public void selectItemAtPosition(final int selectedPosition,
+//                         final AwardListFragment.ListFragmentContainer listFragmentContainer) {
+//        Cursor cursor = getCursor();
+//        if (cursor != null && cursor.moveToPosition(selectedPosition)) {
+//            int movieId = cursor.getInt(DataContract.ViewAwardEntry.COL_MOVIE_ID);
+//            handleItemClick(movieId, selectedPosition, listFragmentContainer);
+//        }
+//    }
 
     // Getters and setters
 

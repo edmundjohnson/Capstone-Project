@@ -196,6 +196,10 @@ public class SecurityManagerFirebase implements SecurityManager {
         getMasterDatabase().onSignedOut();
 
         // TODO: Implement adapter sign out processing - pass adapters in?
+        // But, could sign out from anywhere - how to get a reference to the
+        // list adapter in the list fragment?
+        // If this isn't done, will the wrong list be displayed after signing in as
+        // a different user?
 //        mMovieAdapter.clear();
 //        mAwardAdapter.clear();
     }

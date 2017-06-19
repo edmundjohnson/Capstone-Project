@@ -18,6 +18,7 @@ import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.data.ViewAward;
+import uk.jumpingmouse.moviecompanion.data.ViewMovie;
 import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 
 /**
@@ -38,6 +39,9 @@ public class DataProvider extends ContentProvider {
     private static final int VIEW_AWARD = 300;
     private static final int VIEW_AWARD_ID = 301;
     private static final int VIEW_AWARD_ALL = 302;
+    private static final int VIEW_MOVIE = 400;
+    private static final int VIEW_MOVIE_ID = 401;
+    private static final int VIEW_MOVIE_ALL = 402;
 
     //---------------------------------------------------------------------
     // URI matcher
@@ -76,6 +80,17 @@ public class DataProvider extends ContentProvider {
         uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
                 DataContract.URI_PATH_AWARD + "/*",
                 AWARD_ID);
+
+        // view movie
+        uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
+                DataContract.URI_PATH_VIEW_MOVIE,
+                VIEW_MOVIE);
+        uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
+                DataContract.URI_PATH_VIEW_MOVIE + "/" + DataContract.PARAM_ALL,
+                VIEW_MOVIE_ALL);
+        uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
+                DataContract.URI_PATH_VIEW_MOVIE + "/*",
+                VIEW_MOVIE_ID);
 
         // view award
         uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
@@ -401,6 +416,16 @@ public class DataProvider extends ContentProvider {
             case VIEW_AWARD_ALL:
                 cursor = selectViewAwards(projection, selection, selectionArgs, sortOrder);
                 break;
+            // "award/*"
+            case VIEW_MOVIE_ID:
+                int viewMovieId = ModelUtils.idToMovieId(uri.getLastPathSegment());
+                if (viewMovieId == Movie.ID_UNKNOWN) {
+                    Timber.w("Could not obtain viewMovieId id from URI" + uri);
+                    cursor = null;
+                } else {
+                    cursor = selectViewMovieById(viewMovieId);
+                }
+                break;
             default:
                 throw new UnsupportedOperationException("Unsupported URI for query: " + uri);
         }
@@ -682,6 +707,41 @@ public class DataProvider extends ContentProvider {
         for (Award award : awards) {
             matrixCursor.addRow(award.toObjectArray());
         }
+
+        return matrixCursor;
+    }
+
+    //---------------------------------------------------------------------
+    // ViewMovie query methods
+
+    /**
+     * Return a cursor whose first row is the view movie with a specified id.
+     * @param id the id of the required row
+     * @return a cursor whose first row is the row with the specified id
+     */
+    @Nullable
+    private Cursor selectViewMovieById(final int id) {
+        ViewMovie viewMovie = getLocalDatabase().selectViewMovieById(id);
+        if (viewMovie == null) {
+            Timber.w("", "ViewMovie not found with id: " + id);
+            return null;
+        }
+        return toCursor(viewMovie);
+    }
+
+    /**
+     * Returns a one-row cursor containing a ViewMovie.
+     * @param viewMovie the view movie
+     * @return a one-row cursor containing the ViewMovie
+     */
+    @NonNull
+    private Cursor toCursor(@NonNull ViewMovie viewMovie) {
+        // Create a cursor containing the movie columns
+        String[] columns = DataContract.ViewMovieEntry.getAllColumns();
+        MatrixCursor matrixCursor = new MatrixCursor(columns);
+
+        // populate the cursor with the movie
+        matrixCursor.addRow(viewMovie.toObjectArray());
 
         return matrixCursor;
     }

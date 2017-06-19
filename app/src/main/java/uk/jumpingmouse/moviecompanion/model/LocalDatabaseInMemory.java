@@ -16,6 +16,7 @@ import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.data.ViewAward;
+import uk.jumpingmouse.moviecompanion.data.ViewMovie;
 
 /**
  * Class giving access to a local copy of the database.
@@ -314,7 +315,29 @@ public class LocalDatabaseInMemory implements LocalDatabase {
     }
 
     //---------------------------------------------------------------------
-    // View Award query methods
+    // ViewMovie query methods
+
+    /**
+     * Returns the view movie with a specified id.
+     * @param id the view movie's id
+     * @return the view movie with the specified id, or null if there is no matching view movie
+     */
+    @Override
+    @Nullable
+    public ViewMovie selectViewMovieById(int id) {
+        if (id == Movie.ID_UNKNOWN) {
+            return null;
+        }
+        Movie movie = selectMovieById(id);
+        if (movie == null) {
+            Timber.d("selectViewMovieById: Movie not found with id: " + id);
+            return null;
+        }
+        return new ViewMovie(movie);
+    }
+
+    //---------------------------------------------------------------------
+    // ViewAward query methods
 
     /**
      * Returns the view award with a specified award id.

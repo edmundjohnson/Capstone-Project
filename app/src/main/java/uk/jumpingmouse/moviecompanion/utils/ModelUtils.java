@@ -11,6 +11,7 @@ import java.util.List;
 import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
+import uk.jumpingmouse.moviecompanion.data.ViewMovie;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.omdbapi.OmdbApi;
 import uk.jumpingmouse.omdbapi.OmdbMovie;
@@ -33,15 +34,7 @@ public final class ModelUtils {
      * @return the movie id, e.g. 4061234
      */
     public static int idToMovieId(String strId) {
-        if (strId != null && !strId.isEmpty()) {
-            try {
-                return Integer.parseInt(strId);
-            } catch (Exception e) {
-                Timber.w("Exception while converting String movie id to int id", e);
-                return Movie.ID_UNKNOWN;
-            }
-        }
-        return Movie.ID_UNKNOWN;
+        return JavaUtils.toInt(strId, Movie.ID_UNKNOWN);
     }
 
     /**
@@ -51,12 +44,7 @@ public final class ModelUtils {
      */
     public static int imdbIdToMovieId(String imdbId) {
         if (imdbId != null && imdbId.length() > 2) {
-            try {
-                return Integer.parseInt(imdbId.substring(2));
-            } catch (Exception e) {
-                Timber.w("Exception while converting IMDb id to movie id", e);
-                return Movie.ID_UNKNOWN;
-            }
+            return JavaUtils.toInt(imdbId.substring(2), Movie.ID_UNKNOWN);
         }
         return Movie.ID_UNKNOWN;
     }
@@ -333,6 +321,61 @@ public final class ModelUtils {
                 .category(category)
                 .review(review)
                 .displayOrder(displayOrder)
+                .build();
+    }
+
+    /**
+     * Creates and returns a Movie based on the values of a cursor row.
+     * @param cursor a cursor positioned at the required row
+     * @return a Movie based on the values of the cursor row, or null if the cursor row
+     *         does not contain values for any of the fields which are mandatory for Movie
+     */
+    @Nullable
+    public static ViewMovie newViewMovie(@NonNull Cursor cursor) {
+        final int id = cursor.getInt(DataContract.MovieEntry.COL_ID);
+        final String imdbId = cursor.getString(DataContract.MovieEntry.COL_IMDB_ID);
+        final String title = cursor.getString(DataContract.MovieEntry.COL_TITLE);
+        final String year = cursor.getString(DataContract.MovieEntry.COL_YEAR);
+        final String genre = cursor.getString(DataContract.MovieEntry.COL_GENRE);
+        final String poster = cursor.getString(DataContract.MovieEntry.COL_POSTER);
+
+        // if the id mandatory attribute is missing, return null
+        if (id <= 0) {
+            Timber.e("newViewMovie(Cursor): invalid id");
+            return null;
+        }
+        // if the imdbId mandatory attribute is missing, return null
+        if (imdbId == null) {
+            Timber.e("newViewMovie(Cursor): missing imdbId");
+            return null;
+        }
+        // if the title mandatory attribute is missing, return null
+        if (title == null) {
+            Timber.e("newViewMovie(Cursor): missing title");
+            return null;
+        }
+        // if the released date is invalid set it to unknown
+        long released = cursor.getLong(DataContract.MovieEntry.COL_RELEASED);
+        if (released <= 0 && released != Movie.RELEASED_UNKNOWN) {
+            Timber.w("newViewMovie(Cursor): invalid released");
+            released = Movie.RELEASED_UNKNOWN;
+        }
+        // if the runtime is invalid set it to unknown
+        int runtime = cursor.getInt(DataContract.MovieEntry.COL_RUNTIME);
+        if (runtime < 1 && runtime != Movie.RUNTIME_UNKNOWN) {
+            Timber.w("newViewMovie(Cursor): invalid runtime");
+            runtime = Movie.RUNTIME_UNKNOWN;
+        }
+
+        return ViewMovie.builder()
+                .id(id)
+                .imdbId(imdbId)
+                .title(title)
+                .year(year)
+                .released(released)
+                .runtime(runtime)
+                .genre(genre)
+                .poster(poster)
                 .build();
     }
 

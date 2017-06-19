@@ -10,10 +10,13 @@ import java.util.Date;
 import timber.log.Timber;
 
 /**
- * Class for date/time utilities.
+ * Class for Java utilities.
  * @author Edmund Johnson
  */
-final class DateUtils {
+public final class JavaUtils {
+
+    //---------------------------------------------------------------------
+    // Date utilities
 
 //    /**
 //     * A date format which allows dates to be compared chronologically.
@@ -21,24 +24,9 @@ final class DateUtils {
 //     */
 //    static final String DATE_FORMAT_COMPARABLE = "yyyy-MM-dd HH:mm:ss";
 
-//    /** The day/month format for displaying dates. */
-//    private static SimpleDateFormat sDateFormatDisplay;
-
     /** Private default constructor to prevent instantiation. */
-    private DateUtils() {
+    private JavaUtils() {
     }
-
-//    /**
-//     * Returns a dateFormatDayMonth object.
-//     * @return a dateFormatDayMonth object
-//     */
-//    @NonNull
-//    private static SimpleDateFormat getDateFormatForDisplay() {
-//        if (sDateFormatDayMonth == null) {
-//            sDateFormatDayMonth = new SimpleDateFormat(DATE_FORMAT_FOR_DISPLAY, Locale.US);
-//        }
-//        return sDateFormatDayMonth;
-//    }
 
     /**
      * Returns a Date object representing a supplied String.
@@ -91,5 +79,25 @@ final class DateUtils {
 //    public static String toStringForDisplay(@Nullable final Date date) {
 //        return toString(getDateFormatForDisplay(), date);
 //    }
+
+    //---------------------------------------------------------------------
+
+    /**
+     * Converts a String to an int and returns the int.
+     * @param str the String to convert
+     * @param defaultValue the value to return if the String cannot be parsed as an int
+     * @return the String as an int, or defaultValue if the String could not be parsed as an int
+     */
+    public static int toInt(@Nullable String str, int defaultValue) {
+        if (str != null && !str.trim().isEmpty()) {
+            try {
+                return Integer.parseInt(str);
+            } catch (Exception e) {
+                Timber.w("Exception while converting String to int", e);
+                return defaultValue;
+            }
+        }
+        return defaultValue;
+    }
 
 }

@@ -25,6 +25,7 @@ import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.moviecompanion.model.MasterDatabase;
 import uk.jumpingmouse.moviecompanion.security.SecurityManager;
+import uk.jumpingmouse.moviecompanion.utils.JavaUtils;
 import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 import uk.jumpingmouse.moviecompanion.utils.NavUtils;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
@@ -78,7 +79,7 @@ public class AddAwardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_award);
 
         // Initialise the app bar
-        getViewUtils().initialiseAppBar(this, R.id.tbAppBar, getString(R.string.app_name));
+        getViewUtils().initialiseAppBar(this, R.id.tbAppBar, getString(R.string.app_name), false);
 
         mTxtImdbId = (EditText) findViewById(R.id.txtImdbId);
         mLabelTitle = (TextView) findViewById(R.id.labelTitle);
@@ -251,8 +252,7 @@ public class AddAwardActivity extends AppCompatActivity {
         String awardDate = mTxtAwardDate.getText().toString();
         String category = mRadioAwardCategory.getCheckedRadioButtonId() ==
                 R.id.radioCategoryMovie ? Award.CATEGORY_MOVIE : Award.CATEGORY_DVD;
-        // TODO catch Exception
-        int displayOrder = Integer.parseInt(mTxtAwardDisplayOrder.getText().toString());
+        int displayOrder = JavaUtils.toInt(mTxtAwardDisplayOrder.getText().toString(), 1);
         // Generate the unique award id, e.g. "3666024_170522_M"
         String id = movieId + "_" + awardDate + "_" + category;
 

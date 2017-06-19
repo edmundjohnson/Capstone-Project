@@ -20,11 +20,20 @@
             android:syncable="true" />
 
         <!-- The main activity -->
-        <activity android:name=".activity.MainActivity" >
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <!-- The movie activity -->
+        <activity android:name=".activity.MovieActivity"
+            android:parentActivityName=".activity.MainActivity"
+            android:launchMode="singleTop">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="uk.jumpingmouse.moviecompanion.activity.MainActivity" />
         </activity>
 
     </application>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- The FrameLayout and the RelativeLayout are required to get the correct styling,
+<!-- The FrameLayout and the LinearLayout are required to get the correct styling,
      see styles.xml. -->
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -14,24 +14,26 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:minHeight="?android:attr/listPreferredItemHeight"
-        android:paddingStart="?android:listPreferredItemPaddingStart"
-        android:paddingEnd="?android:listPreferredItemPaddingEnd"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
+        android:gravity="center_vertical"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
         >
         <!--
-                style="@style/AwardListItemContainerInner"
+        android:paddingStart="?android:listPreferredItemPaddingStart"
+        android:paddingEnd="?android:listPreferredItemPaddingEnd"
+        style="@style/AwardListItemContainerInner"
         -->
 
         <ImageView
             android:id="@+id/imgPoster"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:padding="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
             android:scaleType="centerInside"
+            android:padding="0dp"
+            android:layout_margin="0dp"
             android:contentDescription="@string/poster_description"
             tools:src="@mipmap/ic_launcher"/>
 
@@ -39,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginStart="?android:listPreferredItemPaddingStart"
+            android:layout_marginStart="16dp"
             >
 
             <TextView
@@ -54,23 +56,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                >
-
-                <TextView
-                    android:id="@+id/txtCategory"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@android:style/TextAppearance.Small"
-                    tools:text="@string/category_text_movie"
-                    />
+                android:layout_marginTop="8dp">
 
                 <TextView
                     android:id="@+id/txtAwardDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
                     android:textAppearance="@android:style/TextAppearance.Small"
                     tools:text="@string/example_award_date"
+                    />
+
+                <TextView
+                    android:id="@+id/txtCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    tools:text="@string/category_text_movie"
                     />
 
             </LinearLayout>
