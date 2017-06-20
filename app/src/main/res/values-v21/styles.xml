@@ -9,7 +9,7 @@
         <!-- <item name="android:paddingRight">@dimen/appbar_padding_horizontal</item> -->
         <item name="android:popupTheme">@style/AppBarPopupTheme</item>
         <item name="android:titleTextAppearance">@style/AppBarTitle</item>
-        <item name="android:elevation">4dp</item>
+        <!-- <item name="android:elevation">@dimen/abc_action_bar_elevation_material</item> -->
     </style>
     <style name="AppBarPopupTheme" parent="ThemeOverlay.AppCompat.Light" />
 

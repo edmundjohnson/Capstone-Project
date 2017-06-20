@@ -6,11 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layoutAwardListItem"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    >
-<!--
-    style="@style/AwardListItemContainerOuter"
--->
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,20 +16,13 @@
         android:gravity="center_vertical"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
-        >
-        <!--
-        android:paddingStart="?android:listPreferredItemPaddingStart"
-        android:paddingEnd="?android:listPreferredItemPaddingEnd"
-        style="@style/AwardListItemContainerInner"
-        -->
+        tools:ignore="UselessParent">
 
         <ImageView
             android:id="@+id/imgPoster"
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="80dp"
             android:scaleType="centerInside"
-            android:padding="0dp"
-            android:layout_margin="0dp"
             android:contentDescription="@string/poster_description"
             tools:src="@mipmap/ic_launcher"/>
 
@@ -41,16 +30,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginStart="16dp"
-            >
+            android:layout_marginStart="16dp">
 
             <TextView
                 android:id="@+id/txtMovieTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@android:style/TextAppearance.Medium"
-                tools:text="@string/example_movie_title"
-                />
+                tools:text="@string/example_movie_title" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -63,8 +50,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@android:style/TextAppearance.Small"
-                    tools:text="@string/example_award_date"
-                    />
+                    tools:text="@string/example_award_date" />
 
                 <TextView
                     android:id="@+id/txtCategory"
@@ -72,8 +58,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:textAppearance="@android:style/TextAppearance.Small"
-                    tools:text="@string/category_text_movie"
-                    />
+                    tools:text="@string/category_text_movie" />
 
             </LinearLayout>
 

@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.AwardListFragment"
-    >
+    tools:context=".activity.AwardListFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/viewPostList"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:paddingLeft="@dimen/list_side_margin"
+        android:paddingRight="@dimen/list_side_margin"
         android:clickable="true"
         android:focusable="true"
         android:scrollbars="vertical"
-        tools:listitem="@layout/award_list_item"
-        />
+        android:scrollbarStyle="outsideOverlay"
+        tools:listitem="@layout/award_list_item" />
 
     <!-- empty view for when there are no items, use same padding as elsewhere -->
     <TextView
         android:id="@+id/viewAwardListEmpty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp"
-        tools:text="@string/no_awards_available"
-        />
-    <!--
-        android:background="@color/award_list_item_default"
-        android:textSize="@dimen/text_size_list_item_movie_title"
-    -->
+        android:paddingTop="16dp"
+        android:paddingLeft="@dimen/list_side_margin"
+        android:paddingRight="@dimen/list_side_margin"
+        tools:text="@string/no_awards_available" />
 
 </FrameLayout>

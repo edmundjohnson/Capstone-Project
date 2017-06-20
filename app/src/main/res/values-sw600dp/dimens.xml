@@ -6,9 +6,10 @@
     <dimen name="activity_margin_vertical">24dp</dimen>
 
     <!-- APP BAR -->
+    <dimen name="appbar_height">112dp</dimen>
     <!-- To overcome a bug in toolbar, we need to add extra padding on wider screens -->
-    <!--
     <dimen name="appbar_padding_horizontal">8dp</dimen>
+    <!--
     <dimen name="text_size_appbar_title">22dp</dimen>
     -->
 
