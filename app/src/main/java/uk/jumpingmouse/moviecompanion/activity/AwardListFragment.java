@@ -311,7 +311,9 @@ public class AwardListFragment extends Fragment
      */
     @Override
     public void onLoaderReset(final Loader<Cursor> loader) {
-        mViewAwardAdapter.swapCursor(null);
+        if (mViewAwardsCursorLoader != null) {
+            mViewAwardAdapter.swapCursor(null);
+        }
     }
 
     /**
@@ -319,7 +321,9 @@ public class AwardListFragment extends Fragment
      * so that onLoadFinished() can update the adapter data, hence updating the view.
      */
     private void onDataChanged() {
-        mViewAwardsCursorLoader.forceLoad();
+        if (mViewAwardsCursorLoader != null) {
+            mViewAwardsCursorLoader.forceLoad();
+        }
     }
 //    public void onDataChanged(Bundle bundle) {
 //        getLoaderManager().restartLoader(AWARD_LIST_LOADER_ID, bundle, this);

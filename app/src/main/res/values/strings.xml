@@ -21,10 +21,21 @@
     <string name="error_title">Error</string>
 
     <!-- Tool data for layout design view -->
-    <string name="example_movie_title">The Handmaiden</string>
+    <!-- <string name="example_movie_title">The Handmaiden</string> -->
+    <string name="example_movie_title">Those Magnificent Men in Their Flying Machines</string>
     <string name="example_award_date">02 June 17</string>
 
-    <!-- Award List / Movie -->
+    <!-- Movie fields -->
+    <!-- It is unlikely that there will be a film whose length is 1 minute, but more
+         applicable distinctions in the runtime_text could occur in other languages -->
+    <plurals name="runtime_text">
+        <item quantity="one">%d min</item>
+        <item quantity="other">%d mins</item>
+    </plurals>
+    <string name="example_movie_genre">Drama, Romance</string>
+    <string name="example_movie_runtime">114 mins</string>
+
+    <!-- Award fields -->
     <string name="category_text_movie">Movie of the Week</string>
     <string name="category_text_dvd">DVD of the Week</string>
     <string name="category_text_unknown">unknown</string>
@@ -32,10 +43,5 @@
 
     <!-- Award List -->
     <string name="no_awards_available">There are no awards matching your criteria</string>
-
-
-    <!-- Movie -->
-    <string name="example_movie_genre">Comedy</string>
-    <string name="example_movie_runtime">114 min</string>
 
 </resources>

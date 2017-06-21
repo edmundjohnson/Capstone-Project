@@ -2,6 +2,7 @@ package uk.jumpingmouse.moviecompanion.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -75,7 +76,7 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
         //Timber.d("onCreateViewHolder() called with: viewGroup = ["
         //                 + viewGroup + "], viewType = [" + viewType + "]");
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-        View itemView = inflater.inflate(R.layout.award_list_item, viewGroup, false);
+        View itemView = inflater.inflate(R.layout.award_list_item_list, viewGroup, false);
         return new ViewHolder(itemView);
     }
 
@@ -116,16 +117,24 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
         int movieId = mCursor.getInt(DataContract.ViewAwardEntry.COL_MOVIE_ID);
         String awardDate = getViewUtils().getAwardDateDisplayable(
                 mCursor.getString(DataContract.ViewAwardEntry.COL_AWARD_DATE));
-        String category = getViewUtils().getCategoryDisplayable(mContext,
-                mCursor.getString(DataContract.ViewAwardEntry.COL_CATEGORY));
+        String categoryCode = mCursor.getString(DataContract.ViewAwardEntry.COL_CATEGORY);
+        Drawable categoryDrawable = getViewUtils().getCategoryDrawable(mContext, categoryCode);
+        String categoryText = getViewUtils().getCategoryText(mContext, categoryCode);
         int displayOrder = mCursor.getInt(DataContract.ViewAwardEntry.COL_DISPLAY_ORDER);
+
         String movieTitle = mCursor.getString(DataContract.ViewAwardEntry.COL_TITLE);
+        int runtime = mCursor.getInt(DataContract.ViewAwardEntry.COL_RUNTIME);
+        String runtimeText = getViewUtils().getRuntimeText(mContext, runtime);
+        String genre = mCursor.getString(DataContract.ViewAwardEntry.COL_GENRE);
         String poster = mCursor.getString(DataContract.ViewAwardEntry.COL_POSTER);
 
         // replace the contents of the item view with the data for the award
         Picasso.with(mContext).load(poster).into(viewHolder.getImgPoster());
         viewHolder.getTxtMovieTitle().setText(movieTitle);
-        viewHolder.getTxtCategory().setText(category);
+        viewHolder.getTxtRuntime().setText(runtimeText);
+        viewHolder.getTxtGenre().setText(genre);
+        viewHolder.getImgCategory().setImageDrawable(categoryDrawable);
+        viewHolder.getImgCategory().setContentDescription(categoryText);
         viewHolder.getTxtAwardDate().setText(awardDate);
     }
 
@@ -229,8 +238,12 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
         private final ImageView imgPoster;
         /** The view containing the movie title. */
         private final TextView txtMovieTitle;
-        /** The view containing the category. */
-        private final TextView txtCategory;
+        /** The view containing the movie runtime. */
+        private final TextView txtRuntime;
+        /** The view containing the movie genre. */
+        private final TextView txtGenre;
+        /** The image view containing the category drawable icon. */
+        private final ImageView imgCategory;
         /** The view containing the award date. */
         private final TextView txtAwardDate;
 
@@ -242,7 +255,9 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
             super(view);
             imgPoster = (ImageView) view.findViewById(R.id.imgPoster);
             txtMovieTitle = (TextView) view.findViewById(R.id.txtMovieTitle);
-            txtCategory = (TextView) view.findViewById(R.id.txtCategory);
+            txtRuntime = (TextView) view.findViewById(R.id.txtRuntime);
+            txtGenre = (TextView) view.findViewById(R.id.txtGenre);
+            imgCategory = (ImageView) view.findViewById(R.id.imgCategory);
             txtAwardDate = (TextView) view.findViewById(R.id.txtAwardDate);
 
             view.setOnClickListener(this);
@@ -270,8 +285,18 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
         }
 
         @NonNull
-        final TextView getTxtCategory() {
-            return txtCategory;
+        final TextView getTxtRuntime() {
+            return txtRuntime;
+        }
+
+        @NonNull
+        final TextView getTxtGenre() {
+            return txtGenre;
+        }
+
+        @NonNull
+        final ImageView getImgCategory() {
+            return imgCategory;
         }
 
         @NonNull

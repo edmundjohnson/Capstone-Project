@@ -334,6 +334,8 @@ public final class DataContract {
         public static final String COLUMN_CATEGORY = "category";
         public static final String COLUMN_DISPLAY_ORDER = "displayOrder";
         public static final String COLUMN_TITLE = "title";
+        public static final String COLUMN_RUNTIME = "runtime";
+        public static final String COLUMN_GENRE = "genre";
         public static final String COLUMN_POSTER = "poster";
 
         // Note: arrays are mutable, so ALL_COLUMNS should not be public.
@@ -345,6 +347,8 @@ public final class DataContract {
                 COLUMN_CATEGORY,
                 COLUMN_DISPLAY_ORDER,
                 COLUMN_TITLE,
+                COLUMN_RUNTIME,
+                COLUMN_GENRE,
                 COLUMN_POSTER
         };
 
@@ -358,7 +362,9 @@ public final class DataContract {
         public static final int COL_CATEGORY = COL_AWARD_DATE + 1;
         public static final int COL_DISPLAY_ORDER = COL_CATEGORY + 1;
         public static final int COL_TITLE = COL_DISPLAY_ORDER + 1;
-        public static final int COL_POSTER = COL_TITLE + 1;
+        public static final int COL_RUNTIME = COL_TITLE + 1;
+        public static final int COL_GENRE = COL_RUNTIME + 1;
+        public static final int COL_POSTER = COL_GENRE + 1;
 
         // URIs
 

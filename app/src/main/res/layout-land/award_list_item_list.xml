@@ -8,28 +8,32 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:minHeight="?android:attr/listPreferredItemHeight"
-        android:gravity="center_vertical"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
+        android:baselineAligned="false"
         tools:ignore="UselessParent">
 
         <ImageView
             android:id="@+id/imgPoster"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:layout_centerVertical="true"
             android:scaleType="centerInside"
             android:contentDescription="@string/poster_description"
             tools:src="@mipmap/ic_launcher"/>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:layout_toEndOf="@id/imgPoster"
+            android:layout_toStartOf="@id/layoutAwardInfo"
+            android:layout_centerVertical="true"
             android:layout_marginStart="16dp">
 
             <TextView
@@ -40,30 +44,59 @@
                 tools:text="@string/example_movie_title" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="8dp">
 
                 <TextView
-                    android:id="@+id/txtAwardDate"
+                    android:id="@+id/txtRuntime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@android:style/TextAppearance.Small"
-                    tools:text="@string/example_award_date" />
+                    tools:text="@string/example_movie_runtime" />
 
                 <TextView
-                    android:id="@+id/txtCategory"
+                    android:id="@+id/txtGenre"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:textAppearance="@android:style/TextAppearance.Small"
-                    tools:text="@string/category_text_movie" />
+                    tools:text="@string/example_movie_genre" />
 
             </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/layoutAwardInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/imgCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerInside"
+                android:contentDescription="@string/category_text_movie"
+                tools:src="@drawable/ic_local_movies_24dp"/>
+
+            <TextView
+                android:id="@+id/txtAwardDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textAppearance="@android:style/TextAppearance.Small"
+                tools:text="@string/example_award_date" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </FrameLayout>

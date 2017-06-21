@@ -34,8 +34,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_gravity="bottom"
-                android:layout_marginLeft="@dimen/list_toolbar_side_margin"
-                android:layout_marginRight="@dimen/list_toolbar_side_margin"
+                android:layout_marginStart="@dimen/list_toolbar_side_margin"
+                android:layout_marginEnd="@dimen/list_toolbar_side_margin"
                 android:theme="@style/AppBarTheme"
                 app:titleTextAppearance="@style/AppBarTitle"
                 tools:title="@string/app_name" />

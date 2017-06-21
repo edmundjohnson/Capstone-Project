@@ -25,6 +25,10 @@ public class ViewAward {
     private int displayOrder;
     // The movie title, e.g. "The Handmaiden"
     private String title;
+    // The length in minutes
+    private int runtime;
+    // A comma-separated list of genres, e.g. "Drama, Mystery, Romance"
+    private String genre;
     // The URL of the movie poster image
     private String poster;
 
@@ -38,6 +42,8 @@ public class ViewAward {
         this.category = award.getCategory();
         this.displayOrder = award.getDisplayOrder();
         this.title = movie.getTitle();
+        this.runtime = movie.getRuntime();
+        this.genre = movie.getGenre();
         this.poster = movie.getPoster();
     }
 
@@ -72,6 +78,17 @@ public class ViewAward {
         return title;
     }
 
+    /** Returns the runtime in minutes, e.g. 144. */
+    private int getRuntime() {
+        return runtime;
+    }
+
+    /** Returns a comma-separated list of genres, e.g. "Drama, Mystery, Romance". */
+    @Nullable
+    private String getGenre() {
+        return genre;
+    }
+
     @Nullable
     private String getPoster() {
         return poster;
@@ -93,6 +110,8 @@ public class ViewAward {
                 getCategory(),
                 getDisplayOrder(),
                 getTitle(),
+                getRuntime(),
+                getGenre(),
                 getPoster()
         };
     }
@@ -109,6 +128,8 @@ public class ViewAward {
                 + ", category=" + category
                 + ", displayOrder=" + displayOrder
                 + ", title=" + title
+                + ", runtime=" + runtime
+                + ", genre=" + genre
                 + ", poster=" + poster
                 + "}";
     }
@@ -126,7 +147,10 @@ public class ViewAward {
                     && (this.category.equals(that.category))
                     && (this.displayOrder == that.displayOrder)
                     && (this.title.equals(that.title))
-                    && (this.poster.equals(that.poster));
+                    && (this.runtime == that.runtime)
+                    && ((this.genre == null) ? (that.genre == null) : this.genre.equals(that.genre))
+                    && ((this.poster == null) ? (that.poster == null) :
+                    this.poster.equals(that.poster));
         }
         return false;
     }
@@ -147,7 +171,11 @@ public class ViewAward {
         h *= 1000003;
         h ^= this.title.hashCode();
         h *= 1000003;
-        h ^= this.poster.hashCode();
+        h ^= this.runtime;
+        h *= 1000003;
+        h ^= (genre == null) ? 0 : this.genre.hashCode();
+        h *= 1000003;
+        h ^= (poster == null) ? 0 : this.poster.hashCode();
         return h;
     }
 
