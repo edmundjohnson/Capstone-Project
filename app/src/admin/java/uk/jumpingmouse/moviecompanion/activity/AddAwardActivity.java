@@ -79,7 +79,7 @@ public class AddAwardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_award);
 
         // Initialise the app bar
-        getViewUtils().initialiseAppBar(this, R.id.tbAppBar, getString(R.string.app_name), false);
+        getViewUtils().initialiseAppBar(this, R.id.tbAppBar, getString(R.string.app_name), true);
 
         mTxtImdbId = (EditText) findViewById(R.id.txtImdbId);
         mLabelTitle = (TextView) findViewById(R.id.labelTitle);

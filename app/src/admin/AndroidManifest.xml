@@ -10,9 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
 
-        <!-- Can this be removed for admin product flavour ? -->
-        <!-- Android v7 requires the android:authorities to be specified literally,
-             i.e. NOT using a reference to a string/resource -->
+        <!-- The content provider -->
         <provider
             android:authorities="@string/content_authority"
             android:name=".model.DataProvider"
@@ -20,7 +18,6 @@
             android:exported="false"
             android:syncable="true" />
 
-        <!-- Can this be removed for admin product flavour ? -->
         <!-- The main activity -->
         <activity android:name=".activity.MainActivity">
             <intent-filter>
@@ -33,17 +30,16 @@
         <activity android:name=".activity.MovieActivity"
             android:parentActivityName=".activity.MainActivity"
             android:launchMode="singleTop" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="uk.jumpingmouse.moviecompanion.activity.MainActivity" />
         </activity>
 
         <!-- The add movie activity -->
-        <activity android:name=".activity.AddMovieActivity">
+        <activity android:name=".activity.AddMovieActivity"
+            android:parentActivityName=".activity.MainActivity">
         </activity>
 
         <!-- The add award activity -->
-        <activity android:name=".activity.AddAwardActivity">
+        <activity android:name=".activity.AddAwardActivity"
+            android:parentActivityName=".activity.MainActivity">
         </activity>
 
     </application>

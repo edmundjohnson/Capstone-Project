@@ -29,6 +29,8 @@
     </style>
 
     <style name="ButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:paddingEnd">8dp</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:background">@color/colorButtonBackground</item>
         <item name="android:textColor">@android:color/white</item>

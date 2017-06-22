@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:baselineAligned="false"
-    tools:context=".activity.AddAwardActivity"
-    >
+    tools:context=".activity.AddAwardActivity">
 
     <include layout="@layout/appbar"/>
 
@@ -198,9 +197,9 @@
                     android:id="@+id/btnSave"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
-                    android:layout_marginStart="16dp"
                     android:visibility="gone"
                     android:text="@string/button_label_save"
                     android:onClick="onSave"

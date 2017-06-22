@@ -3,18 +3,70 @@
 
     <!-- Material palette: Deep Purple -->
     <!-- see: https://material.io/guidelines/style/color.html#color-color-palette  -->
+    <!--
     <color name="deepPurple400">#9575CD</color>
     <color name="deepPurple500">#673AB7</color>
     <color name="deepPurple700">#512DA8</color>
+    <color name="deepPurple900">#311B92</color>
     <color name="greenA200">#68EFAD</color>
+    -->
 
+    <!-- Material palette: Light Green -->
+    <!-- see: https://material.io/guidelines/style/color.html#color-color-palette  -->
+    <!--
+    <color name="lightGreen400">#9CCC65</color>
+    <color name="lightGreen500">#8BC34A</color>
+    <color name="lightGreen700">#689F38</color>
+    <color name="lightGreen900">#33691E</color>
+    <color name="deepPurpleA200">#7C4DFF</color>
+    -->
 
-    <!-- Theme colours -->
-    <color name="colorPrimary">@color/deepPurple500</color>
-    <color name="colorPrimaryDark">@color/deepPurple700</color>
-    <!-- green A200 -->
-    <color name="colorAccent">@color/greenA200</color>
+    <!--
+         Theme colours.
+         Chosen using the colour tool: https://material.io/color/#!/
+         Primary: Green 800 (to get white text).
+         Secondary (accent): Deep Purple A400
+         Not used, but available: colorPrimaryLight, colorAccentDark, colorAccentLight.
+    -->
+    <!--
+    <color name="colorPrimary">#2e7d32</color>
+    <color name="colorPrimaryDark">#005005</color>
+    <color name="colorAccent">#651fff</color>
+    <color name="colorPrimaryLight">#60ad5e</color>
+    <color name="colorAccentDark">#0100ca</color>
+    <color name="colorAccentLight">#a255ff</color>
+    -->
 
-    <!-- Deep Purple 400 -->
-    <color name="colorButtonBackground">@color/deepPurple400</color>
+    <!--
+         Theme colours.
+         Chosen using the colour tool: https://material.io/color/#!/
+         Primary: Cyan 800 (to get white text).
+         Secondary (accent): Pink 600.
+         Not used, but available: colorPrimaryLight, colorAccentDark, colorAccentLight.
+    -->
+    <!--
+    <color name="colorPrimary">#00838f</color>
+    <color name="colorPrimaryDark">#005662</color>
+    <color name="colorAccent">#d81b60</color>
+    <color name="colorPrimaryLight">#4fb3bf</color>
+    <color name="colorAccentDark">#a00037</color>
+    <color name="colorAccentLight">#ff5c8d</color>
+    -->
+
+    <!--
+         Theme colours.
+         Chosen using the colour tool: https://material.io/color/#!/
+         Primary: Green 800 (to get white text).
+         Secondary (accent): Pink 600.
+         Not used, but available: colorPrimaryLight, colorAccentDark, colorAccentLight.
+    -->
+    <color name="colorPrimary">#2e7d32</color>
+    <color name="colorPrimaryDark">#005005</color>
+    <color name="colorAccent">#d81b60</color>
+    <color name="colorPrimaryLight">#60ad5e</color>
+    <color name="colorAccentDark">#a00037</color>
+    <color name="colorAccentLight">#ff5c8d</color>
+
+    <!-- Buttons -->
+    <color name="colorButtonBackground">@color/colorAccent</color>
 </resources>
