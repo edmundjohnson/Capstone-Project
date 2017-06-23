@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.Toolbar
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/tbAppBar"
-    android:layout_height="wrap_content"
+    android:layout_height="?actionBarSize"
     android:layout_width="match_parent"
-    android:minHeight="?attr/actionBarSize"
-    android:background="?attr/colorPrimary"
     android:theme="@style/AppBarTheme"
-    app:titleTextAppearance="@style/AppBarTitle"
-    tools:title="@string/app_name" />
+    app:contentInsetStart="@dimen/second_keyline" />

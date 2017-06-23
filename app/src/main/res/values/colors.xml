@@ -4,7 +4,8 @@
     <!-- <color name="transparent">#0000</color> -->
     <color name="medium_gray">#ff404040</color>
     <color name="green_50">#e8f5e9</color>
-    <color name="image_placeholder">#ccc</color>
+    <color name="image_placeholder">@color/detail_card_background</color>
+    <!-- <color name="image_placeholder">#ccc</color> -->
 
     <!-- Material palette: Deep Purple -->
     <!-- see: https://material.io/guidelines/style/color.html#color-color-palette  -->

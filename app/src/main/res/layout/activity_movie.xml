@@ -6,6 +6,12 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context=".activity.MovieActivity">
+    <!--
+    NOTE:
+    android:fitsSystemWindows="true" is crucial for Lollipop (? certainly Marshmallow)
+    and above.
+    Without it, the app bar contents are displayed too high, and only the bottom half is visible.
+    -->
 
     <FrameLayout
         android:id="@+id/movie_container"

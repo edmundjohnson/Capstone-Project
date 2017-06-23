@@ -17,12 +17,14 @@
         android:id="@+id/imgPoster"
         android:layout_width="match_parent"
         android:layout_height="@dimen/detail_image_height"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop" />
 
+    <!-- The image_background_protection is to ensure the appbar icons can be seen -->
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/image_background_protection"/>
+        android:background="@drawable/image_background_protection"
+        />
 
 </FrameLayout>
 

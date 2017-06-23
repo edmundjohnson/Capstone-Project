@@ -81,11 +81,11 @@ public class ViewAward {
     // Getters
 
     @NonNull
-    public String getId() {
+    private String getId() {
         return id;
     }
 
-    public int getMovieId() {
+    private int getMovieId() {
         return movieId;
     }
 
@@ -104,7 +104,7 @@ public class ViewAward {
         return review;
     }
 
-    public int getDisplayOrder() {
+    private int getDisplayOrder() {
         return displayOrder;
     }
 

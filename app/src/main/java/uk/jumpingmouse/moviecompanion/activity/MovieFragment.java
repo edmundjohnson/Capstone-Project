@@ -53,8 +53,8 @@ public class MovieFragment extends Fragment
     /** Value passed in: the URI of the view award to display. */
     private Uri mArgViewAwardUri;
 
-    /** The currently displayed ViewAward. */
-    private ViewAward mDisplayedViewAward;
+//    /** The currently displayed ViewAward. */
+//    private ViewAward mDisplayedViewAward;
 
     /** The cursor loader for view award. */
     private CursorLoader mCursorLoader;
@@ -140,37 +140,37 @@ public class MovieFragment extends Fragment
         super.onPause();
     }
 
-    /**
-     * Called to retrieve per-instance state from an activity before being killed so that the
-     * state can be restored in onCreate(Bundle) or onRestoreInstanceState(Bundle).
-     * @param outState the Bundle populated by this method
-     */
-    @Override
-    public final void onSaveInstanceState(final Bundle outState) {
-        super.onSaveInstanceState(outState);
-
+//    /**
+//     * Called to retrieve per-instance state from an activity before being killed so that the
+//     * state can be restored in onCreate(Bundle) or onRestoreInstanceState(Bundle).
+//     * @param outState the Bundle populated by this method
+//     */
+//    @Override
+//    public final void onSaveInstanceState(final Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//
 //        outState.putParcelable(KEY_VIEW_AWARD, mDisplayedViewAward);
-    }
+//    }
 
-    /**
-     * Called when all saved state has been restored into the view hierarchy
-     * of the fragment.  This can be used to do initialization based on saved
-     * state that you are letting the view hierarchy track itself, such as
-     * whether check box widgets are currently checked.  This is called
-     * after {@link #onActivityCreated(Bundle)} and before
-     * {@link #onStart()}.
-     *
-     * @param savedInstanceState If the fragment is being re-created from
-     *     a previous saved state, this is the state.
-     */
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+//    /**
+//     * Called when all saved state has been restored into the view hierarchy
+//     * of the fragment.  This can be used to do initialization based on saved
+//     * state that you are letting the view hierarchy track itself, such as
+//     * whether check box widgets are currently checked.  This is called
+//     * after {@link #onActivityCreated(Bundle)} and before
+//     * {@link #onStart()}.
+//     *
+//     * @param savedInstanceState If the fragment is being re-created from
+//     *     a previous saved state, this is the state.
+//     */
+//    @Override
+//    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
 //        if (savedInstanceState != null) {
 //            displaySavedViewAward(getActivity(), savedInstanceState);
 //        }
-
-        super.onViewStateRestored(savedInstanceState);
-    }
+//
+//        super.onViewStateRestored(savedInstanceState);
+//    }
 
     //--------------------------------------------------------------
     // Construction
@@ -385,8 +385,8 @@ public class MovieFragment extends Fragment
     private void displayViewAward(@Nullable final Context context, @Nullable final ViewAward viewAward) {
 //        Timber.d("displayViewAward() called with: " + " viewAward = [" + viewAward + "]");
 
-        // record the ViewAward, so it can be saved and restored if necessary
-        mDisplayedViewAward = viewAward;
+//        // record the ViewAward, so it can be saved and restored if necessary
+//        mDisplayedViewAward = viewAward;
 
         if (viewAward == null) {
             // Note: we wish mDisplayedViewAward to be null when there is no data
