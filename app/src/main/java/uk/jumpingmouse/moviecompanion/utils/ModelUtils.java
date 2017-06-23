@@ -332,12 +332,17 @@ public final class ModelUtils {
      */
     @Nullable
     public static ViewMovie newViewMovie(@NonNull Cursor cursor) {
-        final int id = cursor.getInt(DataContract.MovieEntry.COL_ID);
-        final String imdbId = cursor.getString(DataContract.MovieEntry.COL_IMDB_ID);
-        final String title = cursor.getString(DataContract.MovieEntry.COL_TITLE);
-        final String year = cursor.getString(DataContract.MovieEntry.COL_YEAR);
-        final String genre = cursor.getString(DataContract.MovieEntry.COL_GENRE);
-        final String poster = cursor.getString(DataContract.MovieEntry.COL_POSTER);
+        final int id = cursor.getInt(DataContract.ViewMovieEntry.COL_ID);
+        final String imdbId = cursor.getString(DataContract.ViewMovieEntry.COL_IMDB_ID);
+        final String title = cursor.getString(DataContract.ViewMovieEntry.COL_TITLE);
+        final String year = cursor.getString(DataContract.ViewMovieEntry.COL_YEAR);
+        final String genre = cursor.getString(DataContract.ViewMovieEntry.COL_GENRE);
+        final String poster = cursor.getString(DataContract.ViewMovieEntry.COL_POSTER);
+        final String awardId = cursor.getString(DataContract.ViewMovieEntry.COL_AWARD_ID);
+        final String awardDate = cursor.getString(DataContract.ViewMovieEntry.COL_AWARD_DATE);
+        final String category = cursor.getString(DataContract.ViewMovieEntry.COL_CATEGORY);
+        final String review = cursor.getString(DataContract.ViewMovieEntry.COL_REVIEW);
+        final int displayOrder = cursor.getInt(DataContract.ViewMovieEntry.COL_DISPLAY_ORDER);
 
         // if the id mandatory attribute is missing, return null
         if (id <= 0) {
@@ -367,7 +372,7 @@ public final class ModelUtils {
             runtime = Movie.RUNTIME_UNKNOWN;
         }
 
-        return ViewMovie.builder()
+        Movie movie = Movie.builder()
                 .id(id)
                 .imdbId(imdbId)
                 .title(title)
@@ -377,6 +382,17 @@ public final class ModelUtils {
                 .genre(genre)
                 .poster(poster)
                 .build();
+
+        Award award = Award.builder()
+                .id(awardId)
+                .movieId(id)
+                .awardDate(awardDate)
+                .category(category)
+                .review(review)
+                .displayOrder(displayOrder)
+                .build();
+
+        return new ViewMovie(movie, award);
     }
 
 }

@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- <color name="transparent">#0000</color> -->
+    <color name="medium_gray">#ff404040</color>
+    <color name="green_50">#e8f5e9</color>
+    <color name="image_placeholder">#ccc</color>
+
     <!-- Material palette: Deep Purple -->
     <!-- see: https://material.io/guidelines/style/color.html#color-color-palette  -->
     <!--
@@ -67,6 +72,11 @@
     <color name="colorAccentDark">#a00037</color>
     <color name="colorAccentLight">#ff5c8d</color>
 
+    <!-- Detail -->
+    <color name="detail_card_background">@color/green_50</color>
+    <color name="detail_text">@color/medium_gray</color>
+
     <!-- Buttons -->
     <color name="colorButtonBackground">@color/colorAccent</color>
+
 </resources>

@@ -97,6 +97,7 @@ public class SecurityManagerFirebase implements SecurityManager {
                     activity.startActivityForResult(
                             AuthUI.getInstance()
                                     .createSignInIntentBuilder()
+                                    .setTheme(R.style.AppThemeWithActionBar)
                                     .setIsSmartLockEnabled(false)
                                     .setProviders(
 //                                    // Firebase UI 0.6.0

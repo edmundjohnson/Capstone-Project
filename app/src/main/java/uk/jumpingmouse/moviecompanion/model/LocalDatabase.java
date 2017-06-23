@@ -118,12 +118,13 @@ public interface LocalDatabase {
     // ViewMovie methods
 
     /**
-     * Returns the view movie with a specified id.
-     * @param id the id of the view movie to be returned
-     * @return the view movie with the specified id
+     * Returns the view movie corresponding to a specified award id.
+     * @param awardId the award id
+     * @return the view movie corresponding to a specified award id,
+     *         or null if there is no matching view movie
      */
     @Nullable
-    ViewMovie selectViewMovieById(int id);
+    ViewMovie selectViewMovieByAwardId(String awardId);
 
     //---------------------------------------------------------------------
     // ViewAward methods

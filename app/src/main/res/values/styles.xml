@@ -15,7 +15,14 @@
         <item name="buttonStyle">@style/ButtonStyle</item>
     </style>
 
-    <!-- Action Bar theme. -->
+    <!-- Base application theme, but with an action bar, used by Auth UI. -->
+    <style name="AppThemeWithActionBar" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!-- App Bar theme. -->
     <!-- Without this, the title becomes black -->
     <style name="AppBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <!-- <item name="android:paddingStart">@dimen/appbar_padding_horizontal</item> -->

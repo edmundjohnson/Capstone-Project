@@ -40,7 +40,7 @@ public class DataProvider extends ContentProvider {
     private static final int VIEW_AWARD_ID = 301;
     private static final int VIEW_AWARD_ALL = 302;
     private static final int VIEW_MOVIE = 400;
-    private static final int VIEW_MOVIE_ID = 401;
+    private static final int VIEW_MOVIE_AWARD_ID = 401;
     private static final int VIEW_MOVIE_ALL = 402;
 
     //---------------------------------------------------------------------
@@ -90,7 +90,7 @@ public class DataProvider extends ContentProvider {
                 VIEW_MOVIE_ALL);
         uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
                 DataContract.URI_PATH_VIEW_MOVIE + "/*",
-                VIEW_MOVIE_ID);
+                VIEW_MOVIE_AWARD_ID);
 
         // view award
         uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
@@ -404,7 +404,7 @@ public class DataProvider extends ContentProvider {
             case AWARD_ID:
                 String awardId = uri.getLastPathSegment();
                 if (awardId == null) {
-                    Timber.w("Could not obtain movie id from URI" + uri);
+                    Timber.w("Could not obtain award id from URI" + uri);
                     cursor = null;
                 } else {
                     cursor = selectAwardById(awardId);
@@ -417,13 +417,13 @@ public class DataProvider extends ContentProvider {
                 cursor = selectViewAwards(projection, selection, selectionArgs, sortOrder);
                 break;
             // "award/*"
-            case VIEW_MOVIE_ID:
-                int viewMovieId = ModelUtils.idToMovieId(uri.getLastPathSegment());
-                if (viewMovieId == Movie.ID_UNKNOWN) {
-                    Timber.w("Could not obtain viewMovieId id from URI" + uri);
+            case VIEW_MOVIE_AWARD_ID:
+                String viewMovieAwardId = uri.getLastPathSegment();
+                if (viewMovieAwardId == null) {
+                    Timber.w("Could not obtain viewMovieAwardId id from URI" + uri);
                     cursor = null;
                 } else {
-                    cursor = selectViewMovieById(viewMovieId);
+                    cursor = selectViewMovieByAwardId(viewMovieAwardId);
                 }
                 break;
             default:
@@ -715,15 +715,15 @@ public class DataProvider extends ContentProvider {
     // ViewMovie query methods
 
     /**
-     * Return a cursor whose first row is the view movie with a specified id.
-     * @param id the id of the required row
-     * @return a cursor whose first row is the row with the specified id
+     * Return a cursor whose first row is the view movie with a specified award id.
+     * @param awardId the award id corresponding to the required view movie row
+     * @return a cursor whose first row is the view movie with a specified award id
      */
     @Nullable
-    private Cursor selectViewMovieById(final int id) {
-        ViewMovie viewMovie = getLocalDatabase().selectViewMovieById(id);
+    private Cursor selectViewMovieByAwardId(final String awardId) {
+        ViewMovie viewMovie = getLocalDatabase().selectViewMovieByAwardId(awardId);
         if (viewMovie == null) {
-            Timber.w("", "ViewMovie not found with id: " + id);
+            Timber.w("", "ViewMovie not found for award id: " + awardId);
             return null;
         }
         return toCursor(viewMovie);

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Movie Companion</string>
 
     <!-- Content provider -->
@@ -20,11 +20,6 @@
     <!-- Validation -->
     <string name="error_title">Error</string>
 
-    <!-- Tool data for layout design view -->
-    <!-- <string name="example_movie_title">The Handmaiden</string> -->
-    <string name="example_movie_title">Those Magnificent Men in Their Flying Machines</string>
-    <string name="example_award_date">02 June 17</string>
-
     <!-- Movie fields -->
     <!-- It is unlikely that there will be a film whose length is 1 minute, but more
          applicable distinctions in the runtime_text could occur in other languages -->
@@ -32,6 +27,9 @@
         <item quantity="one">%d min</item>
         <item quantity="other">%d mins</item>
     </plurals>
+    <!-- <string name="example_movie_title">The Handmaiden</string> -->
+    <string name="example_movie_title">The Loneliness of the Long Distance Runner</string>
+    <string name="example_award_date">02 June 17</string>
     <string name="example_movie_genre">Drama, Romance</string>
     <string name="example_movie_runtime">114 mins</string>
 
@@ -40,6 +38,7 @@
     <string name="category_text_dvd">DVD of the Week</string>
     <string name="category_text_unknown">unknown</string>
     <string name="poster_description">Movie poster</string>
+    <string name="example_review" tools:ignore="Typos">At the beginning we see a man in a boat who is washed up on a desert island.  Initially he builds rafts to get away, but the rafts are constantly scuppered by an unseen sea beast which turns out to be the turtle.  In a rage he overturns the turtle, and then he starts to feel an Ancient Mariner-style remorse and empathy for this creature, and then something magical starts to happen, a transformation starts to happen.  It turns into a meditation upon existence, upon loneliness, upon companionship, upon birth, death and rebirth. It is a film which is deeply compassionate and touching and funny and affectionate and insightful and I was in love with it, I just was so swept away by it.  It\'s a beautiful beautiful work of art.</string>
 
     <!-- Award List -->
     <string name="no_awards_available">There are no awards matching your criteria</string>

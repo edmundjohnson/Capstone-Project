@@ -17,6 +17,7 @@ import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.data.ViewAward;
 import uk.jumpingmouse.moviecompanion.data.ViewMovie;
+import uk.jumpingmouse.moviecompanion.utils.JavaUtils;
 
 /**
  * Class giving access to a local copy of the database.
@@ -275,21 +276,28 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         if (selectionArgs != null) {
             Timber.d("selectAwards: selectionArgs is currently not supported");
         }
-        return selectAwards(getSortColumn(sortOrder, AWARD_SORT_COLUMN_DEFAULT),
+        List<Award> awardList = new ArrayList<>(mAwardMap.values());
+        // always use the default order for now
+        awardList = sortAwardList(awardList,
+                getSortColumn(sortOrder, AWARD_SORT_COLUMN_DEFAULT),
                 isSortAscending(sortOrder, AWARD_SORT_ASCENDING_DEFAULT));
+        return awardList;
     }
 
     /**
-     * Returns a list of all the awards in the local database ordered by a specified column.
+     * Sorts a list of awards and returns the sorted award list.
      * @param sortColumn the column to sort by
      * @param sortAscending whether the sort is ascending
-     * @return a list of all the movies in the local database ordered by the specified column
+     * @return the award list sorted by the specified column and direction
      */
     @NonNull
-    private List<Award> selectAwards(@NonNull String sortColumn, boolean sortAscending) {
+    private List<Award> sortAwardList(@Nullable List<Award> awardList,
+            @NonNull String sortColumn, boolean sortAscending) {
         Timber.d(String.format("selectAwards: sortColumn = %s, sortAscending = %b",
                 sortColumn, sortAscending));
-
+        if (awardList == null) {
+            return Collections.emptyList();
+        }
         Comparator<Award> comparator;
         // code coverage: sortColumn cannot be null
         switch (sortColumn) {
@@ -308,7 +316,6 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         if (!sortAscending) {
             comparator = Collections.reverseOrder(comparator);
         }
-        List<Award> awardList = new ArrayList<>(mAwardMap.values());
         Collections.sort(awardList, comparator);
 
         return awardList;
@@ -318,22 +325,36 @@ public class LocalDatabaseInMemory implements LocalDatabase {
     // ViewMovie query methods
 
     /**
-     * Returns the view movie with a specified id.
-     * @param id the view movie's id
-     * @return the view movie with the specified id, or null if there is no matching view movie
+     * Returns the view movie corresponding to a specified award id.
+     * @param awardId the award id
+     * @return the view movie corresponding to a specified award id,
+     *         or null if there is no matching view movie
      */
     @Override
     @Nullable
-    public ViewMovie selectViewMovieById(int id) {
-        if (id == Movie.ID_UNKNOWN) {
+    public ViewMovie selectViewMovieByAwardId(String awardId) {
+        if (awardId == null) {
             return null;
         }
-        Movie movie = selectMovieById(id);
+        // Extract the movie id from the award id
+        String[] split = awardId.split("_");
+        String strMovieId = split[0];
+        int movieId = JavaUtils.toInt(strMovieId, Movie.ID_UNKNOWN);
+        if (movieId == Movie.ID_UNKNOWN) {
+            Timber.d("selectViewMovieByAwardId: Movie not found with strMovieId: " + strMovieId);
+            return null;
+        }
+        Movie movie = selectMovieById(movieId);
         if (movie == null) {
-            Timber.d("selectViewMovieById: Movie not found with id: " + id);
+            Timber.d("selectViewMovieByAwardId: Movie not found with id: " + movieId);
             return null;
         }
-        return new ViewMovie(movie);
+        Award award = selectAwardById(awardId);
+        if (award == null) {
+            Timber.d("selectViewMovieByAwardId: Award not found with id: " + awardId);
+            return null;
+        }
+        return new ViewMovie(movie, award);
     }
 
     //---------------------------------------------------------------------
@@ -415,9 +436,12 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         Timber.d(String.format("selectViewAwards: sortColumn = %s, sortAscending = %b",
                 sortColumn, sortAscending));
 
+        List<Award> awardList = new ArrayList<>(mAwardMap.values());
         List<ViewAward> viewAwardList = new ArrayList<>();
 
-        for (Award award : mAwardMap.values()) {
+        // We use awardList rather than mAwardMap.values() here, because using mAwardMap.values()
+        // can lead to a ConcurrentModificationException.
+        for (Award award : awardList) {
             Movie movie = selectMovieById(award.getMovieId());
             if (movie != null) {
                 ViewAward viewAward = new ViewAward(award, movie);

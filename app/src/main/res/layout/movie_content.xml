@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:maxWidth="@dimen/detail_card_max_width"
+    android:background="@color/detail_card_background"
+    android:elevation="2dp"
+    tools:context=".activity.MovieActivity" >
+
+    <LinearLayout
+        android:id="@+id/meta_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#333"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/detail_inner_horizontal_margin"
+        android:paddingRight="@dimen/detail_inner_horizontal_margin"
+        android:paddingTop="@dimen/detail_metabar_vertical_padding"
+        android:paddingBottom="@dimen/detail_metabar_vertical_padding"
+        android:layout_marginBottom="@dimen/detail_metabar_vertical_padding">
+
+        <TextView
+            android:id="@+id/txtTitle"
+            style="?android:attr/textAppearanceLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/detail_metabar_title_bottom_padding"
+            android:fontFamily="sans-serif-condensed"
+            android:textColor="#fff"
+            android:textStyle="bold"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            android:lineSpacingMultiplier="0.9"
+            tools:text="@string/example_movie_title" />
+        <!--
+            android:textSize="@dimen/detail_title_text_size"
+        -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/txtRuntime"
+                style="?android:attr/textAppearanceSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#8fff"
+                tools:text="@string/example_movie_runtime" />
+
+            <TextView
+                android:id="@+id/txtGenre"
+                style="?android:attr/textAppearanceSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:textColor="#8fff"
+                tools:text="@string/example_movie_genre" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="@dimen/detail_inner_horizontal_margin"
+        android:layout_marginEnd="@dimen/detail_inner_horizontal_margin"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/imgCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerInside"
+            android:contentDescription="@string/category_text_movie"
+            tools:src="@drawable/ic_local_movies_24dp"/>
+
+        <TextView
+            android:id="@+id/txtCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textAppearance="@android:style/TextAppearance.Small"
+            android:textColor="@color/detail_text"
+            tools:text="@string/category_text_movie" />
+        <!--
+            style="?android:attr/textAppearanceSmall"
+        -->
+
+        <TextView
+            android:id="@+id/txtAwardDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textAppearance="@android:style/TextAppearance.Small"
+            android:textColor="@color/detail_text"
+            tools:text="@string/example_award_date" />
+        <!--
+            style="?android:attr/textAppearanceSmall"
+        -->
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtReview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="@dimen/detail_inner_horizontal_margin"
+        android:layout_marginEnd="@dimen/detail_inner_horizontal_margin"
+        android:paddingBottom="@dimen/detail_body_bottom_margin"
+        android:textAppearance="@android:style/TextAppearance.Small"
+        android:textColor="@color/detail_text"
+        android:lineSpacingMultiplier="@fraction/detail_body_line_spacing_multiplier"
+        tools:text="@string/example_review"/>
+    <!--
+        style="?android:attr/textAppearanceMedium"
+        android:textSize="@dimen/review_text_size"
+    -->
+
+</LinearLayout>
+
+    

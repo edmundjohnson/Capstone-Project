@@ -250,6 +250,7 @@ public final class DataContract {
 
         //static final String ROOT_NODE = "movies";
 
+        //movie fields
         public static final String COLUMN_ID = ViewMovieEntry._ID;
         public static final String COLUMN_IMDB_ID = "imdbId";
         public static final String COLUMN_TITLE = "title";
@@ -258,6 +259,12 @@ public final class DataContract {
         public static final String COLUMN_RUNTIME = "runtime";
         public static final String COLUMN_GENRE = "genre";
         public static final String COLUMN_POSTER = "poster";
+        //award fields
+        public static final String COLUMN_AWARD_ID = "awardId";
+        public static final String COLUMN_AWARD_DATE = "awardDate";
+        public static final String COLUMN_CATEGORY = "category";
+        public static final String COLUMN_REVIEW = "review";
+        public static final String COLUMN_DISPLAY_ORDER = "displayOrder";
 
         // Note: arrays are mutable, so ALL_COLUMNS should not be public.
         // See Effective Java, Item 13.
@@ -269,7 +276,12 @@ public final class DataContract {
                 COLUMN_RELEASED,
                 COLUMN_RUNTIME,
                 COLUMN_GENRE,
-                COLUMN_POSTER
+                COLUMN_POSTER,
+                COLUMN_AWARD_ID,
+                COLUMN_AWARD_DATE,
+                COLUMN_CATEGORY,
+                COLUMN_REVIEW,
+                COLUMN_DISPLAY_ORDER
         };
         public static String[] getAllColumns() {
             return ALL_COLUMNS.clone();
@@ -283,6 +295,11 @@ public final class DataContract {
         public static final int COL_RUNTIME = COL_RELEASED + 1;
         public static final int COL_GENRE = COL_RUNTIME + 1;
         public static final int COL_POSTER = COL_GENRE + 1;
+        public static final int COL_AWARD_ID = COL_POSTER + 1;
+        public static final int COL_AWARD_DATE = COL_AWARD_ID + 1;
+        public static final int COL_CATEGORY = COL_AWARD_DATE + 1;
+        public static final int COL_REVIEW = COL_CATEGORY + 1;
+        public static final int COL_DISPLAY_ORDER = COL_REVIEW + 1;
 
         // URIs
 

@@ -3,6 +3,7 @@ package uk.jumpingmouse.moviecompanion.activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -24,12 +25,17 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
+import uk.jumpingmouse.moviecompanion.data.Award;
+import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.data.ViewMovie;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.moviecompanion.model.LocalDatabase;
 import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
+import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
 /**
  * The fragment class for displaying a ViewMovie.
@@ -56,12 +62,14 @@ public class MovieFragment extends Fragment
     private CursorLoader mViewMovieCursorLoader;
 
     // Screen fields
-//    private LinearLayout mLayoutMovie;
     private ImageView mImgPoster;
-//    private View mViewMovie;
     private TextView mTxtTitle;
-    private TextView mTxtGenre;
     private TextView mTxtRuntime;
+    private TextView mTxtGenre;
+    private ImageView mImgCategory;
+    private TextView mTxtCategory;
+    private TextView mTxtAwardDate;
+    private TextView mTxtReview;
 
     //--------------------------------------------------------------
     // Lifecycle methods
@@ -81,12 +89,14 @@ public class MovieFragment extends Fragment
         View rootView = inflater.inflate(R.layout.movie_fragment, container, false);
 
         // Initialise the display element references
-//        mLayoutMovie = (LinearLayout) rootView.findViewById(R.id.layoutMovie);
         mImgPoster = (ImageView) rootView.findViewById(R.id.imgPoster);
-//        mViewMovie = rootView.findViewById(R.id.viewMovie);
         mTxtTitle = (TextView) rootView.findViewById(R.id.txtTitle);
-        mTxtGenre = (TextView) rootView.findViewById(R.id.txtGenre);
         mTxtRuntime = (TextView) rootView.findViewById(R.id.txtRuntime);
+        mTxtGenre = (TextView) rootView.findViewById(R.id.txtGenre);
+        mImgCategory = (ImageView) rootView.findViewById(R.id.imgCategory);
+        mTxtCategory = (TextView) rootView.findViewById(R.id.txtCategory);
+        mTxtAwardDate = (TextView) rootView.findViewById(R.id.txtAwardDate);
+        mTxtReview = (TextView) rootView.findViewById(R.id.txtReview);
 
         Context context = getActivity();
         if (savedInstanceState != null) {
@@ -408,10 +418,21 @@ public class MovieFragment extends Fragment
      * @param viewMovie the date to display
      */
     private void displayMovieFields(@Nullable final Context context, @NonNull final ViewMovie viewMovie) {
-        // Update the screen fields with the values in the ViewMovie
-        mTxtTitle.setText(viewMovie.getTitle().trim());
-        mTxtGenre.setText(viewMovie.getGenre());
-//        mTxtRuntime.setText(viewMovie.getRuntime());
+        Movie movie = viewMovie.getMovie();
+        Award award = viewMovie.getAward();
+        String runtimeText = getViewUtils().getRuntimeText(context, movie.getRuntime());
+        //String categoryCode = award.getCategory();
+        String categoryCode = Award.CATEGORY_DVD;
+        Drawable categoryDrawable = getViewUtils().getCategoryDrawable(context, categoryCode);
+
+        Picasso.with(context).load(movie.getPoster()).into(mImgPoster);
+        mTxtTitle.setText(movie.getTitle().trim());
+        mTxtRuntime.setText(runtimeText);
+        mTxtGenre.setText(movie.getGenre());
+        mImgCategory.setImageDrawable(categoryDrawable);
+        mTxtCategory.setText(getViewUtils().getCategoryText(context, categoryCode));
+//        mTxtAwardDate.setText(award.getAwardDate());
+//        mTxtReview.setText(award.getReview());
     }
 
     //--------------------------------------------------------------
@@ -477,6 +498,14 @@ public class MovieFragment extends Fragment
         }
     }
 
+    /**
+     * Convenience method which returns a reference to a local database.
+     * @return a reference to a local database
+     */
+    private static LocalDatabase getLocalDatabase() {
+        return ObjectFactory.getLocalDatabase();
+    }
+
 //    /**
 //     * Returns a NetUtils object.
 //     * @return a NetUtils object
@@ -493,21 +522,13 @@ public class MovieFragment extends Fragment
 //        return PrefUtils.getInstance();
 //    }
 
-//    /**
-//     * Returns a NotificationUtils object.
-//     * @return a NotificationUtils object
-//     */
-//    @NonNull
-//    private NotificationUtils getNotificationUtils() {
-//        return NotificationUtils.getInstance();
-//    }
-
     /**
-     * Convenience method which returns a reference to a local database.
-     * @return a reference to a local database
+     * Convenience method which returns a reference to a ViewUtils object.
+     * @return a reference to a ViewUtils object
      */
-    private static LocalDatabase getLocalDatabase() {
-        return ObjectFactory.getLocalDatabase();
+    @NonNull
+    private static ViewUtils getViewUtils() {
+        return ObjectFactory.getViewUtils();
     }
 
     //------------------------------------------------------------------------------
