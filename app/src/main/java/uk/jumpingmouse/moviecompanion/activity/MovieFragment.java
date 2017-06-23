@@ -29,16 +29,14 @@ import com.squareup.picasso.Picasso;
 
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
-import uk.jumpingmouse.moviecompanion.data.Award;
-import uk.jumpingmouse.moviecompanion.data.Movie;
-import uk.jumpingmouse.moviecompanion.data.ViewMovie;
+import uk.jumpingmouse.moviecompanion.data.ViewAward;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.moviecompanion.model.LocalDatabase;
 import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
 /**
- * The fragment class for displaying a ViewMovie.
+ * The fragment class for displaying a movie.
  * @author Edmund Johnson
  */
 public class MovieFragment extends Fragment
@@ -46,20 +44,20 @@ public class MovieFragment extends Fragment
             SharedPreferences.OnSharedPreferenceChangeListener {
 
     /** The cursor loader id. */
-    private static  final int VIEW_MOVIE_LOADER_ID = 1;
+    private static  final int VIEW_AWARD_LOADER_ID = 1;
 
     // Bundle keys, e.g. for use when saving and restoring the fragment's state
-    private static final String KEY_VIEW_MOVIE = "KEY_VIEW_MOVIE";
-    private static final String KEY_VIEW_MOVIE_URI = "KEY_VIEW_MOVIE_URI";
+    private static final String KEY_VIEW_AWARD = "KEY_VIEW_AWARD";
+    private static final String KEY_VIEW_AWARD_URI = "KEY_VIEW_AWARD_URI";
 
-    /** Value passed in: the URI of the movie to display. */
-    private Uri mArgViewMovieUri;
+    /** Value passed in: the URI of the view award to display. */
+    private Uri mArgViewAwardUri;
 
-    /** The currently displayed ViewMovie. */
-    private ViewMovie mDisplayedViewMovie;
+    /** The currently displayed ViewAward. */
+    private ViewAward mDisplayedViewAward;
 
-    /** The cursor loader for view movie. */
-    private CursorLoader mViewMovieCursorLoader;
+    /** The cursor loader for view award. */
+    private CursorLoader mCursorLoader;
 
     // Screen fields
     private ImageView mImgPoster;
@@ -100,7 +98,7 @@ public class MovieFragment extends Fragment
 
         Context context = getActivity();
         if (savedInstanceState != null) {
-            displaySavedViewMovie(context, savedInstanceState);
+            displaySavedViewAward(context, savedInstanceState);
         }
 
         return rootView;
@@ -110,13 +108,13 @@ public class MovieFragment extends Fragment
     public void onActivityCreated(@Nullable Bundle bundle) {
         super.onActivityCreated(bundle);
 
-        if (getArgViewMovieUri() != null) {
-            loadData(getArgViewMovieUri());
+        if (getArgViewAwardUri() != null) {
+            loadData(getArgViewAwardUri());
         }
     }
 
     /**
-     * Perform processing required when the fragment is resumed.
+     * Performs processing required when the fragment is resumed.
      * i.e. register to be notified of changes to SharedPreferences and
      * display the required movie.
      */
@@ -126,13 +124,13 @@ public class MovieFragment extends Fragment
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         prefs.registerOnSharedPreferenceChangeListener(this);
 
-        // If there is no saved ViewMovie (from onSaveInstanceState), display the latest
-        // movie
-        if (mDisplayedViewMovie == null) {
-            Context context = getActivity();
-//            ViewMovie movie = getMovieManager().getMovieLatest(context);
-//            displayViewMovie(context, movie);
-        }
+//        // If there is no saved ViewAward (from onSaveInstanceState), display the latest
+//        // movie
+//        if (mDisplayedViewAward == null) {
+//            Context context = getActivity();
+//            ViewAward viewAward = getLocalDatabase().getViewAwardLatest(context);
+//            displayViewAward(context, viewAward);
+//        }
     }
 
     @Override
@@ -151,7 +149,7 @@ public class MovieFragment extends Fragment
     public final void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putParcelable(KEY_VIEW_MOVIE, mDisplayedViewMovie);
+//        outState.putParcelable(KEY_VIEW_AWARD, mDisplayedViewAward);
     }
 
     /**
@@ -167,9 +165,9 @@ public class MovieFragment extends Fragment
      */
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            displaySavedViewMovie(getActivity(), savedInstanceState);
-        }
+//        if (savedInstanceState != null) {
+//            displaySavedViewAward(getActivity(), savedInstanceState);
+//        }
 
         super.onViewStateRestored(savedInstanceState);
     }
@@ -190,34 +188,32 @@ public class MovieFragment extends Fragment
     // Loader callbacks
 
     /**
-     * Instantiate and return a new loader for the given ID.
-     *
-     * @param id   the ID whose loader is to be created.
+     * Instantiates and returns a new loader for the given loader ID.
+     * @param id the ID whose loader is to be created.
      * @param args any arguments supplied by the caller.
      * @return a new loader instance that is ready to start loading.
      */
     @Override
     public Loader<Cursor> onCreateLoader(final int id, @Nullable final Bundle args) {
-        // This is called when a new Loader needs to be created.  This
-        // fragment only uses one loader, so we don't care about checking the id.
+        // This fragment only uses one loader, so we don't care about checking the id.
 
         Uri uri = null;
         if (args != null) {
-            uri = args.getParcelable(KEY_VIEW_MOVIE_URI);
+            uri = args.getParcelable(KEY_VIEW_AWARD_URI);
         }
 //        if (uri == null) {
-//            // By default, get the most recent ViewMovie
-//            uri = DataContract.ViewMovieEntry.buildUriForRowById(1);
+//            // By default, display the most recent ViewAward
+//            uri = DataContract.ViewAwardEntry.buildUriForRowById(1);
 //        }
 
-        mViewMovieCursorLoader = new CursorLoader(getActivity(),
+        mCursorLoader = new CursorLoader(getActivity(),
                 uri,
-                DataContract.ViewMovieEntry.getAllColumns(),
+                DataContract.ViewAwardEntry.getAllColumns(),
                 null,
                 null,
                 null);
 
-        return mViewMovieCursorLoader;
+        return mCursorLoader;
     }
 
     /**
@@ -269,12 +265,11 @@ public class MovieFragment extends Fragment
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
         if (cursor != null && cursor.moveToFirst()) {
-            ViewMovie viewMovie = ModelUtils.newViewMovie(cursor);
+            ViewAward viewAward = ModelUtils.newViewAward(cursor);
 
-            // display the viewMovie
-            if (viewMovie != null) {
-                // update the screen fields with the cursor data
-                displayMovieFields(getActivity(), viewMovie);
+            // display the viewAward
+            if (viewAward != null) {
+                displayDetailFields(getActivity(), viewAward);
             }
         }
     }
@@ -292,21 +287,21 @@ public class MovieFragment extends Fragment
     }
 
     /**
-     * Load data from the database into the cursor loader, either by creating the
+     * Loads data from the database into the cursor loader, either by creating the
      * cursor loader if it does not exist, or by reloading the cursor loader.
      * @param uri the URI of the data to be loaded
      */
     private void loadData(@NonNull Uri uri) {
         if (getActivity() != null) {
-            if (mViewMovieCursorLoader == null) {
+            if (mCursorLoader == null) {
                 Bundle bundle = new Bundle();
-                bundle.putParcelable(KEY_VIEW_MOVIE_URI, uri);
-                getLoaderManager().initLoader(VIEW_MOVIE_LOADER_ID, bundle, this);
+                bundle.putParcelable(KEY_VIEW_AWARD_URI, uri);
+                getLoaderManager().initLoader(VIEW_AWARD_LOADER_ID, bundle, this);
             } else {
-                //mViewMovieCursorLoader.forceLoad();
+                // The URI may have changed, so restart the loader rather than just doing a forceLoad.
                 Bundle bundle = new Bundle();
-                bundle.putParcelable(KEY_VIEW_MOVIE_URI, uri);
-                getLoaderManager().restartLoader(VIEW_MOVIE_LOADER_ID, bundle, this);
+                bundle.putParcelable(KEY_VIEW_AWARD_URI, uri);
+                getLoaderManager().restartLoader(VIEW_AWARD_LOADER_ID, bundle, this);
             }
         }
     }
@@ -326,15 +321,15 @@ public class MovieFragment extends Fragment
     @MainThread
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 //        if (getString(R.string.pref_feed_status_key).equals(key)
-//                && mDisplayedViewMovie == null) {
+//                && mDisplayedViewAward == null) {
 //            Context context = getActivity();
 //            updateEmptyView(context);
 //        }
     }
 
     /**
-     * Creates and returns an appropriate ViewMovie to display when there is no data,
-     * based on the network status and feed status.
+     * Update the view appropriately when there is no data, based on the
+     * network status and feed status.
      * @param context the context
      */
     private void updateEmptyView(@Nullable final Context context) {
@@ -354,85 +349,72 @@ public class MovieFragment extends Fragment
     // UI methods
 
     /**
-     * Display a ViewMovie which has been saved in a bundle.
+     * Displays a ViewAward which has been saved in a bundle.
      * @param context the context
-     * @param savedInstanceState the bundle containing the ViewMovie
+     * @param savedInstanceState the bundle containing the saved state
      */
-    private void displaySavedViewMovie(@Nullable final Context context,
+    private void displaySavedViewAward(@Nullable final Context context,
                                        @NonNull final Bundle savedInstanceState) {
-        // Retrieve the saved ViewMovie, e.g. after device rotation, activity shown after being hidden
-        ViewMovie viewMovie = savedInstanceState.getParcelable(KEY_VIEW_MOVIE);
-        // Display the ViewMovie.
-        displayViewMovie(context, viewMovie);
+        // Retrieve and display the saved ViewAward
+        ViewAward viewAward = savedInstanceState.getParcelable(KEY_VIEW_AWARD);
+        displayViewAward(context, viewAward);
     }
 
 //    /**
-//     * Display the requested ViewMovie, i.e. one which was not saved.
+//     * Displays the requested ViewAward, i.e. one which was not saved.
 //     * @param context the context
-//     * @return the requested ViewMovie, or null if no ViewMovie was requested
+//     * @return the requested ViewAward, or null if no ViewAward was requested
 //     */
-//    private ViewMovie getRequestedViewMovie(@Nullable final Context context) {
-//        // display the ViewMovie whose URI was passed in
-//        Uri uri = getArgViewMovieUri();
+//    private ViewAward getRequestedViewAward(@Nullable final Context context) {
+//        // display the ViewAward whose URI was passed in
+//        Uri uri = getArgViewAwardUri();
 //        if (uri != null) {
-//            int id = ModelUtils.idToMovieId(uri.getLastPathSegment());
-//            ViewMovie viewMovie = getLocalDatabase().selectViewMovieById(id);
-//            setArgViewMovieUri(null);
-//            return viewMovie;
+//            String id = uri.getLastPathSegment();
+//            ViewAward viewAward = getLocalDatabase().selectViewAwardById(id);
+//            setArgViewAwardUri(null);
+//            return viewAward;
 //        }
 //        return null;
 //    }
 
     /**
-     * Return whether a ViewMovie is currently being displayed, as determined
-     * by the containing activity.
-     * @return true if a ViewMovie is currently being displayed, false otherwise
-     */
-    private boolean isViewMovieDisplayed() {
-        return (getActivity() != null)
-                && ((MovieFragmentContainer) getActivity()).isViewMovieDisplayed();
-    }
-
-    /**
-     * Display a ViewMovie on the screen.
+     * Displays a ViewAward.
      * @param context the context
-     * @param viewMovie the ViewMovie to display
+     * @param viewAward the ViewAward to display
      */
-    private void displayViewMovie(@Nullable final Context context, @Nullable final ViewMovie viewMovie) {
-//        Timber.d("displayViewMovie() called with: " + " viewMovie = [" + viewMovie + "]");
+    private void displayViewAward(@Nullable final Context context, @Nullable final ViewAward viewAward) {
+//        Timber.d("displayViewAward() called with: " + " viewAward = [" + viewAward + "]");
 
-        // record the ViewMovie
-        mDisplayedViewMovie = viewMovie;
+        // record the ViewAward, so it can be saved and restored if necessary
+        mDisplayedViewAward = viewAward;
 
-        if (viewMovie == null) {
-            // Note: we wish mDisplayedViewMovie to be null when there is no data
+        if (viewAward == null) {
+            // Note: we wish mDisplayedViewAward to be null when there is no data
             updateEmptyView(context);
         } else {
-            displayMovieFields(context, viewMovie);
+            displayDetailFields(context, viewAward);
         }
     }
 
     /**
-     * Display a set of ViewMovie field values.
+     * Displays a set of ViewAward field values.
      * @param context the context
-     * @param viewMovie the date to display
+     * @param viewAward the ViewAward to display
      */
-    private void displayMovieFields(@Nullable final Context context, @NonNull final ViewMovie viewMovie) {
-        Movie movie = viewMovie.getMovie();
-        Award award = viewMovie.getAward();
-        String runtimeText = getViewUtils().getRuntimeText(context, movie.getRuntime());
-        //String categoryCode = award.getCategory();
-        String categoryCode = Award.CATEGORY_DVD;
+    private void displayDetailFields(@Nullable final Context context, @NonNull final ViewAward viewAward) {
+        String runtimeText = getViewUtils().getRuntimeText(context, viewAward.getRuntime());
+        String categoryCode = viewAward.getCategory();
         Drawable categoryDrawable = getViewUtils().getCategoryDrawable(context, categoryCode);
+        String awardDateText = getViewUtils().getAwardDateDisplayable(viewAward.getAwardDate());
 
-        Picasso.with(context).load(movie.getPoster()).into(mImgPoster);
-        mTxtTitle.setText(movie.getTitle().trim());
+        Picasso.with(context).load(viewAward.getPoster()).into(mImgPoster);
+        mTxtTitle.setText(viewAward.getTitle().trim());
         mTxtRuntime.setText(runtimeText);
-        mTxtGenre.setText(movie.getGenre());
+        mTxtGenre.setText(viewAward.getGenre());
         mImgCategory.setImageDrawable(categoryDrawable);
         mTxtCategory.setText(getViewUtils().getCategoryText(context, categoryCode));
-//        mTxtAwardDate.setText(award.getAwardDate());
-//        mTxtReview.setText(award.getReview());
+        mTxtAwardDate.setText(awardDateText);
+        mTxtReview.setText(viewAward.getReview());
     }
 
     //--------------------------------------------------------------
@@ -442,11 +424,6 @@ public class MovieFragment extends Fragment
     public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
         // Inflate the menu; this adds items to the app bar if it is present.
         inflater.inflate(R.menu.main_menu, menu);
-
-//        // Show the share menu option if it is present, i.e. a ViewMovie is being displayed
-//        if (menu.findItem(R.id.mnuShare) != null) {
-//            menu.findItem(R.id.mnuShare).setVisible(isViewMovieDisplayed());
-//        }
     }
 
     /**
@@ -470,15 +447,15 @@ public class MovieFragment extends Fragment
     // Utility methods
 
 //    /**
-//     * Display the ViewMovie (if any) which has been set as an argument.
+//     * Displays the ViewAward (if any) which has been set as an argument.
 //     * @param context the context
 //     */
 //    public final void refreshUserInterface(@Nullable final Context context) {
-//        Uri uri = getArgViewMovieUri();
+//        Uri uri = getArgViewAwardUri();
 //        if (uri != null) {
-//            ViewMovie movie = getMovieManager().getMovie(context, uri);
-//            displayViewMovie(context, movie);
-//            setArgViewMovieUri(null);
+//            ViewAward viewAward = getResolver().getContentProvider().etc(context, uri);
+//            displayViewAward(context, viewAward);
+//            setArgViewAwardUri(null);
 //        }
 //    }
 
@@ -486,12 +463,12 @@ public class MovieFragment extends Fragment
     // Getters and Setters
 
     @Nullable
-    private Uri getArgViewMovieUri() {
-        return mArgViewMovieUri;
+    private Uri getArgViewAwardUri() {
+        return mArgViewAwardUri;
     }
-    public final void setArgViewMovieUri(@Nullable final Uri uri) {
+    public final void setArgViewAwardUri(@Nullable final Uri uri) {
         if (uri != null) {
-            mArgViewMovieUri = uri;
+            mArgViewAwardUri = uri;
             if (getActivity() != null) {
                 loadData(uri);
             }
@@ -531,18 +508,18 @@ public class MovieFragment extends Fragment
         return ObjectFactory.getViewUtils();
     }
 
-    //------------------------------------------------------------------------------
-    // Callbacks
-
-    /**
-     * A callback interface that all activities containing this fragment must implement.
-     */
-    public interface MovieFragmentContainer {
-        /**
-         * Return whether a ViewMovie is currently being displayed.
-         * @return true if a ViewMovie is currently being displayed, false otherwise
-         */
-        boolean isViewMovieDisplayed();
-    }
+//    //------------------------------------------------------------------------------
+//    // Callbacks
+//
+//    /**
+//     * A callback interface that all activities containing this fragment must implement.
+//     */
+//    public interface MovieFragmentContainer {
+//        /**
+//         * Return whether a ViewAward is currently being displayed.
+//         * @return true if a ViewAward is currently being displayed, false otherwise
+//         */
+//        boolean isViewAwardDisplayed();
+//    }
 
 }

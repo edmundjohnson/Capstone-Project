@@ -11,7 +11,7 @@ import java.util.List;
 import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
-import uk.jumpingmouse.moviecompanion.data.ViewMovie;
+import uk.jumpingmouse.moviecompanion.data.ViewAward;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.omdbapi.OmdbApi;
 import uk.jumpingmouse.omdbapi.OmdbMovie;
@@ -331,68 +331,51 @@ public final class ModelUtils {
      *         does not contain values for any of the fields which are mandatory for Movie
      */
     @Nullable
-    public static ViewMovie newViewMovie(@NonNull Cursor cursor) {
-        final int id = cursor.getInt(DataContract.ViewMovieEntry.COL_ID);
-        final String imdbId = cursor.getString(DataContract.ViewMovieEntry.COL_IMDB_ID);
-        final String title = cursor.getString(DataContract.ViewMovieEntry.COL_TITLE);
-        final String year = cursor.getString(DataContract.ViewMovieEntry.COL_YEAR);
-        final String genre = cursor.getString(DataContract.ViewMovieEntry.COL_GENRE);
-        final String poster = cursor.getString(DataContract.ViewMovieEntry.COL_POSTER);
-        final String awardId = cursor.getString(DataContract.ViewMovieEntry.COL_AWARD_ID);
-        final String awardDate = cursor.getString(DataContract.ViewMovieEntry.COL_AWARD_DATE);
-        final String category = cursor.getString(DataContract.ViewMovieEntry.COL_CATEGORY);
-        final String review = cursor.getString(DataContract.ViewMovieEntry.COL_REVIEW);
-        final int displayOrder = cursor.getInt(DataContract.ViewMovieEntry.COL_DISPLAY_ORDER);
+    public static ViewAward newViewAward(@NonNull Cursor cursor) {
+        final String id = cursor.getString(DataContract.ViewAwardEntry.COL_ID);
+        final int movieId = cursor.getInt(DataContract.ViewAwardEntry.COL_MOVIE_ID);
+        final String awardDate = cursor.getString(DataContract.ViewAwardEntry.COL_AWARD_DATE);
+        final String category = cursor.getString(DataContract.ViewAwardEntry.COL_CATEGORY);
+        final String review = cursor.getString(DataContract.ViewAwardEntry.COL_REVIEW);
+        final int displayOrder = cursor.getInt(DataContract.ViewAwardEntry.COL_DISPLAY_ORDER);
+        final String title = cursor.getString(DataContract.ViewAwardEntry.COL_TITLE);
+        int runtime = cursor.getInt(DataContract.ViewAwardEntry.COL_RUNTIME);
+        final String genre = cursor.getString(DataContract.ViewAwardEntry.COL_GENRE);
+        final String poster = cursor.getString(DataContract.ViewAwardEntry.COL_POSTER);
 
         // if the id mandatory attribute is missing, return null
-        if (id <= 0) {
-            Timber.e("newViewMovie(Cursor): invalid id");
+        if (id == null) {
+            Timber.e("newViewAward(Cursor): missing id");
             return null;
         }
-        // if the imdbId mandatory attribute is missing, return null
-        if (imdbId == null) {
-            Timber.e("newViewMovie(Cursor): missing imdbId");
+        // if the movieId mandatory attribute is invalid, return null
+        if (movieId <= 0) {
+            Timber.e("newViewAward(Cursor): missing or invalid movieId");
             return null;
         }
         // if the title mandatory attribute is missing, return null
         if (title == null) {
-            Timber.e("newViewMovie(Cursor): missing title");
+            Timber.e("newViewAward(Cursor): missing title");
             return null;
         }
-        // if the released date is invalid set it to unknown
-        long released = cursor.getLong(DataContract.MovieEntry.COL_RELEASED);
-        if (released <= 0 && released != Movie.RELEASED_UNKNOWN) {
-            Timber.w("newViewMovie(Cursor): invalid released");
-            released = Movie.RELEASED_UNKNOWN;
-        }
-        // if the runtime is invalid set it to unknown
-        int runtime = cursor.getInt(DataContract.MovieEntry.COL_RUNTIME);
+        // if the runtime is invalid, set it to unknown
         if (runtime < 1 && runtime != Movie.RUNTIME_UNKNOWN) {
-            Timber.w("newViewMovie(Cursor): invalid runtime");
+            Timber.w("newViewAward(Cursor): invalid runtime: " + runtime);
             runtime = Movie.RUNTIME_UNKNOWN;
         }
 
-        Movie movie = Movie.builder()
+        return ViewAward.builder()
                 .id(id)
-                .imdbId(imdbId)
-                .title(title)
-                .year(year)
-                .released(released)
-                .runtime(runtime)
-                .genre(genre)
-                .poster(poster)
-                .build();
-
-        Award award = Award.builder()
-                .id(awardId)
-                .movieId(id)
+                .movieId(movieId)
                 .awardDate(awardDate)
                 .category(category)
                 .review(review)
                 .displayOrder(displayOrder)
+                .title(title)
+                .runtime(runtime)
+                .genre(genre)
+                .poster(poster)
                 .build();
-
-        return new ViewMovie(movie, award);
     }
 
 }

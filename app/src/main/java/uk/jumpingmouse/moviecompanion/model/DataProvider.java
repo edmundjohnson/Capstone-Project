@@ -18,7 +18,6 @@ import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.data.ViewAward;
-import uk.jumpingmouse.moviecompanion.data.ViewMovie;
 import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 
 /**
@@ -39,9 +38,6 @@ public class DataProvider extends ContentProvider {
     private static final int VIEW_AWARD = 300;
     private static final int VIEW_AWARD_ID = 301;
     private static final int VIEW_AWARD_ALL = 302;
-    private static final int VIEW_MOVIE = 400;
-    private static final int VIEW_MOVIE_AWARD_ID = 401;
-    private static final int VIEW_MOVIE_ALL = 402;
 
     //---------------------------------------------------------------------
     // URI matcher
@@ -80,17 +76,6 @@ public class DataProvider extends ContentProvider {
         uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
                 DataContract.URI_PATH_AWARD + "/*",
                 AWARD_ID);
-
-        // view movie
-        uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
-                DataContract.URI_PATH_VIEW_MOVIE,
-                VIEW_MOVIE);
-        uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
-                DataContract.URI_PATH_VIEW_MOVIE + "/" + DataContract.PARAM_ALL,
-                VIEW_MOVIE_ALL);
-        uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
-                DataContract.URI_PATH_VIEW_MOVIE + "/*",
-                VIEW_MOVIE_AWARD_ID);
 
         // view award
         uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
@@ -417,13 +402,13 @@ public class DataProvider extends ContentProvider {
                 cursor = selectViewAwards(projection, selection, selectionArgs, sortOrder);
                 break;
             // "award/*"
-            case VIEW_MOVIE_AWARD_ID:
-                String viewMovieAwardId = uri.getLastPathSegment();
-                if (viewMovieAwardId == null) {
-                    Timber.w("Could not obtain viewMovieAwardId id from URI" + uri);
+            case VIEW_AWARD_ID:
+                String viewAwardId = uri.getLastPathSegment();
+                if (viewAwardId == null) {
+                    Timber.w("Could not obtain view award id from URI" + uri);
                     cursor = null;
                 } else {
-                    cursor = selectViewMovieByAwardId(viewMovieAwardId);
+                    cursor = selectViewAwardById(viewAwardId);
                 }
                 break;
             default:
@@ -712,41 +697,6 @@ public class DataProvider extends ContentProvider {
     }
 
     //---------------------------------------------------------------------
-    // ViewMovie query methods
-
-    /**
-     * Return a cursor whose first row is the view movie with a specified award id.
-     * @param awardId the award id corresponding to the required view movie row
-     * @return a cursor whose first row is the view movie with a specified award id
-     */
-    @Nullable
-    private Cursor selectViewMovieByAwardId(final String awardId) {
-        ViewMovie viewMovie = getLocalDatabase().selectViewMovieByAwardId(awardId);
-        if (viewMovie == null) {
-            Timber.w("", "ViewMovie not found for award id: " + awardId);
-            return null;
-        }
-        return toCursor(viewMovie);
-    }
-
-    /**
-     * Returns a one-row cursor containing a ViewMovie.
-     * @param viewMovie the view movie
-     * @return a one-row cursor containing the ViewMovie
-     */
-    @NonNull
-    private Cursor toCursor(@NonNull ViewMovie viewMovie) {
-        // Create a cursor containing the movie columns
-        String[] columns = DataContract.ViewMovieEntry.getAllColumns();
-        MatrixCursor matrixCursor = new MatrixCursor(columns);
-
-        // populate the cursor with the movie
-        matrixCursor.addRow(viewMovie.toObjectArray());
-
-        return matrixCursor;
-    }
-
-    //---------------------------------------------------------------------
     // View Award query methods
 
     /**
@@ -793,7 +743,7 @@ public class DataProvider extends ContentProvider {
     @NonNull
     private Cursor toCursor(@NonNull ViewAward viewAward) {
         // Create a cursor containing the award columns
-        String[] columns = DataContract.AwardEntry.getAllColumns();
+        String[] columns = DataContract.ViewAwardEntry.getAllColumns();
         MatrixCursor matrixCursor = new MatrixCursor(columns);
 
         // populate the cursor with the view award

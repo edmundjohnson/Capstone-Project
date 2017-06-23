@@ -16,8 +16,6 @@ import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.data.ViewAward;
-import uk.jumpingmouse.moviecompanion.data.ViewMovie;
-import uk.jumpingmouse.moviecompanion.utils.JavaUtils;
 
 /**
  * Class giving access to a local copy of the database.
@@ -319,42 +317,6 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         Collections.sort(awardList, comparator);
 
         return awardList;
-    }
-
-    //---------------------------------------------------------------------
-    // ViewMovie query methods
-
-    /**
-     * Returns the view movie corresponding to a specified award id.
-     * @param awardId the award id
-     * @return the view movie corresponding to a specified award id,
-     *         or null if there is no matching view movie
-     */
-    @Override
-    @Nullable
-    public ViewMovie selectViewMovieByAwardId(String awardId) {
-        if (awardId == null) {
-            return null;
-        }
-        // Extract the movie id from the award id
-        String[] split = awardId.split("_");
-        String strMovieId = split[0];
-        int movieId = JavaUtils.toInt(strMovieId, Movie.ID_UNKNOWN);
-        if (movieId == Movie.ID_UNKNOWN) {
-            Timber.d("selectViewMovieByAwardId: Movie not found with strMovieId: " + strMovieId);
-            return null;
-        }
-        Movie movie = selectMovieById(movieId);
-        if (movie == null) {
-            Timber.d("selectViewMovieByAwardId: Movie not found with id: " + movieId);
-            return null;
-        }
-        Award award = selectAwardById(awardId);
-        if (award == null) {
-            Timber.d("selectViewMovieByAwardId: Award not found with id: " + awardId);
-            return null;
-        }
-        return new ViewMovie(movie, award);
     }
 
     //---------------------------------------------------------------------

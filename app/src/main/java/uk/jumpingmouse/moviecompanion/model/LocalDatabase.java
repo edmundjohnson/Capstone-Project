@@ -9,7 +9,6 @@ import java.util.List;
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.data.ViewAward;
-import uk.jumpingmouse.moviecompanion.data.ViewMovie;
 
 /**
  * Interface for database implementation classes.
@@ -113,18 +112,6 @@ public interface LocalDatabase {
     List<Award> selectAwards(
             @Nullable final String[] projection, @Nullable final String selection,
             @Nullable final String[] selectionArgs, @Nullable final String sortOrder);
-
-    //---------------------------------------------------------------------
-    // ViewMovie methods
-
-    /**
-     * Returns the view movie corresponding to a specified award id.
-     * @param awardId the award id
-     * @return the view movie corresponding to a specified award id,
-     *         or null if there is no matching view movie
-     */
-    @Nullable
-    ViewMovie selectViewMovieByAwardId(String awardId);
 
     //---------------------------------------------------------------------
     // ViewAward methods

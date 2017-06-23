@@ -78,10 +78,10 @@ public class AwardListFragment extends Fragment
         ViewAwardAdapter.AdapterOnClickHandler clickHandler =
                 new ViewAwardAdapter.AdapterOnClickHandler() {
                     @Override
-                    public void onClick(final int movieId, final int selectedPosition) {
+                    public void onClick(final String id, final int selectedPosition) {
 
                         if (mViewAwardAdapter != null && getActivity() != null) {
-                            mViewAwardAdapter.handleItemClick(movieId, selectedPosition,
+                            mViewAwardAdapter.handleItemClick(id, selectedPosition,
                                     (AwardListFragment.ListFragmentContainer) getActivity());
                         }
                     }

@@ -172,16 +172,16 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
      * Interface for the item click handler.
      */
     public interface AdapterOnClickHandler {
-        void onClick(int movieId, int selectedPosition);
+        void onClick(String id, int selectedPosition);
     }
 
     /**
      * Handler method invoked when an item is clicked.
-     * @param movieId the movie id of the award which has been clicked
+     * @param id the id of the view award which has been clicked
      * @param selectedPosition the item's position in the list
      * @param listFragmentContainer the activity containing the fragment in which the list is displayed
      */
-    public void handleItemClick(final int movieId, final int selectedPosition,
+    public void handleItemClick(final String id, final int selectedPosition,
                              final AwardListFragment.ListFragmentContainer listFragmentContainer) {
         // Ensure the previously-selected item is no longer highlighted
         notifyItemChanged(getSelectedPosition());
@@ -194,7 +194,7 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
 
         // Callback the list fragment container (i.e. the list activity), so it can
         // display the selected movie
-        Uri uri = DataContract.ViewMovieEntry.buildUriForRowById(movieId);
+        Uri uri = DataContract.ViewAwardEntry.buildUriForRowById(id);
         listFragmentContainer.onItemSelected(mContext, uri);
     }
 
@@ -267,8 +267,8 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
         public void onClick(View view) {
             int position = getAdapterPosition();
             if (mCursor.moveToPosition(position)) {
-                int movieId = mCursor.getInt(DataContract.ViewAwardEntry.COL_MOVIE_ID);
-                mClickHandler.onClick(movieId, position);
+                String id = mCursor.getString(DataContract.ViewAwardEntry.COL_ID);
+                mClickHandler.onClick(id, position);
             }
         }
 

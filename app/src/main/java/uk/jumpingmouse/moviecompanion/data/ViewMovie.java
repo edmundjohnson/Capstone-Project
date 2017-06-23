@@ -11,7 +11,9 @@ import android.support.annotation.NonNull;
  * - the movie's Awards
  * - the UserMovie, i.e. whether the movie is on the user's wishlist, see list, favourites, etc.
  * @author Edmund Johnson
+ * @deprecated Use ViewAward instead
  */
+@Deprecated
 public class ViewMovie implements Parcelable {
 
     private Movie movie;

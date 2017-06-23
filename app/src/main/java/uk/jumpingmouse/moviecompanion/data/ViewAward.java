@@ -21,6 +21,8 @@ public class ViewAward {
     private String awardDate;
     // categoryId is one of CATEGORY_MOVIE, CATEGORY_DVD
     private String category;
+    // the review for the award (free text)
+    private String review;
     // displayOrder determines the displayed order of awards for a movie
     private int displayOrder;
     // The movie title, e.g. "The Handmaiden"
@@ -35,11 +37,39 @@ public class ViewAward {
     private ViewAward() {
     }
 
+
+    private ViewAward(
+            @NonNull String id,
+            int movieId,
+            @NonNull String awardDate,
+            @NonNull String category,
+            @NonNull String review,
+            int displayOrder,
+            @NonNull String title,
+            int runtime,
+            @Nullable String genre,
+            @Nullable String poster) {
+        if (movieId <= 0) {
+            throw new NullPointerException("Invalid movieId");
+        }
+        this.id = id;
+        this.movieId = movieId;
+        this.awardDate = awardDate;
+        this.category = category;
+        this.review = review;
+        this.displayOrder = displayOrder;
+        this.title = title;
+        this.runtime = runtime;
+        this.genre = genre;
+        this.poster = poster;
+    }
+
     public ViewAward(@NonNull Award award, @NonNull Movie movie) {
         this.id = award.getId();
         this.movieId = award.getMovieId();
         this.awardDate = award.getAwardDate();
         this.category = award.getCategory();
+        this.review = award.getReview();
         this.displayOrder = award.getDisplayOrder();
         this.title = movie.getTitle();
         this.runtime = movie.getRuntime();
@@ -51,46 +81,51 @@ public class ViewAward {
     // Getters
 
     @NonNull
-    private String getId() {
+    public String getId() {
         return id;
     }
 
-    private int getMovieId() {
+    public int getMovieId() {
         return movieId;
     }
 
     @NonNull
-    private String getAwardDate() {
+    public String getAwardDate() {
         return awardDate;
     }
 
     @NonNull
-    private String getCategory() {
+    public String getCategory() {
         return category;
     }
 
-    private int getDisplayOrder() {
+    @NonNull
+    public String getReview() {
+        return review;
+    }
+
+    public int getDisplayOrder() {
         return displayOrder;
     }
 
     @NonNull
-    private String getTitle() {
+    public String getTitle() {
         return title;
     }
 
     /** Returns the runtime in minutes, e.g. 144. */
-    private int getRuntime() {
+    public int getRuntime() {
         return runtime;
     }
 
     /** Returns a comma-separated list of genres, e.g. "Drama, Mystery, Romance". */
     @Nullable
-    private String getGenre() {
+    public String getGenre() {
         return genre;
     }
 
     @Nullable
-    private String getPoster() {
+    public String getPoster() {
         return poster;
     }
 
@@ -108,12 +143,154 @@ public class ViewAward {
                 getMovieId(),
                 getAwardDate(),
                 getCategory(),
+                getReview(),
                 getDisplayOrder(),
                 getTitle(),
                 getRuntime(),
                 getGenre(),
                 getPoster()
         };
+    }
+
+    //---------------------------------------------------------------
+    // Builder implementation
+
+    /**
+     * Builder for this class.  Usage:
+     * <blockquote><pre>
+     * {@code
+     *   ViewAward award = ViewAward.builder()
+     *         .id(id)
+     *         .movieId(4016934)
+     *         .awardDate("170512")
+     *         [etc]
+     *        .build();
+     * }
+     * </pre></blockquote>
+     * @return an instance of the ViewAward class.
+     */
+    public static ViewAward.Builder builder() {
+        return new ViewAward.Builder();
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public static final class Builder {
+        private String id;
+        private int movieId;
+        private String awardDate;
+        private String category;
+        private String review;
+        private int displayOrder;
+        private String title;
+        private int runtime;
+        private String genre;
+        private String poster;
+
+        Builder() {
+        }
+
+        Builder(ViewAward source) {
+            this.id = source.id;
+            this.movieId = source.movieId;
+            this.awardDate = source.awardDate;
+            this.category = source.category;
+            this.review = source.review;
+            this.displayOrder = source.displayOrder;
+            this.title = source.title;
+            this.runtime = source.runtime;
+            this.genre = source.genre;
+            this.poster = source.poster;
+        }
+
+        public ViewAward.Builder id(@NonNull String id) {
+            this.id = id;
+            return this;
+        }
+
+        public ViewAward.Builder movieId(int movieId) {
+            this.movieId = movieId;
+            return this;
+        }
+
+        public ViewAward.Builder awardDate(@NonNull String awardDate) {
+            this.awardDate = awardDate;
+            return this;
+        }
+
+        public ViewAward.Builder category(@NonNull String category) {
+            this.category = category;
+            return this;
+        }
+
+        public ViewAward.Builder review(@NonNull String review) {
+            this.review = review;
+            return this;
+        }
+
+        public ViewAward.Builder displayOrder(int displayOrder) {
+            this.displayOrder = displayOrder;
+            return this;
+        }
+
+        public ViewAward.Builder title(@NonNull String title) {
+            this.title = title;
+            return this;
+        }
+
+        public ViewAward.Builder runtime(int runtime) {
+            this.runtime = runtime;
+            return this;
+        }
+
+        public ViewAward.Builder genre(@NonNull String genre) {
+            this.genre = genre;
+            return this;
+        }
+
+        public ViewAward.Builder poster(@NonNull String poster) {
+            this.poster = poster;
+            return this;
+        }
+
+        /** Builds and returns an object of this class. */
+        public ViewAward build() {
+            String missing = "";
+            if (id == null) {
+                missing += " id";
+            }
+            if (movieId <= 0) {
+                missing += " movieId";
+            }
+            if (awardDate == null) {
+                missing += " awardDate";
+            }
+            if (category == null) {
+                missing += " category";
+            }
+            if (review == null) {
+                missing += " review";
+            }
+            if (displayOrder <= 0) {
+                missing += " displayOrder";
+            }
+            if (title == null) {
+                missing += " title";
+            }
+            if (!missing.isEmpty()) {
+                throw new IllegalStateException("Missing required properties:" + missing);
+            }
+            return new ViewAward(
+                    this.id,
+                    this.movieId,
+                    this.awardDate,
+                    this.category,
+                    this.review,
+                    this.displayOrder,
+                    this.title,
+                    this.runtime,
+                    this.genre,
+                    this.poster);
+        }
     }
 
     //---------------------------------------------------------------
@@ -126,6 +303,7 @@ public class ViewAward {
                 + ", movieId=" + movieId
                 + ", awardDate=" + awardDate
                 + ", category=" + category
+                + ", review=" + review
                 + ", displayOrder=" + displayOrder
                 + ", title=" + title
                 + ", runtime=" + runtime
@@ -145,12 +323,12 @@ public class ViewAward {
                     && (this.movieId == that.movieId)
                     && (this.awardDate.equals(that.awardDate))
                     && (this.category.equals(that.category))
+                    && (this.review.equals(that.review))
                     && (this.displayOrder == that.displayOrder)
                     && (this.title.equals(that.title))
                     && (this.runtime == that.runtime)
                     && ((this.genre == null) ? (that.genre == null) : this.genre.equals(that.genre))
-                    && ((this.poster == null) ? (that.poster == null) :
-                    this.poster.equals(that.poster));
+                    && ((this.poster == null) ? (that.poster == null) : this.poster.equals(that.poster));
         }
         return false;
     }
@@ -166,6 +344,8 @@ public class ViewAward {
         h ^= this.awardDate.hashCode();
         h *= 1000003;
         h ^= this.category.hashCode();
+        h *= 1000003;
+        h ^= this.review.hashCode();
         h *= 1000003;
         h ^= this.displayOrder;
         h *= 1000003;

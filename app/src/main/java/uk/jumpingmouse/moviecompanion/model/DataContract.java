@@ -236,102 +236,102 @@ public final class DataContract {
 
     }
 
-    /**
-     * Inner class that defines the contents of a ViewMovie.
-     */
-    public static final class ViewMovieEntry implements BaseColumns {
-
-        static final String CONTENT_DIR_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + URI_PATH_VIEW_MOVIE;
-        static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + URI_PATH_VIEW_MOVIE;
-
-        // Database
-
-        //static final String ROOT_NODE = "movies";
-
-        //movie fields
-        public static final String COLUMN_ID = ViewMovieEntry._ID;
-        public static final String COLUMN_IMDB_ID = "imdbId";
-        public static final String COLUMN_TITLE = "title";
-        public static final String COLUMN_YEAR = "year";
-        public static final String COLUMN_RELEASED = "released";
-        public static final String COLUMN_RUNTIME = "runtime";
-        public static final String COLUMN_GENRE = "genre";
-        public static final String COLUMN_POSTER = "poster";
-        //award fields
-        public static final String COLUMN_AWARD_ID = "awardId";
-        public static final String COLUMN_AWARD_DATE = "awardDate";
-        public static final String COLUMN_CATEGORY = "category";
-        public static final String COLUMN_REVIEW = "review";
-        public static final String COLUMN_DISPLAY_ORDER = "displayOrder";
-
-        // Note: arrays are mutable, so ALL_COLUMNS should not be public.
-        // See Effective Java, Item 13.
-        private static final String[] ALL_COLUMNS = {
-                COLUMN_ID,
-                COLUMN_IMDB_ID,
-                COLUMN_TITLE,
-                COLUMN_YEAR,
-                COLUMN_RELEASED,
-                COLUMN_RUNTIME,
-                COLUMN_GENRE,
-                COLUMN_POSTER,
-                COLUMN_AWARD_ID,
-                COLUMN_AWARD_DATE,
-                COLUMN_CATEGORY,
-                COLUMN_REVIEW,
-                COLUMN_DISPLAY_ORDER
-        };
-        public static String[] getAllColumns() {
-            return ALL_COLUMNS.clone();
-        }
-
-        public static final int COL_ID = 0;
-        public static final int COL_IMDB_ID = COL_ID + 1;
-        public static final int COL_TITLE = COL_IMDB_ID + 1;
-        public static final int COL_YEAR = COL_TITLE + 1;
-        public static final int COL_RELEASED = COL_YEAR + 1;
-        public static final int COL_RUNTIME = COL_RELEASED + 1;
-        public static final int COL_GENRE = COL_RUNTIME + 1;
-        public static final int COL_POSTER = COL_GENRE + 1;
-        public static final int COL_AWARD_ID = COL_POSTER + 1;
-        public static final int COL_AWARD_DATE = COL_AWARD_ID + 1;
-        public static final int COL_CATEGORY = COL_AWARD_DATE + 1;
-        public static final int COL_REVIEW = COL_CATEGORY + 1;
-        public static final int COL_DISPLAY_ORDER = COL_REVIEW + 1;
-
-        // URIs
-
-        public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(URI_PATH_VIEW_MOVIE).build();
-
-        /**
-         * Build and return the URI for a ViewMovie identified by its id.
-         * e.g. "content://uk.jumpingmouse.moviecompanion/viewMovie/4016934"
-         * @param id the id of the viewMovie, e.g. 4016934
-         * @return the URI for obtaining the specific ViewMovie
-         */
-        @NonNull
-        public static Uri buildUriForRowById(final int id) {
-            return CONTENT_URI.buildUpon()
-                    .appendPath(Integer.toString(id))
-                    .build();
-        }
-
-        /**
-         * Create and return a URI for querying all ViewMovies.
-         * i.e. "content://uk.jumpingmouse.moviecompanion/viewMovie/all".
-         * @return the URI for querying all viewMovies
-         */
-        @NonNull
-        public static Uri buildUriForAllRows() {
-            return CONTENT_URI.buildUpon()
-                    .appendPath(PARAM_ALL)
-                    .build();
-        }
-
-    }
+//    /**
+//     * Inner class that defines the contents of a ViewMovie.
+//     */
+//    public static final class ViewMovieEntry implements BaseColumns {
+//
+//        static final String CONTENT_DIR_TYPE =
+//                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + URI_PATH_VIEW_MOVIE;
+//        static final String CONTENT_ITEM_TYPE =
+//                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + URI_PATH_VIEW_MOVIE;
+//
+//        // Database
+//
+//        //static final String ROOT_NODE = "movies";
+//
+//        //movie fields
+//        public static final String COLUMN_ID = ViewMovieEntry._ID;
+//        public static final String COLUMN_IMDB_ID = "imdbId";
+//        public static final String COLUMN_TITLE = "title";
+//        public static final String COLUMN_YEAR = "year";
+//        public static final String COLUMN_RELEASED = "released";
+//        public static final String COLUMN_RUNTIME = "runtime";
+//        public static final String COLUMN_GENRE = "genre";
+//        public static final String COLUMN_POSTER = "poster";
+//        //award fields
+//        public static final String COLUMN_AWARD_ID = "awardId";
+//        public static final String COLUMN_AWARD_DATE = "awardDate";
+//        public static final String COLUMN_CATEGORY = "category";
+//        public static final String COLUMN_REVIEW = "review";
+//        public static final String COLUMN_DISPLAY_ORDER = "displayOrder";
+//
+//        // Note: arrays are mutable, so ALL_COLUMNS should not be public.
+//        // See Effective Java, Item 13.
+//        private static final String[] ALL_COLUMNS = {
+//                COLUMN_ID,
+//                COLUMN_IMDB_ID,
+//                COLUMN_TITLE,
+//                COLUMN_YEAR,
+//                COLUMN_RELEASED,
+//                COLUMN_RUNTIME,
+//                COLUMN_GENRE,
+//                COLUMN_POSTER,
+//                COLUMN_AWARD_ID,
+//                COLUMN_AWARD_DATE,
+//                COLUMN_CATEGORY,
+//                COLUMN_REVIEW,
+//                COLUMN_DISPLAY_ORDER
+//        };
+//        public static String[] getAllColumns() {
+//            return ALL_COLUMNS.clone();
+//        }
+//
+//        public static final int COL_ID = 0;
+//        public static final int COL_IMDB_ID = COL_ID + 1;
+//        public static final int COL_TITLE = COL_IMDB_ID + 1;
+//        public static final int COL_YEAR = COL_TITLE + 1;
+//        public static final int COL_RELEASED = COL_YEAR + 1;
+//        public static final int COL_RUNTIME = COL_RELEASED + 1;
+//        public static final int COL_GENRE = COL_RUNTIME + 1;
+//        public static final int COL_POSTER = COL_GENRE + 1;
+//        public static final int COL_AWARD_ID = COL_POSTER + 1;
+//        public static final int COL_AWARD_DATE = COL_AWARD_ID + 1;
+//        public static final int COL_CATEGORY = COL_AWARD_DATE + 1;
+//        public static final int COL_REVIEW = COL_CATEGORY + 1;
+//        public static final int COL_DISPLAY_ORDER = COL_REVIEW + 1;
+//
+//        // URIs
+//
+//        public static final Uri CONTENT_URI =
+//                BASE_CONTENT_URI.buildUpon().appendPath(URI_PATH_VIEW_MOVIE).build();
+//
+//        /**
+//         * Build and return the URI for a ViewMovie identified by its id.
+//         * e.g. "content://uk.jumpingmouse.moviecompanion/viewMovie/4016934"
+//         * @param id the id of the viewMovie, e.g. 4016934
+//         * @return the URI for obtaining the specific ViewMovie
+//         */
+//        @NonNull
+//        public static Uri buildUriForRowById(final int id) {
+//            return CONTENT_URI.buildUpon()
+//                    .appendPath(Integer.toString(id))
+//                    .build();
+//        }
+//
+//        /**
+//         * Create and return a URI for querying all ViewMovies.
+//         * i.e. "content://uk.jumpingmouse.moviecompanion/viewMovie/all".
+//         * @return the URI for querying all viewMovies
+//         */
+//        @NonNull
+//        public static Uri buildUriForAllRows() {
+//            return CONTENT_URI.buildUpon()
+//                    .appendPath(PARAM_ALL)
+//                    .build();
+//        }
+//
+//    }
 
     /**
      * Inner class that defines the contents of a ViewAward.
@@ -349,6 +349,7 @@ public final class DataContract {
         public static final String COLUMN_MOVIE_ID = "movieId";
         public static final String COLUMN_AWARD_DATE = "awardDate";
         public static final String COLUMN_CATEGORY = "category";
+        public static final String COLUMN_REVIEW = "review";
         public static final String COLUMN_DISPLAY_ORDER = "displayOrder";
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_RUNTIME = "runtime";
@@ -362,6 +363,7 @@ public final class DataContract {
                 COLUMN_MOVIE_ID,
                 COLUMN_AWARD_DATE,
                 COLUMN_CATEGORY,
+                COLUMN_REVIEW,
                 COLUMN_DISPLAY_ORDER,
                 COLUMN_TITLE,
                 COLUMN_RUNTIME,
@@ -377,7 +379,8 @@ public final class DataContract {
         public static final int COL_MOVIE_ID = COL_ID + 1;
         public static final int COL_AWARD_DATE = COL_MOVIE_ID + 1;
         public static final int COL_CATEGORY = COL_AWARD_DATE + 1;
-        public static final int COL_DISPLAY_ORDER = COL_CATEGORY + 1;
+        public static final int COL_REVIEW = COL_CATEGORY + 1;
+        public static final int COL_DISPLAY_ORDER = COL_REVIEW + 1;
         public static final int COL_TITLE = COL_DISPLAY_ORDER + 1;
         public static final int COL_RUNTIME = COL_TITLE + 1;
         public static final int COL_GENRE = COL_RUNTIME + 1;

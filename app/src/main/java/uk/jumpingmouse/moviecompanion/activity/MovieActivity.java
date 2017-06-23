@@ -14,7 +14,7 @@ import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
  * The activity class for the movie screen.
  * @author Edmund Johnson
  */
-public class MovieActivity extends AppCompatActivity /* implements MovieFragmentContainer */ {
+public class MovieActivity extends AppCompatActivity {
 
     /** Tag for movie fragment. */
     private static final String TAG_MOVIE_FROM_LIST = "TAG_MOVIE_FROM_LIST";
@@ -29,7 +29,7 @@ public class MovieActivity extends AppCompatActivity /* implements MovieFragment
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.movie);
+        setContentView(R.layout.activity_movie);
 
         // Initialise the app bar
         getViewUtils().initialiseAppBar(this, R.id.tbAppBar, getString(R.string.app_name), true);
@@ -43,7 +43,7 @@ public class MovieActivity extends AppCompatActivity /* implements MovieFragment
             // Note: We are re-using an already-existing instance of MovieFragment to display the
             // selected movie.  Therefore, we cannot call movieFragment.setArguments(), as that can
             // only be done on new fragments.  Instead, we use custom setArg...() methods.
-            movieFragment.setArgViewMovieUri(uri);
+            movieFragment.setArgViewAwardUri(uri);
         }
 
         //        Bundle extras = getIntent().getExtras();
@@ -54,7 +54,7 @@ public class MovieActivity extends AppCompatActivity /* implements MovieFragment
 //            // Note: We are re-using an already-existing instance of MovieFragment to display the
 //            // selected movie.  Therefore, we cannot call movieFragment.setArguments(), as that can
 //            // only be done on new fragments.  Instead, we use custom setArg...() methods.
-//            movieFragment.setArgViewMovieUri(movieUri);
+//            movieFragment.setArgViewAwardUri(movieUri);
 //        }
 
         addFragmentToContainer(movieFragment);
