@@ -3,6 +3,9 @@ package uk.jumpingmouse.moviecompanion.activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +18,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.graphics.Palette;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +26,10 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.data.ViewAward;
@@ -41,11 +47,15 @@ public class MovieFragment extends Fragment
             SharedPreferences.OnSharedPreferenceChangeListener {
 
     /** The cursor loader id. */
-    private static  final int VIEW_AWARD_LOADER_ID = 1;
+    private static final int VIEW_AWARD_LOADER_ID = 1;
 
     // Bundle keys, e.g. for use when saving and restoring the fragment's state
     private static final String KEY_VIEW_AWARD = "KEY_VIEW_AWARD";
     private static final String KEY_VIEW_AWARD_URI = "KEY_VIEW_AWARD_URI";
+
+    private static final int DARK_MUTED_COLOR_DEFAULT = 0xFF333333;
+    // green_50
+    private static final int LIGHT_MUTED_COLOR_DEFAULT = 0xFFE8F5E9;
 
     /** Value passed in: the URI of the view award to display. */
     private Uri mArgViewAwardUri;
@@ -55,6 +65,10 @@ public class MovieFragment extends Fragment
 
     /** The cursor loader for view award. */
     private CursorLoader mCursorLoader;
+
+    private View mRootView;
+    private int mDarkMutedColor = DARK_MUTED_COLOR_DEFAULT;
+    private int mLightMutedColor = LIGHT_MUTED_COLOR_DEFAULT;
 
     // Screen fields
     private ImageView mImgPoster;
@@ -81,24 +95,24 @@ public class MovieFragment extends Fragment
                              final Bundle savedInstanceState) {
 
         // Initialise the display element references
-        View rootView = inflater.inflate(R.layout.movie_fragment, container, false);
+        mRootView = inflater.inflate(R.layout.movie_fragment, container, false);
 
         // Initialise the display element references
-        mImgPoster = (ImageView) rootView.findViewById(R.id.imgPoster);
-        mTxtTitle = (TextView) rootView.findViewById(R.id.txtTitle);
-        mTxtRuntime = (TextView) rootView.findViewById(R.id.txtRuntime);
-        mTxtGenre = (TextView) rootView.findViewById(R.id.txtGenre);
-        mImgCategory = (ImageView) rootView.findViewById(R.id.imgCategory);
-        mTxtCategory = (TextView) rootView.findViewById(R.id.txtCategory);
-        mTxtAwardDate = (TextView) rootView.findViewById(R.id.txtAwardDate);
-        mTxtReview = (TextView) rootView.findViewById(R.id.txtReview);
+        mImgPoster = (ImageView) mRootView.findViewById(R.id.imgPoster);
+        mTxtTitle = (TextView) mRootView.findViewById(R.id.txtTitle);
+        mTxtRuntime = (TextView) mRootView.findViewById(R.id.txtRuntime);
+        mTxtGenre = (TextView) mRootView.findViewById(R.id.txtGenre);
+        mImgCategory = (ImageView) mRootView.findViewById(R.id.imgCategory);
+        mTxtCategory = (TextView) mRootView.findViewById(R.id.txtCategory);
+        mTxtAwardDate = (TextView) mRootView.findViewById(R.id.txtAwardDate);
+        mTxtReview = (TextView) mRootView.findViewById(R.id.txtReview);
 
         Context context = getActivity();
         if (savedInstanceState != null) {
             displaySavedViewAward(context, savedInstanceState);
         }
 
-        return rootView;
+        return mRootView;
     }
 
     @Override
@@ -404,7 +418,108 @@ public class MovieFragment extends Fragment
         Drawable categoryDrawable = getViewUtils().getCategoryDrawable(context, categoryCode);
         String awardDateText = getViewUtils().getAwardDateDisplayable(viewAward.getAwardDate());
 
-        Picasso.with(context).load(viewAward.getPoster()).into(mImgPoster);
+        Picasso.with(context).load(viewAward.getPoster()).into(mImgPoster, new Callback() {
+            @Override
+            public void onSuccess() {
+                if (mRootView == null || mImgPoster.getDrawable() == null) {
+                    return;
+                }
+                Bitmap bitmap = ((BitmapDrawable) mImgPoster.getDrawable()).getBitmap();
+                if (bitmap != null) {
+                    Palette.Builder paletteBuilder = new Palette.Builder(bitmap);
+                    Palette palette = paletteBuilder.generate();
+                    mDarkMutedColor = palette.getDarkMutedColor(DARK_MUTED_COLOR_DEFAULT);
+                    mLightMutedColor = lightenColor(palette.getLightMutedColor(LIGHT_MUTED_COLOR_DEFAULT));
+                    mRootView.findViewById(R.id.layoutAppBar).setBackgroundColor(mDarkMutedColor);
+                    mRootView.findViewById(R.id.layoutMetaBar).setBackgroundColor(mDarkMutedColor);
+                    mRootView.findViewById(R.id.layoutMetaBar).setBackgroundColor(mDarkMutedColor);
+                    mRootView.findViewById(R.id.layoutAwardInfo).setBackgroundColor(mLightMutedColor);
+                    mRootView.findViewById(R.id.txtReview).setBackgroundColor(mLightMutedColor);
+                    mRootView.findViewById(R.id.layoutMovieFragment).setBackgroundColor(mLightMutedColor);
+                    //// Set the status bar background colour to match the meta bar
+                    //// Nice idea, but it's quite distracting, and the appbar goes green
+                    //// when the review is scrolled to the top.
+                    //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    //    if (getActivity() != null && getActivity().getWindow() != null) {
+                    //        getActivity().getWindow().setStatusBarColor(mDarkMutedColor);
+                    //    }
+                    //}
+                    //AppCompatActivity activity = (AppCompatActivity) getActivity();
+                    //// Set appbar to metabar colour - no, this doesn't work, it sets the colour
+                    //// immediately, we want it set when the review is scrolled up.
+                    //if (getActivity() != null) {
+                    //    Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.tbAppBar);
+                    //    toolbar.setBackground(new ColorDrawable(mDarkMutedColor));
+                    //}
+                }
+            }
+
+            /**
+             * Generates and returns a light shade of a colour.
+             * @param color the colour to lighten
+             * @return the light shade of the colour
+             */
+            private int lightenColor(int color) {
+                // Determine the factor to lighten by, based on the darkest component
+                int darkest = Math.min(Color.red(color),
+                        Math.min(Color.green(color), Color.blue(color)));
+                float factor = getLighteningFactor(darkest);
+
+                //float r = Color.red(color) * getLighteningFactor(Color.red(color));
+                //float g = Color.green(color) * getLighteningFactor(Color.green(color));
+                //float b = Color.blue(color) * getLighteningFactor(Color.blue(color));
+
+                float r = Color.red(color) * factor;
+                float g = Color.green(color) * factor;
+                float b = Color.blue(color) * factor;
+                int ir = Math.min(255, (int) r);
+                int ig = Math.min(255, (int) g);
+                int ib = Math.min(255, (int) b);
+                int ia = Color.alpha(color);
+                return Color.argb(ia, ir, ig, ib);
+            }
+
+            /**
+             * Determine and return the lightening factor for a colour component.
+             * @param colourComponent the value of the colour component (red, green or blue)
+             * @return the lightening factor for the colour component: less than 1.0 is darker,
+             *         1.0 is unchanged, and greater than 1.0 is lighter
+             */
+            private float getLighteningFactor(int colourComponent) {
+                if (colourComponent < 112) {
+                    return 2.0f;
+                } else if (colourComponent < 144) {
+                    return 1.8f;
+                } else if (colourComponent < 176) {
+                    return 1.6f;
+                } else if (colourComponent < 192) {
+                    return 1.4f;
+                } else if (colourComponent < 208) {
+                    return 1.2f;
+                } else {
+                    return 1.0f;
+                }
+//                if (colourComponent < 112) {
+//                    return 2.0f;
+//                } else if (colourComponent < 128) {
+//                    return 1.8f;
+//                } else if (colourComponent < 144) {
+//                    return 1.6f;
+//                } else if (colourComponent < 160) {
+//                    return 1.4f;
+//                } else if (colourComponent < 176) {
+//                    return 1.2f;
+//                } else {
+//                    return 1.0f;
+//                }
+            }
+
+            @Override
+            public void onError() {
+                Timber.w("Error loading poster into ImageView");
+            }
+        });
+
         mTxtTitle.setText(viewAward.getTitle().trim());
         mTxtRuntime.setText(runtimeText);
         mTxtGenre.setText(viewAward.getGenre());

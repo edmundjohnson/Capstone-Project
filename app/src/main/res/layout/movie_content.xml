@@ -12,7 +12,7 @@
     tools:context=".activity.MovieActivity" >
 
     <LinearLayout
-        android:id="@+id/meta_bar"
+        android:id="@+id/layoutMetaBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#333"
@@ -21,8 +21,7 @@
         android:paddingStart="@dimen/detail_inner_horizontal_margin"
         android:paddingEnd="@dimen/detail_inner_horizontal_margin"
         android:paddingTop="@dimen/detail_metabar_vertical_padding"
-        android:paddingBottom="@dimen/detail_metabar_vertical_padding"
-        android:layout_marginBottom="@dimen/detail_metabar_vertical_padding">
+        android:paddingBottom="@dimen/detail_metabar_vertical_padding">
 
         <TextView
             android:id="@+id/txtTitle"
@@ -67,9 +66,12 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/layoutAwardInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:paddingTop="@dimen/detail_metabar_vertical_padding"
+        android:paddingBottom="@dimen/detail_metabar_vertical_padding"
         android:paddingStart="@dimen/detail_inner_horizontal_margin"
         android:paddingEnd="@dimen/detail_inner_horizontal_margin"
         android:gravity="center_vertical">
@@ -109,7 +111,6 @@
         android:id="@+id/txtReview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:paddingStart="@dimen/detail_inner_horizontal_margin"
         android:paddingEnd="@dimen/detail_inner_horizontal_margin"
         android:paddingBottom="@dimen/detail_body_bottom_margin"
