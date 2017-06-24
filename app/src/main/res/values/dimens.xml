@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- These dimensions are intended for a phone in portrait mode. -->
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <!-- https://material.io/guidelines/layout/metrics-keylines.html#metrics-keylines-keylines-spacing -->
+    <dimen name="first_keyline">16dp</dimen>
     <dimen name="second_keyline">72dp</dimen>
 
-    <!-- These dimensions are intended for a phone in portrait mode. -->
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_margin_horizontal">16dp</dimen>
     <dimen name="activity_margin_vertical">16dp</dimen>
 
     <!-- App Bar -->

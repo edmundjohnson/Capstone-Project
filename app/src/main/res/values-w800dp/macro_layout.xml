@@ -1,8 +1,4 @@
 <resources>
-    <!-- list -->
-    <dimen name="list_toolbar_side_margin">60dp</dimen>
-    <dimen name="list_side_margin">64dp</dimen>
-
     <!-- detail -->
     <dimen name="detail_card_max_width">704dp</dimen>
 </resources>

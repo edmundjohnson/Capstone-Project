@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <!-- Use the tablet margins for landscape -->
+    <dimen name="first_keyline">24sp</dimen>
+    <dimen name="second_keyline">80sp</dimen>
+
     <!-- App Bar -->
+    <!-- Have a smaller appbar in landscape, to leave more room for the content -->
     <dimen name="appbar_height">56dp</dimen>
+    <!-- To overcome a bug in Android, we need to add extra padding on wider screens -->
+    <dimen name="appbar_padding_horizontal">8dp</dimen>
 
 </resources>

@@ -1,7 +1,5 @@
 <resources>
     <!-- list -->
-    <dimen name="list_toolbar_side_margin">0dp</dimen>
-    <dimen name="list_side_margin">4dp</dimen>
     <integer name="list_column_count">1</integer>
 
     <!-- detail -->
@@ -9,7 +7,7 @@
     <!-- <dimen name="detail_image_height">304dp</dimen> -->
     <dimen name="detail_image_height">424dp</dimen>
     <dimen name="detail_card_top_margin">@dimen/detail_image_height</dimen>
-    <dimen name="detail_inner_horizontal_margin">16dp</dimen>
+    <dimen name="detail_inner_horizontal_margin">@dimen/first_keyline</dimen>
     <dimen name="detail_card_max_width">10000dp</dimen> <!-- force match_parent -->
     <dimen name="detail_metabar_vertical_padding">16dp</dimen>
     <dimen name="detail_metabar_title_bottom_padding">4dp</dimen>

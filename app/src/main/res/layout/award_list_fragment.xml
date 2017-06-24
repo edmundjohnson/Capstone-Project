@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.AwardListFragment">
+    tools:context=".activity.MainActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/viewPostList"
@@ -11,8 +11,6 @@
         android:layout_width="match_parent"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
-        android:paddingStart="@dimen/list_side_margin"
-        android:paddingEnd="@dimen/list_side_margin"
         android:clickable="true"
         android:focusable="true"
         android:scrollbars="vertical"
@@ -25,8 +23,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="16dp"
-        android:paddingStart="@dimen/list_side_margin"
-        android:paddingEnd="@dimen/list_side_margin"
-        tools:text="@string/no_awards_available" />
+        android:visibility="gone"
+        tools:text="@string/no_awards_available"
+        tools:visibility="visible" />
 
 </FrameLayout>

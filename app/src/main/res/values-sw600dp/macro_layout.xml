@@ -3,8 +3,9 @@
     <integer name="list_column_count">2</integer>
 
     <!-- detail -->
-    <dimen name="detail_image_height">384dp</dimen>
-    <dimen name="detail_card_top_margin">384dp</dimen>
+    <!-- <dimen name="detail_image_height">384dp</dimen> -->
+    <dimen name="detail_image_height">600dp</dimen>
+    <dimen name="detail_card_top_margin">@dimen/detail_image_height</dimen>
     <dimen name="detail_inner_horizontal_margin">64dp</dimen>
     <dimen name="detail_metabar_vertical_padding">32dp</dimen>
     <dimen name="detail_metabar_title_bottom_padding">8dp</dimen>
