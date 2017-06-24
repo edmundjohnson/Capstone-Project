@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         // Initialise the app bar
-        getViewUtils().initialiseAppBar(this, R.id.tbAppBar, getString(R.string.app_name), false);
+        getViewUtils().initialiseAppBar(this, R.id.tbAppBar, getString(R.string.app_name), false, 0);
 
         // Initialise the security manager
         getSecurityManager().onCreateActivity(this);

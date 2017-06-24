@@ -8,9 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -79,7 +76,8 @@ public class AddAwardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_award);
 
         // Initialise the app bar
-        getViewUtils().initialiseAppBar(this, R.id.tbAppBar, getString(R.string.app_name), true);
+        getViewUtils().initialiseAppBar(this, R.id.tbAppBar, getString(R.string.app_name),
+                true, R.color.colorPrimary);
 
         mTxtImdbId = (EditText) findViewById(R.id.txtImdbId);
         mLabelTitle = (TextView) findViewById(R.id.labelTitle);
@@ -155,34 +153,6 @@ public class AddAwardActivity extends AppCompatActivity {
 
         outState.putParcelable(KEY_MOVIE, mMovie);
         outState.putParcelable(KEY_AWARD, mAward);
-    }
-
-    //---------------------------------------------------------------------
-    // Navigation methods
-
-    /**
-     * Initialise the contents of the activity's options menu.
-     * @param menu the options menu in which items are placed
-     * @return true, which results in the menu being displayed
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    /**
-     * Process selection of an item in the options menu.
-     * @param item the menu item that was selected
-     * @return false to allow normal menu processing to proceed,
-     *         true if menu processing is consumed here.
-     */
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        boolean consumed = getNavUtils().onOptionsItemSelected(this, item);
-        //noinspection SimplifiableConditionalExpression
-        return consumed ? true : super.onOptionsItemSelected(item);
     }
 
     //---------------------------------------------------------------------

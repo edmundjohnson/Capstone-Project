@@ -32,7 +32,7 @@ public class MovieActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie);
 
         // Initialise the app bar
-        getViewUtils().initialiseAppBar(this, R.id.tbAppBar, "", true);
+        getViewUtils().initialiseAppBar(this, R.id.tbAppBar, "", true, 0);
 
         MovieFragment movieFragment = getMovieFragment();
 

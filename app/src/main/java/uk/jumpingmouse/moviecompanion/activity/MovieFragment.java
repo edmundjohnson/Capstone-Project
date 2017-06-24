@@ -16,9 +16,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
@@ -72,12 +69,12 @@ public class MovieFragment extends Fragment
     //--------------------------------------------------------------
     // Lifecycle methods
 
-    @Override
-    public void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // Add the next line if the fragment needs to handle menu events.
-        setHasOptionsMenu(true);
-    }
+//    @Override
+//    public void onCreate(final Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        // Add the next line if the fragment needs to handle menu events.
+//        //setHasOptionsMenu(true);
+//    }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -415,32 +412,6 @@ public class MovieFragment extends Fragment
         mTxtCategory.setText(getViewUtils().getCategoryText(context, categoryCode));
         mTxtAwardDate.setText(awardDateText);
         mTxtReview.setText(viewAward.getReview());
-    }
-
-    //--------------------------------------------------------------
-    // Navigation methods
-
-    @Override
-    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
-        // Inflate the menu; this adds items to the app bar if it is present.
-        inflater.inflate(R.menu.main_menu, menu);
-    }
-
-    /**
-     * Handler method for selection of an app bar icon or menu option.
-     * @param item the Menu item which was clicked
-     * @return true if the item has been consumed, false otherwise
-     */
-    @Override
-    public final boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-//            case R.id.mnuShare:
-//                shareText();
-//                break;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-//        return true;
     }
 
     //--------------------------------------------------------------

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -71,11 +72,12 @@ public class ViewUtils {
      */
     public void initialiseAppBar(@NonNull final AppCompatActivity activity,
                                  @SuppressWarnings("SameParameterValue") @IdRes final int toolbarResId,
-                                 @Nullable final String titleText, final boolean isUpArrowDisplayed) {
-        // Set the app bar to be the toolbar
-        Toolbar toolbar = initialiseToolbar(activity, toolbarResId, titleText);
-        activity.setSupportActionBar(toolbar);
+                                 @Nullable final String titleText,
+                                 final boolean isUpArrowDisplayed, @ColorRes int backgroundResId) {
+        Toolbar toolbar = initialiseToolbar(activity, toolbarResId, titleText, backgroundResId);
 
+        // Set the app bar to be the toolbar
+        activity.setSupportActionBar(toolbar);
         ActionBar appBar = activity.getSupportActionBar();
         // If required, display the up arrow in the app bar
         displayUpArrowInAppBar(appBar, isUpArrowDisplayed);
@@ -90,12 +92,15 @@ public class ViewUtils {
      */
     @Nullable
     private Toolbar initialiseToolbar(@NonNull final Activity activity, @IdRes final int toolbarResId,
-                                      @Nullable final String titleText) {
+                                      @Nullable final String titleText, @ColorRes int backgroundResId) {
         // Find the toolbar
         Toolbar toolbar = (Toolbar) activity.findViewById(toolbarResId);
         if (toolbar != null) {
-            // Set the title text
+            // Set the title text and background
             toolbar.setTitle(titleText);
+            if (backgroundResId != 0) {
+                toolbar.setBackgroundResource(backgroundResId);
+            }
         }
         return toolbar;
     }
