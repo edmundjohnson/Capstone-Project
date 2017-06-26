@@ -1,5 +1,7 @@
 package uk.jumpingmouse.moviecompanion.utils;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -34,6 +36,20 @@ public abstract class NavUtils {
      */
     public abstract boolean onOptionsItemSelected(
             @Nullable FragmentActivity activity, @NonNull MenuItem item);
+
+    /**
+     * Displays a web link in an external browser.
+     * @param activity the activity invoking the activity to be displayed
+     * @param url the web address to link to
+     */
+    public void displayWebLink(@Nullable FragmentActivity activity, @NonNull String url) {
+        if (activity != null) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            Uri uri = Uri.parse(url);
+            intent.setData(uri);
+            activity.startActivity(intent);
+        }
+    }
 
     //---------------------------------------------------------------------
     // Getters

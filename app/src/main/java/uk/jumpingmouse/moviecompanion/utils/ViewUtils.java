@@ -3,6 +3,7 @@ package uk.jumpingmouse.moviecompanion.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
 import android.support.annotation.IdRes;
@@ -232,6 +233,66 @@ public class ViewUtils {
         Date dateAwardDate = JavaUtils.toDate(AWARD_DATE_FORMAT_STORED, awardDate);
         return dateAwardDate == null ? "?" :
                 JavaUtils.toString(AWARD_DATE_FORMAT_DISPLAYED, dateAwardDate);
+    }
+
+    /**
+     * Generates and returns a lighter version of a colour.
+     * @param color the colour to lighten
+     * @return the lighter version of the colour
+     */
+    public int lightenColor(int color) {
+        // Determine the factor to lighten by, based on the darkest component
+        int darkest = Math.min(Color.red(color),
+                Math.min(Color.green(color), Color.blue(color)));
+        float factor = getLighteningFactor(darkest);
+
+        //float r = Color.red(color) * getLighteningFactor(Color.red(color));
+        //float g = Color.green(color) * getLighteningFactor(Color.green(color));
+        //float b = Color.blue(color) * getLighteningFactor(Color.blue(color));
+
+        float r = Color.red(color) * factor;
+        float g = Color.green(color) * factor;
+        float b = Color.blue(color) * factor;
+        int ir = Math.min(255, (int) r);
+        int ig = Math.min(255, (int) g);
+        int ib = Math.min(255, (int) b);
+        int ia = Color.alpha(color);
+        return Color.argb(ia, ir, ig, ib);
+    }
+
+    /**
+     * Determine and return the lightening factor for a colour component.
+     * @param colourComponent the value of the colour component (red, green or blue)
+     * @return the lightening factor for the colour component: less than 1.0 is darker,
+     *         1.0 is unchanged, and greater than 1.0 is lighter
+     */
+    private float getLighteningFactor(int colourComponent) {
+        if (colourComponent < 112) {
+            return 2.0f;
+        } else if (colourComponent < 144) {
+            return 1.8f;
+        } else if (colourComponent < 176) {
+            return 1.6f;
+        } else if (colourComponent < 192) {
+            return 1.4f;
+        } else if (colourComponent < 208) {
+            return 1.2f;
+        } else {
+            return 1.0f;
+        }
+//                if (colourComponent < 112) {
+//                    return 2.0f;
+//                } else if (colourComponent < 128) {
+//                    return 1.8f;
+//                } else if (colourComponent < 144) {
+//                    return 1.6f;
+//                } else if (colourComponent < 160) {
+//                    return 1.4f;
+//                } else if (colourComponent < 176) {
+//                    return 1.2f;
+//                } else {
+//                    return 1.0f;
+//                }
     }
 
     //---------------------------------------------------------------------

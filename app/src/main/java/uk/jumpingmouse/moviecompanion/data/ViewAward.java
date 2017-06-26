@@ -15,8 +15,10 @@ public class ViewAward {
 
     // the unique identifier for the award, a push id
     private String id;
-    // the unique identifier for the movie
+    // the unique identifier for the movie, e.g. 4016934
     private int movieId;
+    // The IMDb identifier for the movie, e.g. "tt4016934"
+    private String imdbId;
     // awardDate is formatted as "YYMMDD"
     private String awardDate;
     // categoryId is one of CATEGORY_MOVIE, CATEGORY_DVD
@@ -41,6 +43,7 @@ public class ViewAward {
     private ViewAward(
             @NonNull String id,
             int movieId,
+            @NonNull String imdbId,
             @NonNull String awardDate,
             @NonNull String category,
             @NonNull String review,
@@ -54,6 +57,7 @@ public class ViewAward {
         }
         this.id = id;
         this.movieId = movieId;
+        this.imdbId = imdbId;
         this.awardDate = awardDate;
         this.category = category;
         this.review = review;
@@ -66,7 +70,8 @@ public class ViewAward {
 
     public ViewAward(@NonNull Award award, @NonNull Movie movie) {
         this.id = award.getId();
-        this.movieId = award.getMovieId();
+        this.movieId = movie.getId();
+        this.imdbId = movie.getImdbId();
         this.awardDate = award.getAwardDate();
         this.category = award.getCategory();
         this.review = award.getReview();
@@ -87,6 +92,11 @@ public class ViewAward {
 
     private int getMovieId() {
         return movieId;
+    }
+
+    @NonNull
+    public String getImdbId() {
+        return imdbId;
     }
 
     @NonNull
@@ -139,16 +149,17 @@ public class ViewAward {
     public Object[] toObjectArray() {
         return new Object[] {
                 // This must match the order of columns in DataContract.ViewAwardEntry.getAllColumns().
-                getId(),
-                getMovieId(),
-                getAwardDate(),
-                getCategory(),
-                getReview(),
-                getDisplayOrder(),
-                getTitle(),
-                getRuntime(),
-                getGenre(),
-                getPoster()
+                id,
+                movieId,
+                imdbId,
+                awardDate,
+                category,
+                review,
+                displayOrder,
+                title,
+                runtime,
+                genre,
+                poster
         };
     }
 
@@ -162,6 +173,7 @@ public class ViewAward {
      *   ViewAward award = ViewAward.builder()
      *         .id(id)
      *         .movieId(4016934)
+     *         .imdbId("tt4016934")
      *         .awardDate("170512")
      *         [etc]
      *        .build();
@@ -177,6 +189,7 @@ public class ViewAward {
     public static final class Builder {
         private String id;
         private int movieId;
+        private String imdbId;
         private String awardDate;
         private String category;
         private String review;
@@ -192,6 +205,7 @@ public class ViewAward {
         Builder(ViewAward source) {
             this.id = source.id;
             this.movieId = source.movieId;
+            this.imdbId = source.imdbId;
             this.awardDate = source.awardDate;
             this.category = source.category;
             this.review = source.review;
@@ -209,6 +223,11 @@ public class ViewAward {
 
         public ViewAward.Builder movieId(int movieId) {
             this.movieId = movieId;
+            return this;
+        }
+
+        public ViewAward.Builder imdbId(@NonNull String imdbId) {
+            this.imdbId = imdbId;
             return this;
         }
 
@@ -261,6 +280,9 @@ public class ViewAward {
             if (movieId <= 0) {
                 missing += " movieId";
             }
+            if (imdbId == null) {
+                missing += " imdbId";
+            }
             if (awardDate == null) {
                 missing += " awardDate";
             }
@@ -282,6 +304,7 @@ public class ViewAward {
             return new ViewAward(
                     this.id,
                     this.movieId,
+                    this.imdbId,
                     this.awardDate,
                     this.category,
                     this.review,
@@ -301,6 +324,7 @@ public class ViewAward {
         return "ViewAward{"
                 + "id=" + id
                 + ", movieId=" + movieId
+                + ", imdbId=" + imdbId
                 + ", awardDate=" + awardDate
                 + ", category=" + category
                 + ", review=" + review
@@ -321,6 +345,7 @@ public class ViewAward {
             ViewAward that = (ViewAward) o;
             return (this.id.equals(that.id))
                     && (this.movieId == that.movieId)
+                    && (this.imdbId.equals(that.imdbId))
                     && (this.awardDate.equals(that.awardDate))
                     && (this.category.equals(that.category))
                     && (this.review.equals(that.review))
@@ -340,6 +365,8 @@ public class ViewAward {
         h ^= this.id.hashCode();
         h *= 1000003;
         h ^= this.movieId;
+        h *= 1000003;
+        h ^= this.imdbId.hashCode();
         h *= 1000003;
         h ^= this.awardDate.hashCode();
         h *= 1000003;

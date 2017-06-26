@@ -151,14 +151,14 @@ public class Movie implements Parcelable {
     public Object[] toObjectArray() {
         return new Object[] {
                 // This must match the order of columns in DataContract.MovieEntry.getAllColumns().
-                getId(),
-                getImdbId(),
-                getTitle(),
-                getYear(),
-                getReleased(),
-                getRuntime(),
-                getGenre(),
-                getPoster()
+                id,
+                imdbId,
+                title,
+                year,
+                released,
+                runtime,
+                genre,
+                poster
         };
     }
 

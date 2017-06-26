@@ -124,7 +124,7 @@ dependencies {
     compile "com.google.firebase:firebase-core:$FIREBASE_VERSION"
     compile "com.google.firebase:firebase-auth:$FIREBASE_VERSION"
     compile "com.google.firebase:firebase-database:$FIREBASE_VERSION"
-    compile "com.google.firebase:firebase-crash:$FIREBASE_VERSION"
+//    compile "com.google.firebase:firebase-crash:$FIREBASE_VERSION"
     // Firebase UI Auth
     compile "com.firebaseui:firebase-ui-auth:$FIREBASE_UI_VERSION"
 

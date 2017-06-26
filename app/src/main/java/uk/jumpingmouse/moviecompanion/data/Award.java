@@ -129,12 +129,12 @@ public class Award implements Parcelable {
     public Object[] toObjectArray() {
         return new Object[] {
                 // This must match the order of columns in DataContract.AwardEntry.getAllColumns().
-                getId(),
-                getMovieId(),
-                getAwardDate(),
-                getCategory(),
-                getReview(),
-                getDisplayOrder()
+                id,
+                movieId,
+                awardDate,
+                category,
+                review,
+                displayOrder
         };
     }
     //---------------------------------------------------------------

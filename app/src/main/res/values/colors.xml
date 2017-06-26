@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- <color name="transparent">#0000</color> -->
     <color name="medium_gray">#ff404040</color>
     <color name="green_50">#e8f5e9</color>
     <color name="image_placeholder">@color/detail_card_background</color>
     <!-- <color name="image_placeholder">#ccc</color> -->
+    <!-- If modifying this colour, also modify ic_open_in_new_24dp.xml to match it -->
+    <color name="partially_transparent">#B0FFFFFF</color>
 
     <!-- Material palette: Deep Purple -->
     <!-- see: https://material.io/guidelines/style/color.html#color-color-palette  -->

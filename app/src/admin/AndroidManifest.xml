@@ -30,6 +30,9 @@
         <activity android:name=".activity.MovieActivity"
             android:parentActivityName=".activity.MainActivity"
             android:launchMode="singleTop" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
         </activity>
 
         <!-- The add movie activity -->

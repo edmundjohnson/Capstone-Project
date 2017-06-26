@@ -334,6 +334,7 @@ public final class ModelUtils {
     public static ViewAward newViewAward(@NonNull Cursor cursor) {
         final String id = cursor.getString(DataContract.ViewAwardEntry.COL_ID);
         final int movieId = cursor.getInt(DataContract.ViewAwardEntry.COL_MOVIE_ID);
+        final String imdbId = cursor.getString(DataContract.ViewAwardEntry.COL_IMDB_ID);
         final String awardDate = cursor.getString(DataContract.ViewAwardEntry.COL_AWARD_DATE);
         final String category = cursor.getString(DataContract.ViewAwardEntry.COL_CATEGORY);
         final String review = cursor.getString(DataContract.ViewAwardEntry.COL_REVIEW);
@@ -353,6 +354,11 @@ public final class ModelUtils {
             Timber.e("newViewAward(Cursor): missing or invalid movieId");
             return null;
         }
+        // if the imdbId mandatory attribute is invalid, return null
+        if (imdbId == null) {
+            Timber.e("newViewAward(Cursor): missing or invalid imdbId");
+            return null;
+        }
         // if the title mandatory attribute is missing, return null
         if (title == null) {
             Timber.e("newViewAward(Cursor): missing title");
@@ -367,6 +373,7 @@ public final class ModelUtils {
         return ViewAward.builder()
                 .id(id)
                 .movieId(movieId)
+                .imdbId(imdbId)
                 .awardDate(awardDate)
                 .category(category)
                 .review(review)

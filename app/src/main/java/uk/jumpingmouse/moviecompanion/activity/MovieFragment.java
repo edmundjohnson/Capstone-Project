@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -24,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
@@ -36,6 +36,7 @@ import uk.jumpingmouse.moviecompanion.data.ViewAward;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.moviecompanion.model.LocalDatabase;
 import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
+import uk.jumpingmouse.moviecompanion.utils.NavUtils;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
 /**
@@ -60,8 +61,8 @@ public class MovieFragment extends Fragment
     /** Value passed in: the URI of the view award to display. */
     private Uri mArgViewAwardUri;
 
-//    /** The currently displayed ViewAward. */
-//    private ViewAward mDisplayedViewAward;
+    /** The currently displayed ViewAward. */
+    private ViewAward mViewAward;
 
     /** The cursor loader for view award. */
     private CursorLoader mCursorLoader;
@@ -75,6 +76,7 @@ public class MovieFragment extends Fragment
     private TextView mTxtTitle;
     private TextView mTxtRuntime;
     private TextView mTxtGenre;
+    private LinearLayout mLayoutImdbLink;
     private ImageView mImgCategory;
     private TextView mTxtCategory;
     private TextView mTxtAwardDate;
@@ -102,6 +104,7 @@ public class MovieFragment extends Fragment
         mTxtTitle = (TextView) mRootView.findViewById(R.id.txtTitle);
         mTxtRuntime = (TextView) mRootView.findViewById(R.id.txtRuntime);
         mTxtGenre = (TextView) mRootView.findViewById(R.id.txtGenre);
+        mLayoutImdbLink = (LinearLayout) mRootView.findViewById(R.id.layoutImdbLink);
         mImgCategory = (ImageView) mRootView.findViewById(R.id.imgCategory);
         mTxtCategory = (TextView) mRootView.findViewById(R.id.txtCategory);
         mTxtAwardDate = (TextView) mRootView.findViewById(R.id.txtAwardDate);
@@ -109,7 +112,9 @@ public class MovieFragment extends Fragment
 
         Context context = getActivity();
         if (savedInstanceState != null) {
-            displaySavedViewAward(context, savedInstanceState);
+            // Retrieve and display the saved ViewAward
+            mViewAward = savedInstanceState.getParcelable(KEY_VIEW_AWARD);
+            displayViewAward(context, mViewAward);
         }
 
         return mRootView;
@@ -122,6 +127,17 @@ public class MovieFragment extends Fragment
         if (getArgViewAwardUri() != null) {
             loadData(getArgViewAwardUri());
         }
+
+        mLayoutImdbLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mViewAward != null) {
+                    getNavUtils().displayWebLink(getActivity(),
+                            getString(R.string.imdb_link_address, mViewAward.getImdbId()));
+                }
+            }
+        });
+
     }
 
     /**
@@ -274,14 +290,10 @@ public class MovieFragment extends Fragment
      */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-
+        // Construct and display the ViewAward
         if (cursor != null && cursor.moveToFirst()) {
-            ViewAward viewAward = ModelUtils.newViewAward(cursor);
-
-            // display the viewAward
-            if (viewAward != null) {
-                displayDetailFields(getActivity(), viewAward);
-            }
+            mViewAward = ModelUtils.newViewAward(cursor);
+            displayDetailFields(getActivity(), mViewAward);
         }
     }
 
@@ -338,38 +350,8 @@ public class MovieFragment extends Fragment
 //        }
     }
 
-    /**
-     * Update the view appropriately when there is no data, based on the
-     * network status and feed status.
-     * @param context the context
-     */
-    private void updateEmptyView(@Nullable final Context context) {
-
-//        // Get the appropriate error message to display
-//        boolean isNetworkAvailable = getNetUtils().isNetworkAvailable(context);
-//        @PrefUtils.FeedStatus int feedStatus = getPrefUtils().getFeedStatus(context);
-//        int message = getPrefUtils().getNoDataMessage(isNetworkAvailable, feedStatus);
-
-//        // Update the screen fields to display the error message
-//        mTxtDate.setText(null);
-//        mTxtTitle.setText(null);
-//        mTxtText.setText(message);
-    }
-
     //--------------------------------------------------------------
     // UI methods
-
-    /**
-     * Displays a ViewAward which has been saved in a bundle.
-     * @param context the context
-     * @param savedInstanceState the bundle containing the saved state
-     */
-    private void displaySavedViewAward(@Nullable final Context context,
-                                       @NonNull final Bundle savedInstanceState) {
-        // Retrieve and display the saved ViewAward
-        ViewAward viewAward = savedInstanceState.getParcelable(KEY_VIEW_AWARD);
-        displayViewAward(context, viewAward);
-    }
 
 //    /**
 //     * Displays the requested ViewAward, i.e. one which was not saved.
@@ -396,13 +378,7 @@ public class MovieFragment extends Fragment
     private void displayViewAward(@Nullable final Context context, @Nullable final ViewAward viewAward) {
 //        Timber.d("displayViewAward() called with: " + " viewAward = [" + viewAward + "]");
 
-//        // record the ViewAward, so it can be saved and restored if necessary
-//        mDisplayedViewAward = viewAward;
-
-        if (viewAward == null) {
-            // Note: we wish mDisplayedViewAward to be null when there is no data
-            updateEmptyView(context);
-        } else {
+        if (viewAward != null) {
             displayDetailFields(context, viewAward);
         }
     }
@@ -412,7 +388,10 @@ public class MovieFragment extends Fragment
      * @param context the context
      * @param viewAward the ViewAward to display
      */
-    private void displayDetailFields(@Nullable final Context context, @NonNull final ViewAward viewAward) {
+    private void displayDetailFields(@Nullable final Context context, @Nullable final ViewAward viewAward) {
+        if (context == null || viewAward == null) {
+            return;
+        }
         String runtimeText = getViewUtils().getRuntimeText(context, viewAward.getRuntime());
         String categoryCode = viewAward.getCategory();
         Drawable categoryDrawable = getViewUtils().getCategoryDrawable(context, categoryCode);
@@ -429,7 +408,7 @@ public class MovieFragment extends Fragment
                     Palette.Builder paletteBuilder = new Palette.Builder(bitmap);
                     Palette palette = paletteBuilder.generate();
                     mDarkMutedColor = palette.getDarkMutedColor(DARK_MUTED_COLOR_DEFAULT);
-                    mLightMutedColor = lightenColor(palette.getLightMutedColor(LIGHT_MUTED_COLOR_DEFAULT));
+                    mLightMutedColor = getViewUtils().lightenColor(palette.getLightMutedColor(LIGHT_MUTED_COLOR_DEFAULT));
                     mRootView.findViewById(R.id.layoutAppBar).setBackgroundColor(mDarkMutedColor);
                     mRootView.findViewById(R.id.layoutMetaBar).setBackgroundColor(mDarkMutedColor);
                     mRootView.findViewById(R.id.layoutMetaBar).setBackgroundColor(mDarkMutedColor);
@@ -452,66 +431,6 @@ public class MovieFragment extends Fragment
                     //    toolbar.setBackground(new ColorDrawable(mDarkMutedColor));
                     //}
                 }
-            }
-
-            /**
-             * Generates and returns a light shade of a colour.
-             * @param color the colour to lighten
-             * @return the light shade of the colour
-             */
-            private int lightenColor(int color) {
-                // Determine the factor to lighten by, based on the darkest component
-                int darkest = Math.min(Color.red(color),
-                        Math.min(Color.green(color), Color.blue(color)));
-                float factor = getLighteningFactor(darkest);
-
-                //float r = Color.red(color) * getLighteningFactor(Color.red(color));
-                //float g = Color.green(color) * getLighteningFactor(Color.green(color));
-                //float b = Color.blue(color) * getLighteningFactor(Color.blue(color));
-
-                float r = Color.red(color) * factor;
-                float g = Color.green(color) * factor;
-                float b = Color.blue(color) * factor;
-                int ir = Math.min(255, (int) r);
-                int ig = Math.min(255, (int) g);
-                int ib = Math.min(255, (int) b);
-                int ia = Color.alpha(color);
-                return Color.argb(ia, ir, ig, ib);
-            }
-
-            /**
-             * Determine and return the lightening factor for a colour component.
-             * @param colourComponent the value of the colour component (red, green or blue)
-             * @return the lightening factor for the colour component: less than 1.0 is darker,
-             *         1.0 is unchanged, and greater than 1.0 is lighter
-             */
-            private float getLighteningFactor(int colourComponent) {
-                if (colourComponent < 112) {
-                    return 2.0f;
-                } else if (colourComponent < 144) {
-                    return 1.8f;
-                } else if (colourComponent < 176) {
-                    return 1.6f;
-                } else if (colourComponent < 192) {
-                    return 1.4f;
-                } else if (colourComponent < 208) {
-                    return 1.2f;
-                } else {
-                    return 1.0f;
-                }
-//                if (colourComponent < 112) {
-//                    return 2.0f;
-//                } else if (colourComponent < 128) {
-//                    return 1.8f;
-//                } else if (colourComponent < 144) {
-//                    return 1.6f;
-//                } else if (colourComponent < 160) {
-//                    return 1.4f;
-//                } else if (colourComponent < 176) {
-//                    return 1.2f;
-//                } else {
-//                    return 1.0f;
-//                }
             }
 
             @Override
@@ -584,6 +503,14 @@ public class MovieFragment extends Fragment
 //    private PrefUtils getPrefUtils() {
 //        return PrefUtils.getInstance();
 //    }
+
+    /**
+     * Returns a NavUtils object.
+     * @return a NavUtils object
+     */
+    private NavUtils getNavUtils() {
+        return ObjectFactory.getNavUtils();
+    }
 
     /**
      * Convenience method which returns a reference to a ViewUtils object.

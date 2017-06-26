@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Movie Companion</string>
 
     <!-- Content provider -->
@@ -27,20 +27,24 @@
         <item quantity="one">%d min</item>
         <item quantity="other">%d mins</item>
     </plurals>
-    <!-- <string name="example_movie_title">The Handmaiden</string> -->
-    <string name="example_movie_title">The Loneliness of the Long Distance Runner</string>
-    <string name="example_award_date">02 June 17</string>
-    <string name="example_movie_genre">Drama, Romance</string>
-    <string name="example_movie_runtime">114 mins</string>
 
     <!-- Award fields -->
     <string name="category_text_movie">Movie of the Week</string>
     <string name="category_text_dvd">DVD of the Week</string>
     <string name="category_text_unknown">unknown</string>
-    <string name="poster_description">Movie poster</string>
-    <string name="example_review" tools:ignore="Typos">At the beginning we see a man in a boat who is washed up on a desert island.  Initially he builds rafts to get away, but the rafts are constantly scuppered by an unseen sea beast which turns out to be the turtle.  In a rage he overturns the turtle, and then he starts to feel an Ancient Mariner-style remorse and empathy for this creature, and then something magical starts to happen, a transformation starts to happen.  It turns into a meditation upon existence, upon loneliness, upon companionship, upon birth, death and rebirth. It is a film which is deeply compassionate and touching and funny and affectionate and insightful and I was in love with it, I just was so swept away by it.  It\'s a beautiful beautiful work of art.</string>
 
-    <!-- Award List -->
+    <!-- View Award -->
     <string name="no_awards_available">There are no awards matching your criteria</string>
+    <string name="poster_description">Movie poster</string>
+    <string name="imdb_link_address">http://www.imdb.com/title/%s/</string>
+    <string name="imdb_link_text">IMDb</string>
+    <string name="imdb_link_description">Display IMDb page for movie</string>
+
+    <string name="example_movie_title">The Assassination of Jesse James by the Coward Robert Ford</string>
+    <string name="example_award_date">02 June 17</string>
+    <string name="example_movie_genre">Drama, Romance, Comedy, Biography</string>
+    <string name="example_movie_runtime">114 mins</string>
+    <string name="example_imdb_link">IMDb</string>
+    <string name="example_review" tools:ignore="Typos">At the beginning we see a man in a boat who is washed up on a desert island.  Initially he builds rafts to get away, but the rafts are constantly scuppered by an unseen sea beast which turns out to be the turtle.  In a rage he overturns the turtle, and then he starts to feel an Ancient Mariner-style remorse and empathy for this creature, and then something magical starts to happen, a transformation starts to happen.  It turns into a meditation upon existence, upon loneliness, upon companionship, upon birth, death and rebirth. It is a film which is deeply compassionate and touching and funny and affectionate and insightful and I was in love with it, I just was so swept away by it.  It\'s a beautiful beautiful work of art.</string>
 
 </resources>
