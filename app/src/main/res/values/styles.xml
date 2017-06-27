@@ -22,10 +22,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <!-- App Bar theme. -->
-    <!-- Without this, the title becomes black -->
-    <!-- <style name="AppBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar"> -->
-    <style name="AppBarTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <!-- App Bar theme -->
+    <!-- Without this parent, the up arrow and menu dots become black -->
+    <style name="AppBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <!-- <item name="android:paddingStart">@dimen/appbar_padding_horizontal</item> -->
         <!-- <item name="android:paddingEnd">@dimen/appbar_padding_horizontal</item> -->
     </style>

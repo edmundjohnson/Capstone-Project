@@ -8,16 +8,14 @@
     android:background="@color/image_placeholder"
     app:layout_collapseMode="parallax"
     tools:showIn="@layout/movie_fragment">
-    <!--
-    android:id="@+id/image_container"
-    -->
 
-    <!--suppress AndroidLintContentDescription -->
     <ImageView
         android:id="@+id/imgPoster"
         android:layout_width="match_parent"
         android:layout_height="@dimen/detail_image_height"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/poster_description"
+        tools:src="@mipmap/ic_launcher"/>
 
     <!-- The image_background_protection is to ensure the appbar icons can be seen -->
     <View
