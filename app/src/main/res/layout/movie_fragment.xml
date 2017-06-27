@@ -1,48 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/detail_card_background"
-    tools:context=".activity.MovieActivity">
+    android:id="@+id/layoutMovieFragment">
 
-    <!-- android:transitionGroup="true" prevents "Layer exceeds max. dimensions" error -->
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/scrollview"
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:transitionGroup="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="match_parent"
+        tools:context=".activity.MovieActivity">
 
-        <include layout="@layout/movie_content"/>
-
-    </android.support.v4.widget.NestedScrollView>
-
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/layoutAppBar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/detail_card_margin_top"
-        android:background="?colorPrimary">
-
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar_layout"
+        <!-- android:transitionGroup="true" prevents "Layer exceeds max. dimensions" error -->
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/scrollview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:minHeight="?actionBarSize"
-            app:contentScrim="?attr/colorPrimary"
-            app:titleEnabled="false"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
-            <!--
-            app:expandedTitleMarginStart="@dimen/second_keyline"
-            app:collapsedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
-            app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
-            -->
+            android:layout_height="wrap_content"
+            android:transitionGroup="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <include layout="@layout/image_container" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:maxWidth="@dimen/detail_card_max_width"
+                android:elevation="2dp"
+                tools:context=".activity.MovieActivity" >
 
-        </android.support.design.widget.CollapsingToolbarLayout>
-    </android.support.design.widget.AppBarLayout>
+                <include layout="@layout/view_award_movie_info" />
 
-</android.support.design.widget.CoordinatorLayout>
+                <include layout="@layout/view_award_award_info" />
+
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/layoutAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/detail_card_margin_top"
+            android:background="?colorPrimary">
+
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/collapsing_toolbar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:minHeight="?actionBarSize"
+                app:contentScrim="?attr/colorPrimary"
+                app:titleEnabled="false"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                <!--
+                app:expandedTitleMarginStart="@dimen/second_keyline"
+                app:collapsedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
+                app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
+                -->
+
+                <include layout="@layout/image_container" />
+
+            </android.support.design.widget.CollapsingToolbarLayout>
+
+        </android.support.design.widget.AppBarLayout>
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</FrameLayout>

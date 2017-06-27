@@ -6,10 +6,9 @@
     <!-- <dimen name="detail_image_height">384dp</dimen> -->
     <dimen name="detail_image_height">600dp</dimen>
     <dimen name="detail_card_margin_top">@dimen/detail_image_height</dimen>
-    <dimen name="detail_inner_margin_horizontal">64dp</dimen>
-    <dimen name="detail_metabar_padding_top">32dp</dimen>
-    <dimen name="detail_metabar_padding_bottom">32dp</dimen>
-    <dimen name="detail_metabar_title_padding_bottom">8dp</dimen>
-    <dimen name="detail_body_padding_bottom">96dp</dimen>
+    <dimen name="detail_padding_horizontal">64dp</dimen>
+    <dimen name="detail_movie_info_padding_top">32dp</dimen>
+    <dimen name="detail_movie_info_padding_bottom">32dp</dimen>
+    <dimen name="detail_movie_info_title_padding_bottom">8dp</dimen>
 
 </resources>

@@ -7,7 +7,6 @@
     <dimen name="detail_card_margin_top">256dp</dimen>
 
     <!-- In landscape, allow space for toolbar -->
-    <dimen name="detail_metabar_padding_top">@dimen/abc_action_bar_default_height_material</dimen>
-    <dimen name="detail_body_padding_bottom">16dp</dimen>
+    <dimen name="detail_movie_info_padding_top">@dimen/abc_action_bar_default_height_material</dimen>
 
 </resources>

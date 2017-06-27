@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- App Bar themes -->
     <style name="AppBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -7,7 +7,7 @@
         <!-- <item name="android:paddingEnd">@dimen/appbar_padding_horizontal</item> -->
         <item name="android:popupTheme">@style/AppBarPopupTheme</item>
         <item name="android:titleTextAppearance">@style/AppBarTitle</item>
-        <!-- <item name="android:elevation">@dimen/abc_action_bar_elevation_material</item> -->
+        <item name="android:elevation" tools:ignore="PrivateResource">@dimen/abc_action_bar_elevation_material</item>
     </style>
     <style name="AppBarPopupTheme" parent="ThemeOverlay.AppCompat.Light" />
 

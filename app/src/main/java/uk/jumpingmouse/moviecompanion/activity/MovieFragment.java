@@ -392,11 +392,12 @@ public class MovieFragment extends Fragment
                     Palette palette = paletteBuilder.generate();
                     mDarkMutedColor = palette.getDarkMutedColor(DARK_MUTED_COLOR_DEFAULT);
                     mLightMutedColor = getViewUtils().lightenColor(palette.getLightMutedColor(LIGHT_MUTED_COLOR_DEFAULT));
-                    mRootView.findViewById(R.id.layoutMetaBar).setBackgroundColor(mDarkMutedColor);
+
+                    mRootView.findViewById(R.id.layoutMovieInfo).setBackgroundColor(mDarkMutedColor);
+                    mRootView.findViewById(R.id.layoutMovieFragment).setBackgroundColor(mLightMutedColor);
                     mRootView.findViewById(R.id.layoutAwardInfo).setBackgroundColor(mLightMutedColor);
                     mRootView.findViewById(R.id.txtReview).setBackgroundColor(mLightMutedColor);
-//TODO: Sort out white background at bottom of review
-//                    mRootView.findViewById(R.id.layoutMovieFragment).setBackgroundColor(mLightMutedColor);
+
                     //// Set the status bar background colour to match the meta bar
                     //// Nice idea, but it's quite distracting, and the appbar goes green
                     //// when the review is scrolled to the top.
@@ -406,7 +407,7 @@ public class MovieFragment extends Fragment
                     //    }
                     //}
                     //AppCompatActivity activity = (AppCompatActivity) getActivity();
-                    //// Set appbar to metabar colour - no, this doesn't work, it sets the colour
+                    //// Set appbar to movie_info colour - no, this doesn't work, it sets the colour
                     //// immediately, we want it set when the review is scrolled up.
                     //if (getActivity() != null) {
                     //    Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.tbAppBar);

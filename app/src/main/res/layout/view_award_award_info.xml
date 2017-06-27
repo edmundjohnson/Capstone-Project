@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutAwardInfo"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/detail_award_info_padding_vertical"
+    android:paddingBottom="@dimen/detail_award_info_padding_vertical"
+    android:paddingStart="@dimen/detail_padding_horizontal"
+    android:paddingEnd="@dimen/detail_padding_horizontal"
+    tools:context=".activity.MovieActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/imgCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerInside"
+            android:contentDescription="@string/category_text_movie"
+            tools:src="@drawable/ic_local_movies_24dp"/>
+
+        <TextView
+            android:id="@+id/txtCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textAppearance="@android:style/TextAppearance.Small"
+            android:textColor="@color/detail_text"
+            tools:text="@string/category_text_movie" />
+
+        <TextView
+            android:id="@+id/txtAwardDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textAppearance="@android:style/TextAppearance.Small"
+            android:textColor="@color/detail_text"
+            tools:text="@string/example_award_date" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtReview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingBottom="@dimen/detail_review_padding_bottom"
+        android:textAppearance="@android:style/TextAppearance.Medium"
+        android:textColor="@color/detail_text"
+        android:lineSpacingMultiplier="@fraction/detail_body_line_spacing_multiplier"
+        tools:text="@string/example_review"/>
+
+</LinearLayout>

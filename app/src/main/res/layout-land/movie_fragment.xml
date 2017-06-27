@@ -1,39 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:baselineAligned="false"
-    tools:context=".activity.MovieActivity">
-    <!--
-    -->
+    android:id="@+id/layoutMovieFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight = "3"
-        android:id="@+id/layoutPoster">
+        android:orientation="horizontal"
+        android:baselineAligned="false"
+        tools:context=".activity.MovieActivity"
+        tools:ignore="UselessParent">
 
-        <ImageView
-            android:id="@+id/imgPoster"
-            android:layout_width="match_parent"
+        <FrameLayout
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:contentDescription="@string/poster_description"
-            tools:src="@mipmap/ic_launcher"/>
+            android:layout_weight="2">
+
+            <ImageView
+                android:id="@+id/imgPoster"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:contentDescription="@string/poster_description"
+                tools:src="@mipmap/ic_launcher"/>
+
+            <!-- The image_background_protection is to ensure the appbar icons can be seen -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/image_background_protection" />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="3">
+
+            <include layout="@layout/view_award_movie_info" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <include layout="@layout/view_award_award_info" />
+
+            </ScrollView>
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <ScrollView
-        android:id="@+id/viewMovieContent"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight = "2">
+</FrameLayout>
 
-        <include layout="@layout/movie_content"/>
-
-    </ScrollView>
-
-</LinearLayout>
