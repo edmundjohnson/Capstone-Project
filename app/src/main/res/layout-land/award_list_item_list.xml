@@ -39,7 +39,7 @@
             android:layout_marginStart="16dp">
 
             <TextView
-                android:id="@+id/txtMovieTitle"
+                android:id="@+id/txtTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@android:style/TextAppearance.Medium"

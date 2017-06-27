@@ -228,10 +228,6 @@ public class MovieFragment extends Fragment
         if (args != null) {
             uri = args.getParcelable(KEY_VIEW_AWARD_URI);
         }
-//        if (uri == null) {
-//            // By default, display the most recent ViewAward
-//            uri = DataContract.ViewAwardEntry.buildUriForRowById(1);
-//        }
 
         mCursorLoader = new CursorLoader(getActivity(),
                 uri,
@@ -293,7 +289,7 @@ public class MovieFragment extends Fragment
         // Construct and display the ViewAward
         if (cursor != null && cursor.moveToFirst()) {
             mViewAward = ModelUtils.newViewAward(cursor);
-            displayDetailFields(getActivity(), mViewAward);
+            displayViewAward(getActivity(), mViewAward);
         }
     }
 
@@ -376,19 +372,6 @@ public class MovieFragment extends Fragment
      * @param viewAward the ViewAward to display
      */
     private void displayViewAward(@Nullable final Context context, @Nullable final ViewAward viewAward) {
-//        Timber.d("displayViewAward() called with: " + " viewAward = [" + viewAward + "]");
-
-        if (viewAward != null) {
-            displayDetailFields(context, viewAward);
-        }
-    }
-
-    /**
-     * Displays a set of ViewAward field values.
-     * @param context the context
-     * @param viewAward the ViewAward to display
-     */
-    private void displayDetailFields(@Nullable final Context context, @Nullable final ViewAward viewAward) {
         if (context == null || viewAward == null) {
             return;
         }
@@ -409,12 +392,11 @@ public class MovieFragment extends Fragment
                     Palette palette = paletteBuilder.generate();
                     mDarkMutedColor = palette.getDarkMutedColor(DARK_MUTED_COLOR_DEFAULT);
                     mLightMutedColor = getViewUtils().lightenColor(palette.getLightMutedColor(LIGHT_MUTED_COLOR_DEFAULT));
-                    mRootView.findViewById(R.id.layoutAppBar).setBackgroundColor(mDarkMutedColor);
-                    mRootView.findViewById(R.id.layoutMetaBar).setBackgroundColor(mDarkMutedColor);
                     mRootView.findViewById(R.id.layoutMetaBar).setBackgroundColor(mDarkMutedColor);
                     mRootView.findViewById(R.id.layoutAwardInfo).setBackgroundColor(mLightMutedColor);
                     mRootView.findViewById(R.id.txtReview).setBackgroundColor(mLightMutedColor);
-                    mRootView.findViewById(R.id.layoutMovieFragment).setBackgroundColor(mLightMutedColor);
+//TODO: Sort out white background at bottom of review
+//                    mRootView.findViewById(R.id.layoutMovieFragment).setBackgroundColor(mLightMutedColor);
                     //// Set the status bar background colour to match the meta bar
                     //// Nice idea, but it's quite distracting, and the appbar goes green
                     //// when the review is scrolled to the top.

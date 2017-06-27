@@ -254,7 +254,7 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
         ViewHolder(final View view) {
             super(view);
             imgPoster = (ImageView) view.findViewById(R.id.imgPoster);
-            txtMovieTitle = (TextView) view.findViewById(R.id.txtMovieTitle);
+            txtMovieTitle = (TextView) view.findViewById(R.id.txtTitle);
             txtRuntime = (TextView) view.findViewById(R.id.txtRuntime);
             txtGenre = (TextView) view.findViewById(R.id.txtGenre);
             imgCategory = (ImageView) view.findViewById(R.id.imgCategory);

@@ -5,10 +5,11 @@
     <!-- detail -->
     <!-- <dimen name="detail_image_height">384dp</dimen> -->
     <dimen name="detail_image_height">600dp</dimen>
-    <dimen name="detail_card_top_margin">@dimen/detail_image_height</dimen>
-    <dimen name="detail_inner_horizontal_margin">64dp</dimen>
-    <dimen name="detail_metabar_vertical_padding">32dp</dimen>
-    <dimen name="detail_metabar_title_bottom_padding">8dp</dimen>
-    <dimen name="detail_body_bottom_margin">96dp</dimen>
+    <dimen name="detail_card_margin_top">@dimen/detail_image_height</dimen>
+    <dimen name="detail_inner_margin_horizontal">64dp</dimen>
+    <dimen name="detail_metabar_padding_top">32dp</dimen>
+    <dimen name="detail_metabar_padding_bottom">32dp</dimen>
+    <dimen name="detail_metabar_title_padding_bottom">8dp</dimen>
+    <dimen name="detail_body_padding_bottom">96dp</dimen>
 
 </resources>

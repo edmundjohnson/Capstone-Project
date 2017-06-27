@@ -11,9 +11,6 @@
     <dimen name="appbar_height">112dp</dimen>
     <!-- To overcome a bug in toolbar, we need to add extra padding on wider screens -->
     <dimen name="appbar_padding_horizontal">8dp</dimen>
-    <!--
-    <dimen name="text_size_appbar_title">22dp</dimen>
-    -->
 
     <!-- detail -->
     <item name="detail_body_line_spacing_multiplier" format="float" type="fraction">1.3</item>

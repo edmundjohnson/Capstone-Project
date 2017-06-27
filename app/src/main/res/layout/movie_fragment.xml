@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layoutMovieFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/detail_card_background"
@@ -24,7 +23,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/layoutAppBar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/detail_card_top_margin"
+        android:layout_height="@dimen/detail_card_margin_top"
         android:background="?colorPrimary">
 
         <android.support.design.widget.CollapsingToolbarLayout

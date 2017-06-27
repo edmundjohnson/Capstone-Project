@@ -2,7 +2,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- We will be using the toolbar so no need to show action bar or title -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -16,7 +16,7 @@
     </style>
 
     <!-- Base application theme, but with an action bar, used by Auth UI. -->
-    <style name="AppThemeWithActionBar" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppThemeWithActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -24,7 +24,8 @@
 
     <!-- App Bar theme. -->
     <!-- Without this, the title becomes black -->
-    <style name="AppBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    <!-- <style name="AppBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar"> -->
+    <style name="AppBarTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- <item name="android:paddingStart">@dimen/appbar_padding_horizontal</item> -->
         <!-- <item name="android:paddingEnd">@dimen/appbar_padding_horizontal</item> -->
     </style>
