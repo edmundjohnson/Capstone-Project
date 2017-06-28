@@ -2,14 +2,13 @@ package uk.jumpingmouse.moviecompanion.activity;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
-import android.support.annotation.MainThread;
+import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -21,20 +20,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.TextView;
 
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.adapter.ViewAwardAdapter;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.moviecompanion.model.LocalDatabase;
+import uk.jumpingmouse.moviecompanion.utils.NetUtils;
 
 /**
  * The fragment class for the list of posts.
  * @author Edmund Johnson
  */
 public class AwardListFragment extends Fragment
-        implements LoaderManager.LoaderCallbacks<Cursor>,
-            SharedPreferences.OnSharedPreferenceChangeListener {
+        implements LoaderManager.LoaderCallbacks<Cursor> {
 
     /** The cursor loader id. */
     private static  final int AWARD_LIST_LOADER_ID = 1;
@@ -136,14 +136,13 @@ public class AwardListFragment extends Fragment
 
     /**
      * Perform processing required when the fragment is resumed.
-     * i.e. register to be notified of changes to SharedPreferences.
      */
     @Override
     public void onResume() {
         super.onResume();
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        prefs.registerOnSharedPreferenceChangeListener(this);
+//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+//        prefs.registerOnSharedPreferenceChangeListener(this);
 
         // Register a content observer on the ViewAwards URI.
         // The observer will be notified whenever the view award data changes.
@@ -158,8 +157,8 @@ public class AwardListFragment extends Fragment
         getContext().getContentResolver().unregisterContentObserver(
                 getViewAwardContentObserver());
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        prefs.unregisterOnSharedPreferenceChangeListener(this);
+//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+//        prefs.unregisterOnSharedPreferenceChangeListener(this);
 
         super.onPause();
     }
@@ -267,41 +266,6 @@ public class AwardListFragment extends Fragment
         updateEmptyView();
     }
 
-//    /**
-//     * Sets an appropriate message in the 'empty view', based on the network status and feed status.
-//     * @param context the context
-//     * @param emptyView the view to display when there is no data
-//     */
-//    private void updateEmptyView(@Nullable final Context context,
-//                                 @NonNull final TextView emptyView) {
-//        int message;
-//        if (!getNetUtils().isNetworkAvailable(context)) {
-//            message = R.string.no_data_no_connection;
-//        } else {
-//            @PrefUtils.FeedStatus int feedStatus = getPrefUtils().getFeedStatus(context);
-//            switch (feedStatus) {
-//                case PrefUtils.FEED_STATUS_SERVER_INVALID:
-//                    message = R.string.no_data_server_invalid;
-//                    break;
-//                case PrefUtils.FEED_STATUS_SERVER_ERROR:
-//                    message = R.string.no_data_server_error;
-//                    break;
-//                case PrefUtils.FEED_STATUS_SERVER_NO_DATA:
-//                    message = R.string.no_data_server_no_data;
-//                    break;
-//                case PrefUtils.FEED_STATUS_SERVER_DATA_INVALID:
-//                    message = R.string.no_data_server_data_invalid;
-//                    break;
-//                case PrefUtils.FEED_STATUS_OK:
-//                case PrefUtils.FEED_STATUS_UNKNOWN:
-//                default:
-//                    message = R.string.no_data_available;
-//                    break;
-//            }
-//        }
-//        emptyView.setText(message);
-//    }
-
     /**
      * Called when a previously created loader is being reset, and thus
      * making its data unavailable.  The application should at this point
@@ -360,25 +324,24 @@ public class AwardListFragment extends Fragment
     }
 
     //--------------------------------------------------------------
-    // SharedPreference listener
+    // Empty list methods
 
-    /**
-     * Called when a shared preference is changed, added, or removed. This
-     * may be called even if a preference is set to its existing value.
-     * This callback will be run on your main thread.
-     *
-     * @param sharedPreferences the {@link SharedPreferences} that received the change.
-     * @param key               the key of the preference that was changed
-     */
-    @Override
-    @MainThread
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        // TODO
+//    /**
+//     * Called when a shared preference is changed, added, or removed. This
+//     * may be called even if a preference is set to its existing value.
+//     * This callback will be run on your main thread.
+//     *
+//     * @param sharedPreferences the {@link SharedPreferences} that received the change.
+//     * @param key               the key of the preference that was changed
+//     */
+//    @Override
+//    @MainThread
+//    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 //        if (getString(R.string.pref_feed_status_key).equals(key)) {
 //            // If there is no data, set an appropriate message in the 'empty view'
 //            updateEmptyView();
 //        }
-    }
+//    }
 
     /**
      * Sets an appropriate message in the 'empty view', based on the network status and feed status.
@@ -386,17 +349,67 @@ public class AwardListFragment extends Fragment
     private void updateEmptyView() {
         if (mViewAwardAdapter.getItemCount() == 0) {
             Activity activity = getActivity();
+            if (activity != null) {
+                TextView emptyListView = (TextView) activity.findViewById(R.id.viewAwardListEmpty);
 
-//            // Get the appropriate message depending on the state of the network
-//            boolean isNetworkAvailable = getNetUtils().isNetworkAvailable(activity);
-//            @PrefUtils.FeedStatus int feedStatus = getPrefUtils().getFeedStatus(activity);
-//            int message = getPrefUtils().getNoDataMessage(isNetworkAvailable, feedStatus);
-//
-//            // Write the message to the empty list view
-//            TextView emptyListView = (TextView) activity.findViewById(R.id.viewAwardListEmpty);
-//            emptyListView.setText(message);
+                // Get the appropriate message depending on the state of the network
+                @StringRes int message = getNoDataMessage(activity);
+                // Write the message to the empty list view
+                emptyListView.setText(message);
+            }
         }
     }
+
+    /**
+     * Returns the appropriate message to display when there is no data,
+     * based on the network status.
+     * @param context the context
+     * @return the appropriate message to display, as a String resource
+     */
+    private @StringRes int getNoDataMessage(@NonNull final Context context) {
+        // Get the appropriate message depending on the state of the network
+        if (!getNetUtils().isNetworkAvailable(context)) {
+            return R.string.no_data_no_connection;
+        } else {
+            return R.string.no_data_available;
+        }
+    }
+
+//    /**
+//     * Returns an appropriate message for the 'empty view', based on the network status
+//     * and feed status.
+//     * @param context the context
+//     */
+//    private @StringRes int getNoDataMessage(@Nullable final Context context) {
+//        int message;
+//        if (context == null) {
+//            message = R.string.no_data_available;
+//        } else if (!getNetUtils().isNetworkAvailable(context)) {
+//            message = R.string.no_data_no_connection;
+//        } else {
+//            @PrefUtils.FeedStatus int feedStatus = getPrefUtils().getFeedStatus(context);
+//            switch (feedStatus) {
+//                case PrefUtils.FEED_STATUS_SERVER_INVALID:
+//                    message = R.string.no_data_server_invalid;
+//                    break;
+//                case PrefUtils.FEED_STATUS_SERVER_ERROR:
+//                    message = R.string.no_data_server_error;
+//                    break;
+//                case PrefUtils.FEED_STATUS_SERVER_NO_DATA:
+//                    message = R.string.no_data_server_no_data;
+//                    break;
+//                case PrefUtils.FEED_STATUS_SERVER_DATA_INVALID:
+//                    message = R.string.no_data_server_data_invalid;
+//                    break;
+//                case PrefUtils.FEED_STATUS_OK:
+//                case PrefUtils.FEED_STATUS_UNKNOWN:
+//                default:
+//                    message = R.string.no_data_available;
+//                    break;
+//            }
+//        }
+//        return message;
+//    }
 
     //--------------------------------------------------------------
     // Getters and setters
@@ -427,21 +440,13 @@ public class AwardListFragment extends Fragment
         return ObjectFactory.getLocalDatabase();
     }
 
-//    /**
-//     * Returns a NetUtils object.
-//     * @return a NetUtils object
-//     */
-//    private NetUtils getNetUtils() {
-//        return NetUtils.getInstance();
-//    }
-
-//    /**
-//     * Returns a PrefUtils object.
-//     * @return a PrefUtils object
-//     */
-//    private PrefUtils getPrefUtils() {
-//        return PrefUtils.getInstance();
-//    }
+    /**
+     * Returns a NetUtils object.
+     * @return a NetUtils object
+     */
+    private NetUtils getNetUtils() {
+        return NetUtils.getInstance();
+    }
 
     //--------------------------------------------------------------------------
 

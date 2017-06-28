@@ -11,7 +11,7 @@ import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
 /**
- * The activity class for the movie screen.
+ * The activity class for the movie (view award) screen.
  * @author Edmund Johnson
  */
 public class MovieActivity extends AppCompatActivity {

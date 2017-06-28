@@ -164,8 +164,8 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
         mCursor = newCursor;
         notifyDataSetChanged();
 
-        int visibility = getItemCount() == 0 ? View.VISIBLE : View.GONE;
-        mEmptyListView.setVisibility(visibility);
+        int emptyViewVisibility = getItemCount() == 0 ? View.VISIBLE : View.GONE;
+        mEmptyListView.setVisibility(emptyViewVisibility);
     }
 
     /**

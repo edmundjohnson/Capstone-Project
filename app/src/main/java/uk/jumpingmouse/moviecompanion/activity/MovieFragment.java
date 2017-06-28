@@ -1,15 +1,12 @@
 package uk.jumpingmouse.moviecompanion.activity;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -40,12 +37,11 @@ import uk.jumpingmouse.moviecompanion.utils.NavUtils;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
 /**
- * The fragment class for displaying a movie.
+ * The fragment class for displaying a movie (view award).
  * @author Edmund Johnson
  */
 public class MovieFragment extends Fragment
-        implements LoaderManager.LoaderCallbacks<Cursor>,
-            SharedPreferences.OnSharedPreferenceChangeListener {
+        implements LoaderManager.LoaderCallbacks<Cursor> {
 
     /** The cursor loader id. */
     private static final int VIEW_AWARD_LOADER_ID = 1;
@@ -140,17 +136,14 @@ public class MovieFragment extends Fragment
 
     }
 
-    /**
-     * Performs processing required when the fragment is resumed.
-     * i.e. register to be notified of changes to SharedPreferences and
-     * display the required movie.
-     */
-    @Override
-    public void onResume() {
-        super.onResume();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        prefs.registerOnSharedPreferenceChangeListener(this);
-
+//    /**
+//     * Performs processing required when the fragment is resumed.
+//     * i.e. display the required movie.
+//     */
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//
 //        // If there is no saved ViewAward (from onSaveInstanceState), display the latest
 //        // movie
 //        if (mDisplayedViewAward == null) {
@@ -158,14 +151,12 @@ public class MovieFragment extends Fragment
 //            ViewAward viewAward = getLocalDatabase().getViewAwardLatest(context);
 //            displayViewAward(context, viewAward);
 //        }
-    }
+//    }
 
-    @Override
-    public void onPause() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        prefs.unregisterOnSharedPreferenceChangeListener(this);
-        super.onPause();
-    }
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//    }
 
 //    /**
 //     * Called to retrieve per-instance state from an activity before being killed so that the
@@ -326,27 +317,6 @@ public class MovieFragment extends Fragment
     }
 
     //--------------------------------------------------------------
-    // SharedPreference listener
-
-    /**
-     * Called when a shared preference is changed, added, or removed. This
-     * may be called even if a preference is set to its existing value.
-     * This callback will be run on your main thread.
-     *
-     * @param sharedPreferences the {@link SharedPreferences} that received the change.
-     * @param key               the key of the preference that was changed
-     */
-    @Override
-    @MainThread
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-//        if (getString(R.string.pref_feed_status_key).equals(key)
-//                && mDisplayedViewAward == null) {
-//            Context context = getActivity();
-//            updateEmptyView(context);
-//        }
-    }
-
-    //--------------------------------------------------------------
     // UI methods
 
 //    /**
@@ -470,22 +440,6 @@ public class MovieFragment extends Fragment
     private static LocalDatabase getLocalDatabase() {
         return ObjectFactory.getLocalDatabase();
     }
-
-//    /**
-//     * Returns a NetUtils object.
-//     * @return a NetUtils object
-//     */
-//    private NetUtils getNetUtils() {
-//        return NetUtils.getInstance();
-//    }
-
-//    /**
-//     * Returns a PrefUtils object.
-//     * @return a PrefUtils object
-//     */
-//    private PrefUtils getPrefUtils() {
-//        return PrefUtils.getInstance();
-//    }
 
     /**
      * Returns a NavUtils object.
