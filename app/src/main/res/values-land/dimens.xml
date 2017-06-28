@@ -12,4 +12,15 @@
     <!-- To overcome a bug in Android, we need to add extra padding on wider screens -->
     <dimen name="appbar_padding_horizontal">8dp</dimen>
 
+    <!-- List -->
+    <!-- list_item_padding_horizontal equals first_keyline minus list_padding_horizontal -->
+    <dimen name="list_item_padding_horizontal">20dp</dimen>
+
+    <!-- Detail -->
+    <!-- Give the movie info bar the standard app bar elevation -->
+    <dimen name="detail_movie_info_elevation">@dimen/abc_action_bar_elevation_material</dimen>
+    <!-- In landscape, allow space for toolbar -->
+    <dimen name="detail_movie_info_padding_top">@dimen/abc_action_bar_default_height_material</dimen>
+    <dimen name="detail_padding_horizontal">@dimen/first_keyline</dimen>
+
 </resources>

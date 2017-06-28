@@ -12,7 +12,18 @@
     <!-- To overcome a bug in toolbar, we need to add extra padding on wider screens -->
     <dimen name="appbar_padding_horizontal">8dp</dimen>
 
-    <!-- detail -->
+    <!-- List -->
+    <!-- list_item_padding_horizontal equals first_keyline minus list_padding_horizontal -->
+    <dimen name="list_item_padding_horizontal">20dp</dimen>
+
+    <!-- Detail -->
     <item name="detail_body_line_spacing_multiplier" format="float" type="fraction">1.3</item>
+    <!-- <dimen name="detail_image_height">384dp</dimen> -->
+    <dimen name="detail_image_height">600dp</dimen>
+    <dimen name="detail_card_margin_top">@dimen/detail_image_height</dimen>
+    <dimen name="detail_padding_horizontal">64dp</dimen>
+    <dimen name="detail_movie_info_padding_top">32dp</dimen>
+    <dimen name="detail_movie_info_padding_bottom">32dp</dimen>
+    <dimen name="detail_movie_info_title_padding_bottom">8dp</dimen>
 
 </resources>

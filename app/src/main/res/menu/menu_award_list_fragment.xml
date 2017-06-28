@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_option_list_view"
+        android:icon="@drawable/ic_view_list_24dp"
+        android:title="@string/menu_option_list_view"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/menu_option_grid_view"
+        android:icon="@drawable/ic_grid_on_24dp"
+        android:title="@string/menu_option_grid_view"
+        app:showAsAction="ifRoom"/>
+</menu>

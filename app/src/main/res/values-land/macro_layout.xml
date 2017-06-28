@@ -1,8 +1,0 @@
-<resources>
-    <!-- detail -->
-    <!-- Give the movie info bar the standard app bar elevation -->
-    <dimen name="detail_movie_info_elevation">@dimen/abc_action_bar_elevation_material</dimen>
-    <!-- In landscape, allow space for toolbar -->
-    <dimen name="detail_movie_info_padding_top">@dimen/abc_action_bar_default_height_material</dimen>
-    <dimen name="detail_padding_horizontal">@dimen/first_keyline</dimen>
-</resources>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -38,6 +39,7 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
     private Cursor mCursor;
     private final AdapterOnClickHandler mClickHandler;
     private final View mEmptyListView;
+    private @LayoutRes int mItemLayout;
 
     /**
      * Private constructor to prevent direct instantiation from outside this class.
@@ -50,6 +52,7 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
         mContext = context;
         mClickHandler = clickHandler;
         mEmptyListView = emptyListView;
+        setLayoutListView();
     }
 
     /**
@@ -64,6 +67,11 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
         return new ViewAwardAdapter(context, clickHandler, emptyListView);
     }
 
+    @Override
+    public @LayoutRes int getItemViewType(int position) {
+        return getItemLayout();
+    }
+
     /**
      * Create a new view holder for an item (invoked by the layout manager).
      * @param viewGroup the parent view group
@@ -76,7 +84,7 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
         //Timber.d("onCreateViewHolder() called with: viewGroup = ["
         //                 + viewGroup + "], viewType = [" + viewType + "]");
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-        View itemView = inflater.inflate(R.layout.award_list_item_list, viewGroup, false);
+        View itemView = inflater.inflate(viewType, viewGroup, false);
         return new ViewHolder(itemView);
     }
 
@@ -213,6 +221,26 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
 //    }
 
     // Getters and setters
+
+
+    public @LayoutRes int getItemLayout() {
+        return mItemLayout;
+    }
+    public void setItemLayout(final @LayoutRes int listLayout) {
+        mItemLayout = listLayout;
+    }
+    public boolean isLayoutListView() {
+        return R.layout.award_list_item_list == getItemLayout();
+    }
+    public boolean isLayoutGridView() {
+        return R.layout.award_list_item_grid == getItemLayout();
+    }
+    public void setLayoutListView() {
+        setItemLayout(R.layout.award_list_item_list);
+    }
+    public void setLayoutGridView() {
+        setItemLayout(R.layout.award_list_item_grid);
+    }
 
     private int getSelectedPosition() {
         return mSelectedPosition;

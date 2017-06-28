@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- These dimensions are intended for a phone in portrait mode. -->
+    <!-- These dimensions are for a phone in portrait mode. -->
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <!-- https://material.io/guidelines/layout/metrics-keylines.html#metrics-keylines-keylines-spacing -->
@@ -15,8 +15,30 @@
     <dimen name="appbar_padding_horizontal">0dp</dimen>
     <dimen name="text_size_appbar_title">20dp</dimen>
 
+    <!-- List -->
+    <dimen name="list_padding_vertical">4dp</dimen>
+    <dimen name="list_padding_horizontal">4dp</dimen>
+    <!-- list view -->
+    <!-- list_item_padding_horizontal equals first_keyline minus list_padding_horizontal -->
+    <dimen name="list_item_padding_horizontal">12dp</dimen>
+    <!-- grid view -->
+    <integer name="list_grid_column_count">3</integer>
+
     <!-- Detail -->
     <dimen name="detail_scroll_up_distance">30dp</dimen>
     <item name="detail_body_line_spacing_multiplier" format="float" type="fraction">1.25</item>
+    <bool name="detail_is_card">false</bool>
+    <dimen name="detail_card_margin_top">@dimen/detail_image_height</dimen>
+    <dimen name="detail_card_max_width">10000dp</dimen> <!-- force match_parent -->
+
+    <!-- <dimen name="detail_image_height">304dp</dimen> -->
+    <dimen name="detail_image_height">424dp</dimen>
+    <dimen name="detail_padding_horizontal">@dimen/first_keyline</dimen>
+    <dimen name="detail_movie_info_elevation">0dp</dimen>
+    <dimen name="detail_movie_info_padding_top">16dp</dimen>
+    <dimen name="detail_movie_info_padding_bottom">16dp</dimen>
+    <dimen name="detail_movie_info_title_padding_bottom">4dp</dimen>
+    <dimen name="detail_award_info_padding_vertical">16dp</dimen>
+    <dimen name="detail_review_padding_bottom">16dp</dimen>
 
 </resources>

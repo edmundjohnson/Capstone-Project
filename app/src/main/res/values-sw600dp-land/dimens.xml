@@ -1,12 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- list -->
-    <integer name="list_column_count">3</integer>
-
-    <!-- detail -->
+    <!-- Detail -->
     <bool name="detail_is_card">true</bool>
     <dimen name="detail_card_margin_top">256dp</dimen>
 
     <!-- In landscape, allow space for toolbar -->
     <dimen name="detail_movie_info_padding_top">@dimen/abc_action_bar_default_height_material</dimen>
-
 </resources>

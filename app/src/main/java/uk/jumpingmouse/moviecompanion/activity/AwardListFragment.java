@@ -8,15 +8,20 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
@@ -28,6 +33,7 @@ import uk.jumpingmouse.moviecompanion.adapter.ViewAwardAdapter;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.moviecompanion.model.LocalDatabase;
 import uk.jumpingmouse.moviecompanion.utils.NetUtils;
+import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
 /**
  * The fragment class for the list of posts.
@@ -40,11 +46,11 @@ public class AwardListFragment extends Fragment
     private static  final int AWARD_LIST_LOADER_ID = 1;
 
     // Attributes for saving and restoring the fragment's state
+    private static final String KEY_ITEM_LAYOUT = "KEY_ITEM_LAYOUT";
     private static final String KEY_POSITION = "KEY_POSITION";
 
-//    /** The maximum number of items to show on the list page. */
-//    private static final int LIST_SIZE_MAX = 100;
-//    //private static final int LIST_SIZE_MAX = 6;  // Test only !!!
+    /** The menu. */
+    private Menu mMenu;
 
     /** The cursor loader for view awards. */
     private CursorLoader mViewAwardsCursorLoader;
@@ -63,16 +69,19 @@ public class AwardListFragment extends Fragment
     //--------------------------------------------------------------
     // Lifecycle Methods
 
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        // Add the next line if the fragment needs to handle menu events.
-//        //setHasOptionsMenu(true);
-//    }
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Add the next line if the fragment needs to handle menu events.
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
+
+        View rootView = inflater.inflate(R.layout.award_list_fragment, container, false);
+        View emptyListView = rootView.findViewById(R.id.viewAwardListEmpty);
 
         // Create a click handler for the list items
         ViewAwardAdapter.AdapterOnClickHandler clickHandler =
@@ -88,44 +97,42 @@ public class AwardListFragment extends Fragment
                     }
                 };
 
-        View rootView = inflater.inflate(R.layout.award_list_fragment, container, false);
-        View emptyListView = rootView.findViewById(R.id.viewAwardListEmpty);
+        Context context = getActivity();
 
         // The adapter will take data and populate the RecyclerView.
         // We cannot use FLAG_AUTO_REQUERY since it is deprecated, so we would end
         // up with an empty list the first time we run.
-        mViewAwardAdapter = ViewAwardAdapter.newInstance(getActivity(), clickHandler, emptyListView);
+        mViewAwardAdapter = ViewAwardAdapter.newInstance(context, clickHandler, emptyListView);
 
-        // Get a reference to the RecyclerView, and attach this adapter to it.
+        // Restore any saved state
+        if (savedInstanceState != null) {
+            mViewAwardAdapter.setItemLayout(savedInstanceState.getInt(KEY_ITEM_LAYOUT));
+            mSelectedPosition = savedInstanceState.getInt(KEY_POSITION);
+        }
+
+        // Get a reference to the RecyclerView, and attach the adapter to it.
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.viewPostList);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
-                DividerItemDecoration.VERTICAL));
         mRecyclerView.setAdapter(mViewAwardAdapter);
 
         // This setting improves performance as long as changes in content do not change
         // the layout size of the RecyclerView.
         mRecyclerView.setHasFixedSize(true);
 
-        // Restore any saved state
-        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_POSITION)) {
-            // The RecyclerView probably hasn't even been populated yet.
-            // Actually perform the swap out in onLoadFinished.
-            mSelectedPosition = savedInstanceState.getInt(KEY_POSITION);
-        }
+        // Display the list layout as either list view or grid view
+        setLayout(context, mViewAwardAdapter.isLayoutListView());
 
         return rootView;
     }
 
-
+    /**
+     * Save the fragment's state.
+     * @param outState the bundle in which to save the fragment's state
+     */
     @Override
     public void onSaveInstanceState(final Bundle outState) {
-        // When device rotates, the currently selected list item needs to be saved.
-        // When no item is selected, mPosition will be set to RecyclerView.NO_POSITION,
-        // so check for that before storing.
-        if (mSelectedPosition != RecyclerView.NO_POSITION) {
-            outState.putInt(KEY_POSITION, mSelectedPosition);
-        }
+        outState.putInt(KEY_ITEM_LAYOUT, mViewAwardAdapter.getItemLayout());
+        outState.putInt(KEY_POSITION, mSelectedPosition);
+
         super.onSaveInstanceState(outState);
     }
 
@@ -162,6 +169,70 @@ public class AwardListFragment extends Fragment
 //        prefs.unregisterOnSharedPreferenceChangeListener(this);
 
         super.onPause();
+    }
+
+    //---------------------------------------------------------------------
+    // App bar menu actions
+
+    @Override
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+        // Inflate the menu; this adds items to the app bar if it is present.
+        inflater.inflate(R.menu.menu_award_list_fragment, menu);
+
+        boolean isItemLayoutGrid = mViewAwardAdapter != null && mViewAwardAdapter.isLayoutGridView();
+        menu.findItem(R.id.menu_option_list_view).setVisible(isItemLayoutGrid);
+        menu.findItem(R.id.menu_option_grid_view).setVisible(!isItemLayoutGrid);
+
+        mMenu = menu;
+    }
+
+    /**
+     * Process selection of an item in the options menu.
+     * @param item the menu item that was selected
+     * @return false to allow normal menu processing to proceed,
+     *         true if menu processing is consumed here.
+     */
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            // list view
+            case R.id.menu_option_list_view:
+                setLayout(getActivity(), true);
+                return true;
+
+            // grid view
+            case R.id.menu_option_grid_view:
+                setLayout(getActivity(), false);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * Sets the list layout to list view or grid view.
+     * @param context the context
+     * @param isLayoutListView if true, set the list to list view, otherwise set the layout to grid view
+     */
+    private void setLayout(@Nullable Context context, boolean isLayoutListView) {
+        if (context != null && mRecyclerView != null && mViewAwardAdapter != null) {
+            if (isLayoutListView) {
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+                mRecyclerView.addItemDecoration(
+                        new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
+                mViewAwardAdapter.setLayoutListView();
+            } else {
+                int columnCount = getResources().getInteger(R.integer.list_grid_column_count);
+                mRecyclerView.setLayoutManager(new GridLayoutManager(context, columnCount));
+                mViewAwardAdapter.setLayoutGridView();
+            }
+            // The grid icon is shown in list view and vice versa
+            if (mMenu != null) {
+                mMenu.findItem(R.id.menu_option_list_view).setVisible(!isLayoutListView);
+                mMenu.findItem(R.id.menu_option_grid_view).setVisible(isLayoutListView);
+            }
+        }
     }
 
     //--------------------------------------------------------------
@@ -274,36 +345,6 @@ public class AwardListFragment extends Fragment
 //    }
 
     //--------------------------------------------------------------
-    // ContentObserver
-
-    private ViewAwardContentObserver getViewAwardContentObserver() {
-        if (mViewAwardContentObserver == null) {
-            mViewAwardContentObserver = new ViewAwardContentObserver(new Handler());
-        }
-        return mViewAwardContentObserver;
-    }
-
-    /**
-     * A class whose implementations can be used to observe changes to data at a URI,
-     * and update the cursor loader when there is a change.
-     */
-    public class ViewAwardContentObserver extends ContentObserver {
-
-        /**
-         * Creates a content observer.
-         * @param handler The handler to run {@link #onChange} on, or null if none.
-         */
-        ViewAwardContentObserver(Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        public void onChange(boolean selfChange, Uri uri) {
-            onDataChanged();
-        }
-    }
-
-    //--------------------------------------------------------------
     // Empty list methods
 
 //    /**
@@ -330,28 +371,14 @@ public class AwardListFragment extends Fragment
         if (mViewAwardAdapter.getItemCount() == 0) {
             Activity activity = getActivity();
             if (activity != null) {
-                TextView emptyListView = (TextView) activity.findViewById(R.id.viewAwardListEmpty);
-
                 // Get the appropriate message depending on the state of the network
-                @StringRes int message = getNoDataMessage(activity);
+                boolean isNetworkAvailable = getNetUtils().isNetworkAvailable(activity);
+                @StringRes int message = getViewUtils().getNoDataMessage(isNetworkAvailable);
+
                 // Write the message to the empty list view
+                TextView emptyListView = (TextView) activity.findViewById(R.id.viewAwardListEmpty);
                 emptyListView.setText(message);
             }
-        }
-    }
-
-    /**
-     * Returns the appropriate message to display when there is no data,
-     * based on the network status.
-     * @param context the context
-     * @return the appropriate message to display, as a String resource
-     */
-    private @StringRes int getNoDataMessage(@NonNull final Context context) {
-        // Get the appropriate message depending on the state of the network
-        if (!getNetUtils().isNetworkAvailable(context)) {
-            return R.string.no_data_no_connection;
-        } else {
-            return R.string.no_data_available;
         }
     }
 
@@ -394,24 +421,6 @@ public class AwardListFragment extends Fragment
     //--------------------------------------------------------------
     // Getters and setters
 
-//    private int getSelectedPosition() {
-//        if (mViewAwardAdapter == null || mViewAwardAdapter.getItemCount() == 0) {
-//            return RecyclerView.NO_POSITION;
-//        }
-//        return mViewAwardAdapter.getSelectedPosition();
-//    }
-//
-//    private void setSelectedPosition(final int selectedPosition) {
-//        if (mViewAwardAdapter != null
-//                && mViewAwardAdapter.getItemCount() > selectedPosition) {
-//            mViewAwardAdapter.setSelectedPosition(selectedPosition);
-//        }
-//    }
-
-    public RecyclerView getRecyclerView() {
-        return mRecyclerView;
-    }
-
     /**
      * Convenience method which returns a reference to a local database.
      * @return a reference to a local database
@@ -426,6 +435,45 @@ public class AwardListFragment extends Fragment
      */
     private NetUtils getNetUtils() {
         return NetUtils.getInstance();
+    }
+
+    /**
+     * Convenience method which returns a reference to a ViewUtils object.
+     * @return a reference to a ViewUtils object
+     */
+    @NonNull
+    private static ViewUtils getViewUtils() {
+        return ObjectFactory.getViewUtils();
+    }
+
+    //--------------------------------------------------------------
+    // ContentObserver
+
+    private ViewAwardContentObserver getViewAwardContentObserver() {
+        if (mViewAwardContentObserver == null) {
+            mViewAwardContentObserver = new ViewAwardContentObserver(new Handler());
+        }
+        return mViewAwardContentObserver;
+    }
+
+    /**
+     * A class whose implementations can be used to observe changes to data at a URI,
+     * and update the cursor loader when there is a change.
+     */
+    public class ViewAwardContentObserver extends ContentObserver {
+
+        /**
+         * Creates a content observer.
+         * @param handler The handler to run {@link #onChange} on, or null if none.
+         */
+        ViewAwardContentObserver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            onDataChanged();
+        }
     }
 
     //--------------------------------------------------------------------------

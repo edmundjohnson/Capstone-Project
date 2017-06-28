@@ -16,8 +16,8 @@
         android:minHeight="?android:attr/listPreferredItemHeight"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
-        android:paddingStart="@dimen/first_keyline"
-        android:paddingEnd="@dimen/first_keyline"
+        android:paddingStart="@dimen/list_item_padding_horizontal"
+        android:paddingEnd="@dimen/list_item_padding_horizontal"
         android:baselineAligned="false"
         tools:ignore="UselessParent">
 

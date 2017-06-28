@@ -9,6 +9,8 @@
     <!-- <string name="sign_in_cancelled">Sign-in cancelled</string> -->
 
     <!-- Menu -->
+    <string name="menu_option_list_view">List View</string>
+    <string name="menu_option_grid_view">Grid View</string>
     <string name="menu_option_sign_out">Sign Out</string>
 
     <!-- Firebase database operations -->
