@@ -19,7 +19,8 @@
             android:syncable="true" />
 
         <!-- The main activity -->
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".activity.MainActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -29,7 +30,7 @@
         <!-- The movie activity -->
         <activity android:name=".activity.MovieActivity"
             android:parentActivityName=".activity.MainActivity"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

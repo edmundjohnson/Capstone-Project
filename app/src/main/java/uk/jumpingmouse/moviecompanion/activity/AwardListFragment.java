@@ -81,6 +81,7 @@ public class AwardListFragment extends Fragment
                     public void onClick(final String id, final int selectedPosition) {
 
                         if (mViewAwardAdapter != null && getActivity() != null) {
+                            mSelectedPosition = selectedPosition;
                             mViewAwardAdapter.handleItemClick(id, selectedPosition,
                                     (AwardListFragment.ListFragmentContainer) getActivity());
                         }
@@ -236,32 +237,11 @@ public class AwardListFragment extends Fragment
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
         mViewAwardAdapter.swapCursor(cursor);
 
-        // If we don't need to restart the loader, and there's a desired position
-        // to restore to, do so now.
-        //int selectedPosition = getSelectedPosition();
+        // If there's a desired position to restore to, do so now.
         if (mSelectedPosition != RecyclerView.NO_POSITION) {
             mRecyclerView.smoothScrollToPosition(mSelectedPosition);
-
-            // If the device has been rotated in 2-pane mode, the post fragment has been
-            // created anew without a saved state. Display the post here.
-//            mViewAwardAdapter.selectItemAtPosition(selectedPosition);
-
-//            if (cursor != null) {
-//                cursor.moveToPosition(selectedPosition);
-//                long postId = cursor.getLong(PostListFragment.COL_POST_ID);
-//                Uri uri = DataContract.PostEntry.buildUriPostId(postId);
-//
-//                PostListActivity activity = (PostListActivity) getActivity();
-//                activity.displayPost(activity, uri);
-//            }
-
-//            RecyclerView.ViewHolder viewHolder = mRecyclerView.
-//                                findViewHolderForAdapterPosition(getSelectedPosition());
-//            if (viewHolder != null) {
-//                viewHolder.itemView.setActivated(true);
-//            }
-
         }
+
         // If there is no data, set an appropriate message in the 'empty view'
         updateEmptyView();
     }

@@ -183,14 +183,14 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
      */
     public void handleItemClick(final String id, final int selectedPosition,
                              final AwardListFragment.ListFragmentContainer listFragmentContainer) {
-        // Ensure the previously-selected item is no longer highlighted
-        notifyItemChanged(getSelectedPosition());
+//        // Ensure the previously-selected item is no longer highlighted
+//        notifyItemChanged(getSelectedPosition());
 
         // Save the position of the item that was clicked
         setSelectedPosition(selectedPosition);
 
-        // Ensure the newly-selected item is highlighted
-        notifyItemChanged(getSelectedPosition());
+//        // Ensure the newly-selected item is highlighted
+//        notifyItemChanged(getSelectedPosition());
 
         // Callback the list fragment container (i.e. the list activity), so it can
         // display the selected movie
@@ -214,7 +214,7 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
 
     // Getters and setters
 
-    public int getSelectedPosition() {
+    private int getSelectedPosition() {
         return mSelectedPosition;
     }
     private void setSelectedPosition(final int selectedPosition) {
