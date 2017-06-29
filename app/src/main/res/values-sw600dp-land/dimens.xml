@@ -9,4 +9,8 @@
 
     <!-- In landscape, allow space for toolbar -->
     <dimen name="detail_movie_info_padding_top">@dimen/abc_action_bar_default_height_material</dimen>
+
+    <!-- List -->
+    <dimen name="list_item_padding_horizontal">20dp</dimen>
+
 </resources>

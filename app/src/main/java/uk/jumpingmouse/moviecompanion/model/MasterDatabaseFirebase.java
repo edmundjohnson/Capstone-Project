@@ -386,6 +386,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
     private FirebaseDatabase getFirebaseDatabase() {
         if (sFirebaseDatabase == null) {
             sFirebaseDatabase = FirebaseDatabase.getInstance();
+            sFirebaseDatabase.setPersistenceEnabled(true);
         }
         return sFirebaseDatabase;
     }

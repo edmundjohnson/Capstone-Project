@@ -5,9 +5,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layoutAwardListItem"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="?android:colorBackground"
     tools:context=".activity.MainActivity">
+    <!--
+    // this causes wide list items on tablet, BUT...
+    android:layout_width="wrap_content"
+    // this may cause layout truncation problem - see Design view for Pixel in landscape mode
+    android:layout_width="@dimen/list_item_width"
+    // these have no effect:
+    android:maxWidth="600dp"
+    android:minWidth="600dp"
+    -->
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -77,8 +87,7 @@
             android:orientation="horizontal"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginStart="16dp"
-            android:gravity="center_vertical">
+            android:layout_marginStart="16dp">
 
             <ImageView
                 android:id="@+id/imgCategory"

@@ -3,12 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.MainActivity">
+    android:background="@color/green_50"
+    tools:context=".activity.MainActivity"
+    tools:showIn="@layout/activity_main">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/viewPostList"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_width="match_parent"
+        android:layout_gravity="center_horizontal"
         android:paddingTop="@dimen/list_padding_vertical"
         android:paddingBottom="@dimen/list_padding_vertical"
         android:paddingStart="@dimen/list_padding_horizontal"
@@ -22,7 +25,7 @@
     <!-- empty view for when there are no items, use same padding as elsewhere -->
     <TextView
         android:id="@+id/viewAwardListEmpty"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:paddingTop="16dp"
         android:paddingStart="@dimen/first_keyline"

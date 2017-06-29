@@ -2,10 +2,15 @@ package uk.jumpingmouse.moviecompanion.utils;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.SparseArray;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 import timber.log.Timber;
 
@@ -81,6 +86,7 @@ public final class JavaUtils {
 //    }
 
     //---------------------------------------------------------------------
+    // Type conversions
 
     /**
      * Converts a String to an int and returns the int.
@@ -98,6 +104,36 @@ public final class JavaUtils {
             }
         }
         return defaultValue;
+    }
+
+    //---------------------------------------------------------------------
+    // Collection utilities
+
+    /**
+     * Creates and returns a sorted list from the values of a SparseArray
+     * @param sparseArray the SparseArray
+     * @param comparator the comparator to use for sorting the list
+     * @param <C> the class of the objects in the SparseArray
+     * @return the sorted list created from the values of the SparseArray
+     */
+    public static <C> List<C> asSortedList(SparseArray<C> sparseArray, Comparator<? super C> comparator) {
+        List<C> arrayList = asList(sparseArray);
+        Collections.sort(arrayList, comparator);
+        return arrayList;
+    }
+
+    /**
+     * Creates and returns a list from the values of a SparseArray
+     * @param sparseArray the SparseArray
+     * @param <C> the class of the objects in the SparseArray
+     * @return the list created from the values of the SparseArray
+     */
+    private static <C> List<C> asList(SparseArray<C> sparseArray) {
+        if (sparseArray == null) return null;
+        List<C> arrayList = new ArrayList<>(sparseArray.size());
+        for (int i = 0; i < sparseArray.size(); i++)
+            arrayList.add(sparseArray.valueAt(i));
+        return arrayList;
     }
 
 }
