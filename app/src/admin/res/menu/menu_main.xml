@@ -4,13 +4,19 @@
     <item
         android:id="@+id/menu_option_add_movie"
         android:title="@string/menu_option_add_movie"
+        android:menuCategory="secondary"
+        android:orderInCategory="1"
         app:showAsAction="never"/>
     <item
         android:id="@+id/menu_option_add_award"
         android:title="@string/menu_option_add_award"
+        android:menuCategory="secondary"
+        android:orderInCategory="2"
         app:showAsAction="never"/>
     <item
         android:id="@+id/menu_option_sign_out"
         android:title="@string/menu_option_sign_out"
+        android:menuCategory="secondary"
+        android:orderInCategory="9"
         app:showAsAction="never"/>
 </menu>

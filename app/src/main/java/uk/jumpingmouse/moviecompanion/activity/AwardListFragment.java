@@ -205,6 +205,16 @@ public class AwardListFragment extends Fragment
                 setLayout(getActivity(), false);
                 return true;
 
+            // sort
+            case R.id.menu_option_sort:
+                getViewUtils().displayInfoMessage(getActivity(), R.string.menu_option_sort);
+                return true;
+
+            // filter
+            case R.id.menu_option_filter:
+                getViewUtils().displayInfoMessage(getActivity(), R.string.menu_option_filter);
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }

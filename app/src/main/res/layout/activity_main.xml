@@ -23,12 +23,21 @@
             android:id="@+id/toolbar_container"
             android:layout_width="match_parent"
             android:layout_height="@dimen/appbar_height"
-            android:minHeight="?actionBarSize"
+            android:minHeight="?attr/actionBarSize"
             android:background="?colorPrimary"
             android:elevation="@dimen/abc_action_bar_elevation_material"
-            app:layout_scrollFlags="scroll|enterAlwaysCollapsed|exitUntilCollapsed"
-            >
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed|exitUntilCollapsed">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/appbar_padding_vertical"
+                android:layout_marginStart="@dimen/first_keyline"
+                android:layout_marginEnd="@dimen/first_keyline"
+                android:text="@string/appbar_title_award_list"
+                style="@style/AppBarTitle" />
+
+            <!-- Setting gravity programmatically is not straightforward! -->
             <android.support.v7.widget.Toolbar
                 android:id="@+id/tbAppBar"
                 android:layout_width="match_parent"
@@ -37,8 +46,7 @@
                 android:layout_marginStart="@dimen/appbar_padding_horizontal"
                 android:layout_marginEnd="@dimen/appbar_padding_horizontal"
                 android:theme="@style/AppBarTheme"
-                app:titleTextAppearance="@style/AppBarTitle"
-                tools:title="@string/app_name" />
+                app:titleTextAppearance="@style/AppBarTitle" />
 
         </FrameLayout>
 

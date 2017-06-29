@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MovieCom Admin</string>
+    <string name="app_name">Movie Companion - Admin</string>
 
     <!-- Content provider -->
     <!-- Specify a different content_authority for the admin product flavour so the
@@ -9,7 +9,7 @@
     <!-- OMDb -->
     <string name="omdbapi_key_missing">Please add omdbapi.key to your local.properties file</string>
 
-    <!-- Menu -->
+    <!-- App Bar and Menu -->
     <string name="menu_option_add_movie">Add Movie</string>
     <string name="menu_option_add_award">Add Award</string>
 

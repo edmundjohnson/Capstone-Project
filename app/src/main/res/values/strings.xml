@@ -5,13 +5,16 @@
     <string name="content_authority" translatable="false">uk.jumpingmouse.moviecompanion</string>
 
     <!-- Security -->
-    <string name="sign_in_ok">Signed in!</string>
+    <!-- <string name="sign_in_ok">Signed in!</string> -->
     <!-- <string name="sign_in_cancelled">Sign-in cancelled</string> -->
 
-    <!-- Menu -->
+    <!-- App Bar and Menu -->
+    <string name="appbar_title_award_list">@string/app_name</string>
+    <string name="menu_option_sign_out">Sign Out</string>
     <string name="menu_option_list_view">List View</string>
     <string name="menu_option_grid_view">Grid View</string>
-    <string name="menu_option_sign_out">Sign Out</string>
+    <string name="menu_option_sort">Sort</string>
+    <string name="menu_option_filter">Filter</string>
 
     <!-- Firebase database operations -->
     <string name="databaseOperationAddNode">Add node</string>

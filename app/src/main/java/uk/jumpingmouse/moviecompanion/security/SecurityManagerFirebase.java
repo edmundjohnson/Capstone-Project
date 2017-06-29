@@ -147,11 +147,12 @@ public class SecurityManagerFirebase implements SecurityManager {
 
         // Are we returning from the sign-in screen?
         if (requestCode == SecurityManager.RC_SIGN_IN) {
-            if (resultCode == Activity.RESULT_OK) {
-                // The user signed in successfully
-                //IdpResponse idpResponse = IdpResponse.fromResultIntent(data);
-                getViewUtils().displayInfoMessage(activity, R.string.sign_in_ok);
-            } else if (resultCode == Activity.RESULT_CANCELED) {
+//            if (resultCode == Activity.RESULT_OK) {
+//                // The user signed in successfully
+//                //IdpResponse idpResponse = IdpResponse.fromResultIntent(data);
+//                getViewUtils().displayInfoMessage(activity, R.string.sign_in_ok);
+//            } else
+            if (resultCode == Activity.RESULT_CANCELED) {
                 // The user cancelled the sign-in, e.g. they hit the back button
                 //getViewUtils().displayInfoMessage(this, R.string.sign_in_cancelled);
                 // finish the activity

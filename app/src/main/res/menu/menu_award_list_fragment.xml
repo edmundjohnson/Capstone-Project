@@ -1,14 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- We need showAsAction to be "always", otherwise menu options
+         are hidden unnecessarily in portrait orientation -->
     <item
         android:id="@+id/menu_option_list_view"
-        android:icon="@drawable/ic_view_list_24dp"
+        android:icon="@drawable/ic_list_24dp"
         android:title="@string/menu_option_list_view"
-        app:showAsAction="ifRoom"/>
+        android:orderInCategory="1"
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction" />
     <item
         android:id="@+id/menu_option_grid_view"
-        android:icon="@drawable/ic_grid_on_24dp"
+        android:icon="@drawable/ic_view_comfy_24dp"
         android:title="@string/menu_option_grid_view"
-        app:showAsAction="ifRoom"/>
+        android:orderInCategory="2"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/menu_option_sort"
+        android:icon="@drawable/ic_sort_24dp"
+        android:title="@string/menu_option_sort"
+        android:orderInCategory="3"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/menu_option_filter"
+        android:icon="@drawable/ic_filter_list_24dp"
+        android:title="@string/menu_option_filter"
+        android:orderInCategory="4"
+        app:showAsAction="always" />
 </menu>

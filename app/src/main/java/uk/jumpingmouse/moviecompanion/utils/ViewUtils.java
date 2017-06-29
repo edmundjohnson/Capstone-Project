@@ -81,7 +81,9 @@ public class ViewUtils {
         activity.setSupportActionBar(toolbar);
         ActionBar appBar = activity.getSupportActionBar();
         // If required, display the up arrow in the app bar
-        displayUpArrowInAppBar(appBar, isUpArrowDisplayed);
+        if (appBar != null) {
+            displayUpArrowInAppBar(appBar, isUpArrowDisplayed);
+        }
     }
 
     /**
@@ -97,8 +99,9 @@ public class ViewUtils {
         // Find the toolbar
         Toolbar toolbar = (Toolbar) activity.findViewById(toolbarResId);
         if (toolbar != null) {
-            // Set the title text and background
+            // Set the title text
             toolbar.setTitle(titleText);
+            // Set the background
             if (backgroundResId != 0) {
                 toolbar.setBackgroundResource(backgroundResId);
             }
