@@ -11,9 +11,9 @@
 
     <!-- App Bar -->
     <dimen name="appbar_height">112dp</dimen>
-    <dimen name="appbar_padding_vertical">24dp</dimen>
     <!-- To overcome a bug in Android, we need to add extra padding on wider screens -->
     <dimen name="appbar_padding_horizontal">0dp</dimen>
+    <dimen name="appbar_title_padding_vertical">64dp</dimen>
     <dimen name="text_size_appbar_title">20dp</dimen>
 
     <!-- List -->

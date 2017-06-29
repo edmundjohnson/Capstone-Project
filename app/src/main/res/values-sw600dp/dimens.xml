@@ -11,6 +11,7 @@
     <dimen name="appbar_height">112dp</dimen>
     <!-- To overcome a bug in toolbar, we need to add extra padding on wider screens -->
     <dimen name="appbar_padding_horizontal">8dp</dimen>
+    <dimen name="appbar_title_padding_vertical">20dp</dimen>
 
     <!-- List -->
     <!-- list_item_padding_horizontal equals first_keyline minus list_padding_horizontal -->

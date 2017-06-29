@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App Bar -->
-    <dimen name="appbar_padding_vertical">24dp</dimen>
+    <dimen name="appbar_title_padding_vertical">20dp</dimen>
 
     <!-- Detail -->
     <bool name="detail_is_card">true</bool>

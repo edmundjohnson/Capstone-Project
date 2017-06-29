@@ -31,7 +31,8 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/appbar_padding_vertical"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="@dimen/appbar_title_padding_vertical"
                 android:layout_marginStart="@dimen/first_keyline"
                 android:layout_marginEnd="@dimen/first_keyline"
                 android:text="@string/appbar_title_award_list"
