@@ -5,18 +5,20 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layoutAwardListItem"
-    android:layout_width="wrap_content"
+    android:layout_width="@dimen/list_item_width"
     android:layout_height="wrap_content"
     android:background="?android:colorBackground"
     tools:context=".activity.MainActivity">
     <!--
-    // this causes wide list items on tablet, BUT...
-    android:layout_width="wrap_content"
-    // this may cause layout truncation problem - see Design view for Pixel in landscape mode
-    android:layout_width="@dimen/list_item_width"
-    // these have no effect:
-    android:maxWidth="600dp"
-    android:minWidth="600dp"
+    // Using the following line would cause the list items to be very wide on tablet, so...
+           android:layout_width="wrap_content"
+    // ... the following line is used:
+           android:layout_width="@dimen/list_item_width"
+    // The Design view for e.g. the Nexus 4 in landscape mode shows truncation of the list item,
+    // but running it in an emulator shows no truncation, so it should be OK.
+    // Ideally, the following would be used, but they have no effect:
+           android:maxWidth="600dp"
+           android:minWidth="600dp"
     -->
 
     <RelativeLayout

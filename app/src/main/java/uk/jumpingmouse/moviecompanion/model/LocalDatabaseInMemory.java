@@ -16,6 +16,7 @@ import java.util.Map;
 import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
+import uk.jumpingmouse.moviecompanion.data.UserMovie;
 import uk.jumpingmouse.moviecompanion.data.ViewAward;
 import uk.jumpingmouse.moviecompanion.utils.JavaUtils;
 
@@ -29,10 +30,12 @@ public class LocalDatabaseInMemory implements LocalDatabase {
     /** The singleton instance of this class. */
     private static LocalDatabase sLocalDatabase = null;
 
-    /** The map of movies. */
+    /** The movies. */
     private final SparseArray<Movie> mMovies;
-    /** The map of awards. */
+    /** The awards. */
     private final Map<String, Award> mAwards;
+    /** The user movies. */
+    private final SparseArray<UserMovie> mUserMovies;
 
     /** The cursor for the view award list. It is assumed there is only ever one. */
     private Cursor mCursorViewAwards;
@@ -56,6 +59,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
     private LocalDatabaseInMemory() {
         mMovies = new SparseArray<>();
         mAwards = new HashMap<>();
+        mUserMovies = new SparseArray<>();
     }
 
     //---------------------------------------------------------------------
@@ -319,6 +323,50 @@ public class LocalDatabaseInMemory implements LocalDatabase {
     }
 
     //---------------------------------------------------------------------
+    // UserMovie modification methods
+
+    /**
+     * Adds a user movie's details to the database.
+     * If the user movie does not exist in the database, it is inserted.
+     * If it already exists in the database, it is updated.
+     * @param userMovie the user movie to insert or update
+     * @return the number of rows inserted or updated. This is currently always 1,
+     * but that could change if the local database is implemented in SQLite.
+     */
+    @Override
+    public int addUserMovie(@NonNull UserMovie userMovie) {
+        int id = userMovie.getId();
+        // remove the user movie if it already exists
+        UserMovie existingUserMovie = selectUserMovieById(id);
+        if (existingUserMovie != null) {
+            mUserMovies.remove(id);
+        }
+        // add the new user movie
+        mUserMovies.put(id, userMovie);
+
+        return 1;
+    }
+
+    //---------------------------------------------------------------------
+    // UserMovie query methods
+
+    /**
+     * Returns the movie with a specified movie id.
+     * @param id the movie's id
+     * @return the user movie with the specified id, or null if there is no matching user movie
+     */
+    @Override
+    @Nullable
+    public UserMovie selectUserMovieById(int id) {
+        //UserMovie userMovie = mUserMovies.get(id);
+        // There may not yet be a UserMovie for this movie
+        //if (userMovie == null) {
+        //    Timber.d("selectUserMovieById: No user movies found with matching id: " + id);
+        //}
+        return mUserMovies.get(id);
+    }
+
+    //---------------------------------------------------------------------
     // ViewAward query methods
 
     /**
@@ -342,7 +390,9 @@ public class LocalDatabaseInMemory implements LocalDatabase {
             Timber.d("selectViewAwardById: Movie not found with id: " + award.getMovieId());
             return null;
         }
-        return new ViewAward(award, movie);
+        UserMovie userMovie = selectUserMovieById(award.getMovieId());
+        // There may not yet be a userMovie, it is OK to pass it to ViewAward as null
+        return new ViewAward(award, movie, userMovie);
     }
 
     /**
@@ -405,7 +455,8 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         for (Award award : awardList) {
             Movie movie = selectMovieById(award.getMovieId());
             if (movie != null) {
-                ViewAward viewAward = new ViewAward(award, movie);
+                UserMovie userMovie = selectUserMovieById(award.getMovieId());
+                ViewAward viewAward = new ViewAward(award, movie, userMovie);
                 viewAwardList.add(viewAward);
             }
         }

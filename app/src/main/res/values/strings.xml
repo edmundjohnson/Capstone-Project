@@ -15,6 +15,12 @@
     <string name="menu_option_grid_view">Grid View</string>
     <string name="menu_option_sort">Sort</string>
     <string name="menu_option_filter">Filter</string>
+    <string name="menu_option_add_to_wishlist">Add to wishlist</string>
+    <string name="menu_option_remove_from_wishlist">Remove from wishlist</string>
+    <string name="menu_option_add_to_watched">Mark as watched</string>
+    <string name="menu_option_remove_from_watched">Mark as not watched</string>
+    <string name="menu_option_add_to_favourites">Add to favourites</string>
+    <string name="menu_option_remove_from_favourites">Remove from favourites</string>
 
     <!-- Firebase database operations -->
     <string name="databaseOperationAddNode">Add node</string>
@@ -38,12 +44,18 @@
     <string name="category_text_dvd">DVD of the Week</string>
     <string name="category_text_unknown">unknown</string>
 
-    <!-- View Award -->
-    <string name="no_awards_available">There are no awards matching your criteria</string>
+    <!-- View Award (Movie) screen-->
     <string name="poster_description">Movie poster</string>
     <string name="imdb_link_address">http://www.imdb.com/title/%s/</string>
     <string name="imdb_link_text">IMDb</string>
     <string name="imdb_link_description">Display IMDb page for movie</string>
+
+    <string name="added_to_wishlist">added to wishlist</string>
+    <string name="removed_from_wishlist">removed from wishlist</string>
+    <string name="added_to_watched">marked as watched</string>
+    <string name="removed_from_watched">marked as not watched</string>
+    <string name="added_to_favourites">added to favourites</string>
+    <string name="removed_from_favourites">removed from favourites</string>
 
     <string name="example_movie_title">The Assassination of Jesse James by the Coward Robert Ford</string>
     <string name="example_award_date">02 June 17</string>

@@ -7,8 +7,10 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
@@ -16,6 +18,9 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.graphics.Palette;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
@@ -29,6 +34,7 @@ import com.squareup.picasso.Picasso;
 import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
+import uk.jumpingmouse.moviecompanion.data.UserMovie;
 import uk.jumpingmouse.moviecompanion.data.ViewAward;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.moviecompanion.model.LocalDatabase;
@@ -63,6 +69,9 @@ public class MovieFragment extends Fragment
     /** The cursor loader for view award. */
     private CursorLoader mCursorLoader;
 
+    /** The menu. */
+    private Menu mMenu;
+
     private View mRootView;
     private int mDarkMutedColor = DARK_MUTED_COLOR_DEFAULT;
     private int mLightMutedColor = LIGHT_MUTED_COLOR_DEFAULT;
@@ -81,12 +90,12 @@ public class MovieFragment extends Fragment
     //--------------------------------------------------------------
     // Lifecycle methods
 
-//    @Override
-//    public void onCreate(final Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        // Add the next line if the fragment needs to handle menu events.
-//        //setHasOptionsMenu(true);
-//    }
+    @Override
+    public void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Add the next line if the fragment needs to handle menu events.
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -200,6 +209,169 @@ public class MovieFragment extends Fragment
     @NonNull
     public static MovieFragment newInstance() {
         return new MovieFragment();
+    }
+
+    //---------------------------------------------------------------------
+    // Menu actions
+
+    @Override
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+        // Inflate the menu; this adds items to the app bar if it is present.
+        inflater.inflate(R.menu.menu_movie_fragment, menu);
+        setMenuItemVisibility(menu, mViewAward);
+        mMenu = menu;
+    }
+
+    /**
+     * Set the correct visibility for the ViewAward-related menu items.
+     * @param menu the menu
+     * @param viewAward the view award
+     */
+    private void setMenuItemVisibility(@Nullable Menu menu, @Nullable ViewAward viewAward) {
+        if (menu != null && viewAward != null) {
+            boolean isOnWishlist = mViewAward != null && mViewAward.isOnWishlist();
+            boolean isWatched = mViewAward != null && mViewAward.isWatched();
+            boolean isFavourite = mViewAward != null && mViewAward.isFavourite();
+
+            menu.findItem(R.id.menu_option_add_to_wishlist).setVisible(!isOnWishlist);
+            menu.findItem(R.id.menu_option_remove_from_wishlist).setVisible(isOnWishlist);
+            menu.findItem(R.id.menu_option_add_to_watched).setVisible(!isWatched);
+            menu.findItem(R.id.menu_option_remove_from_watched).setVisible(isWatched);
+            menu.findItem(R.id.menu_option_add_to_favourites).setVisible(!isFavourite);
+            menu.findItem(R.id.menu_option_remove_from_favourites).setVisible(isFavourite);
+        }
+    }
+
+    /**
+     * Process selection of an item in the options menu.
+     * @param item the menu item that was selected
+     * @return false to allow normal menu processing to proceed,
+     *         true if menu processing is consumed here.
+     */
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Context context = getActivity();
+        switch (item.getItemId()) {
+            // add to wishlist
+            case R.id.menu_option_add_to_wishlist:
+                addToWishlist(context);
+                return true;
+
+            // remove from wishlist
+            case R.id.menu_option_remove_from_wishlist:
+                removeFromWishlist(context);
+                return true;
+
+            // add to watched
+            case R.id.menu_option_add_to_watched:
+                addToWatched(context);
+                return true;
+
+            // remove from watched
+            case R.id.menu_option_remove_from_watched:
+                removeFromWatched(context);
+                return true;
+
+            // add to favourites
+            case R.id.menu_option_add_to_favourites:
+                addToFavourites(context);
+                return true;
+
+            // remove from favourites
+            case R.id.menu_option_remove_from_favourites:
+                removeFromFavourites(context);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void addToWishlist(@Nullable Context context) {
+        mViewAward.setOnWishlist(true);
+        toggleUserMovieField(context,
+                R.id.menu_option_add_to_wishlist,
+                R.id.menu_option_remove_from_wishlist,
+                R.string.added_to_wishlist);
+    }
+
+    private void removeFromWishlist(@Nullable Context context) {
+        mViewAward.setOnWishlist(false);
+        toggleUserMovieField(context,
+                R.id.menu_option_remove_from_wishlist,
+                R.id.menu_option_add_to_wishlist,
+                R.string.removed_from_wishlist);
+    }
+
+    private void addToWatched(@Nullable Context context) {
+        mViewAward.setWatched(true);
+        toggleUserMovieField(context,
+                R.id.menu_option_add_to_watched,
+                R.id.menu_option_remove_from_watched,
+                R.string.added_to_watched);
+    }
+
+    private void removeFromWatched(@Nullable Context context) {
+        mViewAward.setWatched(false);
+        toggleUserMovieField(context,
+                R.id.menu_option_remove_from_watched,
+                R.id.menu_option_add_to_watched,
+                R.string.removed_from_watched);
+    }
+
+    private void addToFavourites(@Nullable Context context) {
+        mViewAward.setFavourite(true);
+        toggleUserMovieField(context,
+                R.id.menu_option_add_to_favourites,
+                R.id.menu_option_remove_from_favourites,
+                R.string.added_to_favourites);
+    }
+
+    private void removeFromFavourites(@Nullable Context context) {
+        mViewAward.setFavourite(false);
+        toggleUserMovieField(context,
+                R.id.menu_option_remove_from_favourites,
+                R.id.menu_option_add_to_favourites,
+                R.string.removed_from_favourites);
+    }
+
+    /**
+     * Change the value of a boolean field in a UserMovie.
+     * @param context the context
+     * @param menuItemClickedResId the menu item that was clicked to change the field
+     * @param menuItemToggleResId the menu item which changes the value back
+     * @param messageResId a message to display when the menu item is clicked
+     */
+    private void toggleUserMovieField(@Nullable Context context,
+                                      @IdRes int menuItemClickedResId,
+                                      @IdRes int menuItemToggleResId,
+                                      @StringRes int messageResId) {
+        mMenu.findItem(menuItemClickedResId).setVisible(false);
+        mMenu.findItem(menuItemToggleResId).setVisible(true);
+
+        if (context != null) {
+            getViewUtils().displayInfoMessage(context, messageResId);
+        }
+
+        updateUserMovieInDatabase();
+    }
+
+    /**
+     * Update a UserMovie in the database to reflect the currently displayed values.
+     */
+    private void updateUserMovieInDatabase() {
+        // Generate a UserMovie based on the currently displayed values
+        UserMovie userMovie = new UserMovie(
+                mViewAward.getMovieId(),
+                mViewAward.isOnWishlist(),
+                mViewAward.isWatched(),
+                mViewAward.isFavourite());
+
+        // Update the local copy of the UserMovie - the user may not be online
+        int rowsUpdatedUserMovie = getLocalDatabase().addUserMovie(userMovie);
+
+        // TODO: update the Firebase database
+        String breakpoint = "b";
     }
 
     //------------------------------------------------------------------------------
@@ -345,6 +517,9 @@ public class MovieFragment extends Fragment
         if (context == null || viewAward == null) {
             return;
         }
+        // Update the menu to reflect the latest values
+        setMenuItemVisibility(mMenu, mViewAward);
+
         String runtimeText = getViewUtils().getRuntimeText(context, viewAward.getRuntime());
         String categoryCode = viewAward.getCategory();
         Drawable categoryDrawable = getViewUtils().getCategoryDrawable(context, categoryCode);

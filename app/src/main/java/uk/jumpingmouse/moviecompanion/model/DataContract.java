@@ -34,7 +34,7 @@ public final class DataContract {
     static final String URI_PATH_MOVIE = "movie";
     static final String URI_PATH_AWARD = "award";
     //static final String URI_PATH_USER = "user";
-    static final String URI_PATH_VIEW_MOVIE = "viewMovie";
+    static final String URI_PATH_USER_MOVIE = "userMovie";
     static final String URI_PATH_VIEW_AWARD = "viewAward";
 
     // Query parameters
@@ -236,6 +236,74 @@ public final class DataContract {
 
     }
 
+    /** Inner class that defines the contents of a user movie node. */
+    public static final class UserMovieEntry implements BaseColumns {
+
+        static final String CONTENT_DIR_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + URI_PATH_USER_MOVIE;
+        static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + URI_PATH_USER_MOVIE;
+
+        // Database
+
+        static final String ROOT_NODE = "user";
+
+        public static final String COLUMN_ID = MovieEntry._ID;
+        public static final String COLUMN_ON_WISHLIST = "onWishlist";
+        public static final String COLUMN_WATCHED = "watched";
+        public static final String COLUMN_FAVOURITE = "favourite";
+
+        // Note: arrays are mutable, so ALL_COLUMNS should not be public.
+        // See Effective Java, Item 13.
+        private static final String[] ALL_COLUMNS = {
+                COLUMN_ID,
+                COLUMN_ON_WISHLIST,
+                COLUMN_WATCHED,
+                COLUMN_FAVOURITE
+        };
+        public static String[] getAllColumns() {
+            return ALL_COLUMNS.clone();
+        }
+
+        public static final int COL_ID = 0;
+        public static final int COL_ON_WISHLIST = COL_ID + 1;
+        public static final int COL_WATCHED = COL_ON_WISHLIST + 1;
+        public static final int COL_FAVOURITE = COL_WATCHED + 1;
+
+        // URIs
+
+        static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(URI_PATH_USER_MOVIE).build();
+
+        /**
+         * Build and return the URI for a user movie identified by its user id and movie id.
+         * e.g. "content://uk.jumpingmouse.moviecompanion/userMovie/[userId]/4016934"
+         * @param userId the id of the user
+         * @param movieId the id of the movie, e.g. 4016934
+         * @return the URI for obtaining the specific user movie
+         */
+        @NonNull
+        public static Uri buildUriForRowById(final int movieId, @NonNull final String userId) {
+            return CONTENT_URI.buildUpon()
+                    .appendPath(userId)
+                    .appendPath(Integer.toString(movieId))
+                    .build();
+        }
+
+//        /**
+//         * Create and return a URI for querying all user userMovies.
+//         * i.e. "content://uk.jumpingmouse.moviecompanion/userMovie/all".
+//         * @return the URI for querying all user movies
+//         */
+//        @NonNull
+//        public static Uri buildUriForAllRows() {
+//            return CONTENT_URI.buildUpon()
+//                    .appendPath(PARAM_ALL)
+//                    .build();
+//        }
+
+    }
+
     /**
      * Inner class that defines the contents of a ViewAward.
      */
@@ -259,6 +327,9 @@ public final class DataContract {
         static final String COLUMN_RUNTIME = "runtime";
         static final String COLUMN_GENRE = "genre";
         static final String COLUMN_POSTER = "poster";
+        static final String COLUMN_ON_WISHLIST = "onWishlist";
+        static final String COLUMN_WATCHED = "watched";
+        static final String COLUMN_FAVOURITE = "favourite";
 
         // Note: arrays are mutable, so ALL_COLUMNS should not be public.
         // See Effective Java, Item 13.
@@ -273,7 +344,10 @@ public final class DataContract {
                 COLUMN_TITLE,
                 COLUMN_RUNTIME,
                 COLUMN_GENRE,
-                COLUMN_POSTER
+                COLUMN_POSTER,
+                COLUMN_ON_WISHLIST,
+                COLUMN_WATCHED,
+                COLUMN_FAVOURITE
         };
 
         public static String[] getAllColumns() {
@@ -291,6 +365,9 @@ public final class DataContract {
         public static final int COL_RUNTIME = COL_TITLE + 1;
         public static final int COL_GENRE = COL_RUNTIME + 1;
         public static final int COL_POSTER = COL_GENRE + 1;
+        public static final int COL_ON_WISHLIST = COL_POSTER + 1;
+        public static final int COL_WATCHED = COL_ON_WISHLIST + 1;
+        public static final int COL_FAVOURITE = COL_WATCHED + 1;
 
         // URIs
 

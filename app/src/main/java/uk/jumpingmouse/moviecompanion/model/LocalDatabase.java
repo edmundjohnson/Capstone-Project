@@ -8,6 +8,7 @@ import java.util.List;
 
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
+import uk.jumpingmouse.moviecompanion.data.UserMovie;
 import uk.jumpingmouse.moviecompanion.data.ViewAward;
 
 /**
@@ -112,6 +113,27 @@ public interface LocalDatabase {
     List<Award> selectAwards(
             @Nullable final String[] projection, @Nullable final String selection,
             @Nullable final String[] selectionArgs, @Nullable final String sortOrder);
+
+    //---------------------------------------------------------------------
+    // UserMovie methods
+
+    /**
+     * Adds a user movie's details to the database.
+     * If the user movie does not exist in the database, it is inserted.
+     * If it already exists in the database, it is updated.
+     * @param userMovie the user movie to insert or update
+     * @return the number of rows inserted or updated. This is currently always 1,
+     * but that could change if the local database is implemented in SQLite.
+     */
+    int addUserMovie(@NonNull UserMovie userMovie);
+
+    /**
+     * Returns the movie with a specified movie id.
+     * @param id the movie's id
+     * @return the user movie with the specified id, or null if there is no matching user movie
+     */
+    @Nullable
+    UserMovie selectUserMovieById(int id);
 
     //---------------------------------------------------------------------
     // ViewAward methods

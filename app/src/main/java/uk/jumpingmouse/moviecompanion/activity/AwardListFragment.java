@@ -172,7 +172,7 @@ public class AwardListFragment extends Fragment
     }
 
     //---------------------------------------------------------------------
-    // App bar menu actions
+    // Menu actions
 
     @Override
     public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {

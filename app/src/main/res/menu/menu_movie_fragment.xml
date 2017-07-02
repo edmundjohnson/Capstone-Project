@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- We need showAsAction to be "always", otherwise menu options
+         are hidden unnecessarily in portrait orientation -->
+    <item
+        android:id="@+id/menu_option_add_to_wishlist"
+        android:icon="@drawable/ic_bookmark_border_24dp"
+        android:title="@string/menu_option_add_to_wishlist"
+        android:orderInCategory="1"
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction" />
+    <item
+        android:id="@+id/menu_option_remove_from_wishlist"
+        android:icon="@drawable/ic_bookmark_24dp"
+        android:title="@string/menu_option_remove_from_wishlist"
+        android:orderInCategory="1"
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction" />
+    <item
+        android:id="@+id/menu_option_add_to_watched"
+        android:icon="@drawable/ic_visibility_off_24dp"
+        android:title="@string/menu_option_add_to_watched"
+        android:orderInCategory="2"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/menu_option_remove_from_watched"
+        android:icon="@drawable/ic_visibility_24dp"
+        android:title="@string/menu_option_remove_from_watched"
+        android:orderInCategory="2"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/menu_option_add_to_favourites"
+        android:icon="@drawable/ic_favorite_border_24dp"
+        android:title="@string/menu_option_add_to_favourites"
+        android:orderInCategory="3"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/menu_option_remove_from_favourites"
+        android:icon="@drawable/ic_favorite_24dp"
+        android:title="@string/menu_option_remove_from_favourites"
+        android:orderInCategory="3"
+        app:showAsAction="always"/>
+</menu>

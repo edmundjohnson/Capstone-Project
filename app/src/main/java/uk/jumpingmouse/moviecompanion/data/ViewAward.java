@@ -29,12 +29,18 @@ public class ViewAward {
     private int displayOrder;
     // The movie title, e.g. "The Handmaiden"
     private String title;
-    // The length in minutes
+    // The length of the movie in minutes, e.g. 144
     private int runtime;
     // A comma-separated list of genres, e.g. "Drama, Mystery, Romance"
     private String genre;
     // The URL of the movie poster image
     private String poster;
+    // Whether the movie is on the current user's wishlist
+    private boolean onWishlist;
+    // Whether the movie is on the current user's watched list
+    private boolean watched;
+    // Whether the movie is on the current user's list of favourites
+    private boolean favourite;
 
     private ViewAward() {
     }
@@ -51,7 +57,10 @@ public class ViewAward {
             @NonNull String title,
             int runtime,
             @Nullable String genre,
-            @Nullable String poster) {
+            @Nullable String poster,
+            boolean onWishlist,
+            boolean watched,
+            boolean favourite) {
         if (movieId <= 0) {
             throw new NullPointerException("Invalid movieId");
         }
@@ -66,9 +75,12 @@ public class ViewAward {
         this.runtime = runtime;
         this.genre = genre;
         this.poster = poster;
+        this.onWishlist = onWishlist;
+        this.watched = watched;
+        this.favourite = favourite;
     }
 
-    public ViewAward(@NonNull Award award, @NonNull Movie movie) {
+    public ViewAward(@NonNull Award award, @NonNull Movie movie, @Nullable UserMovie userMovie) {
         this.id = award.getId();
         this.movieId = movie.getId();
         this.imdbId = movie.getImdbId();
@@ -80,6 +92,11 @@ public class ViewAward {
         this.runtime = movie.getRuntime();
         this.genre = movie.getGenre();
         this.poster = movie.getPoster();
+        if (userMovie != null) {
+            this.onWishlist = userMovie.isOnWishlist();
+            this.watched = userMovie.isWatched();
+            this.favourite = userMovie.isFavourite();
+        }
     }
 
     //---------------------------------------------------------------
@@ -90,7 +107,7 @@ public class ViewAward {
         return id;
     }
 
-    private int getMovieId() {
+    public int getMovieId() {
         return movieId;
     }
 
@@ -123,12 +140,10 @@ public class ViewAward {
         return title;
     }
 
-    /** Returns the runtime in minutes, e.g. 144. */
     public int getRuntime() {
         return runtime;
     }
 
-    /** Returns a comma-separated list of genres, e.g. "Drama, Mystery, Romance". */
     @Nullable
     public String getGenre() {
         return genre;
@@ -137,6 +152,33 @@ public class ViewAward {
     @Nullable
     public String getPoster() {
         return poster;
+    }
+
+    public boolean isOnWishlist() {
+        return onWishlist;
+    }
+
+    public boolean isWatched() {
+        return watched;
+    }
+
+    public boolean isFavourite() {
+        return favourite;
+    }
+
+    //---------------------------------------------------------------
+    // Setters
+
+    public void setOnWishlist(boolean onWishlist) {
+        this.onWishlist = onWishlist;
+    }
+
+    public void setWatched(boolean watched) {
+        this.watched = watched;
+    }
+
+    public void setFavourite(boolean favourite) {
+        this.favourite = favourite;
     }
 
     //---------------------------------------------------------------
@@ -159,7 +201,10 @@ public class ViewAward {
                 title,
                 runtime,
                 genre,
-                poster
+                poster,
+                onWishlist ? 1 : 0,
+                watched ? 1 : 0,
+                favourite ? 1 : 0
         };
     }
 
@@ -198,6 +243,9 @@ public class ViewAward {
         private int runtime;
         private String genre;
         private String poster;
+        private boolean onWishlist;
+        private boolean watched;
+        private boolean favourite;
 
         Builder() {
         }
@@ -214,60 +262,65 @@ public class ViewAward {
             this.runtime = source.runtime;
             this.genre = source.genre;
             this.poster = source.poster;
+            this.onWishlist = source.onWishlist;
+            this.watched = source.watched;
+            this.favourite = source.favourite;
         }
 
         public ViewAward.Builder id(@NonNull String id) {
             this.id = id;
             return this;
         }
-
         public ViewAward.Builder movieId(int movieId) {
             this.movieId = movieId;
             return this;
         }
-
         public ViewAward.Builder imdbId(@NonNull String imdbId) {
             this.imdbId = imdbId;
             return this;
         }
-
         public ViewAward.Builder awardDate(@NonNull String awardDate) {
             this.awardDate = awardDate;
             return this;
         }
-
         public ViewAward.Builder category(@NonNull String category) {
             this.category = category;
             return this;
         }
-
         public ViewAward.Builder review(@NonNull String review) {
             this.review = review;
             return this;
         }
-
         public ViewAward.Builder displayOrder(int displayOrder) {
             this.displayOrder = displayOrder;
             return this;
         }
-
         public ViewAward.Builder title(@NonNull String title) {
             this.title = title;
             return this;
         }
-
         public ViewAward.Builder runtime(int runtime) {
             this.runtime = runtime;
             return this;
         }
-
         public ViewAward.Builder genre(@NonNull String genre) {
             this.genre = genre;
             return this;
         }
-
         public ViewAward.Builder poster(@NonNull String poster) {
             this.poster = poster;
+            return this;
+        }
+        public ViewAward.Builder onWishlist(boolean onWishlist) {
+            this.onWishlist = onWishlist;
+            return this;
+        }
+        public ViewAward.Builder watched(boolean watched) {
+            this.watched = watched;
+            return this;
+        }
+        public ViewAward.Builder favourite(boolean favourite) {
+            this.favourite = favourite;
             return this;
         }
 
@@ -312,7 +365,10 @@ public class ViewAward {
                     this.title,
                     this.runtime,
                     this.genre,
-                    this.poster);
+                    this.poster,
+                    this.onWishlist,
+                    this.watched,
+                    this.favourite);
         }
     }
 
@@ -333,6 +389,9 @@ public class ViewAward {
                 + ", runtime=" + runtime
                 + ", genre=" + genre
                 + ", poster=" + poster
+                + ", onWishlist=" + onWishlist
+                + ", watched=" + watched
+                + ", favourite=" + favourite
                 + "}";
     }
 
@@ -353,7 +412,10 @@ public class ViewAward {
                     && (this.title.equals(that.title))
                     && (this.runtime == that.runtime)
                     && ((this.genre == null) ? (that.genre == null) : this.genre.equals(that.genre))
-                    && ((this.poster == null) ? (that.poster == null) : this.poster.equals(that.poster));
+                    && ((this.poster == null) ? (that.poster == null) : this.poster.equals(that.poster))
+                    && (this.onWishlist == that.onWishlist)
+                    && (this.watched == that.watched)
+                    && (this.favourite == that.favourite);
         }
         return false;
     }
@@ -383,6 +445,12 @@ public class ViewAward {
         h ^= (genre == null) ? 0 : this.genre.hashCode();
         h *= 1000003;
         h ^= (poster == null) ? 0 : this.poster.hashCode();
+        h *= 1000003;
+        h ^= this.onWishlist ? 1 : 0;
+        h *= 1000003;
+        h ^= this.watched ? 1 : 0;
+        h *= 1000003;
+        h ^= this.favourite ? 1 : 0;
         return h;
     }
 

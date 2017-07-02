@@ -343,6 +343,9 @@ public final class ModelUtils {
         int runtime = cursor.getInt(DataContract.ViewAwardEntry.COL_RUNTIME);
         final String genre = cursor.getString(DataContract.ViewAwardEntry.COL_GENRE);
         final String poster = cursor.getString(DataContract.ViewAwardEntry.COL_POSTER);
+        final boolean onWishlist = cursor.getInt(DataContract.ViewAwardEntry.COL_ON_WISHLIST) == 1;
+        final boolean watched = cursor.getInt(DataContract.ViewAwardEntry.COL_WATCHED) == 1;
+        final boolean favourite = cursor.getInt(DataContract.ViewAwardEntry.COL_FAVOURITE) == 1;
 
         // if the id mandatory attribute is missing, return null
         if (id == null) {
@@ -382,6 +385,9 @@ public final class ModelUtils {
                 .runtime(runtime)
                 .genre(genre)
                 .poster(poster)
+                .onWishlist(onWishlist)
+                .watched(watched)
+                .favourite(favourite)
                 .build();
     }
 
