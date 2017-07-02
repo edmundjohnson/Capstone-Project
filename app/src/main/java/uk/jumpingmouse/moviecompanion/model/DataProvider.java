@@ -17,7 +17,9 @@ import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
+import uk.jumpingmouse.moviecompanion.data.UserMovie;
 import uk.jumpingmouse.moviecompanion.data.ViewAward;
+import uk.jumpingmouse.moviecompanion.security.SecurityManager;
 import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 
 /**
@@ -35,9 +37,12 @@ public class DataProvider extends ContentProvider {
     private static final int AWARD = 200;
     private static final int AWARD_ID = 201;
     private static final int AWARD_ALL = 202;
-    private static final int VIEW_AWARD = 300;
-    private static final int VIEW_AWARD_ID = 301;
-    private static final int VIEW_AWARD_ALL = 302;
+    private static final int USER_MOVIE = 300;
+    private static final int USER_MOVIE_ID = 301;
+    private static final int USER_MOVIE_ALL = 302;
+    private static final int VIEW_AWARD = 400;
+    private static final int VIEW_AWARD_ID = 401;
+    private static final int VIEW_AWARD_ALL = 402;
 
     //---------------------------------------------------------------------
     // URI matcher
@@ -76,6 +81,17 @@ public class DataProvider extends ContentProvider {
         uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
                 DataContract.URI_PATH_AWARD + "/*",
                 AWARD_ID);
+
+        // user movie
+        uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
+                DataContract.URI_PATH_USER_MOVIE,
+                USER_MOVIE);
+        uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
+                DataContract.URI_PATH_USER_MOVIE + "/" + DataContract.PARAM_ALL,
+                USER_MOVIE_ALL);
+        uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
+                DataContract.URI_PATH_USER_MOVIE + "/*",
+                USER_MOVIE_ID);
 
         // view award
         uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
@@ -137,6 +153,18 @@ public class DataProvider extends ContentProvider {
                 return DataContract.AwardEntry.CONTENT_ITEM_TYPE;
             case AWARD_ALL:
                 return DataContract.AwardEntry.CONTENT_DIR_TYPE;
+            case USER_MOVIE:
+                return DataContract.UserMovieEntry.CONTENT_DIR_TYPE;
+            case USER_MOVIE_ID:
+                return DataContract.UserMovieEntry.CONTENT_ITEM_TYPE;
+            case USER_MOVIE_ALL:
+                return DataContract.UserMovieEntry.CONTENT_DIR_TYPE;
+            case VIEW_AWARD:
+                return DataContract.ViewAwardEntry.CONTENT_DIR_TYPE;
+            case VIEW_AWARD_ID:
+                return DataContract.ViewAwardEntry.CONTENT_ITEM_TYPE;
+            case VIEW_AWARD_ALL:
+                return DataContract.ViewAwardEntry.CONTENT_DIR_TYPE;
             default:
                 throw new UnsupportedOperationException("Unsupported URI for getType: " + uri);
         }
@@ -181,13 +209,21 @@ public class DataProvider extends ContentProvider {
                 }
                 returnUri = DataContract.AwardEntry.buildUriForRowById(award.getId());
                 break;
+            case USER_MOVIE:
+                UserMovie userMovie = insertUserMovie(values);
+                if (userMovie == null) {
+                    Timber.w("insert: Failed to insert userMovie using ContentValues: ", values);
+                    return null;
+                }
+                returnUri = DataContract.UserMovieEntry.buildUriForRowById(userMovie.getId());
+                break;
             default:
                 throw new UnsupportedOperationException("Unsupported URI for insert: " + uri);
         }
-        // Notify any observers on the movie/award URI
+        // Notify any observers on the modified URI
         notifyChange(context, uri, null);
-        // Notify any observers on the viewAward URI, as ViewAwards are affected by
-        // changes to movies and awards.
+        // Notify any observers on the ViewAward URI, as ViewAwards are affected by
+        // changes to movies, awards and user movies.
         notifyChange(context, DataContract.ViewAwardEntry.buildUriForAllRows(), null);
 
         return returnUri;
@@ -224,10 +260,6 @@ public class DataProvider extends ContentProvider {
         final int match = URI_MATCHER.match(uri);
 
         switch (match) {
-//            case MOVIE:
-//                // A null id updates all rows
-//                rowsUpdated = updateAllMovies(context, values);
-//                break;
             case MOVIE_ID:
                 int movieId = ModelUtils.idToMovieId(uri.getLastPathSegment());
                 if (movieId == Movie.ID_UNKNOWN) {
@@ -240,6 +272,15 @@ public class DataProvider extends ContentProvider {
             case AWARD_ID:
                 String awardId = uri.getLastPathSegment();
                 rowsUpdated = updateAward(awardId, values);
+                break;
+            case USER_MOVIE_ID:
+                int userMovieId = ModelUtils.idToMovieId(uri.getLastPathSegment());
+                if (userMovieId == Movie.ID_UNKNOWN) {
+                    Timber.w("Could not obtain userMovie id from URI: " + uri);
+                    rowsUpdated = 0;
+                } else {
+                    rowsUpdated = updateUserMovie(userMovieId, values);
+                }
                 break;
             default:
                 throw new UnsupportedOperationException("Unsupported URI for update: " + uri);
@@ -292,9 +333,6 @@ public class DataProvider extends ContentProvider {
         final int match = URI_MATCHER.match(uri);
 
         switch (match) {
-//            case MOVIE:
-//                rowsDeleted = deleteAllMovies(context, values);
-//                break;
             case MOVIE_ID:
                 int movieId = ModelUtils.idToMovieId(uri.getLastPathSegment());
                 if (movieId == Movie.ID_UNKNOWN) {
@@ -313,16 +351,25 @@ public class DataProvider extends ContentProvider {
                     rowsDeleted = deleteAward(awardId);
                 }
                 break;
+            case USER_MOVIE_ID:
+                int userMovieId = ModelUtils.idToMovieId(uri.getLastPathSegment());
+                if (userMovieId == Movie.ID_UNKNOWN) {
+                    Timber.e("Could not obtain user movie id from URI: " + uri);
+                    rowsDeleted = 0;
+                } else {
+                    rowsDeleted = deleteUserMovie(context, userMovieId);
+                }
+                break;
             default:
                 throw new UnsupportedOperationException("Unsupported URI for delete: " + uri);
         }
 
         // Notify the URI listeners (using the content resolver) if the rowsDeleted != 0.
         if (rowsDeleted != 0) {
-            // Notify any observers on the movie/award URI
+            // Notify any observers on the modified URI
             notifyChange(context, uri, null);
             // Notify any observers on the viewAward URI, as ViewAwards are affected by
-            // changes to movies and awards
+            // changes to movies, awards and userMovies
             notifyChange(context, DataContract.ViewAwardEntry.buildUriForAllRows(), null);
         }
 
@@ -393,6 +440,16 @@ public class DataProvider extends ContentProvider {
                     cursor = null;
                 } else {
                     cursor = selectAwardById(awardId);
+                }
+                break;
+            // "userMovie"
+            case USER_MOVIE_ID:
+                int userMovieId = ModelUtils.idToMovieId(uri.getLastPathSegment());
+                if (userMovieId == Movie.ID_UNKNOWN) {
+                    Timber.w("Could not obtain user movie id from URI" + uri);
+                    cursor = null;
+                } else {
+                    cursor = selectUserMovieById(userMovieId);
                 }
                 break;
             // "viewAward"
@@ -697,6 +754,98 @@ public class DataProvider extends ContentProvider {
     }
 
     //---------------------------------------------------------------------
+    // UserMovie modification methods
+
+    /**
+     * Inserts a user movie into the database.
+     * @param values the values to use for the new user movie
+     * @return the inserted user movie
+     */
+    @Nullable
+    private UserMovie insertUserMovie(@Nullable final ContentValues values) {
+        if (values == null) {
+            Timber.e("insertUserMovie: values are null");
+            return null;
+        }
+        UserMovie userMovie = ModelUtils.newUserMovie(values);
+        if (userMovie == null) {
+            Timber.e("insertUserMovie: unable to create UserMovie from values: " + values);
+            return null;
+        }
+        int rowsAdded = getLocalDatabase().addUserMovie(userMovie);
+        if (rowsAdded == 0) {
+            Timber.e("insertUserMovie: unable to add userMovie to database: " + userMovie);
+            return null;
+        } else {
+            return userMovie;
+        }
+    }
+
+    /**
+     * Updates a user movie in the database.
+     * @param id the user movie's id
+     * @param values the new values to use for the user movie
+     * @return the number of rows updated
+     */
+    private int updateUserMovie(final int id, @Nullable final ContentValues values) {
+        if (values == null) {
+            return 0;
+        }
+        UserMovie userMovie = ModelUtils.newUserMovie(values);
+        if (userMovie == null) {
+            return 0;
+        } else if (id != userMovie.getId()) {
+            throw new UnsupportedOperationException(
+                    "Id mismatch between URL and body of update user movie request");
+        }
+        return getLocalDatabase().addUserMovie(userMovie);
+    }
+
+    /**
+     * Deletes a user movie from the database.
+     * @param id the user movie's id
+     * @return the number of rows deleted
+     */
+    private int deleteUserMovie(@Nullable Context context, final int id) {
+        return getLocalDatabase().deleteUserMovie(id);
+    }
+
+    //---------------------------------------------------------------------
+    // UserMovie query methods
+
+    /**
+     * Return a cursor whose first row is the user movie with a specified id.
+     * @param id the id of the required row
+     * @return a cursor whose first row is the row with the specified id
+     */
+    @Nullable
+    private Cursor selectUserMovieById(final int id) {
+        UserMovie userMovie = getLocalDatabase().selectUserMovieById(id);
+        if (userMovie == null) {
+            Timber.w("", "UserMovie not found with id: " + id);
+            return null;
+        }
+        return toCursor(userMovie);
+    }
+
+    /**
+     * Returns a one-row cursor containing a user movie.
+     * @param userMovie the user movie
+     * @return a one-row cursor containing the user movie
+     */
+    @NonNull
+    private Cursor toCursor(@NonNull UserMovie userMovie) {
+        // Create a cursor containing the user movie columns
+        String[] columns = DataContract.UserMovieEntry.getAllColumns();
+        MatrixCursor matrixCursor = new MatrixCursor(columns);
+
+        // populate the cursor with the user movie
+        matrixCursor.addRow(userMovie.toObjectArray());
+
+        return matrixCursor;
+    }
+
+    //---------------------------------------------------------------------
     // View Award query methods
 
     /**
@@ -800,6 +949,15 @@ public class DataProvider extends ContentProvider {
 
     //---------------------------------------------------------------------
     // Getters
+
+    /**
+     * Convenience method which returns a SecurityManager.
+     * @return a SecurityManager
+     */
+    @NonNull
+    static SecurityManager getSecurityManager() {
+        return ObjectFactory.getSecurityManager();
+    }
 
     /**
      * Convenience method which returns a reference to a local database.

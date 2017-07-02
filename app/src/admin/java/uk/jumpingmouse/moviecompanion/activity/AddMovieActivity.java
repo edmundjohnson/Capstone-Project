@@ -324,6 +324,7 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
     private static MasterDatabase getMasterDatabase() {
         return ObjectFactory.getMasterDatabase();
     }
+
     /**
      * Convenience method which returns a SecurityManager.
      * @return a SecurityManager

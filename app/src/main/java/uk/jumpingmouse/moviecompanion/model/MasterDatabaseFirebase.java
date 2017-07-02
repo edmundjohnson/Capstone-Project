@@ -22,6 +22,8 @@ import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.adapter.ViewAwardAdapter;
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
+import uk.jumpingmouse.moviecompanion.data.UserMovie;
+import uk.jumpingmouse.moviecompanion.security.SecurityManager;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
 /**
@@ -36,20 +38,24 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
     private static DatabaseReference sDatabaseReferenceMovies;
     // A database reference to the "/awards" node.
     private static DatabaseReference sDatabaseReferenceAwards;
+    // A database reference to the "/users/[uid]/userMovies" node.
+    private static DatabaseReference sDatabaseReferenceUserMovies;
 
     // A listener which listens for database events at the "/movies" node.
     private ChildEventListener mChildEventListenerMovies;
     // A listener which listens for database events at the "/awards" node.
     private ChildEventListener mChildEventListenerAwards;
+    // A listener which listens for database events at the "/users/[uid]/userMovies" node.
+    private ChildEventListener mChildEventListenerUserMovies;
 
     private ViewAwardAdapter mViewAwardAdapter;
 
     //---------------------------------------------------------------------
     // Instance handling methods
 
-    /** Default constructor. */
-    MasterDatabaseFirebase() {
-    }
+//    /** Default constructor. */
+//    MasterDatabaseFirebase() {
+//    }
 
     //---------------------------------------------------------------------
     // Event-related methods
@@ -61,12 +67,14 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
     public void onSignedIn(@Nullable Context context) {
         attachDatabaseEventListenerMovies(context);
         attachDatabaseEventListenerAwards(context);
+        attachDatabaseEventListenerUserMovies(context);
     }
 
     /** Performs processing required when a user has signed out. */
     public void onSignedOut() {
         detachDatabaseEventListenerMovies();
         detachDatabaseEventListenerAwards();
+        detachDatabaseEventListenerUserMovies();
     }
 
     //---------------------------------------------------------------------
@@ -118,6 +126,52 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
     public abstract int deleteAward(@Nullable Context context, @Nullable String id);
 
     //---------------------------------------------------------------------
+    // Firebase database UserMovie modification methods.
+    // Available to all users.
+
+    /**
+     * Adds a user movie's details to the Firebase database.
+     * If the user movie does not exist in the database, it is inserted.
+     * If it already exists in the database, it is updated.
+     * @param context the context
+     * @param userMovie the user movie to insert or update
+     * @return the number of rows inserted or updated
+     */
+    @Override
+    public int addUserMovie(@Nullable final Context context,  @NonNull final UserMovie userMovie) {
+        if (context == null) {
+            return 0;
+        }
+        String userMoviesNode = DataContract.UserMovieEntry.getUserMoviesNode(
+                getSecurityManager().getUid());
+
+        if (userMoviesNode == null) {
+            return 0;
+        }
+        return setNode(context, userMoviesNode, Integer.toString(userMovie.getId()),
+                userMovie, false);
+    }
+
+    /**
+     * Deletes a user movie from the Firebase database.
+     * @param context the context
+     * @param id the id of the user movie to be deleted
+     * @return the number of rows deleted
+     */
+    @Override
+    public int deleteUserMovie(@Nullable Context context, int id) {
+        if (context == null || id == Movie.ID_UNKNOWN) {
+            return 0;
+        }
+        String userMoviesNode = DataContract.UserMovieEntry.getUserMoviesNode(
+                getSecurityManager().getUid());
+        if (userMoviesNode == null) {
+            return 0;
+        }
+        return deleteNode(context, userMoviesNode, Integer.toString(id), false);
+    }
+
+    //---------------------------------------------------------------------
     // Database changes initiated on the local device
 
     /**
@@ -130,10 +184,12 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
      * @param targetNode the node to which the new node is to be added
      * @param nodeKey the key of the new node to insert or update
      * @param nodeValue the value of the new node to insert or update
+     * @param isAdminFunction whether this operation is part of an admin function
      * @return the number of rows inserted or updated
      */
     int setNode(@Nullable final Context context, @NonNull final String targetNode,
-                @NonNull String nodeKey, @NonNull final Object nodeValue) {
+                @NonNull String nodeKey, @NonNull final Object nodeValue,
+                boolean isAdminFunction) {
         if (context == null) {
             return 0;
         }
@@ -144,7 +200,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
         // Add or update the new node at the database target node.
         getDatabaseReference(targetNode).updateChildren(mapValue,
                 getDatabaseOperationCompletionListener(context, R.string.databaseOperationAddNode,
-                        targetNode, nodeKey, true));
+                        targetNode, nodeKey, isAdminFunction));
 
         // We don't know whether the add will succeed - assume it will
         return 1;
@@ -159,11 +215,12 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
      * @param context the context
      * @param targetNode the node to which the new node is to be added
      * @param nodeValue the value of the new node to insert or update
+     * @param isAdminFunction whether this operation is part of an admin function
      * @return the key of the created node, or null if no node was created
      */
     @Nullable
-    String pushNode(@Nullable final Context context, @NonNull final String targetNode,
-                @NonNull final Object nodeValue) {
+    private String pushNode(@Nullable final Context context, @NonNull final String targetNode,
+                @NonNull final Object nodeValue, boolean isAdminFunction) {
         if (context == null) {
             return null;
         }
@@ -172,7 +229,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
         String newNodeKey = newNode.getKey();
         newNode.setValue(nodeValue,
                 getDatabaseOperationCompletionListener(context, R.string.databaseOperationAddNode,
-                        targetNode, newNodeKey, true));
+                        targetNode, newNodeKey, isAdminFunction));
         return newNodeKey;
     }
 
@@ -181,17 +238,18 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
      * @param context the context
      * @param targetNode the node from which the node is to be deleted
      * @param nodeKey the key of the node to be deleted
+     * @param isAdminFunction whether this operation is part of an admin function
      * @return the number of rows deleted
      */
     int deleteNode(@Nullable Context context, @NonNull final String targetNode,
-                           @NonNull String nodeKey) {
+                           @NonNull String nodeKey, boolean isAdminFunction) {
         if (context == null) {
             return 0;
         }
         // Delete the node from the target node.
         getDatabaseReference(targetNode).child(nodeKey).removeValue(
                 getDatabaseOperationCompletionListener(context, R.string.databaseOperationDeleteNode,
-                        targetNode, nodeKey, true));
+                        targetNode, nodeKey, isAdminFunction));
 
         // We don't know whether the delete will succeed - assume it will
         return 1;
@@ -359,6 +417,64 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
         }
     }
 
+    /**
+     * Attach a ChildEventListener to the "/users/[uid]/userMovies" node.
+     * @param context the context
+     */
+    private void attachDatabaseEventListenerUserMovies(@Nullable final Context context) {
+        if (mChildEventListenerUserMovies == null) {
+            mChildEventListenerUserMovies = new ChildEventListener() {
+                // This is called for each existing child when the listener is attached
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    UserMovie userMovie = dataSnapshot.getValue(UserMovie.class);
+                    if (userMovie != null && context != null) {
+                        Uri uriInserted = context.getContentResolver().insert(
+                                DataContract.UserMovieEntry.CONTENT_URI, userMovie.toContentValues());
+                    }
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    UserMovie userMovie = dataSnapshot.getValue(UserMovie.class);
+                    if (userMovie != null && context != null) {
+                        int rowsUpdated = context.getContentResolver().update(
+                                DataContract.UserMovieEntry.buildUriForRowById(userMovie.getId()),
+                                userMovie.toContentValues(), null, null);
+                    }
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    UserMovie userMovie = dataSnapshot.getValue(UserMovie.class);
+                    if (userMovie != null && context != null) {
+                        String uid = getSecurityManager().getUid();
+                        Uri uri = DataContract.UserMovieEntry.buildUriForRowById(userMovie.getId());
+                        int rowsDeleted = context.getContentResolver().delete(uri, null, null);
+                    }
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    Timber.e("Unexpected operation detected at \"/users/%s/userMovies\" node: onChildMoved(...)",
+                            getSecurityManager().getUid());
+                }
+
+                // Called if an error occurs while attempting a database operation
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Timber.e(String.format(Locale.getDefault(),
+                            "Unexpected operation detected at node \"/users/%s/userMovies\": onCancelled(...)."
+                                    + "Error code: %d, details: %s, message: %s",
+                            getSecurityManager().getUid(), databaseError.getCode(),
+                            databaseError.getDetails(), databaseError.getMessage()));
+                }
+            };
+
+            getDatabaseReferenceMovies().addChildEventListener(mChildEventListenerUserMovies);
+        }
+    }
+
     /** Detach the ChildEventListener from the "/movies" node. */
     private void detachDatabaseEventListenerMovies() {
         if (mChildEventListenerMovies != null) {
@@ -372,6 +488,14 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
         if (mChildEventListenerAwards != null) {
             getDatabaseReferenceAwards().removeEventListener(mChildEventListenerAwards);
             mChildEventListenerAwards = null;
+        }
+    }
+
+    /** Detach the ChildEventListener from the "/users/[uid]/userMovies" node. */
+    private void detachDatabaseEventListenerUserMovies() {
+        if (mChildEventListenerUserMovies != null) {
+            getDatabaseReferenceMovies().removeEventListener(mChildEventListenerUserMovies);
+            mChildEventListenerUserMovies = null;
         }
     }
 
@@ -424,6 +548,15 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
     private DatabaseReference getDatabaseReference(@NonNull String nodePath) {
         // This returns a non-null value, even if the node does not exist.
         return getFirebaseDatabase().getReference(nodePath);
+    }
+
+    /**
+     * Convenience method which returns a SecurityManager.
+     * @return a SecurityManager
+     */
+    @NonNull
+    private static SecurityManager getSecurityManager() {
+        return ObjectFactory.getSecurityManager();
     }
 
     /**

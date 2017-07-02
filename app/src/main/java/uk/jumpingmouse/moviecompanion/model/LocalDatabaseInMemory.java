@@ -347,6 +347,23 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         return 1;
     }
 
+    /**
+     * Deletes a user movie from the database.
+     * @param id the id of the user movie to be deleted
+     * @return the number of rows deleted
+     */
+    @Override
+    public int deleteUserMovie(int id) {
+        UserMovie existingUserMovie = selectUserMovieById(id);
+        if (existingUserMovie == null) {
+            Timber.w("deleteUserMovie: UserMovie not found with id: " + id);
+            return 0;
+        } else {
+            mUserMovies.remove(id);
+            return 1;
+        }
+    }
+
     //---------------------------------------------------------------------
     // UserMovie query methods
 

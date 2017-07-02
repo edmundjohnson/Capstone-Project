@@ -28,8 +28,9 @@
     <string name="databaseOperationSuccess">Success:\n%1$s \"%2$s\" at node /%3$s</string>
     <string name="databaseOperationFailure">FAILURE:\n%1$s \"%2$s\" at node /%3$s\nError code: %4$d, details: %5$s, message: %6$s</string>
 
-    <!-- Validation -->
+    <!-- Error messages -->
     <string name="error_title">Error</string>
+    <string name="error_internet_connection_required">This requires an internet connection</string>
 
     <!-- Movie fields -->
     <!-- It is unlikely that there will be a film whose length is 1 minute, but more
@@ -43,6 +44,11 @@
     <string name="category_text_movie">Movie of the Week</string>
     <string name="category_text_dvd">DVD of the Week</string>
     <string name="category_text_unknown">unknown</string>
+
+    <!-- View Award list -->
+    <!-- TODO: May need another message mentioning list filter -->
+    <string name="no_data_available">There are no movies available.</string>
+    <string name="no_data_no_connection">There are no movies available. Please check your internet connection.</string>
 
     <!-- View Award (Movie) screen-->
     <string name="poster_description">Movie poster</string>
@@ -61,14 +67,8 @@
     <string name="example_award_date">02 June 17</string>
     <string name="example_movie_genre">Drama, Romance, Comedy, Biography</string>
     <string name="example_movie_runtime">114 mins</string>
-    <string name="example_imdb_link">IMDb</string>
     <!-- Short and long review for use in design view -->
     <string name="example_review" tools:ignore="Typos">It\'s a beautiful beautiful work of art.</string>
     <!-- <string name="example_review" tools:ignore="Typos">At the beginning we see a man in a boat who is washed up on a desert island.  Initially he builds rafts to get away, but the rafts are constantly scuppered by an unseen sea beast which turns out to be the turtle.  In a rage he overturns the turtle, and then he starts to feel an Ancient Mariner-style remorse and empathy for this creature, and then something magical starts to happen, a transformation starts to happen.  It turns into a meditation upon existence, upon loneliness, upon companionship, upon birth, death and rebirth. It is a film which is deeply compassionate and touching and funny and affectionate and insightful and I was in love with it, I just was so swept away by it.  It\'s a beautiful beautiful work of art.</string> -->
-
-    <!-- View Award list -->
-    <!-- TODO: May need another message mentioning list filter -->
-    <string name="no_data_available">There are no movies available.</string>
-    <string name="no_data_no_connection">There are no movies available. Please check your internet connection.</string>
 
 </resources>

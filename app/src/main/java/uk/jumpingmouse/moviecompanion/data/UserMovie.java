@@ -29,7 +29,7 @@ public class UserMovie implements Parcelable {
     private UserMovie() {
     }
 
-    public UserMovie(
+    private UserMovie(
             int id,
             boolean onWishlist,
             boolean watched,

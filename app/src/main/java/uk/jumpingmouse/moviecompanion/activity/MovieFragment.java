@@ -37,9 +37,10 @@ import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.data.UserMovie;
 import uk.jumpingmouse.moviecompanion.data.ViewAward;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
-import uk.jumpingmouse.moviecompanion.model.LocalDatabase;
+import uk.jumpingmouse.moviecompanion.model.MasterDatabase;
 import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 import uk.jumpingmouse.moviecompanion.utils.NavUtils;
+import uk.jumpingmouse.moviecompanion.utils.NetUtils;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
 /**
@@ -340,38 +341,47 @@ public class MovieFragment extends Fragment
      * @param context the context
      * @param menuItemClickedResId the menu item that was clicked to change the field
      * @param menuItemToggleResId the menu item which changes the value back
-     * @param messageResId a message to display when the menu item is clicked
+     * @param messageResId a message to display when the operation has been performed
      */
     private void toggleUserMovieField(@Nullable Context context,
                                       @IdRes int menuItemClickedResId,
                                       @IdRes int menuItemToggleResId,
                                       @StringRes int messageResId) {
-        mMenu.findItem(menuItemClickedResId).setVisible(false);
-        mMenu.findItem(menuItemToggleResId).setVisible(true);
-
-        if (context != null) {
-            getViewUtils().displayInfoMessage(context, messageResId);
+        if (context == null || mViewAward == null) {
+            return;
         }
 
-        updateUserMovieInDatabase();
+        if (!getNetUtils().isNetworkAvailable(context)) {
+            getViewUtils().displayInfoMessage(context, R.string.error_internet_connection_required);
+            return;
+        }
+
+        updateUserMovieInDatabase(context, mViewAward);
+
+        if (mMenu != null) {
+            mMenu.findItem(menuItemClickedResId).setVisible(false);
+            mMenu.findItem(menuItemToggleResId).setVisible(true);
+        }
+
+        getViewUtils().displayInfoMessage(context, messageResId);
     }
 
     /**
-     * Update a UserMovie in the database to reflect the currently displayed values.
+     * Update a UserMovie in the database to reflect the values of a view award.
+     * @param context the context
+     * @param viewAward the view award
      */
-    private void updateUserMovieInDatabase() {
+    private void updateUserMovieInDatabase(@NonNull Context context, @NonNull ViewAward viewAward) {
         // Generate a UserMovie based on the currently displayed values
-        UserMovie userMovie = new UserMovie(
-                mViewAward.getMovieId(),
-                mViewAward.isOnWishlist(),
-                mViewAward.isWatched(),
-                mViewAward.isFavourite());
+        UserMovie userMovie = UserMovie.builder()
+                .id(viewAward.getMovieId())
+                .onWishlist(viewAward.isOnWishlist())
+                .watched(viewAward.isWatched())
+                .favourite(viewAward.isFavourite())
+                .build();
 
-        // Update the local copy of the UserMovie - the user may not be online
-        int rowsUpdatedUserMovie = getLocalDatabase().addUserMovie(userMovie);
-
-        // TODO: update the Firebase database
-        String breakpoint = "b";
+        // Update the Firebase database
+        int rowsUpdated = getMasterDatabase().addUserMovie(context, userMovie);
     }
 
     //------------------------------------------------------------------------------
@@ -609,11 +619,20 @@ public class MovieFragment extends Fragment
     }
 
     /**
-     * Convenience method which returns a reference to a local database.
-     * @return a reference to a local database
+     * Convenience method for returning a reference to the database helper.
+     * @return a reference to the database helper
      */
-    private static LocalDatabase getLocalDatabase() {
-        return ObjectFactory.getLocalDatabase();
+    @NonNull
+    private static MasterDatabase getMasterDatabase() {
+        return ObjectFactory.getMasterDatabase();
+    }
+
+    /**
+     * Returns a NetUtils object.
+     * @return a NetUtils object
+     */
+    private NetUtils getNetUtils() {
+        return NetUtils.getInstance();
     }
 
     /**

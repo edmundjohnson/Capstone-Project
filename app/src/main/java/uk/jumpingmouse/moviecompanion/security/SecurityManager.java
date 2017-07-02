@@ -57,4 +57,11 @@ public interface SecurityManager {
      */
     void signOut(@Nullable FragmentActivity activity);
 
+    /**
+     * Returns the unique user id of the user who is signed in.
+     * @return the unique user id of the user who is signed in, or null if no user is signed in
+     */
+    @Nullable
+    String getUid();
+
 }

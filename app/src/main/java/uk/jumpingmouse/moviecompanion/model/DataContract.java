@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import uk.jumpingmouse.moviecompanion.BuildConfig;
 
@@ -12,6 +13,9 @@ import uk.jumpingmouse.moviecompanion.BuildConfig;
  * @author Edmund Johnson
  */
 public final class DataContract {
+
+    /** Database node for user-related data. */
+    private static final String ROOT_NODE_USERS = "users";
 
     /**
      * The "content authority" is a name for the entire content provider, similar to the
@@ -33,7 +37,6 @@ public final class DataContract {
      */
     static final String URI_PATH_MOVIE = "movie";
     static final String URI_PATH_AWARD = "award";
-    //static final String URI_PATH_USER = "user";
     static final String URI_PATH_USER_MOVIE = "userMovie";
     static final String URI_PATH_VIEW_AWARD = "viewAward";
 
@@ -246,7 +249,7 @@ public final class DataContract {
 
         // Database
 
-        static final String ROOT_NODE = "user";
+        private static final String ROOT_NODE = "userMovies" ;
 
         public static final String COLUMN_ID = MovieEntry._ID;
         public static final String COLUMN_ON_WISHLIST = "onWishlist";
@@ -272,26 +275,24 @@ public final class DataContract {
 
         // URIs
 
-        static final Uri CONTENT_URI =
+        public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(URI_PATH_USER_MOVIE).build();
 
         /**
-         * Build and return the URI for a user movie identified by its user id and movie id.
-         * e.g. "content://uk.jumpingmouse.moviecompanion/userMovie/[userId]/4016934"
-         * @param userId the id of the user
-         * @param movieId the id of the movie, e.g. 4016934
+         * Build and return the URI for a user movie identified by its movie id.
+         * e.g. "content://uk.jumpingmouse.moviecompanion/userMovies/4016934"
+         * @param movieId the id of the user movie, e.g. 4016934
          * @return the URI for obtaining the specific user movie
          */
         @NonNull
-        public static Uri buildUriForRowById(final int movieId, @NonNull final String userId) {
+        public static Uri buildUriForRowById(final int movieId) {
             return CONTENT_URI.buildUpon()
-                    .appendPath(userId)
                     .appendPath(Integer.toString(movieId))
                     .build();
         }
 
 //        /**
-//         * Create and return a URI for querying all user userMovies.
+//         * Create and return a URI for querying all userMovies.
 //         * i.e. "content://uk.jumpingmouse.moviecompanion/userMovie/all".
 //         * @return the URI for querying all user movies
 //         */
@@ -302,6 +303,18 @@ public final class DataContract {
 //                    .build();
 //        }
 
+        /**
+         * Returns the user movies node for a user, i.e. "/users/[uid]/userMovies".
+         * @param uid the user's uid
+         * @return the user movies node for a user
+         */
+        @Nullable
+        public static String getUserMoviesNode(@Nullable String uid) {
+            if (uid == null) {
+                return null;
+            }
+            return ROOT_NODE_USERS + "/" + uid + "/" + ROOT_NODE;
+        }
     }
 
     /**
@@ -400,5 +413,17 @@ public final class DataContract {
         }
 
     }
+
+//    //---------------------------------------------------------------------
+//    // Getters
+//
+//    /**
+//     * Convenience method which returns a SecurityManager.
+//     * @return a SecurityManager
+//     */
+//    @NonNull
+//    private static SecurityManager getSecurityManager() {
+//        return ObjectFactory.getSecurityManager();
+//    }
 
 }

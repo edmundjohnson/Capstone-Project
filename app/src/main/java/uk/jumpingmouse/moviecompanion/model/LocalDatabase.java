@@ -128,6 +128,13 @@ public interface LocalDatabase {
     int addUserMovie(@NonNull UserMovie userMovie);
 
     /**
+     * Deletes a user movie from the database.
+     * @param id the id of the user movie to be deleted
+     * @return the number of rows deleted
+     */
+    int deleteUserMovie(int id);
+
+    /**
      * Returns the movie with a specified movie id.
      * @param id the movie's id
      * @return the user movie with the specified id, or null if there is no matching user movie

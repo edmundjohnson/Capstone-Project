@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
+import uk.jumpingmouse.moviecompanion.data.UserMovie;
 
 /**
  * Interface for implementations of the master database.
@@ -120,5 +121,26 @@ public interface MasterDatabase {
 //     */
 //    @Nullable
 //    Award selectAwardById(@Nullable String id);
+
+    //---------------------------------------------------------------------
+    // UserMovie modification methods.
+
+    /**
+     * Adds a user movie's details to the Firebase database.
+     * If the user movie does not exist in the database, it is inserted.
+     * If it already exists in the database, it is updated.
+     * @param context the context
+     * @param userMovie the user movie to insert or update
+     * @return the number of rows inserted or updated
+     */
+    int addUserMovie(@Nullable final Context context, @NonNull final UserMovie userMovie);
+
+    /**
+     * Deletes a user movie from the Firebase database.
+     * @param context the context
+     * @param id the id of the user movie to be deleted
+     * @return the number of rows deleted
+     */
+    int deleteUserMovie(@Nullable Context context, int id);
 
 }

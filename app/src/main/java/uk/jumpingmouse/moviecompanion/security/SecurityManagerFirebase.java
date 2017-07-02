@@ -170,16 +170,6 @@ public class SecurityManagerFirebase implements SecurityManager {
     }
 
     /**
-     * Returns whether the user is signed in.
-     * @return true if the user is signed in, false otherwise
-     */
-    @Override
-    public boolean isUserSignedIn() {
-        FirebaseUser user = getFirebaseAuth().getCurrentUser();
-        return (user != null);
-    }
-
-    /**
      * Performs processing required on user sign in.
      * @param context the context
      */
@@ -210,11 +200,36 @@ public class SecurityManagerFirebase implements SecurityManager {
     //---------------------------------------------------------------------
     // Security methods
 
+    /**
+     * Returns whether the user is signed in.
+     * @return true if the user is signed in, false otherwise
+     */
+    @Override
+    public boolean isUserSignedIn() {
+        FirebaseUser user = getFirebaseAuth().getCurrentUser();
+        return (user != null);
+    }
+
+    /**
+     * Signs out the currently signed-in user.
+     * @param activity the current activity
+     */
     @Override
     public void signOut(@Nullable FragmentActivity activity) {
         if (activity != null) {
             AuthUI.getInstance().signOut(activity);
         }
+    }
+
+    /**
+     * Returns the unique user id of the user who is signed in.
+     * @return the unique user id of the user who is signed in, or null if no user is signed in
+     */
+    @Override
+    @Nullable
+    public String getUid() {
+        FirebaseUser user = getFirebaseAuth().getCurrentUser();
+        return user == null ? null : user.getUid();
     }
 
     //---------------------------------------------------------------------

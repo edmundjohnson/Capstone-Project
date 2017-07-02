@@ -3,7 +3,7 @@
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="first_keyline">24sp</dimen>
-    <dimen name="second_keyline">80sp</dimen>
+    <!-- <dimen name="second_keyline">80sp</dimen> -->
 
     <dimen name="activity_margin_vertical">24dp</dimen>
 

@@ -11,6 +11,7 @@ import java.util.List;
 import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
+import uk.jumpingmouse.moviecompanion.data.UserMovie;
 import uk.jumpingmouse.moviecompanion.data.ViewAward;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.omdbapi.OmdbApi;
@@ -27,6 +28,9 @@ public final class ModelUtils {
      */
     private ModelUtils() {
     }
+
+    //---------------------------------------------------------------------
+    // Movie methods
 
     /**
      * Converts a String movie id to an int movie id and returns it.
@@ -226,6 +230,9 @@ public final class ModelUtils {
         return movieList;
     }
 
+    //---------------------------------------------------------------------
+    // Award methods
+
     /**
      * Creates and returns an Award object based on a set of ContentValues.
      * @param values the ContentValues
@@ -324,11 +331,52 @@ public final class ModelUtils {
                 .build();
     }
 
+    //---------------------------------------------------------------------
+    // UserMovie methods
+
     /**
-     * Creates and returns a Movie based on the values of a cursor row.
+     * Creates and returns a UserMovie based on a set of ContentValues.
+     * @param values the ContentValues
+     * @return a UserMovie corresponding to the ContentValues, or null if the ContentValues
+     *         do not contain values for any of the fields which are mandatory for UserMovie
+     */
+    @Nullable
+    public static UserMovie newUserMovie(@NonNull final ContentValues values) {
+        // if any mandatory attribute is missing, return null
+
+        // id
+        int id;
+        try {
+            id = values.getAsInteger(DataContract.UserMovieEntry.COLUMN_ID);
+            if (id <= 0) {
+                Timber.e("newUserMovie: invalid id");
+                return null;
+            }
+        } catch (NullPointerException e) {
+            Timber.e("newUserMovie: id is null ContentValues", e);
+            return null;
+        }
+
+        boolean onWishlist = values.getAsBoolean(DataContract.UserMovieEntry.COLUMN_ON_WISHLIST);
+        boolean watched = values.getAsBoolean(DataContract.UserMovieEntry.COLUMN_WATCHED);
+        boolean favourite = values.getAsBoolean(DataContract.UserMovieEntry.COLUMN_FAVOURITE);
+
+        return UserMovie.builder()
+                .id(id)
+                .onWishlist(onWishlist)
+                .watched(watched)
+                .favourite(favourite)
+                .build();
+    }
+
+    //---------------------------------------------------------------------
+    // ViewAward methods
+
+    /**
+     * Creates and returns a ViewAward based on the values of a cursor row.
      * @param cursor a cursor positioned at the required row
-     * @return a Movie based on the values of the cursor row, or null if the cursor row
-     *         does not contain values for any of the fields which are mandatory for Movie
+     * @return a ViewAward based on the values of the cursor row, or null if the cursor row
+     *         does not contain values for any of the fields which are mandatory for ViewAward
      */
     @Nullable
     public static ViewAward newViewAward(@NonNull Cursor cursor) {

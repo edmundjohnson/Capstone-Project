@@ -25,12 +25,23 @@
 #-renamesourcefileattribute SourceFile
 
 #--------------------------------------------------
+# Firebase
+# See  https://firebase.google.com/docs/database/android/start/
+-keepattributes Signature
+
+# This rule will properly ProGuard all the model classes.
+-keepclassmembers class uk.jumpingmouse.moviecompanion.data.** {
+  *;
+}
+
+#--------------------------------------------------
+# Retrofit2
 # Lines recommended in the Retrofit2 documentation:
 # Platform calls Class.forName on types which do not exist on Android to determine platform.
 -dontnote retrofit2.Platform
 # Platform used when running on Java 8 VMs. Will not be used at runtime.
 -dontwarn retrofit2.Platform$Java8
 # Retain generic type information for use by reflection by converters and adapters.
--keepattributes Signature
+#-keepattributes Signature  # this line is already included for Firebase
 # Retain declared checked exceptions for use by a Proxy instance.
 -keepattributes Exceptions

@@ -5,7 +5,7 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <!-- https://material.io/guidelines/layout/metrics-keylines.html#metrics-keylines-keylines-spacing -->
     <dimen name="first_keyline">16dp</dimen>
-    <dimen name="second_keyline">72dp</dimen>
+    <!-- <dimen name="second_keyline">72dp</dimen> -->
 
     <dimen name="activity_margin_vertical">16dp</dimen>
 
