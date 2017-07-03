@@ -332,7 +332,7 @@ public class ViewUtils {
      * @param longDuration if true, a long duration message is displayed,
      *                    otherwise a short duration one
      */
-    private void displayInfoMessage(@Nullable Context context, @StringRes int messageResId,
+    public void displayInfoMessage(@Nullable Context context, @StringRes int messageResId,
                                     @SuppressWarnings("SameParameterValue") boolean longDuration) {
         if (context != null) {
             displayToast(context, context.getString(messageResId), longDuration);

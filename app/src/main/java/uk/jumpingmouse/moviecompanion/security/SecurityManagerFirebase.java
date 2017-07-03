@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 
 import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.ErrorCodes;
+import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -97,16 +99,12 @@ public class SecurityManagerFirebase implements SecurityManager {
                     activity.startActivityForResult(
                             AuthUI.getInstance()
                                     .createSignInIntentBuilder()
-                                    .setTheme(R.style.AppThemeWithActionBar)
+                                    //.setTheme(R.style.AppThemeWithActionBar)
                                     .setIsSmartLockEnabled(false)
-                                    .setProviders(
-//                                    // Firebase UI 0.6.0
-//                                    AuthUI.EMAIL_PROVIDER,
-//                                    AuthUI.GOOGLE_PROVIDER)
-                                            // Firebase UI 1.0.1
+                                    .setAvailableProviders(
                                             Arrays.asList(
-                                                    new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                                                    new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
+                                                    new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
+                                                    new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build()))
                                     .build(),
                             RC_SIGN_IN);
                 }
@@ -146,19 +144,34 @@ public class SecurityManagerFirebase implements SecurityManager {
                                  int resultCode, @Nullable Intent data) {
 
         // Are we returning from the sign-in screen?
-        if (requestCode == SecurityManager.RC_SIGN_IN) {
-//            if (resultCode == Activity.RESULT_OK) {
-//                // The user signed in successfully
-//                //IdpResponse idpResponse = IdpResponse.fromResultIntent(data);
-//                getViewUtils().displayInfoMessage(activity, R.string.sign_in_ok);
-//            } else
-            if (resultCode == Activity.RESULT_CANCELED) {
-                // The user cancelled the sign-in, e.g. they hit the back button
-                //getViewUtils().displayInfoMessage(this, R.string.sign_in_cancelled);
-                // finish the activity
-                activity.finish();
+        if (requestCode == RC_SIGN_IN) {
+//            getViewUtils().displayInfoMessage(activity, R.string.sign_in_ok);
+
+            if (resultCode != Activity.RESULT_OK) {
+                IdpResponse idpResponse = IdpResponse.fromResultIntent(data);
+                if (idpResponse == null) {
+                    // user pressed the back button
+                    // finish the activity
+                    activity.finish();
+                } else if (idpResponse.getErrorCode() == ErrorCodes.NO_NETWORK) {
+                    getViewUtils().displayInfoMessage(activity,
+                            activity.getString(R.string.connection_required_for_sign_in,
+                                    activity.getString(R.string.app_name)), true);
+                    activity.finish();
+                } else if (idpResponse.getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
+                    getViewUtils().displayInfoMessage(activity, R.string.unknown_error_on_sign_in, true);
+                }
+
+//                if (resultCode == Activity.RESULT_CANCELED) {
+//                    // The sign-in was cancelled, e.g. the user hit the back button
+//                    // OR... there might be no internet connection !!!
+//                    //getViewUtils().displayInfoMessage(this, R.string.sign_in_cancelled);
+//                    // finish the activity
+//                    activity.finish();
+//                }
             }
         // Are we are returning from an admin screen (perhaps via back arrow on sign-in screen)?
+        // (No longer possible)
         } else if (requestCode == SecurityManager.RC_ADD_MOVIE
                 || requestCode == SecurityManager.RC_ADD_AWARD) {
             // if the user has clicked back arrow after signing out on a different activity,

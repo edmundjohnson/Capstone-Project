@@ -30,7 +30,9 @@
 
     <!-- Error messages -->
     <string name="error_title">Error</string>
-    <string name="error_internet_connection_required">This requires an internet connection</string>
+    <string name="connection_required_for_sign_in">An internet connection is required to sign into %s</string>
+    <string name="unknown_error_on_sign_in">Something has gone wrong, please check your internet connection or try again later</string>
+    <!-- <string name="error_internet_connection_required">This requires an internet connection</string> -->
 
     <!-- Movie fields -->
     <!-- It is unlikely that there will be a film whose length is 1 minute, but more

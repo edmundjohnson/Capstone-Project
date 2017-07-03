@@ -14,10 +14,10 @@ repositories {
     flatDir {
         dirs 'libs'
     }
+    maven { url "https://maven.google.com" }
     maven { url 'https://maven.fabric.io/public' }
 }
 
-// minSdkVersion must be >= 17 to set supportsRtl=true
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
@@ -26,6 +26,7 @@ android {
     Properties properties = new Properties()
     properties.load(project.rootProject.file("local.properties").newDataInputStream())
 
+    // minSdkVersion must be >= 17 to set supportsRtl=true
     defaultConfig {
         applicationId "uk.jumpingmouse.moviecompanion"
         minSdkVersion 17
@@ -105,11 +106,10 @@ android {
 ext {
     // The compatible versions of firebase, firebase-ui and the support library are listed here:
     // https://github.com/firebase/FirebaseUI-Android/blob/master/constants.gradle
-    SUPPORT_LIB_VERSION = '25.1.1'
-    //SUPPORT_LIB_VERSION = '25.3.1'
-    FIREBASE_VERSION = '10.2.0'
-    //FIREBASE_VERSION = '10.2.6'
-    FIREBASE_UI_VERSION = '1.2.0'
+    SUPPORT_LIB_VERSION = '25.4.0'
+    // Version 11.0.2 not compatible at 3/7/17
+    FIREBASE_VERSION = '11.0.1'
+    FIREBASE_UI_VERSION = '2.0.1'
 }
 
 dependencies {
@@ -127,6 +127,9 @@ dependencies {
 //    compile "com.google.firebase:firebase-crash:$FIREBASE_VERSION"
     // Firebase UI Auth
     compile "com.firebaseui:firebase-ui-auth:$FIREBASE_UI_VERSION"
+
+    // Picasso
+    compile 'com.squareup.picasso:picasso:2.5.2'
 
     // Timber
     compile 'com.jakewharton.timber:timber:4.5.1'
