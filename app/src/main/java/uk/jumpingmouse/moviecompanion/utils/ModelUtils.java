@@ -369,6 +369,21 @@ public final class ModelUtils {
                 .build();
     }
 
+    /**
+     * Construct and return a UserMovie based on the values in a ViewAward.
+     * @param viewAward the ViewAward
+     * @return a UserMovie based on the values in the ViewAward
+     */
+    public static UserMovie newUserMovie(@Nullable ViewAward viewAward) {
+        return viewAward == null ? null :
+                UserMovie.builder()
+                        .id(viewAward.getMovieId())
+                        .onWishlist(viewAward.isOnWishlist())
+                        .watched(viewAward.isWatched())
+                        .favourite(viewAward.isFavourite())
+                        .build();
+    }
+
     //---------------------------------------------------------------------
     // ViewAward methods
 

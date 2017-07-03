@@ -192,8 +192,7 @@ public class SecurityManagerFirebase implements SecurityManager {
         // list adapter in the list fragment?
         // If this isn't done, will the wrong list be displayed after signing in as
         // a different user?
-//        mMovieAdapter.clear();
-//        mAwardAdapter.clear();
+//        mViewAwardAdapter.clear();
     }
 
 

@@ -7,10 +7,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
@@ -37,6 +35,7 @@ import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.data.UserMovie;
 import uk.jumpingmouse.moviecompanion.data.ViewAward;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
+import uk.jumpingmouse.moviecompanion.model.LocalDatabase;
 import uk.jumpingmouse.moviecompanion.model.MasterDatabase;
 import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 import uk.jumpingmouse.moviecompanion.utils.NavUtils;
@@ -130,9 +129,7 @@ public class MovieFragment extends Fragment
     public void onActivityCreated(@Nullable Bundle bundle) {
         super.onActivityCreated(bundle);
 
-        if (getArgViewAwardUri() != null) {
-            loadData(getArgViewAwardUri());
-        }
+        loadData(getArgViewAwardUri());
 
         mLayoutImdbLink.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -255,32 +252,50 @@ public class MovieFragment extends Fragment
         switch (item.getItemId()) {
             // add to wishlist
             case R.id.menu_option_add_to_wishlist:
-                addToWishlist(context);
+                mViewAward.setOnWishlist(true);
+                if (updateViewAwardFlags(context, mMenu, mViewAward)) {
+                    getViewUtils().displayInfoMessage(context, R.string.added_to_wishlist);
+                }
                 return true;
 
             // remove from wishlist
             case R.id.menu_option_remove_from_wishlist:
-                removeFromWishlist(context);
+                mViewAward.setOnWishlist(false);
+                if (updateViewAwardFlags(context, mMenu, mViewAward)) {
+                    getViewUtils().displayInfoMessage(context, R.string.removed_from_wishlist);
+                }
                 return true;
 
             // add to watched
             case R.id.menu_option_add_to_watched:
-                addToWatched(context);
+                mViewAward.setWatched(true);
+                if (updateViewAwardFlags(context, mMenu, mViewAward)) {
+                    getViewUtils().displayInfoMessage(context, R.string.added_to_watched);
+                }
                 return true;
 
             // remove from watched
             case R.id.menu_option_remove_from_watched:
-                removeFromWatched(context);
+                mViewAward.setWatched(false);
+                if (updateViewAwardFlags(context, mMenu, mViewAward)) {
+                    getViewUtils().displayInfoMessage(context, R.string.removed_from_watched);
+                }
                 return true;
 
             // add to favourites
             case R.id.menu_option_add_to_favourites:
-                addToFavourites(context);
+                mViewAward.setFavourite(true);
+                if (updateViewAwardFlags(context, mMenu, mViewAward)) {
+                    getViewUtils().displayInfoMessage(context, R.string.added_to_favourites);
+                }
                 return true;
 
             // remove from favourites
             case R.id.menu_option_remove_from_favourites:
-                removeFromFavourites(context);
+                mViewAward.setFavourite(false);
+                if (updateViewAwardFlags(context, mMenu, mViewAward)) {
+                    getViewUtils().displayInfoMessage(context, R.string.removed_from_favourites);
+                }
                 return true;
 
             default:
@@ -288,100 +303,55 @@ public class MovieFragment extends Fragment
         }
     }
 
-    private void addToWishlist(@Nullable Context context) {
-        mViewAward.setOnWishlist(true);
-        toggleUserMovieField(context,
-                R.id.menu_option_add_to_wishlist,
-                R.id.menu_option_remove_from_wishlist,
-                R.string.added_to_wishlist);
-    }
-
-    private void removeFromWishlist(@Nullable Context context) {
-        mViewAward.setOnWishlist(false);
-        toggleUserMovieField(context,
-                R.id.menu_option_remove_from_wishlist,
-                R.id.menu_option_add_to_wishlist,
-                R.string.removed_from_wishlist);
-    }
-
-    private void addToWatched(@Nullable Context context) {
-        mViewAward.setWatched(true);
-        toggleUserMovieField(context,
-                R.id.menu_option_add_to_watched,
-                R.id.menu_option_remove_from_watched,
-                R.string.added_to_watched);
-    }
-
-    private void removeFromWatched(@Nullable Context context) {
-        mViewAward.setWatched(false);
-        toggleUserMovieField(context,
-                R.id.menu_option_remove_from_watched,
-                R.id.menu_option_add_to_watched,
-                R.string.removed_from_watched);
-    }
-
-    private void addToFavourites(@Nullable Context context) {
-        mViewAward.setFavourite(true);
-        toggleUserMovieField(context,
-                R.id.menu_option_add_to_favourites,
-                R.id.menu_option_remove_from_favourites,
-                R.string.added_to_favourites);
-    }
-
-    private void removeFromFavourites(@Nullable Context context) {
-        mViewAward.setFavourite(false);
-        toggleUserMovieField(context,
-                R.id.menu_option_remove_from_favourites,
-                R.id.menu_option_add_to_favourites,
-                R.string.removed_from_favourites);
-    }
-
     /**
-     * Change the value of a boolean field in a UserMovie.
+     * Perform updates based on the values of the boolean flag fields in a view award.
      * @param context the context
-     * @param menuItemClickedResId the menu item that was clicked to change the field
-     * @param menuItemToggleResId the menu item which changes the value back
-     * @param messageResId a message to display when the operation has been performed
+     * @param menu the menu
+     * @param viewAward the view award
+     * @return true if successful, false otherwise
      */
-    private void toggleUserMovieField(@Nullable Context context,
-                                      @IdRes int menuItemClickedResId,
-                                      @IdRes int menuItemToggleResId,
-                                      @StringRes int messageResId) {
-        if (context == null || mViewAward == null) {
-            return;
+    private boolean updateViewAwardFlags(@Nullable Context context, @Nullable Menu menu,
+                                         @Nullable ViewAward viewAward) {
+        if (context != null && viewAward != null) {
+            int rowsUpdated = updateUserMovie(context, viewAward);
+            if (rowsUpdated > 0) {
+                setMenuItemVisibility(menu, viewAward);
+                loadData(getArgViewAwardUri());
+                return true;
+            }
         }
-
-        if (!getNetUtils().isNetworkAvailable(context)) {
-            getViewUtils().displayInfoMessage(context, R.string.error_internet_connection_required);
-            return;
-        }
-
-        updateUserMovieInDatabase(context, mViewAward);
-
-        if (mMenu != null) {
-            mMenu.findItem(menuItemClickedResId).setVisible(false);
-            mMenu.findItem(menuItemToggleResId).setVisible(true);
-        }
-
-        getViewUtils().displayInfoMessage(context, messageResId);
+        return false;
     }
 
     /**
-     * Update a UserMovie in the database to reflect the values of a view award.
+     * Update the database values of a UserMovie, based on the values in a view award.
      * @param context the context
      * @param viewAward the view award
+     * @return the number of database rows updated
      */
-    private void updateUserMovieInDatabase(@NonNull Context context, @NonNull ViewAward viewAward) {
-        // Generate a UserMovie based on the currently displayed values
-        UserMovie userMovie = UserMovie.builder()
-                .id(viewAward.getMovieId())
-                .onWishlist(viewAward.isOnWishlist())
-                .watched(viewAward.isWatched())
-                .favourite(viewAward.isFavourite())
-                .build();
+    private int updateUserMovie(@NonNull Context context, @NonNull ViewAward viewAward) {
+//        if (!getNetUtils().isNetworkAvailable(context)) {
+//            getViewUtils().displayInfoMessage(context, R.string.error_internet_connection_required);
+//            return 0;
+//        }
 
         // Update the Firebase database
+        UserMovie userMovie = ModelUtils.newUserMovie(viewAward);
         int rowsUpdated = getMasterDatabase().addUserMovie(context, userMovie);
+        if (rowsUpdated == 0) {
+            Timber.e("updateUserMovie: 0 rows updated in master database");
+            return 0;
+        }
+
+        // Update the local database as the user may be offline
+        // TODO: test this in a variety of offline->online situations, to ensure
+        // that the Firebase updates are not lost even if the app is force stopped
+        rowsUpdated = getLocalDatabase().addUserMovie(userMovie);
+        if (rowsUpdated == 0) {
+            Timber.e("updateUserMovie: 0 rows updated in local database");
+            return 0;
+        }
+        return rowsUpdated;
     }
 
     //------------------------------------------------------------------------------
@@ -483,8 +453,8 @@ public class MovieFragment extends Fragment
      * cursor loader if it does not exist, or by reloading the cursor loader.
      * @param uri the URI of the data to be loaded
      */
-    private void loadData(@NonNull Uri uri) {
-        if (getActivity() != null) {
+    private void loadData(@Nullable Uri uri) {
+        if (getActivity() != null && uri != null) {
             if (mCursorLoader == null) {
                 Bundle bundle = new Bundle();
                 bundle.putParcelable(KEY_VIEW_AWARD_URI, uri);
@@ -612,9 +582,7 @@ public class MovieFragment extends Fragment
     public final void setArgViewAwardUri(@Nullable final Uri uri) {
         if (uri != null) {
             mArgViewAwardUri = uri;
-            if (getActivity() != null) {
-                loadData(uri);
-            }
+            loadData(uri);
         }
     }
 
@@ -625,6 +593,14 @@ public class MovieFragment extends Fragment
     @NonNull
     private static MasterDatabase getMasterDatabase() {
         return ObjectFactory.getMasterDatabase();
+    }
+
+    /**
+     * Convenience method which returns a reference to a local database.
+     * @return a reference to a local database
+     */
+    private static LocalDatabase getLocalDatabase() {
+        return ObjectFactory.getLocalDatabase();
     }
 
     /**
