@@ -2,11 +2,13 @@ package uk.jumpingmouse.moviecompanion.activity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -33,6 +35,7 @@ import uk.jumpingmouse.moviecompanion.adapter.ViewAwardAdapter;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.moviecompanion.model.LocalDatabase;
 import uk.jumpingmouse.moviecompanion.utils.NetUtils;
+import uk.jumpingmouse.moviecompanion.utils.PrefUtils;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
 /**
@@ -40,7 +43,8 @@ import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
  * @author Edmund Johnson
  */
 public class AwardListFragment extends Fragment
-        implements LoaderManager.LoaderCallbacks<Cursor> {
+        implements LoaderManager.LoaderCallbacks<Cursor>,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     /** The cursor loader id. */
     private static  final int AWARD_LIST_LOADER_ID = 1;
@@ -149,8 +153,9 @@ public class AwardListFragment extends Fragment
     public void onResume() {
         super.onResume();
 
-//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-//        prefs.registerOnSharedPreferenceChangeListener(this);
+        // Register the shared preference change listener.
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        prefs.registerOnSharedPreferenceChangeListener(this);
 
         // Register a content observer on the ViewAwards URI.
         // The observer will be notified whenever the view award data changes.
@@ -165,8 +170,9 @@ public class AwardListFragment extends Fragment
         getContext().getContentResolver().unregisterContentObserver(
                 getViewAwardContentObserver());
 
-//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-//        prefs.unregisterOnSharedPreferenceChangeListener(this);
+        // Unregister the shared preference change listener.
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        prefs.unregisterOnSharedPreferenceChangeListener(this);
 
         super.onPause();
     }
@@ -454,6 +460,34 @@ public class AwardListFragment extends Fragment
     @NonNull
     private static ViewUtils getViewUtils() {
         return ObjectFactory.getViewUtils();
+    }
+
+    //--------------------------------------------------------------
+    // SharedPreference listener
+
+    /**
+     * Called when a shared preference is changed, added or removed. This
+     * may be called even if a preference is set to its existing value.
+     * This callback will be run on the main thread.
+     * @param sharedPreferences The {@link SharedPreferences} that received the change.
+     * @param key               The key of the preference that was changed, added or removed
+     */
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        Context context = getActivity();
+        if (context == null) {
+            return;
+        }
+        if (PrefUtils.isKeyAwardListSortOrder(context, key)) {
+            String awardListSortOrder = PrefUtils.getAwardListSortOrder(context);
+            // TODO: Construct a uri with sortOrder parameters, restart loader
+            // Create bundle
+            // Add URI to bundle
+            //getLoaderManager().initLoader(AWARD_LIST_LOADER_ID, bundle, this);
+            getViewUtils().displayInfoMessage(context,"awardListSortOrder: " + awardListSortOrder);
+        } else {
+            getViewUtils().displayInfoMessage(context,"key: " + key);
+        }
     }
 
     //--------------------------------------------------------------

@@ -51,15 +51,15 @@ public class UserMovie implements Parcelable {
         return id;
     }
 
-    public boolean isOnWishlist() {
+    boolean isOnWishlist() {
         return onWishlist;
     }
 
-    public boolean isWatched() {
+    boolean isWatched() {
         return watched;
     }
 
-    public boolean isFavourite() {
+    boolean isFavourite() {
         return favourite;
     }
 

@@ -315,7 +315,6 @@ public class MovieFragment extends Fragment
         if (context != null && viewAward != null) {
             int rowsUpdated = updateUserMovie(context, viewAward);
             if (rowsUpdated > 0) {
-                setMenuItemVisibility(menu, viewAward);
                 loadData(getArgViewAwardUri());
                 return true;
             }

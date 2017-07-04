@@ -54,7 +54,7 @@
 
     <!-- View Award (Movie) screen-->
     <string name="poster_description">Movie poster</string>
-    <string name="imdb_link_address">http://www.imdb.com/title/%s/</string>
+    <string name="imdb_link_address" translatable="false">http://www.imdb.com/title/%s/</string>
     <string name="imdb_link_text">IMDb</string>
     <string name="imdb_link_description">Display IMDb page for movie</string>
 
@@ -72,5 +72,8 @@
     <!-- Short and long review for use in design view -->
     <string name="example_review" tools:ignore="Typos">It\'s a beautiful beautiful work of art.</string>
     <!-- <string name="example_review" tools:ignore="Typos">At the beginning we see a man in a boat who is washed up on a desert island.  Initially he builds rafts to get away, but the rafts are constantly scuppered by an unseen sea beast which turns out to be the turtle.  In a rage he overturns the turtle, and then he starts to feel an Ancient Mariner-style remorse and empathy for this creature, and then something magical starts to happen, a transformation starts to happen.  It turns into a meditation upon existence, upon loneliness, upon companionship, upon birth, death and rebirth. It is a film which is deeply compassionate and touching and funny and affectionate and insightful and I was in love with it, I just was so swept away by it.  It\'s a beautiful beautiful work of art.</string> -->
+
+    <!-- preferences -->
+    <string name="pref_award_list_sort_order_key" translatable="false">pref_list_sort_order_key</string>
 
 </resources>

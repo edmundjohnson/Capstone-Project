@@ -13,6 +13,12 @@ import java.util.Comparator;
  */
 public class ViewAward {
 
+    public static final String SORT_ORDER_AWARD_DATE_ASC = "awardDate ASC";
+    public static final String SORT_ORDER_AWARD_DATE_DESC = "awardDate DESC";
+    public static final String SORT_ORDER_TITLE_ASC = "title ASC";
+    public static final String SORT_ORDER_TITLE_DESC = "title DESC";
+    public static final String SORT_ORDER_DEFAULT = SORT_ORDER_AWARD_DATE_DESC;
+
     // the unique identifier for the award, a push id
     private String id;
     // the unique identifier for the movie, e.g. 4016934
@@ -458,7 +464,7 @@ public class ViewAward {
     // Comparators
 
     /** Comparator for ordering by movie id. */
-    public static final Comparator<ViewAward> ViewAwardComparatorMovieId
+    public static final Comparator<ViewAward> VIEW_AWARD_COMPARATOR_MOVIE_ID
             = new Comparator<ViewAward>() {
         public int compare(ViewAward viewAward1, ViewAward viewAward2) {
             // ascending order
@@ -474,7 +480,7 @@ public class ViewAward {
     };
 
     /** Comparator for ordering by award date. */
-    public static final Comparator<ViewAward> ViewAwardComparatorAwardDate
+    public static final Comparator<ViewAward> VIEW_AWARD_COMPARATOR_AWARD_DATE
             = new Comparator<ViewAward>() {
         public int compare(ViewAward viewAward1, ViewAward viewAward2) {
             // ascending order

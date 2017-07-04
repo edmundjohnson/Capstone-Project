@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.activity.AddAwardActivity;
 import uk.jumpingmouse.moviecompanion.activity.AddMovieActivity;
+import uk.jumpingmouse.moviecompanion.data.ViewAward;
 import uk.jumpingmouse.moviecompanion.security.SecurityManager;
 
 /**
@@ -50,6 +51,11 @@ public class NavUtilsImpl extends NavUtils {
     public boolean onOptionsItemSelected(@Nullable FragmentActivity activity,
                                          @NonNull MenuItem item) {
         switch (item.getItemId()) {
+            // sort list
+            case R.id.menu_option_sort:
+                modifyListSortOrder(activity);
+                return true;
+
             // add movie
             case R.id.menu_option_add_movie:
                 displayAddMovie(activity);
@@ -70,6 +76,35 @@ public class NavUtilsImpl extends NavUtils {
                 // returns false
                 return false;
         }
+    }
+
+    /**
+     * Sorts the ViewAward list.
+     * @param activity the activity in which sorting was invoked
+     */
+    private void modifyListSortOrder(@Nullable FragmentActivity activity) {
+        if (activity == null) {
+            return;
+        }
+        String listSortOrder = PrefUtils.getAwardListSortOrder(activity);
+
+        // For now, cycle through the options
+        switch (listSortOrder) {
+            case ViewAward.SORT_ORDER_AWARD_DATE_DESC:
+                listSortOrder = ViewAward.SORT_ORDER_TITLE_ASC;
+                break;
+            case ViewAward.SORT_ORDER_TITLE_ASC:
+                listSortOrder = ViewAward.SORT_ORDER_TITLE_DESC;
+                break;
+            case ViewAward.SORT_ORDER_TITLE_DESC:
+                listSortOrder = ViewAward.SORT_ORDER_AWARD_DATE_ASC;
+                break;
+            case ViewAward.SORT_ORDER_AWARD_DATE_ASC:
+            default:
+                listSortOrder = ViewAward.SORT_ORDER_AWARD_DATE_DESC;
+                break;
+        }
+        PrefUtils.setAwardListSortOrder(activity, listSortOrder);
     }
 
     /**

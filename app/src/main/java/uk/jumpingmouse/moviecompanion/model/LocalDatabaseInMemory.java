@@ -169,17 +169,17 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         switch (sortColumn) {
             // A bit of a fiddle, but it works for now
             case DataContract.MovieEntry.COLUMN_ID:
-                comparator = Movie.MovieComparatorImdbId;
+                comparator = Movie.MOVIE_COMPARATOR_IMDB_ID;
                 break;
             case DataContract.MovieEntry.COLUMN_IMDB_ID:
-                comparator = Movie.MovieComparatorImdbId;
+                comparator = Movie.MOVIE_COMPARATOR_IMDB_ID;
                 break;
             case DataContract.MovieEntry.COLUMN_TITLE:
-                comparator = Movie.MovieComparatorTitle;
+                comparator = Movie.MOVIE_COMPARATOR_TITLE;
                 break;
             // code coverage: default case cannot happen due to earlier checks
             default:
-                comparator = Movie.MovieComparatorTitle;
+                comparator = Movie.MOVIE_COMPARATOR_TITLE;
                 break;
         }
         if (!sortAscending) {
@@ -304,14 +304,14 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         switch (sortColumn) {
             // A bit of a fiddle, but it works for now
             case DataContract.AwardEntry.COLUMN_MOVIE_ID:
-                comparator = Award.AwardComparatorMovieId;
+                comparator = Award.AWARD_COMPARATOR_MOVIE_ID;
                 break;
             case DataContract.AwardEntry.COLUMN_AWARD_DATE:
-                comparator = Award.AwardComparatorAwardDate;
+                comparator = Award.AWARD_COMPARATOR_AWARD_DATE;
                 break;
             // code coverage: default case cannot happen due to earlier checks
             default:
-                comparator = Award.AwardComparatorAwardDate;
+                comparator = Award.AWARD_COMPARATOR_AWARD_DATE;
                 break;
         }
         if (!sortAscending) {
@@ -483,14 +483,14 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         switch (sortColumn) {
             // A bit of a fiddle, but it works for now
             case DataContract.ViewAwardEntry.COLUMN_MOVIE_ID:
-                comparator = ViewAward.ViewAwardComparatorMovieId;
+                comparator = ViewAward.VIEW_AWARD_COMPARATOR_MOVIE_ID;
                 break;
             case DataContract.ViewAwardEntry.COLUMN_AWARD_DATE:
-                comparator = ViewAward.ViewAwardComparatorAwardDate;
+                comparator = ViewAward.VIEW_AWARD_COMPARATOR_AWARD_DATE;
                 break;
             // code coverage: default case cannot happen due to earlier checks
             default:
-                comparator = ViewAward.ViewAwardComparatorAwardDate;
+                comparator = ViewAward.VIEW_AWARD_COMPARATOR_AWARD_DATE;
                 break;
         }
         if (!sortAscending) {

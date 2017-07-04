@@ -83,7 +83,7 @@ public class Award implements Parcelable {
     }
 
     @NonNull
-    public String getAwardDate() {
+    String getAwardDate() {
         return awardDate;
     }
 
@@ -97,7 +97,7 @@ public class Award implements Parcelable {
         return review;
     }
 
-    public int getDisplayOrder() {
+    int getDisplayOrder() {
         return displayOrder;
     }
 
@@ -363,7 +363,7 @@ public class Award implements Parcelable {
     // Comparators
 
     /** Comparator for ordering by movie id. */
-    public static final Comparator<Award> AwardComparatorMovieId
+    public static final Comparator<Award> AWARD_COMPARATOR_MOVIE_ID
             = new Comparator<Award>() {
         public int compare(Award award1, Award award2) {
             // ascending order
@@ -379,7 +379,7 @@ public class Award implements Parcelable {
     };
 
     /** Comparator for ordering by award date. */
-    public static final Comparator<Award> AwardComparatorAwardDate
+    public static final Comparator<Award> AWARD_COMPARATOR_AWARD_DATE
             = new Comparator<Award>() {
         public int compare(Award award1, Award award2) {
             // ascending order

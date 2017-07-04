@@ -405,7 +405,7 @@ public class Movie implements Parcelable {
     // Comparators
 
     /** Comparator for ordering by imdbId. */
-    public static final Comparator<Movie> MovieComparatorImdbId
+    public static final Comparator<Movie> MOVIE_COMPARATOR_IMDB_ID
             = new Comparator<Movie>() {
                 public int compare(Movie movie1, Movie movie2) {
                     // ascending order
@@ -416,7 +416,7 @@ public class Movie implements Parcelable {
             };
 
     /** Comparator for ordering by title. */
-    public static final Comparator<Movie> MovieComparatorTitle
+    public static final Comparator<Movie> MOVIE_COMPARATOR_TITLE
             = new Comparator<Movie>() {
                 public int compare(Movie movie1, Movie movie2) {
                     // ascending order
