@@ -15,13 +15,6 @@
         <item name="buttonStyle">@style/ButtonStyle</item>
     </style>
 
-    <!-- Base application theme, but with an action bar, used by Auth UI. -->
-    <style name="AppThemeWithActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
-
     <!-- App Bar theme -->
     <!-- Without this parent, the up arrow and menu dots become black -->
     <style name="AppBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">

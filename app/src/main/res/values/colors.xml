@@ -76,7 +76,6 @@
 
     <!-- Detail -->
     <color name="detail_card_background">@color/green_50</color>
-    <color name="detail_award_info_background">@color/green_50</color>
     <color name="detail_text">@color/medium_gray</color>
 
     <!-- Buttons -->

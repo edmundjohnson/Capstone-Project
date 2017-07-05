@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -32,6 +31,7 @@ import android.widget.TextView;
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.adapter.ViewAwardAdapter;
+import uk.jumpingmouse.moviecompanion.data.ViewAward;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.moviecompanion.model.LocalDatabase;
 import uk.jumpingmouse.moviecompanion.utils.NetUtils;
@@ -48,6 +48,9 @@ public class AwardListFragment extends Fragment
 
     /** The cursor loader id. */
     private static  final int AWARD_LIST_LOADER_ID = 1;
+
+    // Attributes for the bundle passed in
+    private static final String KEY_VIEW_AWARD_URI = "KEY_VIEW_AWARD_URI";
 
     // Attributes for saving and restoring the fragment's state
     private static final String KEY_ITEM_LAYOUT = "KEY_ITEM_LAYOUT";
@@ -200,25 +203,30 @@ public class AwardListFragment extends Fragment
      */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Context context = getActivity();
+        if (context == null) {
+            return super.onOptionsItemSelected(item);
+        }
+
         switch (item.getItemId()) {
             // list view
             case R.id.menu_option_list_view:
-                setLayout(getActivity(), true);
+                setLayout(context, true);
                 return true;
 
             // grid view
             case R.id.menu_option_grid_view:
-                setLayout(getActivity(), false);
+                setLayout(context, false);
                 return true;
 
             // sort
             case R.id.menu_option_sort:
-                getViewUtils().displayInfoMessage(getActivity(), R.string.menu_option_sort);
+                modifyListSortOrder(context);
                 return true;
 
             // filter
             case R.id.menu_option_filter:
-                getViewUtils().displayInfoMessage(getActivity(), R.string.menu_option_filter);
+                getViewUtils().displayInfoMessage(context, R.string.menu_option_filter);
                 return true;
 
             default:
@@ -231,8 +239,8 @@ public class AwardListFragment extends Fragment
      * @param context the context
      * @param isLayoutListView if true, set the list to list view, otherwise set the layout to grid view
      */
-    private void setLayout(@Nullable Context context, boolean isLayoutListView) {
-        if (context != null && mRecyclerView != null && mViewAwardAdapter != null) {
+    private void setLayout(@NonNull Context context, boolean isLayoutListView) {
+        if (mRecyclerView != null && mViewAwardAdapter != null) {
             if (isLayoutListView) {
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
                 mRecyclerView.addItemDecoration(
@@ -251,6 +259,32 @@ public class AwardListFragment extends Fragment
         }
     }
 
+    /**
+     * Sorts the ViewAward list.
+     * @param context the activity in which sorting was invoked
+     */
+    private void modifyListSortOrder(@NonNull Context context) {
+        String listSortOrder = PrefUtils.getAwardListSortOrder(context);
+
+        // For now, cycle through the options
+        switch (listSortOrder) {
+            case ViewAward.SORT_ORDER_AWARD_DATE_DESC:
+                listSortOrder = ViewAward.SORT_ORDER_TITLE_ASC;
+                break;
+            case ViewAward.SORT_ORDER_TITLE_ASC:
+                listSortOrder = ViewAward.SORT_ORDER_TITLE_DESC;
+                break;
+            case ViewAward.SORT_ORDER_TITLE_DESC:
+                listSortOrder = ViewAward.SORT_ORDER_AWARD_DATE_ASC;
+                break;
+            case ViewAward.SORT_ORDER_AWARD_DATE_ASC:
+            default:
+                listSortOrder = ViewAward.SORT_ORDER_AWARD_DATE_DESC;
+                break;
+        }
+        PrefUtils.setAwardListSortOrder(context, listSortOrder);
+    }
+
     //--------------------------------------------------------------
     // Loader Callbacks
 
@@ -266,15 +300,30 @@ public class AwardListFragment extends Fragment
         // This is called when a new Loader needs to be created.  This
         // fragment only uses one loader, so we don't care about checking the id.
 
-        // buildUriForAllRows gets a number of view awards in descending order of date
-        Uri uri = DataContract.ViewAwardEntry.buildUriForAllRows();
+        Uri uri = null;
+        String sortOrder = null;
+
+        // sortOrder and uri are fiddly!
+        if (args != null) {
+            uri = args.getParcelable(KEY_VIEW_AWARD_URI);
+            if (uri != null) {
+                sortOrder = uri.getQueryParameter(DataContract.PARAM_SORT_ORDER);
+            }
+        }
+        if (sortOrder == null) {
+            sortOrder = getActivity() == null ? ViewAward.SORT_ORDER_DEFAULT
+                    : PrefUtils.getAwardListSortOrder(getActivity());
+        }
+        if (uri == null) {
+            uri = DataContract.ViewAwardEntry.buildUriForAllRowsWithSortOrder(sortOrder);
+        }
 
         mViewAwardsCursorLoader = new CursorLoader(getActivity(),
                 uri,
                 DataContract.ViewAwardEntry.ALL_COLUMNS,
                 null,
                 null,
-                null);
+                sortOrder);
 
         return mViewAwardsCursorLoader;
     }
@@ -478,15 +527,12 @@ public class AwardListFragment extends Fragment
         if (context == null) {
             return;
         }
-        if (PrefUtils.isKeyAwardListSortOrder(context, key)) {
+        if (PrefUtils.isAwardListSortOrderKey(context, key)) {
             String awardListSortOrder = PrefUtils.getAwardListSortOrder(context);
-            // TODO: Construct a uri with sortOrder parameters, restart loader
-            // Create bundle
-            // Add URI to bundle
-            //getLoaderManager().initLoader(AWARD_LIST_LOADER_ID, bundle, this);
-            getViewUtils().displayInfoMessage(context,"awardListSortOrder: " + awardListSortOrder);
-        } else {
-            getViewUtils().displayInfoMessage(context,"key: " + key);
+            Uri uri = DataContract.ViewAwardEntry.buildUriForAllRowsWithSortOrder(awardListSortOrder);
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(KEY_VIEW_AWARD_URI, uri);
+            getLoaderManager().restartLoader(AWARD_LIST_LOADER_ID, bundle, this);
         }
     }
 

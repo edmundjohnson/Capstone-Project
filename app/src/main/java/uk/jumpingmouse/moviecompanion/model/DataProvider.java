@@ -33,16 +33,12 @@ public class DataProvider extends ContentProvider {
     // Constants representing URL formats
     private static final int MOVIE = 100;
     private static final int MOVIE_ID = 101;
-    private static final int MOVIE_ALL = 102;
     private static final int AWARD = 200;
     private static final int AWARD_ID = 201;
-    private static final int AWARD_ALL = 202;
     private static final int USER_MOVIE = 300;
     private static final int USER_MOVIE_ID = 301;
-    private static final int USER_MOVIE_ALL = 302;
     private static final int VIEW_AWARD = 400;
     private static final int VIEW_AWARD_ID = 401;
-    private static final int VIEW_AWARD_ALL = 402;
 
     //---------------------------------------------------------------------
     // URI matcher
@@ -65,9 +61,6 @@ public class DataProvider extends ContentProvider {
                 DataContract.URI_PATH_MOVIE,
                 MOVIE);
         uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
-                DataContract.URI_PATH_MOVIE + "/" + DataContract.PARAM_ALL,
-                MOVIE_ALL);
-        uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
                 DataContract.URI_PATH_MOVIE + "/*",
                 MOVIE_ID);
 
@@ -75,9 +68,6 @@ public class DataProvider extends ContentProvider {
         uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
                 DataContract.URI_PATH_AWARD,
                 AWARD);
-        uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
-                DataContract.URI_PATH_AWARD + "/" + DataContract.PARAM_ALL,
-                AWARD_ALL);
         uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
                 DataContract.URI_PATH_AWARD + "/*",
                 AWARD_ID);
@@ -87,9 +77,6 @@ public class DataProvider extends ContentProvider {
                 DataContract.URI_PATH_USER_MOVIE,
                 USER_MOVIE);
         uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
-                DataContract.URI_PATH_USER_MOVIE + "/" + DataContract.PARAM_ALL,
-                USER_MOVIE_ALL);
-        uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
                 DataContract.URI_PATH_USER_MOVIE + "/*",
                 USER_MOVIE_ID);
 
@@ -97,9 +84,6 @@ public class DataProvider extends ContentProvider {
         uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
                 DataContract.URI_PATH_VIEW_AWARD,
                 VIEW_AWARD);
-        uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
-                DataContract.URI_PATH_VIEW_AWARD + "/" + DataContract.PARAM_ALL,
-                VIEW_AWARD_ALL);
         uriMatcher.addURI(DataContract.CONTENT_AUTHORITY,
                 DataContract.URI_PATH_VIEW_AWARD + "/*",
                 VIEW_AWARD_ID);
@@ -145,26 +129,18 @@ public class DataProvider extends ContentProvider {
                 return DataContract.MovieEntry.CONTENT_DIR_TYPE;
             case MOVIE_ID:
                 return DataContract.MovieEntry.CONTENT_ITEM_TYPE;
-            case MOVIE_ALL:
-                return DataContract.MovieEntry.CONTENT_DIR_TYPE;
             case AWARD:
                 return DataContract.AwardEntry.CONTENT_DIR_TYPE;
             case AWARD_ID:
                 return DataContract.AwardEntry.CONTENT_ITEM_TYPE;
-            case AWARD_ALL:
-                return DataContract.AwardEntry.CONTENT_DIR_TYPE;
             case USER_MOVIE:
                 return DataContract.UserMovieEntry.CONTENT_DIR_TYPE;
             case USER_MOVIE_ID:
                 return DataContract.UserMovieEntry.CONTENT_ITEM_TYPE;
-            case USER_MOVIE_ALL:
-                return DataContract.UserMovieEntry.CONTENT_DIR_TYPE;
             case VIEW_AWARD:
                 return DataContract.ViewAwardEntry.CONTENT_DIR_TYPE;
             case VIEW_AWARD_ID:
                 return DataContract.ViewAwardEntry.CONTENT_ITEM_TYPE;
-            case VIEW_AWARD_ALL:
-                return DataContract.ViewAwardEntry.CONTENT_DIR_TYPE;
             default:
                 throw new UnsupportedOperationException("Unsupported URI for getType: " + uri);
         }
@@ -412,8 +388,6 @@ public class DataProvider extends ContentProvider {
         switch (URI_MATCHER.match(uri)) {
             // "movie"
             case MOVIE:
-            // "movie/all"
-            case MOVIE_ALL:
                 cursor = selectMovies(projection, selection, selectionArgs, sortOrder);
                 break;
             // "movie/*"
@@ -428,8 +402,6 @@ public class DataProvider extends ContentProvider {
                 break;
             // "award"
             case AWARD:
-            // "award/all"
-            case AWARD_ALL:
                 cursor = selectAwards(projection, selection, selectionArgs, sortOrder);
                 break;
             // "award/*"
@@ -454,8 +426,6 @@ public class DataProvider extends ContentProvider {
                 break;
             // "viewAward"
             case VIEW_AWARD:
-            // "viewAward/all"
-            case VIEW_AWARD_ALL:
                 cursor = selectViewAwards(projection, selection, selectionArgs, sortOrder);
                 break;
             // "award/*"

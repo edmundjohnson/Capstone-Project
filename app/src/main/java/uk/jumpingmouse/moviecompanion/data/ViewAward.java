@@ -463,21 +463,21 @@ public class ViewAward {
     //---------------------------------------------------------------
     // Comparators
 
-    /** Comparator for ordering by movie id. */
-    public static final Comparator<ViewAward> VIEW_AWARD_COMPARATOR_MOVIE_ID
-            = new Comparator<ViewAward>() {
-        public int compare(ViewAward viewAward1, ViewAward viewAward2) {
-            // ascending order
-            if (viewAward1.movieId == viewAward2.movieId) {
-                // movieId, then awardDate, then reverse category ("M" > "D")
-                if (viewAward1.awardDate.equals(viewAward2.awardDate)) {
-                    return viewAward2.category.compareTo(viewAward1.category);
-                }
-                return viewAward1.awardDate.compareTo(viewAward2.awardDate);
-            }
-            return viewAward1.movieId - viewAward2.movieId;
-        }
-    };
+//    /** Comparator for ordering by movie id. */
+//    public static final Comparator<ViewAward> VIEW_AWARD_COMPARATOR_MOVIE_ID
+//            = new Comparator<ViewAward>() {
+//        public int compare(ViewAward viewAward1, ViewAward viewAward2) {
+//            // ascending order
+//            if (viewAward1.movieId == viewAward2.movieId) {
+//                // movieId, then awardDate, then reverse category ("M" > "D")
+//                if (viewAward1.awardDate.equals(viewAward2.awardDate)) {
+//                    return viewAward2.category.compareTo(viewAward1.category);
+//                }
+//                return viewAward1.awardDate.compareTo(viewAward2.awardDate);
+//            }
+//            return viewAward1.movieId - viewAward2.movieId;
+//        }
+//    };
 
     /** Comparator for ordering by award date. */
     public static final Comparator<ViewAward> VIEW_AWARD_COMPARATOR_AWARD_DATE
@@ -491,6 +491,19 @@ public class ViewAward {
                 return viewAward1.category.compareTo(viewAward2.category);
             }
             return viewAward1.awardDate.compareTo(viewAward2.awardDate);
+        }
+    };
+
+    /** Comparator for ordering by movie title. */
+    public static final Comparator<ViewAward> VIEW_AWARD_COMPARATOR_TITLE
+            = new Comparator<ViewAward>() {
+        public int compare(ViewAward viewAward1, ViewAward viewAward2) {
+            // ascending order
+            if (viewAward1.title.equals(viewAward2.title)) {
+                // title ascending, then imdbId (released date would be better)
+                return viewAward1.imdbId.compareTo(viewAward2.imdbId);
+            }
+            return viewAward1.title.compareTo(viewAward2.title);
         }
     };
 

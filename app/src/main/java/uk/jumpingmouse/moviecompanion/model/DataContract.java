@@ -41,7 +41,7 @@ public final class DataContract {
     static final String URI_PATH_VIEW_AWARD = "viewAward";
 
     // Query parameters
-    static final String PARAM_ALL = "all";
+    public static final String PARAM_SORT_ORDER = "sortOrder";
 
     // Values for sort direction (PARAM_SORT_DIRECTION)
     static final String SORT_DIRECTION_ASC = "ASC";
@@ -137,14 +137,12 @@ public final class DataContract {
 
         /**
          * Create and return a URI for querying all movies.
-         * i.e. "content://uk.jumpingmouse.moviecompanion/movie/all".
+         * i.e. "content://uk.jumpingmouse.moviecompanion/movie".
          * @return the URI for querying all movies
          */
         @NonNull
         public static Uri buildUriForAllRows() {
-            return CONTENT_URI.buildUpon()
-                    .appendPath(PARAM_ALL)
-                    .build();
+            return CONTENT_URI;
         }
 
 //        /**
@@ -225,7 +223,7 @@ public final class DataContract {
 
         /**
          * Create and return a URI for querying all the awards for a movie.
-         * i.e. "content://uk.jumpingmouse.moviecompanion/award/4016934/all".
+         * i.e. "content://uk.jumpingmouse.moviecompanion/award/4016934".
          * @param movieId the id of the movie, e.g. 4016934
          * @return the URI for querying all awards for the movie
          */
@@ -233,7 +231,6 @@ public final class DataContract {
         static Uri buildUriForAllRowsForMovie(final int movieId) {
             return CONTENT_URI.buildUpon()
                     .appendPath(Integer.toString(movieId))
-                    .appendPath(PARAM_ALL)
                     .build();
         }
 
@@ -293,14 +290,12 @@ public final class DataContract {
 
 //        /**
 //         * Create and return a URI for querying all userMovies.
-//         * i.e. "content://uk.jumpingmouse.moviecompanion/userMovie/all".
+//         * i.e. "content://uk.jumpingmouse.moviecompanion/userMovie".
 //         * @return the URI for querying all user movies
 //         */
 //        @NonNull
 //        public static Uri buildUriForAllRows() {
-//            return CONTENT_URI.buildUpon()
-//                    .appendPath(PARAM_ALL)
-//                    .build();
+//            return CONTENT_URI;
 //        }
 
         /**
@@ -402,28 +397,26 @@ public final class DataContract {
 
         /**
          * Create and return a URI for querying all the view awards.
-         * i.e. "content://uk.jumpingmouse.moviecompanion/viewAward/all".
+         * i.e. "content://uk.jumpingmouse.moviecompanion/viewAward".
          * @return the URI for querying all awards for the movie
          */
         @NonNull
         public static Uri buildUriForAllRows() {
+            return CONTENT_URI;
+        }
+
+        /**
+         * Create and return a URI for querying all the view awards.
+         * i.e. "content://uk.jumpingmouse.moviecompanion/viewAward".
+         * @return the URI for querying all awards for the movie
+         */
+        @NonNull
+        public static Uri buildUriForAllRowsWithSortOrder(@NonNull String sortOrder) {
             return CONTENT_URI.buildUpon()
-                    .appendPath(PARAM_ALL)
+                    .appendQueryParameter(PARAM_SORT_ORDER, sortOrder)
                     .build();
         }
 
     }
-
-//    //---------------------------------------------------------------------
-//    // Getters
-//
-//    /**
-//     * Convenience method which returns a SecurityManager.
-//     * @return a SecurityManager
-//     */
-//    @NonNull
-//    private static SecurityManager getSecurityManager() {
-//        return ObjectFactory.getSecurityManager();
-//    }
 
 }

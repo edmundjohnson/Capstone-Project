@@ -481,12 +481,11 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         Comparator<ViewAward> comparator;
         // code coverage: sortColumn cannot be null
         switch (sortColumn) {
-            // A bit of a fiddle, but it works for now
-            case DataContract.ViewAwardEntry.COLUMN_MOVIE_ID:
-                comparator = ViewAward.VIEW_AWARD_COMPARATOR_MOVIE_ID;
-                break;
             case DataContract.ViewAwardEntry.COLUMN_AWARD_DATE:
                 comparator = ViewAward.VIEW_AWARD_COMPARATOR_AWARD_DATE;
+                break;
+            case DataContract.ViewAwardEntry.COLUMN_TITLE:
+                comparator = ViewAward.VIEW_AWARD_COMPARATOR_TITLE;
                 break;
             // code coverage: default case cannot happen due to earlier checks
             default:
@@ -538,10 +537,6 @@ public class LocalDatabaseInMemory implements LocalDatabase {
             // split.length is always at least 1
             // code coverage: split[0] cannot be null
             switch (split[0]) {
-                case DataContract.MovieEntry.COLUMN_ID:
-                    return DataContract.MovieEntry.COLUMN_ID;
-                case DataContract.MovieEntry.COLUMN_IMDB_ID:
-                    return DataContract.MovieEntry.COLUMN_IMDB_ID;
                 case DataContract.MovieEntry.COLUMN_TITLE:
                     return DataContract.MovieEntry.COLUMN_TITLE;
                 case DataContract.ViewAwardEntry.COLUMN_AWARD_DATE:
