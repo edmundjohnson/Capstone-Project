@@ -51,6 +51,14 @@
     <!-- TODO: May need another message mentioning list filter -->
     <string name="no_data_available">There are no movies available.</string>
     <string name="no_data_no_connection">There are no movies available. Please check your internet connection.</string>
+    <!-- Sorting the list -->
+    <string name="sort_title">Order the list by:</string>
+    <string name="sort_order_award_date_desc">review date, latest first</string>
+    <string name="sort_order_award_date_asc">review date, earliest first</string>
+    <string name="sort_order_title_asc">movie name, alphabetical</string>
+    <string name="sort_order_title_desc">movie name, reverse alphabetical</string>
+    <string name="sort_order_runtime_asc">runtime, shortest first</string>
+    <string name="sort_order_runtime_desc">runtime, longest first</string>
 
     <!-- View Award (Movie) screen-->
     <string name="poster_description">Movie poster</string>

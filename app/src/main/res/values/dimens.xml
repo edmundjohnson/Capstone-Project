@@ -8,6 +8,7 @@
     <!-- <dimen name="second_keyline">72dp</dimen> -->
 
     <dimen name="activity_margin_vertical">16dp</dimen>
+    <dimen name="activity_margin_horizontal">16dp</dimen>
 
     <!-- App Bar -->
     <dimen name="appbar_height">112dp</dimen>

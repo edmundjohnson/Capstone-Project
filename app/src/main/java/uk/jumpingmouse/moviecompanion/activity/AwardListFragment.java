@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -221,7 +222,7 @@ public class AwardListFragment extends Fragment
 
             // sort
             case R.id.menu_option_sort:
-                modifyListSortOrder(context);
+                displayAwardListSortOptions();
                 return true;
 
             // filter
@@ -259,30 +260,10 @@ public class AwardListFragment extends Fragment
         }
     }
 
-    /**
-     * Sorts the ViewAward list.
-     * @param context the activity in which sorting was invoked
-     */
-    private void modifyListSortOrder(@NonNull Context context) {
-        String listSortOrder = PrefUtils.getAwardListSortOrder(context);
-
-        // For now, cycle through the options
-        switch (listSortOrder) {
-            case ViewAward.SORT_ORDER_AWARD_DATE_DESC:
-                listSortOrder = ViewAward.SORT_ORDER_TITLE_ASC;
-                break;
-            case ViewAward.SORT_ORDER_TITLE_ASC:
-                listSortOrder = ViewAward.SORT_ORDER_TITLE_DESC;
-                break;
-            case ViewAward.SORT_ORDER_TITLE_DESC:
-                listSortOrder = ViewAward.SORT_ORDER_AWARD_DATE_ASC;
-                break;
-            case ViewAward.SORT_ORDER_AWARD_DATE_ASC:
-            default:
-                listSortOrder = ViewAward.SORT_ORDER_AWARD_DATE_DESC;
-                break;
-        }
-        PrefUtils.setAwardListSortOrder(context, listSortOrder);
+    private void displayAwardListSortOptions() {
+        FragmentManager fm = getFragmentManager();
+        AwardListSortFragment awardListSortFragment = new AwardListSortFragment();
+        awardListSortFragment.show(fm, "TAG_AWARD_LIST_SORT_FRAGMENT");
     }
 
     //--------------------------------------------------------------
