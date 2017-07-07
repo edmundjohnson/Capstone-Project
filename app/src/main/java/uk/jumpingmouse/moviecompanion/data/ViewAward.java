@@ -13,14 +13,6 @@ import java.util.Comparator;
  */
 public class ViewAward {
 
-    public static final String SORT_ORDER_AWARD_DATE_ASC = "awardDate ASC";
-    public static final String SORT_ORDER_AWARD_DATE_DESC = "awardDate DESC";
-    public static final String SORT_ORDER_TITLE_ASC = "title ASC";
-    public static final String SORT_ORDER_TITLE_DESC = "title DESC";
-    public static final String SORT_ORDER_RUNTIME_ASC = "runtime ASC";
-    public static final String SORT_ORDER_RUNTIME_DESC = "runtime DESC";
-    public static final String SORT_ORDER_DEFAULT = SORT_ORDER_AWARD_DATE_DESC;
-
     // the unique identifier for the award, a push id
     private String id;
     // the unique identifier for the movie, e.g. 4016934

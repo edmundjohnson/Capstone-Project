@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
 import uk.jumpingmouse.moviecompanion.R;
-import uk.jumpingmouse.moviecompanion.data.ViewAward;
+import uk.jumpingmouse.moviecompanion.data.ViewAwardListParameters;
 import uk.jumpingmouse.moviecompanion.utils.PrefUtils;
 
 /**
@@ -57,9 +57,9 @@ public class AwardListSortFragment extends DialogFragment {
     }
 
     /**
-     * Check the radio button corresponding to the current sort order.
+     * Check the radio button corresponding to a sort order.
      * @param radioGroup a radio group containing all the sort order radio buttons
-     * @param sortOrder the current sort order, e.g. "awardDate DESC"
+     * @param sortOrder a sort order, e.g. "awardDate DESC"
      */
     private void checkSortOrderRadioButton(@NonNull RadioGroup radioGroup, @NonNull String sortOrder) {
         @IdRes int radioButtonResId = getRadioButtonForSortOrder(sortOrder);
@@ -73,17 +73,17 @@ public class AwardListSortFragment extends DialogFragment {
      */
     private @IdRes int getRadioButtonForSortOrder(@NonNull String sortOrder) {
         switch (sortOrder) {
-            case ViewAward.SORT_ORDER_AWARD_DATE_ASC:
+            case ViewAwardListParameters.SORT_ORDER_AWARD_DATE_ASC:
                 return  R.id.radioAwardDateAsc;
-            case ViewAward.SORT_ORDER_AWARD_DATE_DESC:
+            case ViewAwardListParameters.SORT_ORDER_AWARD_DATE_DESC:
                 return  R.id.radioAwardDateDesc;
-            case ViewAward.SORT_ORDER_TITLE_ASC:
+            case ViewAwardListParameters.SORT_ORDER_TITLE_ASC:
                 return R.id.radioTitleAsc;
-            case ViewAward.SORT_ORDER_TITLE_DESC:
+            case ViewAwardListParameters.SORT_ORDER_TITLE_DESC:
                 return R.id.radioTitleDesc;
-            case ViewAward.SORT_ORDER_RUNTIME_ASC:
+            case ViewAwardListParameters.SORT_ORDER_RUNTIME_ASC:
                 return R.id.radioRuntimeAsc;
-            case ViewAward.SORT_ORDER_RUNTIME_DESC:
+            case ViewAwardListParameters.SORT_ORDER_RUNTIME_DESC:
                 return R.id.radioRuntimeDesc;
             default:
                 return R.id.radioAwardDateDesc;
@@ -99,19 +99,19 @@ public class AwardListSortFragment extends DialogFragment {
     private String getSortOrderForRadioButton(@IdRes int radioButtonResId) {
         switch (radioButtonResId) {
             case R.id.radioAwardDateAsc:
-                return ViewAward.SORT_ORDER_AWARD_DATE_ASC;
+                return ViewAwardListParameters.SORT_ORDER_AWARD_DATE_ASC;
             case R.id.radioAwardDateDesc:
-                return ViewAward.SORT_ORDER_AWARD_DATE_DESC;
+                return ViewAwardListParameters.SORT_ORDER_AWARD_DATE_DESC;
             case R.id.radioTitleAsc:
-                return ViewAward.SORT_ORDER_TITLE_ASC;
+                return ViewAwardListParameters.SORT_ORDER_TITLE_ASC;
             case R.id.radioTitleDesc:
-                return ViewAward.SORT_ORDER_TITLE_DESC;
+                return ViewAwardListParameters.SORT_ORDER_TITLE_DESC;
             case R.id.radioRuntimeAsc:
-                return ViewAward.SORT_ORDER_RUNTIME_ASC;
+                return ViewAwardListParameters.SORT_ORDER_RUNTIME_ASC;
             case R.id.radioRuntimeDesc:
-                return ViewAward.SORT_ORDER_RUNTIME_DESC;
+                return ViewAwardListParameters.SORT_ORDER_RUNTIME_DESC;
             default:
-                return ViewAward.SORT_ORDER_DEFAULT;
+                return ViewAwardListParameters.SORT_ORDER_DEFAULT;
         }
     }
 }

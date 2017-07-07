@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="filter_wishlist">
+        <item>@string/filter_wishlist_any</item>
+        <item>@string/filter_wishlist_only</item>
+        <item>@string/filter_wishlist_exclude</item>
+    </string-array>
+
+</resources>

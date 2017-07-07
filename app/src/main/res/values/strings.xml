@@ -4,9 +4,13 @@
     <!-- Content provider -->
     <string name="content_authority" translatable="false">uk.jumpingmouse.moviecompanion</string>
 
-    <!-- Security -->
-    <!-- <string name="sign_in_ok">Signed in!</string> -->
-    <!-- <string name="sign_in_cancelled">Sign-in cancelled</string> -->
+    <!-- General UI -->
+    <string name="button_ok">OK</string>
+
+    <!-- Error messages -->
+    <string name="error_title">Error</string>
+    <string name="connection_required_for_sign_in">An internet connection is required to sign into %s</string>
+    <string name="unknown_error_on_sign_in">Something has gone wrong, please check your internet connection or try again later</string>
 
     <!-- App Bar and Menu -->
     <string name="appbar_title_award_list">@string/app_name</string>
@@ -28,14 +32,8 @@
     <string name="databaseOperationSuccess">Success:\n%1$s \"%2$s\" at node /%3$s</string>
     <string name="databaseOperationFailure">FAILURE:\n%1$s \"%2$s\" at node /%3$s\nError code: %4$d, details: %5$s, message: %6$s</string>
 
-    <!-- Error messages -->
-    <string name="error_title">Error</string>
-    <string name="connection_required_for_sign_in">An internet connection is required to sign into %s</string>
-    <string name="unknown_error_on_sign_in">Something has gone wrong, please check your internet connection or try again later</string>
-    <!-- <string name="error_internet_connection_required">This requires an internet connection</string> -->
-
     <!-- Movie fields -->
-    <!-- It is unlikely that there will be a film whose length is 1 minute, but more
+    <!-- It is unlikely that there will be a movie whose length is 1 minute, but more
          applicable distinctions in the runtime_text could occur in other languages -->
     <plurals name="runtime_text">
         <item quantity="one">%d min</item>
@@ -48,9 +46,10 @@
     <string name="category_text_unknown">unknown</string>
 
     <!-- View Award list -->
-    <!-- TODO: May need another message mentioning list filter -->
+    <!-- TODO: May need another "no movies" message mentioning list filter -->
     <string name="no_data_available">There are no movies available.</string>
     <string name="no_data_no_connection">There are no movies available. Please check your internet connection.</string>
+
     <!-- Sorting the list -->
     <string name="sort_title">Order the list by:</string>
     <string name="sort_order_award_date_desc">review date, latest first</string>
@@ -82,6 +81,22 @@
     <!-- <string name="example_review" tools:ignore="Typos">At the beginning we see a man in a boat who is washed up on a desert island.  Initially he builds rafts to get away, but the rafts are constantly scuppered by an unseen sea beast which turns out to be the turtle.  In a rage he overturns the turtle, and then he starts to feel an Ancient Mariner-style remorse and empathy for this creature, and then something magical starts to happen, a transformation starts to happen.  It turns into a meditation upon existence, upon loneliness, upon companionship, upon birth, death and rebirth. It is a film which is deeply compassionate and touching and funny and affectionate and insightful and I was in love with it, I just was so swept away by it.  It\'s a beautiful beautiful work of art.</string> -->
 
     <!-- preferences -->
-    <string name="pref_award_list_sort_order_key" translatable="false">pref_list_sort_order_key</string>
+    <string name="pref_award_list_sort_order_key" translatable="false">pref_award_list_sort_order_key</string>
+    <string name="pref_award_list_filter_wishlist_key" translatable="false">pref_award_list_filter_wishlist_key</string>
+
+    <!-- Filter list -->
+    <string name="filter_title">Movie Filter</string>
+    <string name="filter_wishlist_title">Wishlist</string>
+    <string name="filter_wishlist_any">All</string>
+    <string name="filter_wishlist_only">Wishlist only</string>
+    <string name="filter_wishlist_exclude">Exclude wishlist</string>
+    <string name="filter_watched_title">Watched</string>
+    <string name="filter_watched_any">All</string>
+    <string name="filter_watched_only">Watched movies only</string>
+    <string name="filter_watched_exclude">Exclude watched movies</string>
+    <string name="filter_favourites_title">Favourites</string>
+    <string name="filter_favourites_any">All</string>
+    <string name="filter_favourites_only">Favourites only</string>
+    <string name="filter_favourites_exclude">Exclude favourites</string>
 
 </resources>

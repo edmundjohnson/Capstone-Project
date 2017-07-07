@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.util.SparseArray;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.data.UserMovie;
 import uk.jumpingmouse.moviecompanion.data.ViewAward;
+import uk.jumpingmouse.moviecompanion.data.ViewAwardListParameters;
 import uk.jumpingmouse.moviecompanion.utils.JavaUtils;
 
 /**
@@ -433,42 +435,41 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         if (projection != null) {
             Timber.d("selectViewAwards: projection is currently not supported");
         }
-        if (selection != null) {
-            Timber.d("selectViewAwards: selection is currently not supported");
-        }
-        if (selectionArgs != null) {
-            Timber.d("selectViewAwards: selectionArgs is currently not supported");
-        }
+//        if (selection != null) {
+//            Timber.d("selectViewAwards: selection is currently not supported");
+//        }
+//        if (selectionArgs != null) {
+//            Timber.d("selectViewAwards: selectionArgs is currently not supported");
+//        }
 
-        String sortColumn = getSortColumn(sortOrder, VIEW_AWARD_SORT_COLUMN_DEFAULT);
-        boolean sortAscending = isSortAscending(sortOrder, VIEW_AWARD_SORT_ASCENDING_DEFAULT);
+        // Generate an unsorted, unfiltered ViewAward list from the list of awards.
+//        // We use awardList rather than mAwards.values() in the call to generateViewAwardList(...)
+//        // because using mAwards.values() can lead to a ConcurrentModificationException.
+//        List<Award> awardList = new ArrayList<>(mAwards.values());
+//        List<ViewAward> viewAwardList = generateViewAwardList(awardList);
+        List<ViewAward> viewAwardList = generateViewAwardList(mAwards.values());
+
+        // Filter the ViewAward list
+        viewAwardList = applyFilterToViewAwardList(viewAwardList, selection, selectionArgs);
+
+        // Sort the ViewAward list
+        viewAwardList = applySortToViewAwardList(viewAwardList, sortOrder);
 
         if (mCursorViewAwards != null) {
             mCursorViewAwards.close();
         }
-        List<ViewAward> viewAwardList = selectViewAwards(sortColumn, sortAscending);
         mCursorViewAwards = toCursorViewAwards(viewAwardList);
-
         return mCursorViewAwards;
     }
 
     /**
-     * Returns a list of all the view awards in the local database ordered by a specified column.
-     * @param sortColumn the column to sort by
-     * @param sortAscending whether the sort is ascending
-     * @return a cursor containing a list of all the ViewAwards in the local database
-     *         ordered by the specified column
+     * Generates and returns a ViewAward list corresponding to an Award list.
+     * @param awardList the award list
+     * @return a list of ViewAwards corresponding to awardList
      */
-    @NonNull
-    private List<ViewAward> selectViewAwards(@NonNull String sortColumn, boolean sortAscending) {
-        Timber.d(String.format("selectViewAwards: sortColumn = %s, sortAscending = %b",
-                sortColumn, sortAscending));
-
-        List<Award> awardList = new ArrayList<>(mAwards.values());
+    private List<ViewAward> generateViewAwardList(Collection<Award> awardList) {
         List<ViewAward> viewAwardList = new ArrayList<>();
 
-        // We use awardList rather than mAwards.values() here, because using mAwards.values()
-        // can lead to a ConcurrentModificationException.
         for (Award award : awardList) {
             Movie movie = selectMovieById(award.getMovieId());
             if (movie != null) {
@@ -477,6 +478,92 @@ public class LocalDatabaseInMemory implements LocalDatabase {
                 viewAwardList.add(viewAward);
             }
         }
+        return viewAwardList;
+    }
+
+    /**
+     * Returns a sorted list of view awards.
+     * @param viewAwardList a list of view awards to be sorted
+     * @param selection The selection criteria to apply when filtering rows.
+     *                  If this is {@code null} then all rows are included.
+     * @param selectionArgs Any ?s included in selection will be replaced by
+     *      the values from selectionArgs, in the order that they appear in the selection.
+     *      The values will be bound as Strings.
+     * @return a cursor containing a list of all the ViewAwards in the local database
+     *         ordered by the specified column
+     */
+    @NonNull
+    private List<ViewAward> applyFilterToViewAwardList(@NonNull List<ViewAward> viewAwardList,
+               @Nullable final String selection, @Nullable final String[] selectionArgs) {
+        //Timber.d(String.format("applyFilterToViewAwardList: selection = %s, selectionArgs = %s",
+        //        selection, selectionArgs.toString()));
+
+        if (selection == null || selectionArgs == null) {
+            return viewAwardList;
+        }
+
+        List<ViewAward> filteredViewAwardList = new ArrayList<>();
+        for (ViewAward viewAward : viewAwardList) {
+            if (isIncludedByFilter(viewAward, selection, selectionArgs)) {
+                filteredViewAwardList.add(viewAward);
+            }
+        }
+
+        return filteredViewAwardList;
+    }
+
+    /**
+     * Returns whether a view award is included after filtering
+     * @param viewAward the view award
+     * @param selection the selection, e.g. "filterWishlist=? AND filterWatched=? AND filterFavourite=?"
+     * @param selectionArgs the selectionArgs, e.g. { wishlistAny, watchedOnly, favouriteExcluded }
+     * @return true if the view award is included after filtering, false otherwise
+     */
+    private boolean isIncludedByFilter(@NonNull ViewAward viewAward,
+                                       @NonNull final String selection, @NonNull final String[] selectionArgs) {
+        boolean isIncluded = true;
+
+        // wishlist filter
+        if (selectionArgs.length > 0) {
+            switch (selectionArgs[0]) {
+                case ViewAwardListParameters.FILTER_WISHLIST_ANY:
+                    break;
+                case ViewAwardListParameters.FILTER_WISHLIST_ONLY:
+                    isIncluded = viewAward.isOnWishlist();
+                    break;
+                case ViewAwardListParameters.FILTER_WISHLIST_EXCLUDE:
+                    isIncluded = !viewAward.isOnWishlist();
+                    break;
+                default:
+                    break;
+            }
+        }
+//        if (!isIncluded) {
+//            return false;
+//        }
+
+        return isIncluded;
+    }
+
+    /**
+     * Returns a sorted list of view awards.
+     * @param viewAwardList a list of view awards to be sorted
+     * @param sortOrder How the rows in the cursor should be sorted, e.g. "awardDate DESC".
+     *      If this is {@code null}, the sort order is undefined.
+     * @return a cursor containing a list of all the ViewAwards in the local database
+     *         ordered by the specified column
+     */
+    @NonNull
+    private List<ViewAward> applySortToViewAwardList(@NonNull List<ViewAward> viewAwardList,
+                                             @Nullable String sortOrder) {
+        Timber.d(String.format("applySortToViewAwardList: sortOrder = %s", sortOrder));
+
+        if (sortOrder == null) {
+            return viewAwardList;
+        }
+
+        String sortColumn = getSortColumn(sortOrder, VIEW_AWARD_SORT_COLUMN_DEFAULT);
+        boolean sortAscending = isSortAscending(sortOrder, VIEW_AWARD_SORT_ASCENDING_DEFAULT);
 
         Comparator<ViewAward> comparator;
         // code coverage: sortColumn cannot be null

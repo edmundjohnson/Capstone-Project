@@ -32,7 +32,7 @@ import android.widget.TextView;
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.adapter.ViewAwardAdapter;
-import uk.jumpingmouse.moviecompanion.data.ViewAward;
+import uk.jumpingmouse.moviecompanion.data.ViewAwardListParameters;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.moviecompanion.model.LocalDatabase;
 import uk.jumpingmouse.moviecompanion.utils.NetUtils;
@@ -227,7 +227,7 @@ public class AwardListFragment extends Fragment
 
             // filter
             case R.id.menu_option_filter:
-                getViewUtils().displayInfoMessage(context, R.string.menu_option_filter);
+                displayAwardListFilter();
                 return true;
 
             default:
@@ -260,10 +260,30 @@ public class AwardListFragment extends Fragment
         }
     }
 
+    /**
+     * Display the sort options dialog.
+     */
     private void displayAwardListSortOptions() {
+        // clear any saved position, which is now meaningless
+        mSelectedPosition = RecyclerView.NO_POSITION;
+
+        // display the sort dialog
         FragmentManager fm = getFragmentManager();
         AwardListSortFragment awardListSortFragment = new AwardListSortFragment();
         awardListSortFragment.show(fm, "TAG_AWARD_LIST_SORT_FRAGMENT");
+    }
+
+    /**
+     * Display the filter dialog.
+     */
+    private void displayAwardListFilter() {
+        // clear any saved position, which is now meaningless
+        mSelectedPosition = RecyclerView.NO_POSITION;
+
+        // display the filter dialog
+        FragmentManager fm = getFragmentManager();
+        AwardListFilterFragment awardListFilterFragment = new AwardListFilterFragment();
+        awardListFilterFragment.show(fm, "TAG_AWARD_LIST_FILTER_FRAGMENT");
     }
 
     //--------------------------------------------------------------
@@ -281,32 +301,59 @@ public class AwardListFragment extends Fragment
         // This is called when a new Loader needs to be created.  This
         // fragment only uses one loader, so we don't care about checking the id.
 
+        Context context = getActivity();
+        if (context == null) {
+            return null;
+        }
+
         Uri uri = null;
         String sortOrder = null;
+        String filterWishlist = null;
 
-        // sortOrder and uri are fiddly!
+        // URI, sort order and filters are fiddly!
         if (args != null) {
             uri = args.getParcelable(KEY_VIEW_AWARD_URI);
             if (uri != null) {
                 sortOrder = uri.getQueryParameter(DataContract.PARAM_SORT_ORDER);
+                filterWishlist = uri.getQueryParameter(DataContract.PARAM_FILTER_WISHLIST);
             }
         }
         if (sortOrder == null) {
-            sortOrder = getActivity() == null ? ViewAward.SORT_ORDER_DEFAULT
-                    : PrefUtils.getAwardListSortOrder(getActivity());
+            sortOrder = PrefUtils.getAwardListSortOrder(context);
         }
-        if (uri == null) {
-            uri = DataContract.ViewAwardEntry.buildUriForAllRowsWithSortOrder(sortOrder);
+        if (filterWishlist == null) {
+            filterWishlist = PrefUtils.getAwardListFilterWishlist(context);
         }
 
-        mViewAwardsCursorLoader = new CursorLoader(getActivity(),
+        ViewAwardListParameters parameters = new ViewAwardListParameters();
+        parameters.setSortOrder(sortOrder);
+        parameters.setFilterWishlist(filterWishlist);
+
+        if (uri == null) {
+            uri = DataContract.ViewAwardEntry.buildUriWithParameters(parameters);
+        }
+
+        StringBuilder selection = new StringBuilder();
+        String[] selectionArgs = new String[3];
+        generateSelectionForParameters(selection, selectionArgs, parameters);
+
+        mViewAwardsCursorLoader = new CursorLoader(context,
                 uri,
                 DataContract.ViewAwardEntry.ALL_COLUMNS,
-                null,
-                null,
+                selection.toString(),
+                selectionArgs,
                 sortOrder);
 
         return mViewAwardsCursorLoader;
+    }
+
+    private void generateSelectionForParameters(@NonNull StringBuilder selection,
+            @NonNull String[] selectionArgs, @NonNull ViewAwardListParameters parameters) {
+
+        int argNumber = 0;
+        selection.append(" filterWishlist=?");
+        selectionArgs[argNumber++] = parameters.getFilterWishlist();
+
     }
 
     /**
@@ -392,23 +439,6 @@ public class AwardListFragment extends Fragment
 
     //--------------------------------------------------------------
     // Empty list methods
-
-//    /**
-//     * Called when a shared preference is changed, added, or removed. This
-//     * may be called even if a preference is set to its existing value.
-//     * This callback will be run on your main thread.
-//     *
-//     * @param sharedPreferences the {@link SharedPreferences} that received the change.
-//     * @param key               the key of the preference that was changed
-//     */
-//    @Override
-//    @MainThread
-//    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-//        if (getString(R.string.pref_feed_status_key).equals(key)) {
-//            // If there is no data, set an appropriate message in the 'empty view'
-//            updateEmptyView();
-//        }
-//    }
 
     /**
      * Sets an appropriate message in the 'empty view', based on the network status and feed status.
@@ -508,9 +538,19 @@ public class AwardListFragment extends Fragment
         if (context == null) {
             return;
         }
-        if (PrefUtils.isAwardListSortOrderKey(context, key)) {
-            String awardListSortOrder = PrefUtils.getAwardListSortOrder(context);
-            Uri uri = DataContract.ViewAwardEntry.buildUriForAllRowsWithSortOrder(awardListSortOrder);
+        // If the sort order or a filter has changed, restart the loader to requery the data
+        if (PrefUtils.isAwardListSortOrderKey(context, key)
+                || PrefUtils.isAwardListFilterWishlistKey(context, key)) {
+
+            // Construct the URI using the sort and filter parameters
+            String sortOrder = PrefUtils.getAwardListSortOrder(context);
+            String filterWishlist = PrefUtils.getAwardListFilterWishlist(context);
+            ViewAwardListParameters parameters = new ViewAwardListParameters();
+            parameters.setSortOrder(sortOrder);
+            parameters.setFilterWishlist(filterWishlist);
+            Uri uri = DataContract.ViewAwardEntry.buildUriWithParameters(parameters);
+
+            // Restart the loader
             Bundle bundle = new Bundle();
             bundle.putParcelable(KEY_VIEW_AWARD_URI, uri);
             getLoaderManager().restartLoader(AWARD_LIST_LOADER_ID, bundle, this);

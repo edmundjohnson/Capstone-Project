@@ -471,7 +471,10 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
                 }
             };
 
-            getDatabaseReferenceMovies().addChildEventListener(mChildEventListenerUserMovies);
+            String uid = getSecurityManager().getUid();
+            if (uid != null) {
+                getDatabaseReferenceUserMovies(uid).addChildEventListener(mChildEventListenerUserMovies);
+            }
         }
     }
 
@@ -494,7 +497,10 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
     /** Detach the ChildEventListener from the "/users/[uid]/userMovies" node. */
     private void detachDatabaseEventListenerUserMovies() {
         if (mChildEventListenerUserMovies != null) {
-            getDatabaseReferenceMovies().removeEventListener(mChildEventListenerUserMovies);
+            String uid = getSecurityManager().getUid();
+            if (uid != null) {
+                getDatabaseReferenceUserMovies(uid).removeEventListener(mChildEventListenerUserMovies);
+            }
             mChildEventListenerUserMovies = null;
         }
     }
@@ -537,6 +543,19 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
             sDatabaseReferenceAwards = getDatabaseReference(DataContract.AwardEntry.ROOT_NODE);
         }
         return sDatabaseReferenceAwards;
+    }
+
+    /**
+     * Returns a reference to the "/users/[uid]/userMovies" part of the database.
+     * @return a reference to the "/users/[uid]/userMovies" part of the database
+     */
+    @NonNull
+    private DatabaseReference getDatabaseReferenceUserMovies(@NonNull String uid) {
+        if (sDatabaseReferenceUserMovies == null) {
+            sDatabaseReferenceUserMovies = getDatabaseReference(
+                    DataContract.UserMovieEntry.getUserMoviesNode(uid));
+        }
+        return sDatabaseReferenceUserMovies;
     }
 
     /**

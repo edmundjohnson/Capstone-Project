@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import uk.jumpingmouse.moviecompanion.BuildConfig;
+import uk.jumpingmouse.moviecompanion.data.ViewAwardListParameters;
 
 /**
  * Class which defines the contract between the model (database) and view layers.
@@ -42,6 +43,7 @@ public final class DataContract {
 
     // Query parameters
     public static final String PARAM_SORT_ORDER = "sortOrder";
+    public static final String PARAM_FILTER_WISHLIST = "filterWishlist";
 
     // Values for sort direction (PARAM_SORT_DIRECTION)
     static final String SORT_DIRECTION_ASC = "ASC";
@@ -405,15 +407,29 @@ public final class DataContract {
             return CONTENT_URI;
         }
 
+//        /**
+//         * Create and return a URI for querying all the view awards.
+//         * i.e. "content://uk.jumpingmouse.moviecompanion/viewAward".
+//         * @return the URI for querying all awards for the movie
+//         */
+//        @NonNull
+//        public static Uri buildUriForAllRowsWithSortOrder(@NonNull String sortOrder) {
+//            return CONTENT_URI.buildUpon()
+//                    .appendQueryParameter(PARAM_SORT_ORDER, sortOrder)
+//                    .build();
+//        }
+
         /**
          * Create and return a URI for querying all the view awards.
-         * i.e. "content://uk.jumpingmouse.moviecompanion/viewAward".
+         * e.g. "content://uk.jumpingmouse.moviecompanion/viewAward?sortOrder=awardDate DESC&filterWishlist=wishlistAll".
+         * @param parameters the parameters affecting the display of the view award list
          * @return the URI for querying all awards for the movie
          */
         @NonNull
-        public static Uri buildUriForAllRowsWithSortOrder(@NonNull String sortOrder) {
+        public static Uri buildUriWithParameters(@NonNull ViewAwardListParameters parameters) {
             return CONTENT_URI.buildUpon()
-                    .appendQueryParameter(PARAM_SORT_ORDER, sortOrder)
+                    .appendQueryParameter(PARAM_SORT_ORDER, parameters.getSortOrder())
+                    .appendQueryParameter(PARAM_FILTER_WISHLIST, parameters.getFilterWishlist())
                     .build();
         }
 

@@ -8,7 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
 import uk.jumpingmouse.moviecompanion.R;
-import uk.jumpingmouse.moviecompanion.data.ViewAward;
+import uk.jumpingmouse.moviecompanion.data.ViewAwardListParameters;
 
 /**
  * Preferences utility methods.
@@ -27,13 +27,33 @@ public class PrefUtils {
      * @param defaultValue the value to return if the preference has not been assigned a value
      * @return the value of the user preference
      */
-    @Nullable
-    private static String getSharedPreferenceString(@NonNull Context context,
-                                @StringRes int prefKeyResId, @Nullable String defaultValue) {
+    @NonNull
+    private static String getSharedPreferenceString(@Nullable Context context,
+                                @StringRes int prefKeyResId, @NonNull String defaultValue) {
+        if (context == null) {
+            return defaultValue;
+        }
         String prefKey = context.getString(prefKeyResId);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         return sharedPref.getString(prefKey, defaultValue);
     }
+
+//    /**
+//     * Returns the value of an integer user preference.
+//     * @param context the context
+//     * @param prefKeyResId the string resource id of the key of the shared preference to be updated
+//     * @param defaultValue the value to return if the preference has not been assigned a value
+//     * @return the value of the user preference
+//     */
+//    private static int getSharedPreferenceInt(@Nullable Context context,
+//                                              @StringRes int prefKeyResId, int defaultValue) {
+//        if (context == null) {
+//            return defaultValue;
+//        }
+//        String prefKey = context.getString(prefKeyResId);
+//        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+//        return sharedPref.getInt(prefKey, defaultValue);
+//    }
 
     /**
      * Returns the value of a boolean user preference.
@@ -42,15 +62,18 @@ public class PrefUtils {
      * @param defaultValue the value to return if the preference has not been assigned a value
      * @return the value of the user preference
      */
-    private static boolean getSharedPreferenceBoolean(@NonNull Context context,
+    private static boolean getSharedPreferenceBoolean(@Nullable Context context,
                                               @StringRes int prefKeyResId, boolean defaultValue) {
+        if (context == null) {
+            return defaultValue;
+        }
         String prefKey = context.getString(prefKeyResId);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         return sharedPref.getBoolean(prefKey, defaultValue);
     }
 
     /**
-     * Sets a shared preference to a supplied value.
+     * Sets a shared preference to a supplied String value.
      * @param context the context
      * @param prefKeyResId the string resource id of the key of the shared preference to be updated
      * @param value the value to which the shared preference is to be set
@@ -64,11 +87,26 @@ public class PrefUtils {
         sharedPrefEditor.apply();
     }
 
+//    /**
+//     * Sets a shared preference to a supplied integer value.
+//     * @param context the context
+//     * @param prefKeyResId the string resource id of the key of the shared preference to be updated
+//     * @param value the value to which the shared preference is to be set
+//     */
+//    private static void setSharedPreferenceInt(@NonNull Context context,
+//                                               @StringRes int prefKeyResId, int value) {
+//        String prefKey = context.getString(prefKeyResId);
+//        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+//        SharedPreferences.Editor sharedPrefEditor = sharedPref.edit();
+//        sharedPrefEditor.putInt(prefKey, value);
+//        sharedPrefEditor.apply();
+//    }
+
     /**
-     * Sets a shared preference to a supplied value.
+     * Sets a shared preference to a supplied boolean value.
      * @param context the context
      * @param prefKeyResId the string resource id of the key of the shared preference to be updated
-     * @param value the value to set the preference to
+     * @param value the value to which the shared preference is to be set
      */
     private static void setSharedPreferenceBoolean(@NonNull Context context,
                                                    @StringRes int prefKeyResId, boolean value) {
@@ -77,6 +115,15 @@ public class PrefUtils {
         SharedPreferences.Editor sharedPrefEditor = sharedPref.edit();
         sharedPrefEditor.putBoolean(prefKey, value);
         sharedPrefEditor.apply();
+    }
+
+    /**
+     * Returns the list sort order shared preference.
+     * @param context the context
+     */
+    public static String getAwardListSortOrder(@Nullable Context context) {
+        return getSharedPreferenceString(context, R.string.pref_award_list_sort_order_key,
+                ViewAwardListParameters.SORT_ORDER_DEFAULT);
     }
 
     /**
@@ -89,23 +136,42 @@ public class PrefUtils {
     }
 
     /**
-     * Returns the list sort order shared preference.
-     * @param context the context
-     */
-    public static String getAwardListSortOrder(@NonNull Context context) {
-        return getSharedPreferenceString(
-                context, R.string.pref_award_list_sort_order_key, ViewAward.SORT_ORDER_DEFAULT);
-    }
-
-    /**
      * Returns whether a string has the same value as the award list sort order preference key.
      * @param context the context
      * @param value the value to compare to the award list sort order preference key
      * @return true if value is the award list sort order preference key, false otherwise
      */
     public static boolean isAwardListSortOrderKey(@NonNull Context context, @Nullable String value) {
-        return value != null
-                && value.equals(context.getString(R.string.pref_award_list_sort_order_key));
+        return value != null && value.equals(context.getString(R.string.pref_award_list_sort_order_key));
+    }
+
+    /**
+     * Returns the award list wishlist filter shared preference.
+     * @param context the context
+     */
+    @NonNull
+    public static String getAwardListFilterWishlist(@Nullable Context context) {
+        return getSharedPreferenceString(context, R.string.pref_award_list_filter_wishlist_key,
+                ViewAwardListParameters.FILTER_WISHLIST_DEFAULT);
+    }
+
+    /**
+     * Sets the award list wishlist filter shared preference to a supplied value.
+     * @param context the context
+     * @param value the new value for the award list wishlist filter
+     */
+    public static void setAwardListFilterWishlist(@NonNull Context context, @NonNull String value) {
+        setSharedPreferenceString(context, R.string.pref_award_list_filter_wishlist_key, value);
+    }
+
+    /**
+     * Returns whether a string has the same value as the award list wishlist filter preference key.
+     * @param context the context
+     * @param value the value to compare to the award list sort order preference key
+     * @return true if value is the award list wishlist filter preference key, false otherwise
+     */
+    public static boolean isAwardListFilterWishlistKey(@NonNull Context context, @Nullable String value) {
+        return value != null && value.equals(context.getString(R.string.pref_award_list_filter_wishlist_key));
     }
 
 }
