@@ -30,6 +30,7 @@
         android:paddingEnd="@dimen/first_keyline"
         android:visibility="gone"
         android:textAppearance="@android:style/TextAppearance.Medium"
+        android:textColor="@color/text_gray"
         tools:text="@string/no_data_no_connection"
         tools:visibility="visible" />
 

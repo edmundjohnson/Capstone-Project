@@ -21,6 +21,7 @@
     <string name="menu_option_grid_view">Grid View</string>
     <string name="menu_option_sort">Sort</string>
     <string name="menu_option_filter">Filter</string>
+    <string name="menu_option_filter_active">Active Filter</string>
     <string name="menu_option_add_to_wishlist">Add to wishlist</string>
     <string name="menu_option_remove_from_wishlist">Remove from wishlist</string>
     <string name="menu_option_add_to_watched">Mark as watched</string>
@@ -48,9 +49,9 @@
     <string name="category_text_unknown">unknown</string>
 
     <!-- View Award list -->
-    <!-- TODO: May need another "no movies" message mentioning list filter -->
     <string name="no_data_available">There are no movies available.</string>
     <string name="no_data_no_connection">There are no movies available. Please check your internet connection.</string>
+    <string name="no_data_filter_active">There are no movies to display.  This may be because none of the movies match your filter settings.</string>
 
     <!-- Sorting the list -->
     <string name="sort_title">List Order</string>
@@ -88,7 +89,7 @@
     <string name="pref_award_list_filter_watched_key" translatable="false">pref_award_list_filter_watched_key</string>
     <string name="pref_award_list_filter_favourite_key" translatable="false">pref_award_list_filter_favourite_key</string>
 
-    <!-- Filter list -->
+    <!-- Award List Filter screen -->
     <string name="filter_title">List Filters</string>
     <string name="filter_wishlist_title">Wishlist</string>
     <string name="filter_wishlist_any">No filter</string>
@@ -102,5 +103,6 @@
     <string name="filter_favourite_any">No filter</string>
     <string name="filter_favourite_only">Show favourite movies</string>
     <string name="filter_favourite_exclude">Hide favourite movies</string>
+    <string name="button_clear_filters">Clear Filters</string>
 
 </resources>

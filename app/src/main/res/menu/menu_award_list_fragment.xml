@@ -30,4 +30,10 @@
         android:title="@string/menu_option_filter"
         android:orderInCategory="4"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_option_filter_active"
+        android:icon="@drawable/ic_filter_list_active_24dp"
+        android:title="@string/menu_option_filter_active"
+        android:orderInCategory="4"
+        app:showAsAction="always" />
 </menu>

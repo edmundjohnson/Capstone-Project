@@ -136,4 +136,21 @@ public final class JavaUtils {
         return arrayList;
     }
 
+    /**
+     * Returns the position of a value in a string array.
+     * @param valueArray the string array
+     * @param value the value whose position is required
+     * @return the array index of value in the array, or -1 if value is not found
+     */
+    public static int getPositionInArray(@NonNull String[] valueArray, @Nullable String value) {
+        if (value != null) {
+            for (int position = 0; position < valueArray.length; position++) {
+                if (valueArray[position].equals(value)) {
+                    return position;
+                }
+            }
+        }
+        return -1;
+    }
+
 }

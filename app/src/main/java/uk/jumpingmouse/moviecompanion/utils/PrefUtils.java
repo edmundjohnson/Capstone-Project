@@ -20,6 +20,9 @@ public class PrefUtils {
     private PrefUtils() {
     }
 
+    //--------------------------------------------------------------
+    // Generic getters and setters
+
     /**
      * Returns the value of a String user preference.
      * @param context the context
@@ -117,6 +120,9 @@ public class PrefUtils {
         sharedPrefEditor.apply();
     }
 
+    //--------------------------------------------------------------
+    // Award list sort order preferences
+
     /**
      * Returns the list sort order shared preference.
      * @param context the context
@@ -144,6 +150,9 @@ public class PrefUtils {
     public static boolean isAwardListSortOrderKey(@NonNull Context context, @Nullable String value) {
         return value != null && value.equals(context.getString(R.string.pref_award_list_sort_order_key));
     }
+
+    //--------------------------------------------------------------
+    // Award list filter preferences
 
     /**
      * Returns the award list wishlist filter shared preference.
@@ -230,6 +239,22 @@ public class PrefUtils {
      */
     public static boolean isAwardListFilterFavouriteKey(@NonNull Context context, @Nullable String value) {
         return value != null && value.equals(context.getString(R.string.pref_award_list_filter_favourite_key));
+    }
+
+    /**
+     * Returns whether there are any active filters, i.e. whether any filter is set to
+     * a non-default value.
+     * @param context the context
+     * @return true if there are any active filters, false otherwise
+     */
+    public static boolean isFilterActive(@Nullable Context context) {
+        // return true if any filter is not set to its default value
+        return !PrefUtils.getAwardListFilterWishlist(context).equals(
+                ViewAwardListParameters.FILTER_WISHLIST_DEFAULT)
+                || !PrefUtils.getAwardListFilterWatched(context).equals(
+                ViewAwardListParameters.FILTER_WATCHED_DEFAULT)
+                || !PrefUtils.getAwardListFilterFavourite(context).equals(
+                ViewAwardListParameters.FILTER_FAVOURITE_DEFAULT);
     }
 
 }

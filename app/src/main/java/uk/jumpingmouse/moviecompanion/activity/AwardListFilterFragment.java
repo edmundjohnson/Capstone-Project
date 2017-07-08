@@ -2,8 +2,6 @@ package uk.jumpingmouse.moviecompanion.activity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +12,7 @@ import android.widget.Spinner;
 
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.data.ViewAwardListParameters;
+import uk.jumpingmouse.moviecompanion.utils.JavaUtils;
 import uk.jumpingmouse.moviecompanion.utils.PrefUtils;
 
 /**
@@ -34,27 +33,35 @@ public class AwardListFilterFragment extends DialogFragment {
 
             // Wishlist filter
 
-            String previousFilterWishlist = PrefUtils.getAwardListFilterWishlist(context);
-            Spinner spinnerFilterWishlist = (Spinner) view.findViewById(R.id.spinnerFilterWishlist);
-
             // Create an ArrayAdapter using the string array and a default spinner layout
             ArrayAdapter<CharSequence> filterWishlistAdapter = ArrayAdapter.createFromResource(context,
                     R.array.filter_wishlist, android.R.layout.simple_spinner_item);
             // Specify the layout to use when the list of choices appears
             filterWishlistAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            // Apply the adapter to the spinner
-            spinnerFilterWishlist.setAdapter(filterWishlistAdapter);
-            setSpinnerPositionByValue(spinnerFilterWishlist, previousFilterWishlist);
 
-            spinnerFilterWishlist.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            // Apply the adapter to the spinner
+            final Spinner spnFilterWishlist = (Spinner) view.findViewById(R.id.spnFilterWishlist);
+            spnFilterWishlist.setAdapter(filterWishlistAdapter);
+
+            // Set the spinner to the position of the current filter value
+            String previousFilterWishlist = PrefUtils.getAwardListFilterWishlist(context);
+            int positionWishlist = JavaUtils.getPositionInArray(
+                    ViewAwardListParameters.FILTER_WISHLIST_OPTIONS, previousFilterWishlist);
+            spnFilterWishlist.setSelection(positionWishlist == -1 ? 0 : positionWishlist);
+
+            // Add a listener to the spinner
+            spnFilterWishlist.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     // The activity may no longer be there
                     Context context = getActivity();
                     if (context != null) {
-                        // Change the wishlist filter shared preference
-                        String newFilterWishlist = ViewAwardListParameters.FILTER_WISHLIST_OPTIONS[position];
-                        PrefUtils.setAwardListFilterWishlist(context, newFilterWishlist);
+                        String previousFilterValue = PrefUtils.getAwardListFilterWishlist(context);
+                        String newFilterValue = ViewAwardListParameters.FILTER_WISHLIST_OPTIONS[position];
+                        // If the filter has changed, update its shared preference
+                        if (!newFilterValue.equals(previousFilterValue)) {
+                            PrefUtils.setAwardListFilterWishlist(context, newFilterValue);
+                        }
                     }
                 }
                 @Override
@@ -65,27 +72,35 @@ public class AwardListFilterFragment extends DialogFragment {
 
             // Watched filter
 
-            String previousFilterWatched = PrefUtils.getAwardListFilterWatched(context);
-            Spinner spinnerFilterWatched = (Spinner) view.findViewById(R.id.spinnerFilterWatched);
-            setSpinnerPositionByValue(spinnerFilterWatched, previousFilterWatched);
-
             // Create an ArrayAdapter using the string array and a default spinner layout
             ArrayAdapter<CharSequence> filterWatchedAdapter = ArrayAdapter.createFromResource(context,
                     R.array.filter_watched, android.R.layout.simple_spinner_item);
             // Specify the layout to use when the list of choices appears
             filterWatchedAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            // Apply the adapter to the spinner
-            spinnerFilterWatched.setAdapter(filterWatchedAdapter);
 
-            spinnerFilterWatched.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            // Apply the adapter to the spinner
+            final Spinner spnFilterWatched = (Spinner) view.findViewById(R.id.spnFilterWatched);
+            spnFilterWatched.setAdapter(filterWatchedAdapter);
+
+            // Set the spinner to the position of the current filter value
+            String previousFilterWatched = PrefUtils.getAwardListFilterWatched(context);
+            int positionWatched = JavaUtils.getPositionInArray(
+                    ViewAwardListParameters.FILTER_WATCHED_OPTIONS, previousFilterWatched);
+            spnFilterWatched.setSelection(positionWatched == -1 ? 0 : positionWatched);
+
+            // Add a listener to the spinner
+            spnFilterWatched.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     // The activity may no longer be there
                     Context context = getActivity();
                     if (context != null) {
-                        // Change the watched filter shared preference
+                        String previousFilterValue = PrefUtils.getAwardListFilterWatched(context);
                         String newFilterValue = ViewAwardListParameters.FILTER_WATCHED_OPTIONS[position];
-                        PrefUtils.setAwardListFilterWatched(context, newFilterValue);
+                        // If the filter has changed, update its shared preference
+                        if (!newFilterValue.equals(previousFilterValue)) {
+                            PrefUtils.setAwardListFilterWatched(context, newFilterValue);
+                        }
                     }
                 }
                 @Override
@@ -96,27 +111,32 @@ public class AwardListFilterFragment extends DialogFragment {
 
             // Favourite filter
 
-            String previousFilterFavourite = PrefUtils.getAwardListFilterFavourite(context);
-            Spinner spinnerFilterFavourite = (Spinner) view.findViewById(R.id.spinnerFilterFavourite);
-            setSpinnerPositionByValue(spinnerFilterFavourite, previousFilterFavourite);
-
             // Create an ArrayAdapter using the string array and a default spinner layout
             ArrayAdapter<CharSequence> filterFavouriteAdapter = ArrayAdapter.createFromResource(context,
                     R.array.filter_favourite, android.R.layout.simple_spinner_item);
             // Specify the layout to use when the list of choices appears
             filterFavouriteAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            // Apply the adapter to the spinner
-            spinnerFilterFavourite.setAdapter(filterFavouriteAdapter);
 
-            spinnerFilterFavourite.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            // Apply the adapter to the spinner
+            final Spinner spnFilterFavourite = (Spinner) view.findViewById(R.id.spnFilterFavourite);
+            spnFilterFavourite.setAdapter(filterFavouriteAdapter);
+
+            // Set the spinner to the position of the current filter value
+            String previousFilterFavourite = PrefUtils.getAwardListFilterFavourite(context);
+            int positionFavourite = JavaUtils.getPositionInArray(
+                    ViewAwardListParameters.FILTER_FAVOURITE_OPTIONS, previousFilterFavourite);
+            spnFilterFavourite.setSelection(positionFavourite == -1 ? 0 : positionFavourite);
+
+            // Add a listener to the spinner
+            spnFilterFavourite.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     // The activity may no longer be there
                     Context context = getActivity();
                     if (context != null) {
                         String previousFilterValue = PrefUtils.getAwardListFilterFavourite(context);
-                        // Change the watched filter shared preference
                         String newFilterValue = ViewAwardListParameters.FILTER_FAVOURITE_OPTIONS[position];
+                        // If the filter has changed, update its shared preference
                         if (!newFilterValue.equals(previousFilterValue)) {
                             PrefUtils.setAwardListFilterFavourite(context, newFilterValue);
                         }
@@ -125,6 +145,26 @@ public class AwardListFilterFragment extends DialogFragment {
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
                     // do nothing
+                }
+            });
+
+            // OK button
+            View txtOk = view.findViewById(R.id.txtOk);
+            txtOk.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismiss();
+                }
+            });
+
+            // Clear Filters button
+            View txtClearFilters = view.findViewById(R.id.txtClearFilters);
+            txtClearFilters.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    spnFilterWishlist.setSelection(0);
+                    spnFilterWatched.setSelection(0);
+                    spnFilterFavourite.setSelection(0);
                 }
             });
 
@@ -155,31 +195,9 @@ public class AwardListFilterFragment extends DialogFragment {
 //                }
 //            });
 
-            // OK button
-            View txtOk = view.findViewById(R.id.txtOk);
-            txtOk.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dismiss();
-                }
-            });
-
         }
 
         return view;
-    }
-
-    private void setSpinnerPositionByValue(@NonNull Spinner spinner, @Nullable String value) {
-        if (value == null) {
-            return;
-        }
-        int index = 0;
-        for(int i = 0; i < spinner.getCount(); i++){
-            if (spinner.getItemAtPosition(i).toString().equals(value)) {
-                spinner.setSelection(i);
-                break;
-            }
-        }
     }
 
 //    /**

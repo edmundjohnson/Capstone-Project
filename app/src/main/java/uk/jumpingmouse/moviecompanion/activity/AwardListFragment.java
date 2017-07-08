@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -193,6 +194,9 @@ public class AwardListFragment extends Fragment
         menu.findItem(R.id.menu_option_list_view).setVisible(isItemLayoutGrid);
         menu.findItem(R.id.menu_option_grid_view).setVisible(!isItemLayoutGrid);
 
+        Context context = getActivity();
+        displayMenuOptionForFilter(context, menu);
+
         mMenu = menu;
     }
 
@@ -225,8 +229,9 @@ public class AwardListFragment extends Fragment
                 displayAwardListSortOptions();
                 return true;
 
-            // filter
+            // filter and filter (active)
             case R.id.menu_option_filter:
+            case R.id.menu_option_filter_active:
                 displayAwardListFilter();
                 return true;
 
@@ -271,6 +276,20 @@ public class AwardListFragment extends Fragment
         FragmentManager fm = getFragmentManager();
         AwardListSortFragment awardListSortFragment = new AwardListSortFragment();
         awardListSortFragment.show(fm, "TAG_AWARD_LIST_SORT_FRAGMENT");
+    }
+
+    /**
+     * Display the appropriate filter icon, based on whether there are any active filters.
+     * @param context the context
+     * @param menu the menu in which to display the filter icon
+     */
+    private void displayMenuOptionForFilter(@Nullable Context context, @Nullable Menu menu) {
+        if (menu == null) {
+            return;
+        }
+        boolean isFilterActive = PrefUtils.isFilterActive(context);
+        menu.findItem(R.id.menu_option_filter).setVisible(!isFilterActive);
+        menu.findItem(R.id.menu_option_filter_active).setVisible(isFilterActive);
     }
 
     /**
@@ -421,7 +440,7 @@ public class AwardListFragment extends Fragment
         }
 
         // If there is no data, set an appropriate message in the 'empty view'
-        updateEmptyView();
+        updateEmptyView(getActivity());
     }
 
     /**
@@ -456,14 +475,14 @@ public class AwardListFragment extends Fragment
 
     /**
      * Sets an appropriate message in the 'empty view', based on the network status and feed status.
+     * @param context the context
      */
-    private void updateEmptyView() {
+    private void updateEmptyView(@Nullable Context context) {
         if (mViewAwardAdapter.getItemCount() == 0) {
             Activity activity = getActivity();
             if (activity != null) {
                 // Get the appropriate message depending on the state of the network
-                boolean isNetworkAvailable = getNetUtils().isNetworkAvailable(activity);
-                @StringRes int message = getViewUtils().getNoDataMessage(isNetworkAvailable);
+                @StringRes int message = getNoDataMessage(context);
 
                 // Write the message to the empty list view
                 TextView emptyListView = (TextView) activity.findViewById(R.id.viewAwardListEmpty);
@@ -472,41 +491,23 @@ public class AwardListFragment extends Fragment
         }
     }
 
-//    /**
-//     * Returns an appropriate message for the 'empty view', based on the network status
-//     * and feed status.
-//     * @param context the context
-//     */
-//    private @StringRes int getNoDataMessage(@Nullable final Context context) {
-//        int message;
-//        if (context == null) {
-//            message = R.string.no_data_available;
-//        } else if (!getNetUtils().isNetworkAvailable(context)) {
-//            message = R.string.no_data_no_connection;
-//        } else {
-//            @PrefUtils.FeedStatus int feedStatus = getPrefUtils().getFeedStatus(context);
-//            switch (feedStatus) {
-//                case PrefUtils.FEED_STATUS_SERVER_INVALID:
-//                    message = R.string.no_data_server_invalid;
-//                    break;
-//                case PrefUtils.FEED_STATUS_SERVER_ERROR:
-//                    message = R.string.no_data_server_error;
-//                    break;
-//                case PrefUtils.FEED_STATUS_SERVER_NO_DATA:
-//                    message = R.string.no_data_server_no_data;
-//                    break;
-//                case PrefUtils.FEED_STATUS_SERVER_DATA_INVALID:
-//                    message = R.string.no_data_server_data_invalid;
-//                    break;
-//                case PrefUtils.FEED_STATUS_OK:
-//                case PrefUtils.FEED_STATUS_UNKNOWN:
-//                default:
-//                    message = R.string.no_data_available;
-//                    break;
-//            }
-//        }
-//        return message;
-//    }
+    /**
+     * Returns the appropriate message to display when there is no data,
+     * based on the network status and whether there are active filters.
+     * @param context the context
+     * @return the appropriate message to display, as a String resource
+     */
+    private @StringRes int getNoDataMessage(@Nullable Context context) {
+        boolean isNetworkAvailable = getNetUtils().isNetworkAvailable(context);
+
+        if (!isNetworkAvailable) {
+            return R.string.no_data_no_connection;
+        } else if (PrefUtils.isFilterActive(context)) {
+            return R.string.no_data_filter_active;
+        } else {
+            return R.string.no_data_available;
+        }
+    }
 
     //--------------------------------------------------------------
     // Getters and setters
@@ -574,6 +575,9 @@ public class AwardListFragment extends Fragment
             Bundle bundle = new Bundle();
             bundle.putParcelable(KEY_VIEW_AWARD_URI, uri);
             getLoaderManager().restartLoader(AWARD_LIST_LOADER_ID, bundle, this);
+
+            // Redisplay the filter menu icon - it may have changed
+            displayMenuOptionForFilter(context, mMenu);
         }
     }
 

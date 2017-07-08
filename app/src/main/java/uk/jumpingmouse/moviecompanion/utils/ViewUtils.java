@@ -298,21 +298,6 @@ public class ViewUtils {
 //                }
     }
 
-    /**
-     * Returns the appropriate message to display when there is no data,
-     * based on the network status.
-     * @param isNetworkAvailable whether there is an internet connection
-     * @return the appropriate message to display, as a String resource
-     */
-    public @StringRes int getNoDataMessage(final boolean isNetworkAvailable) {
-        // Get the appropriate message depending on the state of the network
-        if (!isNetworkAvailable) {
-            return R.string.no_data_no_connection;
-        } else {
-            return R.string.no_data_available;
-        }
-    }
-
     //---------------------------------------------------------------------
     // Message display methods
 

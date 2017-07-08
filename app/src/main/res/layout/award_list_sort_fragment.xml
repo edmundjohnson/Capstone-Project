@@ -14,8 +14,8 @@
         android:paddingEnd="@dimen/activity_margin_horizontal"
         android:gravity="center"
         android:background="@color/colorPrimary"
-        android:textColor="@android:color/white"
         android:textAppearance="@android:style/TextAppearance.Large"
+        android:textColor="@android:color/white"
         android:text="@string/sort_title" />
 
     <LinearLayout

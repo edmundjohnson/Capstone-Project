@@ -105,7 +105,7 @@
                 style="@style/SpinnerContainer.Filter">
 
                 <Spinner
-                    android:id="@+id/spinnerFilterWishlist"
+                    android:id="@+id/spnFilterWishlist"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
@@ -137,7 +137,7 @@
                 style="@style/SpinnerContainer.Filter">
 
                 <Spinner
-                    android:id="@+id/spinnerFilterWatched"
+                    android:id="@+id/spnFilterWatched"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
@@ -169,7 +169,7 @@
                 style="@style/SpinnerContainer.Filter">
 
                 <Spinner
-                    android:id="@+id/spinnerFilterFavourite"
+                    android:id="@+id/spnFilterFavourite"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
@@ -177,6 +177,7 @@
 
         </LinearLayout>
 
+        <!-- Buttons -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -187,6 +188,14 @@
             android:paddingStart="@dimen/activity_margin_horizontal"
             android:paddingEnd="@dimen/activity_margin_horizontal"
             android:background="@android:color/white">
+
+            <TextView
+                android:id="@+id/txtClearFilters"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:text="@string/button_clear_filters"
+                style="@style/PseudoButtonStyle" />
 
             <TextView
                 android:id="@+id/txtOk"
