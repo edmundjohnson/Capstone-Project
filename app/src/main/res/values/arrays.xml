@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Must match the order in ViewAwardListParameters.FILTER_WISHLIST_OPTIONS -->
     <string-array name="filter_wishlist">
         <item>@string/filter_wishlist_any</item>
         <item>@string/filter_wishlist_only</item>
         <item>@string/filter_wishlist_exclude</item>
+    </string-array>
+
+    <string-array name="filter_watched">
+        <item>@string/filter_watched_any</item>
+        <item>@string/filter_watched_only</item>
+        <item>@string/filter_watched_exclude</item>
+    </string-array>
+
+    <string-array name="filter_favourite">
+        <item>@string/filter_favourite_any</item>
+        <item>@string/filter_favourite_only</item>
+        <item>@string/filter_favourite_exclude</item>
     </string-array>
 
 </resources>

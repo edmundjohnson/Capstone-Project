@@ -3,68 +3,82 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingTop="@dimen/activity_margin_vertical"
-    android:paddingBottom="@dimen/activity_margin_vertical"
-    android:paddingStart="@dimen/activity_margin_horizontal"
-    android:paddingEnd="@dimen/activity_margin_horizontal"
-    android:orientation="vertical"
-    android:background="@color/green_50">
+    android:orientation="vertical">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="6dp"
-        android:layout_marginBottom="4dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingStart="@dimen/activity_margin_horizontal"
+        android:paddingEnd="@dimen/activity_margin_horizontal"
+        android:gravity="center"
+        android:background="@color/colorPrimary"
+        android:textColor="@android:color/white"
         android:textAppearance="@android:style/TextAppearance.Large"
         android:text="@string/sort_title" />
 
-    <RadioGroup
-        android:id="@+id/radioGroupSortOrder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:background="@color/green_50">
 
-        <RadioButton
-            android:id="@+id/radioAwardDateDesc"
-            android:layout_width="wrap_content"
+        <RadioGroup
+            android:id="@+id/radioGroupSortOrder"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/sort_order_award_date_desc"
-            style="@style/RadioButtonStyle" />
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp">
 
-        <RadioButton
-            android:id="@+id/radioAwardDateAsc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/sort_order_award_date_asc"
-            style="@style/RadioButtonStyle" />
+            <RadioButton
+                android:id="@+id/radioAwardDateDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sort_order_award_date_desc"
+                style="@style/RadioButton" />
 
-        <RadioButton
-            android:id="@+id/radioTitleAsc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/sort_order_title_asc"
-            style="@style/RadioButtonStyle" />
+            <RadioButton
+                android:id="@+id/radioAwardDateAsc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sort_order_award_date_asc"
+                style="@style/RadioButton" />
 
-        <RadioButton
-            android:id="@+id/radioTitleDesc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/sort_order_title_desc"
-            style="@style/RadioButtonStyle" />
+            <RadioButton
+                android:id="@+id/radioTitleAsc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sort_order_title_asc"
+                style="@style/RadioButton" />
 
-        <RadioButton
-            android:id="@+id/radioRuntimeAsc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/sort_order_runtime_asc"
-            style="@style/RadioButtonStyle" />
+            <RadioButton
+                android:id="@+id/radioTitleDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sort_order_title_desc"
+                style="@style/RadioButton" />
 
-        <RadioButton
-            android:id="@+id/radioRuntimeDesc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/sort_order_runtime_desc"
-            style="@style/RadioButtonStyle" />
+            <RadioButton
+                android:id="@+id/radioRuntimeAsc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sort_order_runtime_asc"
+                style="@style/RadioButton" />
 
-    </RadioGroup>
+            <RadioButton
+                android:id="@+id/radioRuntimeDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sort_order_runtime_desc"
+                style="@style/RadioButton" />
+
+        </RadioGroup>
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -218,12 +218,18 @@ public class AddAwardActivity extends AppCompatActivity {
             return;
         }
 
-        int movieId = mMovie.getId();
         String awardDate = mTxtAwardDate.getText().toString();
         String category = mRadioAwardCategory.getCheckedRadioButtonId() ==
                 R.id.radioCategoryMovie ? Award.CATEGORY_MOVIE : Award.CATEGORY_DVD;
         int displayOrder = JavaUtils.toInt(mTxtAwardDisplayOrder.getText().toString(), 1);
+
+        if (awardDate.isEmpty() || category.isEmpty() || displayOrder <= 0) {
+            getViewUtils().displayErrorMessage(this, R.string.error_mandatory_field_missing);
+            return;
+        }
+
         // Generate the unique award id, e.g. "3666024_170522_M"
+        int movieId = mMovie.getId();
         String id = movieId + "_" + awardDate + "_" + category;
 
         mAward = Award.builder()

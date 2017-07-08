@@ -538,9 +538,46 @@ public class LocalDatabaseInMemory implements LocalDatabase {
                     break;
             }
         }
-//        if (!isIncluded) {
-//            return false;
-//        }
+        // bail out early if possible
+        if (!isIncluded) {
+            return false;
+        }
+
+        // watched filter
+        if (selectionArgs.length > 1) {
+            switch (selectionArgs[1]) {
+                case ViewAwardListParameters.FILTER_WATCHED_ANY:
+                    break;
+                case ViewAwardListParameters.FILTER_WATCHED_ONLY:
+                    isIncluded = viewAward.isWatched();
+                    break;
+                case ViewAwardListParameters.FILTER_WATCHED_EXCLUDE:
+                    isIncluded = !viewAward.isWatched();
+                    break;
+                default:
+                    break;
+            }
+        }
+        // bail out early if possible
+        if (!isIncluded) {
+            return false;
+        }
+
+        // favourite filter
+        if (selectionArgs.length > 2) {
+            switch (selectionArgs[2]) {
+                case ViewAwardListParameters.FILTER_FAVOURITE_ANY:
+                    break;
+                case ViewAwardListParameters.FILTER_FAVOURITE_ONLY:
+                    isIncluded = viewAward.isFavourite();
+                    break;
+                case ViewAwardListParameters.FILTER_FAVOURITE_EXCLUDE:
+                    isIncluded = !viewAward.isFavourite();
+                    break;
+                default:
+                    break;
+            }
+        }
 
         return isIncluded;
     }

@@ -44,6 +44,8 @@ public final class DataContract {
     // Query parameters
     public static final String PARAM_SORT_ORDER = "sortOrder";
     public static final String PARAM_FILTER_WISHLIST = "filterWishlist";
+    public static final String PARAM_FILTER_WATCHED = "filterWatched";
+    public static final String PARAM_FILTER_FAVOURITE = "filterFavourite";
 
     // Values for sort direction (PARAM_SORT_DIRECTION)
     static final String SORT_DIRECTION_ASC = "ASC";
@@ -430,6 +432,8 @@ public final class DataContract {
             return CONTENT_URI.buildUpon()
                     .appendQueryParameter(PARAM_SORT_ORDER, parameters.getSortOrder())
                     .appendQueryParameter(PARAM_FILTER_WISHLIST, parameters.getFilterWishlist())
+                    .appendQueryParameter(PARAM_FILTER_WATCHED, parameters.getFilterWatched())
+                    .appendQueryParameter(PARAM_FILTER_FAVOURITE, parameters.getFilterFavourite())
                     .build();
         }
 

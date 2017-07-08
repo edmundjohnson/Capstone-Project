@@ -11,6 +11,8 @@
     <string name="error_title">Error</string>
     <string name="connection_required_for_sign_in">An internet connection is required to sign into %s</string>
     <string name="unknown_error_on_sign_in">Something has gone wrong, please check your internet connection or try again later</string>
+    <!-- Error messages: Admin -->
+    <string name="error_mandatory_field_missing">A mandatory field is missing</string>
 
     <!-- App Bar and Menu -->
     <string name="appbar_title_award_list">@string/app_name</string>
@@ -51,7 +53,7 @@
     <string name="no_data_no_connection">There are no movies available. Please check your internet connection.</string>
 
     <!-- Sorting the list -->
-    <string name="sort_title">Order the list by:</string>
+    <string name="sort_title">List Order</string>
     <string name="sort_order_award_date_desc">review date, latest first</string>
     <string name="sort_order_award_date_asc">review date, earliest first</string>
     <string name="sort_order_title_asc">movie name, alphabetical</string>
@@ -83,20 +85,22 @@
     <!-- preferences -->
     <string name="pref_award_list_sort_order_key" translatable="false">pref_award_list_sort_order_key</string>
     <string name="pref_award_list_filter_wishlist_key" translatable="false">pref_award_list_filter_wishlist_key</string>
+    <string name="pref_award_list_filter_watched_key" translatable="false">pref_award_list_filter_watched_key</string>
+    <string name="pref_award_list_filter_favourite_key" translatable="false">pref_award_list_filter_favourite_key</string>
 
     <!-- Filter list -->
-    <string name="filter_title">Movie Filter</string>
+    <string name="filter_title">List Filters</string>
     <string name="filter_wishlist_title">Wishlist</string>
-    <string name="filter_wishlist_any">All</string>
-    <string name="filter_wishlist_only">Wishlist only</string>
-    <string name="filter_wishlist_exclude">Exclude wishlist</string>
-    <string name="filter_watched_title">Watched</string>
-    <string name="filter_watched_any">All</string>
-    <string name="filter_watched_only">Watched movies only</string>
-    <string name="filter_watched_exclude">Exclude watched movies</string>
-    <string name="filter_favourites_title">Favourites</string>
-    <string name="filter_favourites_any">All</string>
-    <string name="filter_favourites_only">Favourites only</string>
-    <string name="filter_favourites_exclude">Exclude favourites</string>
+    <string name="filter_wishlist_any">No filter</string>
+    <string name="filter_wishlist_only">Show movies on wishlist</string>
+    <string name="filter_wishlist_exclude">Hide movies on wishlist</string>
+    <string name="filter_watched_title">Watched Movies</string>
+    <string name="filter_watched_any">No filter</string>
+    <string name="filter_watched_only">Show watched movies</string>
+    <string name="filter_watched_exclude">Hide watched movies</string>
+    <string name="filter_favourite_title">Favourite Movies</string>
+    <string name="filter_favourite_any">No filter</string>
+    <string name="filter_favourite_only">Show favourite movies</string>
+    <string name="filter_favourite_exclude">Hide favourite movies</string>
 
 </resources>

@@ -167,11 +167,69 @@ public class PrefUtils {
     /**
      * Returns whether a string has the same value as the award list wishlist filter preference key.
      * @param context the context
-     * @param value the value to compare to the award list sort order preference key
+     * @param value the value to compare to the award list wishlist filter preference key
      * @return true if value is the award list wishlist filter preference key, false otherwise
      */
     public static boolean isAwardListFilterWishlistKey(@NonNull Context context, @Nullable String value) {
         return value != null && value.equals(context.getString(R.string.pref_award_list_filter_wishlist_key));
+    }
+
+    /**
+     * Returns the award list watched filter shared preference.
+     * @param context the context
+     */
+    @NonNull
+    public static String getAwardListFilterWatched(@Nullable Context context) {
+        return getSharedPreferenceString(context, R.string.pref_award_list_filter_watched_key,
+                ViewAwardListParameters.FILTER_WATCHED_DEFAULT);
+    }
+
+    /**
+     * Sets the award list watched filter shared preference to a supplied value.
+     * @param context the context
+     * @param value the new value for the award list watched filter
+     */
+    public static void setAwardListFilterWatched(@NonNull Context context, @NonNull String value) {
+        setSharedPreferenceString(context, R.string.pref_award_list_filter_watched_key, value);
+    }
+
+    /**
+     * Returns whether a string has the same value as the award list watched filter preference key.
+     * @param context the context
+     * @param value the value to compare to the award list watched filter preference key
+     * @return true if value is the award list watched filter preference key, false otherwise
+     */
+    public static boolean isAwardListFilterWatchedKey(@NonNull Context context, @Nullable String value) {
+        return value != null && value.equals(context.getString(R.string.pref_award_list_filter_watched_key));
+    }
+
+    /**
+     * Returns the award list favourite filter shared preference.
+     * @param context the context
+     */
+    @NonNull
+    public static String getAwardListFilterFavourite(@Nullable Context context) {
+        return getSharedPreferenceString(context, R.string.pref_award_list_filter_favourite_key,
+                ViewAwardListParameters.FILTER_FAVOURITE_DEFAULT);
+    }
+
+    /**
+     * Sets the award list favourite filter shared preference to a supplied value.
+     * @param context the context
+     * @param value the new value for the award list favourite filter
+     */
+    public static void setAwardListFilterFavourite(@NonNull Context context, @NonNull String value) {
+        setSharedPreferenceString(context, R.string.pref_award_list_filter_favourite_key, value);
+    }
+
+    /**
+     * Returns whether a string has the same value as the award list favourite filter preference key.
+     * @param context the context
+     * @param value the value to compare to the award list favourite filter preference key
+     * @return true if value is the award list favourite filter preference key, false otherwise
+     */
+    public static boolean isAwardListFilterFavouriteKey(@NonNull Context context, @Nullable String value) {
+        return value != null && value.equals(context.getString(R.string.pref_award_list_filter_favourite_key));
     }
 
 }

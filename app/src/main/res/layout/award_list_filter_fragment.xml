@@ -3,88 +3,201 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingTop="@dimen/activity_margin_vertical"
-    android:paddingBottom="@dimen/activity_margin_vertical"
-    android:paddingStart="@dimen/activity_margin_horizontal"
-    android:paddingEnd="@dimen/activity_margin_horizontal"
-    android:orientation="vertical"
-    android:background="@color/green_50">
+    android:orientation="vertical">
 
+    <!-- Title -->
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="6dp"
-        android:layout_marginBottom="4dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:gravity="center"
+        android:background="@color/colorPrimary"
+        android:textColor="@android:color/white"
         android:textAppearance="@android:style/TextAppearance.Large"
         android:text="@string/filter_title" />
 
-    <!-- Add Button "Clear All Filters" -->
-
-    <!-- Wishlist filter -->
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="6dp"
-        android:layout_marginBottom="4dp"
-        android:textAppearance="@android:style/TextAppearance.Medium"
-        android:text="@string/filter_wishlist_title" />
-
-    <RadioGroup
-        android:id="@+id/radioGroupFilterWishlist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <RadioButton
-            android:id="@+id/radioWishlistAny"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/filter_wishlist_any"
-            style="@style/RadioButtonStyle" />
-
-        <RadioButton
-            android:id="@+id/radioWishlistOnly"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/filter_wishlist_only"
-            style="@style/RadioButtonStyle" />
-
-        <RadioButton
-            android:id="@+id/radioWishlistExclude"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/filter_wishlist_exclude"
-            style="@style/RadioButtonStyle" />
-
-    </RadioGroup>
-
-    <!-- Wishlist filter -->
-
+    <!-- Main content -->
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="1dp"
+        android:background="@color/green_50">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <!-- Wishlist filter: RadioButtons -->
+        <!--
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
-            android:layout_marginBottom="4dp"
-            android:textAppearance="@android:style/TextAppearance.Medium"
-            android:text="@string/filter_wishlist_title" />
+            android:orientation="vertical"
+            android:layout_marginTop="4dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:background="@color/green_50">
 
-        <Spinner
-            android:id="@+id/spinnerWishlist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_marginBottom="4dp"
+                android:textAppearance="@android:style/TextAppearance.Medium"
+                android:text="@string/filter_wishlist_title" />
 
-        </Spinner>
+            <RadioGroup
+                android:id="@+id/radioGroupFilterWishlist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/radioWishlistAny"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_wishlist_any"
+                    style="@style/RadioButton.Filter" />
+
+                <RadioButton
+                    android:id="@+id/radioWishlistOnly"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_wishlist_only"
+                    style="@style/RadioButton.Filter" />
+
+                <RadioButton
+                    android:id="@+id/radioWishlistExclude"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_wishlist_exclude"
+                    style="@style/RadioButton.Filter" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+        -->
+
+        <!-- Wishlist filter: Spinner -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="1dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="10dp"
+            android:paddingStart="@dimen/activity_margin_horizontal"
+            android:paddingEnd="@dimen/activity_margin_horizontal"
+            android:background="@android:color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter_wishlist_title"
+                style="@style/SpinnerLabelStyle" />
+
+            <!-- This is the container for the widest Spinner.
+                 If its width is set to "match_parent" (like the others), the layout collapses.
+                 This could be a problem in non-English languages. -->
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/SpinnerContainer.Filter">
+
+                <Spinner
+                    android:id="@+id/spinnerFilterWishlist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <!-- Watched filter: Spinner -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="1dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="10dp"
+            android:paddingStart="@dimen/activity_margin_horizontal"
+            android:paddingEnd="@dimen/activity_margin_horizontal"
+            android:background="@android:color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter_watched_title"
+                style="@style/SpinnerLabelStyle" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/SpinnerContainer.Filter">
+
+                <Spinner
+                    android:id="@+id/spinnerFilterWatched"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <!-- Favourite filter: Spinner -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="1dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="10dp"
+            android:paddingStart="@dimen/activity_margin_horizontal"
+            android:paddingEnd="@dimen/activity_margin_horizontal"
+            android:background="@android:color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter_favourite_title"
+                style="@style/SpinnerLabelStyle" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/SpinnerContainer.Filter">
+
+                <Spinner
+                    android:id="@+id/spinnerFilterFavourite"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="1dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:paddingStart="@dimen/activity_margin_horizontal"
+            android:paddingEnd="@dimen/activity_margin_horizontal"
+            android:background="@android:color/white">
+
+            <TextView
+                android:id="@+id/txtOk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="@string/button_ok"
+                style="@style/PseudoButtonStyle" />
+
+        </FrameLayout>
 
     </LinearLayout>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_ok"/>
 
 </LinearLayout>

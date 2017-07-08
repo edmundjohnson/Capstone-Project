@@ -12,8 +12,6 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
-        android:paddingTop="@dimen/list_padding_vertical"
-        android:paddingBottom="@dimen/list_padding_vertical"
         android:paddingStart="@dimen/list_padding_horizontal"
         android:paddingEnd="@dimen/list_padding_horizontal"
         android:clickable="true"
