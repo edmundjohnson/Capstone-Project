@@ -195,17 +195,17 @@
                         style="@style/RadioButton.Filter" />
 
                     <RadioButton
-                        android:id="@+id/radioWishlistOnly"
+                        android:id="@+id/radioWishlistShow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/filter_wishlist_only"
+                        android:text="@string/filter_wishlist_show"
                         style="@style/RadioButton.Filter" />
 
                     <RadioButton
-                        android:id="@+id/radioWishlistExclude"
+                        android:id="@+id/radioWishlistHide"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/filter_wishlist_exclude"
+                        android:text="@string/filter_wishlist_hide"
                         style="@style/RadioButton.Filter" />
 
                 </RadioGroup>

@@ -6,37 +6,37 @@
 
     <!-- The genre filter option keys, as stored in the shared preferences. -->
     <string-array name="filter_genre_pref_key">
-        <item>@string/filter_genre_all_key</item>
-        <item>@string/filter_genre_action_key</item>
-        <item>@string/filter_genre_animation_key</item>
-        <item>@string/filter_genre_comedy_key</item>
-        <item>@string/filter_genre_biography_key</item>
-        <item>@string/filter_genre_crime_key</item>
-        <item>@string/filter_genre_documentary_key</item>
-        <item>@string/filter_genre_drama_key</item>
-        <item>@string/filter_genre_fantasy_key</item>
-        <item>@string/filter_genre_horror_key</item>
-        <item>@string/filter_genre_music_key</item>
-        <item>@string/filter_genre_mystery_key</item>
-        <item>@string/filter_genre_romance_key</item>
-        <item>@string/filter_genre_thriller_key</item>
+        <item>filter_genre_all</item>
+        <item>filter_genre_action</item>
+        <item>filter_genre_animation</item>
+        <item>filter_genre_comedy</item>
+        <item>filter_genre_biography</item>
+        <item>filter_genre_crime</item>
+        <item>filter_genre_documentary</item>
+        <item>filter_genre_drama</item>
+        <item>filter_genre_fantasy</item>
+        <item>filter_genre_horror</item>
+        <item>filter_genre_music</item>
+        <item>filter_genre_mystery</item>
+        <item>filter_genre_romance</item>
+        <item>filter_genre_thriller</item>
     </string-array>
     <!-- The genre filter options, as displayed in the drop-down -->
     <string-array name="filter_genre_pref_display">
-        <item>@string/filter_genre_all_display</item>
-        <item>@string/filter_genre_action_display</item>
-        <item>@string/filter_genre_animation_display</item>
-        <item>@string/filter_genre_comedy_display</item>
-        <item>@string/filter_genre_biography_display</item>
-        <item>@string/filter_genre_crime_display</item>
-        <item>@string/filter_genre_documentary_display</item>
-        <item>@string/filter_genre_drama_display</item>
-        <item>@string/filter_genre_fantasy_display</item>
-        <item>@string/filter_genre_horror_display</item>
-        <item>@string/filter_genre_music_display</item>
-        <item>@string/filter_genre_mystery_display</item>
-        <item>@string/filter_genre_romance_display</item>
-        <item>@string/filter_genre_thriller_display</item>
+        <item>@string/filter_genre_all</item>
+        <item>@string/filter_genre_action</item>
+        <item>@string/filter_genre_animation</item>
+        <item>@string/filter_genre_comedy</item>
+        <item>@string/filter_genre_biography</item>
+        <item>@string/filter_genre_crime</item>
+        <item>@string/filter_genre_documentary</item>
+        <item>@string/filter_genre_drama</item>
+        <item>@string/filter_genre_fantasy</item>
+        <item>@string/filter_genre_horror</item>
+        <item>@string/filter_genre_music</item>
+        <item>@string/filter_genre_mystery</item>
+        <item>@string/filter_genre_romance</item>
+        <item>@string/filter_genre_thriller</item>
     </string-array>
 
     <!-- Wishlist filter -->
@@ -44,15 +44,15 @@
 
     <!-- The wishlist filter option keys, as stored in the shared preferences. -->
     <string-array name="filter_wishlist_pref_key">
-        <item>@string/filter_wishlist_any_key</item>
-        <item>@string/filter_wishlist_only_key</item>
-        <item>@string/filter_wishlist_exclude_key</item>
+        <item>filter_wishlist_any</item>
+        <item>filter_wishlist_show</item>
+        <item>filter_wishlist_hide</item>
     </string-array>
     <!-- The wishlist filter options, as displayed in the drop-down -->
     <string-array name="filter_wishlist_pref_display">
-        <item>@string/filter_wishlist_any_display</item>
-        <item>@string/filter_wishlist_only_display</item>
-        <item>@string/filter_wishlist_exclude_display</item>
+        <item>@string/filter_wishlist_any</item>
+        <item>@string/filter_wishlist_show</item>
+        <item>@string/filter_wishlist_hide</item>
     </string-array>
 
     <!-- Watched filter -->
@@ -60,15 +60,15 @@
 
     <!-- The watched filter option keys, as stored in the shared preferences. -->
     <string-array name="filter_watched_pref_key">
-        <item>@string/filter_watched_any_key</item>
-        <item>@string/filter_watched_only_key</item>
-        <item>@string/filter_watched_exclude_key</item>
+        <item>filter_watched_any</item>
+        <item>filter_watched_show</item>
+        <item>filter_watched_hide</item>
     </string-array>
     <!-- The watched filter options, as displayed in the drop-down -->
     <string-array name="filter_watched_pref_display">
-        <item>@string/filter_watched_any_display</item>
-        <item>@string/filter_watched_only_display</item>
-        <item>@string/filter_watched_exclude_display</item>
+        <item>@string/filter_watched_any</item>
+        <item>@string/filter_watched_show</item>
+        <item>@string/filter_watched_hide</item>
     </string-array>
 
     <!-- Favourite filter -->
@@ -76,15 +76,15 @@
 
     <!-- The favourite filter option keys, as stored in the shared preferences. -->
     <string-array name="filter_favourite_pref_key">
-        <item>@string/filter_favourite_any_key</item>
-        <item>@string/filter_favourite_only_key</item>
-        <item>@string/filter_favourite_exclude_key</item>
+        <item>filter_favourite_any</item>
+        <item>filter_favourite_show</item>
+        <item>filter_favourite_hide</item>
     </string-array>
     <!-- The favourite filter options, as displayed in the drop-down -->
     <string-array name="filter_favourite_pref_display">
-        <item>@string/filter_favourite_any_display</item>
-        <item>@string/filter_favourite_only_display</item>
-        <item>@string/filter_favourite_exclude_display</item>
+        <item>@string/filter_favourite_any</item>
+        <item>@string/filter_favourite_show</item>
+        <item>@string/filter_favourite_hide</item>
     </string-array>
 
 </resources>

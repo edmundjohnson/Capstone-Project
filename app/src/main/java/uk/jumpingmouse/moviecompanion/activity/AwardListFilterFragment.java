@@ -250,7 +250,7 @@ public class AwardListFilterFragment extends DialogFragment {
 //    /**
 //     * Check the radio button corresponding to a filter value.
 //     * @param radioGroup a radio group containing all the filter radio buttons
-//     * @param filterValue the filter value, e.g. ViewAward.FILTER_WISHLIST_ONLY
+//     * @param filterValue the filter value, e.g. ViewAward.FILTER_WISHLIST_SHOW
 //     */
 //    private void checkRadioButtonForFilterValue(@NonNull RadioGroup radioGroup, @Nullable String filterValue,
 //                                                @IdRes int defaultRadioButton) {
@@ -271,10 +271,10 @@ public class AwardListFilterFragment extends DialogFragment {
 //        switch (filterValue) {
 //            case ViewAwardListParameters.FILTER_WISHLIST_ANY:
 //                return  R.id.radioWishlistAny;
-//            case ViewAwardListParameters.FILTER_WISHLIST_ONLY:
-//                return  R.id.radioWishlistOnly;
-//            case ViewAwardListParameters.FILTER_WISHLIST_EXCLUDE:
-//                return  R.id.radioWishlistExclude;
+//            case ViewAwardListParameters.FILTER_WISHLIST_SHOW:
+//                return  R.id.radioWishlistShow;
+//            case ViewAwardListParameters.FILTER_WISHLIST_HIDE:
+//                return  R.id.radioWishlistHide;
 //            default:
 //                return defaultRadioButton;
 //        }
@@ -291,10 +291,10 @@ public class AwardListFilterFragment extends DialogFragment {
 //        switch (radioButtonResId) {
 //            case R.id.radioWishlistAny:
 //                return ViewAwardListParameters.FILTER_WISHLIST_ANY;
-//            case R.id.radioWishlistOnly:
-//                return ViewAwardListParameters.FILTER_WISHLIST_ONLY;
-//            case R.id.radioWishlistExclude:
-//                return ViewAwardListParameters.FILTER_WISHLIST_EXCLUDE;
+//            case R.id.radioWishlistShow:
+//                return ViewAwardListParameters.FILTER_WISHLIST_SHOW;
+//            case R.id.radioWishlistHide:
+//                return ViewAwardListParameters.FILTER_WISHLIST_HIDE;
 //            default:
 //                return defaultValue;
 //        }

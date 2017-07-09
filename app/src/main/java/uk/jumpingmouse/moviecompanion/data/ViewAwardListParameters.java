@@ -3,6 +3,10 @@ package uk.jumpingmouse.moviecompanion.data;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * This class represents the parameters which affect the ViewAward list, such as sort order
  * and filters.
@@ -26,40 +30,61 @@ public class ViewAwardListParameters {
 
     // Strings are used for the filter values so they can be used in URIs.
 
-    // These values must match the values in arrays.xml "filter_genre_pref_value"
-    public static final String FILTER_GENRE_ALL = "genreAll";
-    public static final String FILTER_GENRE_ACTION = "genreAction";
-    public static final String FILTER_GENRE_ANIMATION = "genreAnimation";
-    public static final String FILTER_GENRE_BIOGRAPHY = "genreBiography";
-    public static final String FILTER_GENRE_COMEDY = "genreComedy";
-    public static final String FILTER_GENRE_CRIME = "genreCrime";
-    public static final String FILTER_GENRE_DOCUMENTARY = "genreDocumentary";
-    public static final String FILTER_GENRE_DRAMA = "genreDrama";
-    public static final String FILTER_GENRE_FANTASY = "genreFantasy";
-    public static final String FILTER_GENRE_HORROR = "genreHorror";
-    public static final String FILTER_GENRE_MUSIC = "genreMusic";
-    public static final String FILTER_GENRE_MYSTERY = "genreMystery";
-    public static final String FILTER_GENRE_ROMANCE = "genreRomance";
-    public static final String FILTER_GENRE_THRILLER = "genreThriller";
+    // These values must match the values in arrays.xml "filter_genre_pref_key"
+    public static final String FILTER_GENRE_ALL = "filter_genre_all";
+    private static final String FILTER_GENRE_ACTION = "filter_genre_action";
+    private static final String FILTER_GENRE_ANIMATION = "filter_genre_animation";
+    private static final String FILTER_GENRE_BIOGRAPHY = "filter_genre_biography";
+    private static final String FILTER_GENRE_COMEDY = "filter_genre_comedy";
+    private static final String FILTER_GENRE_CRIME = "filter_genre_crime";
+    private static final String FILTER_GENRE_DOCUMENTARY = "filter_genre_documentary";
+    private static final String FILTER_GENRE_DRAMA = "filter_genre_drama";
+    private static final String FILTER_GENRE_FANTASY = "filter_genre_fantasy";
+    private static final String FILTER_GENRE_HORROR = "filter_genre_horror";
+    private static final String FILTER_GENRE_MUSIC = "filter_genre_music";
+    private static final String FILTER_GENRE_MYSTERY = "filter_genre_mystery";
+    private static final String FILTER_GENRE_ROMANCE = "filter_genre_romance";
+    private static final String FILTER_GENRE_THRILLER = "filter_genre_thriller";
     public static final String FILTER_GENRE_DEFAULT = FILTER_GENRE_ALL;
 
-    // These values must match the values in arrays.xml "filter_wishlist_pref_value"
-    public static final String FILTER_WISHLIST_ANY = "wishlistAny";
-    public static final String FILTER_WISHLIST_ONLY = "wishlistOnly";
-    public static final String FILTER_WISHLIST_EXCLUDE = "wishlistExclude";
+    // These values must match the values in arrays.xml "filter_wishlist_pref_key"
+    public static final String FILTER_WISHLIST_ANY = "filter_wishlist_any";
+    public static final String FILTER_WISHLIST_SHOW = "filter_wishlist_show";
+    public static final String FILTER_WISHLIST_HIDE = "filter_wishlist_hide";
     public static final String FILTER_WISHLIST_DEFAULT = FILTER_WISHLIST_ANY;
 
-    // These values must match the values in arrays.xml "filter_watched_pref_value"
-    public static final String FILTER_WATCHED_ANY = "watchedAny";
-    public static final String FILTER_WATCHED_ONLY = "watchedOnly";
-    public static final String FILTER_WATCHED_EXCLUDE = "watchedExclude";
+    // These values must match the values in arrays.xml "filter_watched_pref_key"
+    public static final String FILTER_WATCHED_ANY = "filter_watched_any";
+    public static final String FILTER_WATCHED_SHOW = "filter_watched_show";
+    public static final String FILTER_WATCHED_HIDE = "filter_watched_hide";
     public static final String FILTER_WATCHED_DEFAULT = FILTER_WATCHED_ANY;
 
-    // These values must match the values in arrays.xml "filter_favourite_pref_value"
-    public static final String FILTER_FAVOURITE_ANY = "favouriteAny";
-    public static final String FILTER_FAVOURITE_ONLY = "favouriteOnly";
-    public static final String FILTER_FAVOURITE_EXCLUDE = "favouriteExclude";
+    // These values must match the values in arrays.xml "filter_favourite_pref_key"
+    public static final String FILTER_FAVOURITE_ANY = "filter_favourite_any";
+    public static final String FILTER_FAVOURITE_SHOW = "filter_favourite_show";
+    public static final String FILTER_FAVOURITE_HIDE = "filter_favourite_hide";
     public static final String FILTER_FAVOURITE_DEFAULT = FILTER_FAVOURITE_ANY;
+
+    // This map contains the genres as stored in the database.
+    // The values therefore MUST NOT be translated!
+    private static final Map<String, String> GENRES_STORED;
+    static {
+        Map<String, String> genresStoredModifiable = new HashMap<>();
+        genresStoredModifiable.put(FILTER_GENRE_ACTION, "Action");
+        genresStoredModifiable.put(FILTER_GENRE_ANIMATION, "Animation");
+        genresStoredModifiable.put(FILTER_GENRE_BIOGRAPHY, "Biography");
+        genresStoredModifiable.put(FILTER_GENRE_COMEDY, "Comedy");
+        genresStoredModifiable.put(FILTER_GENRE_CRIME, "Crime");
+        genresStoredModifiable.put(FILTER_GENRE_DOCUMENTARY, "Documentary");
+        genresStoredModifiable.put(FILTER_GENRE_DRAMA, "Drama");
+        genresStoredModifiable.put(FILTER_GENRE_FANTASY, "Fantasy");
+        genresStoredModifiable.put(FILTER_GENRE_HORROR, "Horror");
+        genresStoredModifiable.put(FILTER_GENRE_MUSIC, "Music");
+        genresStoredModifiable.put(FILTER_GENRE_MYSTERY, "Mystery");
+        genresStoredModifiable.put(FILTER_GENRE_ROMANCE, "Romance");
+        genresStoredModifiable.put(FILTER_GENRE_THRILLER, "Thriller");
+        GENRES_STORED = Collections.unmodifiableMap(genresStoredModifiable);
+    }
 
     // parameters
     private String sortOrder;
@@ -67,6 +92,18 @@ public class ViewAwardListParameters {
     private String filterWishlist;
     private String filterWatched;
     private String filterFavourite;
+
+    // utilities
+
+    /**
+     * Returns a map of the genres as stored in the database.
+     * The map keys are of the form "filter_genre_comedy", "filter_genre_drama", etc.
+     * The map values are of the form "Comedy", "Drama", etc.
+     * @return a map of the genres as stored in the database
+     */
+    public static Map getGenresStored() {
+        return GENRES_STORED;
+    }
 
     // Getters and setters
 

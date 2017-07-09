@@ -482,8 +482,8 @@ public class LocalDatabaseInMemory implements LocalDatabase {
     }
 
     /**
-     * Returns a sorted list of view awards.
-     * @param viewAwardList a list of view awards to be sorted
+     * Returns a filtered list of view awards.
+     * @param viewAwardList a list of view awards to be filtered
      * @param selection The selection criteria to apply when filtering rows.
      *                  If this is {@code null} then all rows are included.
      * @param selectionArgs Any ?s included in selection will be replaced by
@@ -515,124 +515,128 @@ public class LocalDatabaseInMemory implements LocalDatabase {
     /**
      * Returns whether a view award is included after filtering
      * @param viewAward the view award
-     * @param selection the selection, e.g. "filterWishlist=? AND filterWatched=? AND filterFavourite=?"
-     * @param selectionArgs the selectionArgs, e.g. { wishlistAny, watchedOnly, favouriteExcluded }
+     * @param selection the selection,
+     *             e.g. "filterWishlist=? AND filterWatched=? AND filterFavourite=?"
+     * @param selectionArgs the selectionArgs,
+     *             e.g. { "filter_wishlist_any", "filter_watched_show", "filter_favourite_hide" }
      * @return true if the view award is included after filtering, false otherwise
      */
     private boolean isIncludedByFilter(@NonNull ViewAward viewAward,
                        @NonNull final String selection, @NonNull final String[] selectionArgs) {
-        boolean isIncluded = true;
-
         // genre filter
-        if (selectionArgs.length > 0 && viewAward.getGenre() != null) {
-            switch (selectionArgs[0]) {
-                case ViewAwardListParameters.FILTER_GENRE_ALL:
-                    break;
-                //TODO Improve all this...
-                case ViewAwardListParameters.FILTER_GENRE_ACTION:
-                    isIncluded = viewAward.getGenre().contains("Action");
-                    break;
-                case ViewAwardListParameters.FILTER_GENRE_ANIMATION:
-                    isIncluded = viewAward.getGenre().contains("Animation");
-                    break;
-                case ViewAwardListParameters.FILTER_GENRE_BIOGRAPHY:
-                    isIncluded = viewAward.getGenre().contains("Biography");
-                    break;
-                case ViewAwardListParameters.FILTER_GENRE_COMEDY:
-                    isIncluded = viewAward.getGenre().contains("Comedy");
-                    break;
-                case ViewAwardListParameters.FILTER_GENRE_CRIME:
-                    isIncluded = viewAward.getGenre().contains("Crime");
-                    break;
-                case ViewAwardListParameters.FILTER_GENRE_DOCUMENTARY:
-                    isIncluded = viewAward.getGenre().contains("Documentary");
-                    break;
-                case ViewAwardListParameters.FILTER_GENRE_DRAMA:
-                    isIncluded = viewAward.getGenre().contains("Drama");
-                    break;
-                case ViewAwardListParameters.FILTER_GENRE_FANTASY:
-                    isIncluded = viewAward.getGenre().contains("Fantasy");
-                    break;
-                case ViewAwardListParameters.FILTER_GENRE_HORROR:
-                    isIncluded = viewAward.getGenre().contains("Horror");
-                    break;
-                case ViewAwardListParameters.FILTER_GENRE_MUSIC:
-                    isIncluded = viewAward.getGenre().contains("Music");
-                    break;
-                case ViewAwardListParameters.FILTER_GENRE_MYSTERY:
-                    isIncluded = viewAward.getGenre().contains("Mystery");
-                    break;
-                case ViewAwardListParameters.FILTER_GENRE_ROMANCE:
-                    isIncluded = viewAward.getGenre().contains("Romance");
-                    break;
-                case ViewAwardListParameters.FILTER_GENRE_THRILLER:
-                    isIncluded = viewAward.getGenre().contains("Thriller");
-                    break;
-                default:
-                    break;
+        if (selectionArgs.length > 0) {
+            if (!isIncludedByFilterGenre(viewAward, selectionArgs[0])) {
+                return false;
             }
         }
-        // bail out early if possible
-        if (!isIncluded) {
-            return false;
-        }
-
         // wishlist filter
         if (selectionArgs.length > 1) {
-            switch (selectionArgs[1]) {
-                case ViewAwardListParameters.FILTER_WISHLIST_ANY:
-                    break;
-                case ViewAwardListParameters.FILTER_WISHLIST_ONLY:
-                    isIncluded = viewAward.isOnWishlist();
-                    break;
-                case ViewAwardListParameters.FILTER_WISHLIST_EXCLUDE:
-                    isIncluded = !viewAward.isOnWishlist();
-                    break;
-                default:
-                    break;
+            if (!isIncludedByFilterWishlist(viewAward, selectionArgs[1])) {
+                return false;
             }
         }
-        // bail out early if possible
-        if (!isIncluded) {
-            return false;
-        }
-
         // watched filter
         if (selectionArgs.length > 2) {
-            switch (selectionArgs[2]) {
-                case ViewAwardListParameters.FILTER_WATCHED_ANY:
-                    break;
-                case ViewAwardListParameters.FILTER_WATCHED_ONLY:
-                    isIncluded = viewAward.isWatched();
-                    break;
-                case ViewAwardListParameters.FILTER_WATCHED_EXCLUDE:
-                    isIncluded = !viewAward.isWatched();
-                    break;
-                default:
-                    break;
+            if (!isIncludedByFilterWatched(viewAward, selectionArgs[2])) {
+                return false;
             }
         }
-        // bail out early if possible
-        if (!isIncluded) {
-            return false;
-        }
-
         // favourite filter
         if (selectionArgs.length > 3) {
-            switch (selectionArgs[3]) {
-                case ViewAwardListParameters.FILTER_FAVOURITE_ANY:
-                    break;
-                case ViewAwardListParameters.FILTER_FAVOURITE_ONLY:
-                    isIncluded = viewAward.isFavourite();
-                    break;
-                case ViewAwardListParameters.FILTER_FAVOURITE_EXCLUDE:
-                    isIncluded = !viewAward.isFavourite();
-                    break;
-                default:
-                    break;
+            if (!isIncludedByFilterFavourite(viewAward, selectionArgs[3])) {
+                return false;
             }
         }
+        return true;
+    }
 
+    /**
+     * Returns whether a ViewAward is allowed through when filtered by genre.
+     * @param viewAward the ViewAward
+     * @param keyGenre the genre key being used as a filter, e.g. "filter_genre_comedy"
+     * @return true if the ViewAward is allowed through the filter, false otherwise
+     */
+    private boolean isIncludedByFilterGenre(@NonNull ViewAward viewAward, @NonNull String keyGenre) {
+        if (keyGenre.equals(ViewAwardListParameters.FILTER_GENRE_ALL)) {
+            return true;
+        }
+        String filterGenreStored = (String) ViewAwardListParameters.getGenresStored().get(keyGenre);
+        //noinspection SimplifiableIfStatement
+        if (filterGenreStored == null) {
+            return true;
+        }
+        return viewAward.getGenre() != null && viewAward.getGenre().contains(filterGenreStored);
+    }
+
+    /**
+     * Returns whether a ViewAward is allowed through the wishlist filter.
+     * @param viewAward the ViewAward
+     * @param filterValue the value of the wishlist filter, e.g. "filter_wishlist_show"
+     * @return true if the ViewAward is allowed through the filter, false otherwise
+     */
+    private boolean isIncludedByFilterWishlist(
+            @NonNull ViewAward viewAward, @NonNull String filterValue) {
+        boolean isIncluded = true;
+        switch (filterValue) {
+            case ViewAwardListParameters.FILTER_WISHLIST_ANY:
+                break;
+            case ViewAwardListParameters.FILTER_WISHLIST_SHOW:
+                isIncluded = viewAward.isOnWishlist();
+                break;
+            case ViewAwardListParameters.FILTER_WISHLIST_HIDE:
+                isIncluded = !viewAward.isOnWishlist();
+                break;
+            default:
+                break;
+        }
+        return isIncluded;
+    }
+
+    /**
+     * Returns whether a ViewAward is allowed through the watched filter.
+     * @param viewAward the ViewAward
+     * @param filterValue the value of the watched filter, e.g. "filter_watched_show"
+     * @return true if the ViewAward is allowed through the filter, false otherwise
+     */
+    private boolean isIncludedByFilterWatched(
+            @NonNull ViewAward viewAward, @NonNull String filterValue) {
+        boolean isIncluded = true;
+        switch (filterValue) {
+            case ViewAwardListParameters.FILTER_WATCHED_ANY:
+                break;
+            case ViewAwardListParameters.FILTER_WATCHED_SHOW:
+                isIncluded = viewAward.isWatched();
+                break;
+            case ViewAwardListParameters.FILTER_WATCHED_HIDE:
+                isIncluded = !viewAward.isWatched();
+                break;
+            default:
+                break;
+        }
+        return isIncluded;
+    }
+
+    /**
+     * Returns whether a ViewAward is allowed through the favourite filter.
+     * @param viewAward the ViewAward
+     * @param filterValue the value of the favourite filter, e.g. "filter_favourite_show"
+     * @return true if the ViewAward is allowed through the filter, false otherwise
+     */
+    private boolean isIncludedByFilterFavourite(
+            @NonNull ViewAward viewAward, @NonNull String filterValue) {
+        boolean isIncluded = true;
+        switch (filterValue) {
+            case ViewAwardListParameters.FILTER_FAVOURITE_ANY:
+                break;
+            case ViewAwardListParameters.FILTER_FAVOURITE_SHOW:
+                isIncluded = viewAward.isFavourite();
+                break;
+            case ViewAwardListParameters.FILTER_FAVOURITE_HIDE:
+                isIncluded = !viewAward.isFavourite();
+                break;
+            default:
+                break;
+        }
         return isIncluded;
     }
 
