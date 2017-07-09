@@ -5,8 +5,8 @@ apply plugin: 'com.github.ben-manes.versions'
 
 buildscript {
     repositories {
-        jcenter()
         maven { url 'https://maven.google.com' }
+        jcenter()
     }
     dependencies {
         //classpath 'com.android.tools.build:gradle:2.3.2'
@@ -25,6 +25,7 @@ buildscript {
 
 allprojects {
     repositories {
+        maven { url 'https://maven.google.com' }
         jcenter()
     }
 }

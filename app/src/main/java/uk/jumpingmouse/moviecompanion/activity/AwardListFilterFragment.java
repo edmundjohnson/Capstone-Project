@@ -31,6 +31,45 @@ public class AwardListFilterFragment extends DialogFragment {
 
         if (context != null && view != null) {
 
+            // Genre filter
+
+            // Create an ArrayAdapter using the string array and a default spinner layout
+            ArrayAdapter<CharSequence> filterGenreAdapter = ArrayAdapter.createFromResource(context,
+                    R.array.filter_genre, android.R.layout.simple_spinner_item);
+            // Specify the layout to use when the list of choices appears
+            filterGenreAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            // Apply the adapter to the spinner
+            final Spinner spnFilterGenre = (Spinner) view.findViewById(R.id.spnFilterGenre);
+            spnFilterGenre.setAdapter(filterGenreAdapter);
+
+            // Set the spinner to the position of the current filter value
+            String previousFilterGenre = PrefUtils.getAwardListFilterGenre(context);
+            int positionGenre = JavaUtils.getPositionInArray(
+                    ViewAwardListParameters.FILTER_GENRE_OPTIONS, previousFilterGenre);
+            spnFilterGenre.setSelection(positionGenre == -1 ? 0 : positionGenre);
+
+            // Add a listener to the spinner
+            spnFilterGenre.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    // The activity may no longer be there
+                    Context context = getActivity();
+                    if (context != null) {
+                        String previousFilterValue = PrefUtils.getAwardListFilterGenre(context);
+                        String newFilterValue = ViewAwardListParameters.FILTER_GENRE_OPTIONS[position];
+                        // If the filter has changed, update its shared preference
+                        if (!newFilterValue.equals(previousFilterValue)) {
+                            PrefUtils.setAwardListFilterGenre(context, newFilterValue);
+                        }
+                    }
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                    // do nothing
+                }
+            });
+
             // Wishlist filter
 
             // Create an ArrayAdapter using the string array and a default spinner layout
@@ -162,6 +201,7 @@ public class AwardListFilterFragment extends DialogFragment {
             txtClearFilters.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    spnFilterGenre.setSelection(0);
                     spnFilterWishlist.setSelection(0);
                     spnFilterWatched.setSelection(0);
                     spnFilterFavourite.setSelection(0);

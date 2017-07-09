@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string-array name="filter_genre">
+        <item>@string/filter_genre_all</item>
+        <item>@string/filter_genre_action</item>
+        <item>@string/filter_genre_animation</item>
+        <item>@string/filter_genre_biography</item>
+        <item>@string/filter_genre_comedy</item>
+        <item>@string/filter_genre_crime</item>
+        <item>@string/filter_genre_documentary</item>
+        <item>@string/filter_genre_drama</item>
+        <item>@string/filter_genre_fantasy</item>
+        <item>@string/filter_genre_horror</item>
+        <item>@string/filter_genre_music</item>
+        <item>@string/filter_genre_mystery</item>
+        <item>@string/filter_genre_romance</item>
+        <item>@string/filter_genre_thriller</item>
+    </string-array>
+
     <!-- Must match the order in ViewAwardListParameters.FILTER_WISHLIST_OPTIONS -->
     <string-array name="filter_wishlist">
         <item>@string/filter_wishlist_any</item>
@@ -8,12 +25,14 @@
         <item>@string/filter_wishlist_exclude</item>
     </string-array>
 
+    <!-- Must match the order in ViewAwardListParameters.FILTER_WATCHED_OPTIONS -->
     <string-array name="filter_watched">
         <item>@string/filter_watched_any</item>
         <item>@string/filter_watched_only</item>
         <item>@string/filter_watched_exclude</item>
     </string-array>
 
+    <!-- Must match the order in ViewAwardListParameters.FILTER_FAVOURITE_OPTIONS -->
     <string-array name="filter_favourite">
         <item>@string/filter_favourite_any</item>
         <item>@string/filter_favourite_only</item>

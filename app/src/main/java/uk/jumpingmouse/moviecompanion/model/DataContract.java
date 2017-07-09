@@ -43,6 +43,7 @@ public final class DataContract {
 
     // Query parameters
     public static final String PARAM_SORT_ORDER = "sortOrder";
+    public static final String PARAM_FILTER_GENRE = "filterGenre";
     public static final String PARAM_FILTER_WISHLIST = "filterWishlist";
     public static final String PARAM_FILTER_WATCHED = "filterWatched";
     public static final String PARAM_FILTER_FAVOURITE = "filterFavourite";
@@ -431,6 +432,7 @@ public final class DataContract {
         public static Uri buildUriWithParameters(@NonNull ViewAwardListParameters parameters) {
             return CONTENT_URI.buildUpon()
                     .appendQueryParameter(PARAM_SORT_ORDER, parameters.getSortOrder())
+                    .appendQueryParameter(PARAM_FILTER_GENRE, parameters.getFilterGenre())
                     .appendQueryParameter(PARAM_FILTER_WISHLIST, parameters.getFilterWishlist())
                     .appendQueryParameter(PARAM_FILTER_WATCHED, parameters.getFilterWatched())
                     .appendQueryParameter(PARAM_FILTER_FAVOURITE, parameters.getFilterFavourite())

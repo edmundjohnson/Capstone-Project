@@ -520,12 +520,66 @@ public class LocalDatabaseInMemory implements LocalDatabase {
      * @return true if the view award is included after filtering, false otherwise
      */
     private boolean isIncludedByFilter(@NonNull ViewAward viewAward,
-                                       @NonNull final String selection, @NonNull final String[] selectionArgs) {
+                       @NonNull final String selection, @NonNull final String[] selectionArgs) {
         boolean isIncluded = true;
 
-        // wishlist filter
-        if (selectionArgs.length > 0) {
+        // genre filter
+        if (selectionArgs.length > 0 && viewAward.getGenre() != null) {
             switch (selectionArgs[0]) {
+                case ViewAwardListParameters.FILTER_GENRE_ALL:
+                    break;
+                //TODO Improve all this...
+                case ViewAwardListParameters.FILTER_GENRE_ACTION:
+                    isIncluded = viewAward.getGenre().contains("Action");
+                    break;
+                case ViewAwardListParameters.FILTER_GENRE_ANIMATION:
+                    isIncluded = viewAward.getGenre().contains("Animation");
+                    break;
+                case ViewAwardListParameters.FILTER_GENRE_BIOGRAPHY:
+                    isIncluded = viewAward.getGenre().contains("Biography");
+                    break;
+                case ViewAwardListParameters.FILTER_GENRE_COMEDY:
+                    isIncluded = viewAward.getGenre().contains("Comedy");
+                    break;
+                case ViewAwardListParameters.FILTER_GENRE_CRIME:
+                    isIncluded = viewAward.getGenre().contains("Crime");
+                    break;
+                case ViewAwardListParameters.FILTER_GENRE_DOCUMENTARY:
+                    isIncluded = viewAward.getGenre().contains("Documentary");
+                    break;
+                case ViewAwardListParameters.FILTER_GENRE_DRAMA:
+                    isIncluded = viewAward.getGenre().contains("Drama");
+                    break;
+                case ViewAwardListParameters.FILTER_GENRE_FANTASY:
+                    isIncluded = viewAward.getGenre().contains("Fantasy");
+                    break;
+                case ViewAwardListParameters.FILTER_GENRE_HORROR:
+                    isIncluded = viewAward.getGenre().contains("Horror");
+                    break;
+                case ViewAwardListParameters.FILTER_GENRE_MUSIC:
+                    isIncluded = viewAward.getGenre().contains("Music");
+                    break;
+                case ViewAwardListParameters.FILTER_GENRE_MYSTERY:
+                    isIncluded = viewAward.getGenre().contains("Mystery");
+                    break;
+                case ViewAwardListParameters.FILTER_GENRE_ROMANCE:
+                    isIncluded = viewAward.getGenre().contains("Romance");
+                    break;
+                case ViewAwardListParameters.FILTER_GENRE_THRILLER:
+                    isIncluded = viewAward.getGenre().contains("Thriller");
+                    break;
+                default:
+                    break;
+            }
+        }
+        // bail out early if possible
+        if (!isIncluded) {
+            return false;
+        }
+
+        // wishlist filter
+        if (selectionArgs.length > 1) {
+            switch (selectionArgs[1]) {
                 case ViewAwardListParameters.FILTER_WISHLIST_ANY:
                     break;
                 case ViewAwardListParameters.FILTER_WISHLIST_ONLY:
@@ -544,8 +598,8 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         }
 
         // watched filter
-        if (selectionArgs.length > 1) {
-            switch (selectionArgs[1]) {
+        if (selectionArgs.length > 2) {
+            switch (selectionArgs[2]) {
                 case ViewAwardListParameters.FILTER_WATCHED_ANY:
                     break;
                 case ViewAwardListParameters.FILTER_WATCHED_ONLY:
@@ -564,8 +618,8 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         }
 
         // favourite filter
-        if (selectionArgs.length > 2) {
-            switch (selectionArgs[2]) {
+        if (selectionArgs.length > 3) {
+            switch (selectionArgs[3]) {
                 case ViewAwardListParameters.FILTER_FAVOURITE_ANY:
                     break;
                 case ViewAwardListParameters.FILTER_FAVOURITE_ONLY:

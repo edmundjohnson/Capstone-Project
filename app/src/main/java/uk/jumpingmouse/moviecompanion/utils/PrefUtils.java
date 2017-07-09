@@ -120,6 +120,19 @@ public class PrefUtils {
         sharedPrefEditor.apply();
     }
 
+    /**
+     * Returns whether a string has the same value as the string represented by a resource key.
+     * @param context the context
+     * @param stringValue the string value to compare to the string represented by stringResId
+     * @param stringResId a string resource id
+     * @return true if stringValue has the same value as the string represented by stringResId,
+     *         false otherwise
+     */
+    private static boolean stringEqualsResId(@NonNull Context context, @Nullable String stringValue,
+                                             @StringRes int stringResId) {
+        return stringValue != null && stringValue.equals(context.getString(stringResId));
+    }
+
     //--------------------------------------------------------------
     // Award list sort order preferences
 
@@ -148,11 +161,40 @@ public class PrefUtils {
      * @return true if value is the award list sort order preference key, false otherwise
      */
     public static boolean isAwardListSortOrderKey(@NonNull Context context, @Nullable String value) {
-        return value != null && value.equals(context.getString(R.string.pref_award_list_sort_order_key));
+        return stringEqualsResId(context, value, R.string.pref_award_list_sort_order_key);
     }
 
     //--------------------------------------------------------------
     // Award list filter preferences
+
+    /**
+     * Returns the award list genre filter shared preference.
+     * @param context the context
+     */
+    @NonNull
+    public static String getAwardListFilterGenre(@Nullable Context context) {
+        return getSharedPreferenceString(context, R.string.pref_award_list_filter_genre_key,
+                ViewAwardListParameters.FILTER_GENRE_DEFAULT);
+    }
+
+    /**
+     * Sets the award list genre filter shared preference to a supplied value.
+     * @param context the context
+     * @param value the new value for the award list genre filter
+     */
+    public static void setAwardListFilterGenre(@NonNull Context context, @NonNull String value) {
+        setSharedPreferenceString(context, R.string.pref_award_list_filter_genre_key, value);
+    }
+
+    /**
+     * Returns whether a string has the same value as the award list genre filter preference key.
+     * @param context the context
+     * @param value the value to compare to the award list genre filter preference key
+     * @return true if value is the award list genre filter preference key, false otherwise
+     */
+    public static boolean isAwardListFilterGenreKey(@NonNull Context context, @Nullable String value) {
+        return stringEqualsResId(context, value, R.string.pref_award_list_filter_genre_key);
+    }
 
     /**
      * Returns the award list wishlist filter shared preference.
@@ -180,7 +222,7 @@ public class PrefUtils {
      * @return true if value is the award list wishlist filter preference key, false otherwise
      */
     public static boolean isAwardListFilterWishlistKey(@NonNull Context context, @Nullable String value) {
-        return value != null && value.equals(context.getString(R.string.pref_award_list_filter_wishlist_key));
+        return stringEqualsResId(context, value, R.string.pref_award_list_filter_wishlist_key);
     }
 
     /**
@@ -209,7 +251,7 @@ public class PrefUtils {
      * @return true if value is the award list watched filter preference key, false otherwise
      */
     public static boolean isAwardListFilterWatchedKey(@NonNull Context context, @Nullable String value) {
-        return value != null && value.equals(context.getString(R.string.pref_award_list_filter_watched_key));
+        return stringEqualsResId(context, value, R.string.pref_award_list_filter_watched_key);
     }
 
     /**
@@ -238,7 +280,7 @@ public class PrefUtils {
      * @return true if value is the award list favourite filter preference key, false otherwise
      */
     public static boolean isAwardListFilterFavouriteKey(@NonNull Context context, @Nullable String value) {
-        return value != null && value.equals(context.getString(R.string.pref_award_list_filter_favourite_key));
+        return stringEqualsResId(context, value, R.string.pref_award_list_filter_favourite_key);
     }
 
     /**
@@ -249,7 +291,9 @@ public class PrefUtils {
      */
     public static boolean isFilterActive(@Nullable Context context) {
         // return true if any filter is not set to its default value
-        return !PrefUtils.getAwardListFilterWishlist(context).equals(
+        return !PrefUtils.getAwardListFilterGenre(context).equals(
+                ViewAwardListParameters.FILTER_GENRE_DEFAULT)
+                || !PrefUtils.getAwardListFilterWishlist(context).equals(
                 ViewAwardListParameters.FILTER_WISHLIST_DEFAULT)
                 || !PrefUtils.getAwardListFilterWatched(context).equals(
                 ViewAwardListParameters.FILTER_WATCHED_DEFAULT)

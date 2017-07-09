@@ -327,6 +327,7 @@ public class AwardListFragment extends Fragment
 
         Uri uri = null;
         String sortOrder = null;
+        String filterGenre = null;
         String filterWishlist = null;
         String filterWatched = null;
         String filterFavourite = null;
@@ -336,6 +337,7 @@ public class AwardListFragment extends Fragment
             uri = args.getParcelable(KEY_VIEW_AWARD_URI);
             if (uri != null) {
                 sortOrder = uri.getQueryParameter(DataContract.PARAM_SORT_ORDER);
+                filterGenre = uri.getQueryParameter(DataContract.PARAM_FILTER_GENRE);
                 filterWishlist = uri.getQueryParameter(DataContract.PARAM_FILTER_WISHLIST);
                 filterWatched = uri.getQueryParameter(DataContract.PARAM_FILTER_WATCHED);
                 filterFavourite = uri.getQueryParameter(DataContract.PARAM_FILTER_FAVOURITE);
@@ -343,6 +345,9 @@ public class AwardListFragment extends Fragment
         }
         if (sortOrder == null) {
             sortOrder = PrefUtils.getAwardListSortOrder(context);
+        }
+        if (filterGenre == null) {
+            filterGenre = PrefUtils.getAwardListFilterGenre(context);
         }
         if (filterWishlist == null) {
             filterWishlist = PrefUtils.getAwardListFilterWishlist(context);
@@ -356,6 +361,7 @@ public class AwardListFragment extends Fragment
 
         ViewAwardListParameters parameters = new ViewAwardListParameters();
         parameters.setSortOrder(sortOrder);
+        parameters.setFilterGenre(filterGenre);
         parameters.setFilterWishlist(filterWishlist);
         parameters.setFilterWatched(filterWatched);
         parameters.setFilterFavourite(filterFavourite);
@@ -365,7 +371,7 @@ public class AwardListFragment extends Fragment
         }
 
         StringBuilder selection = new StringBuilder();
-        String[] selectionArgs = new String[3];
+        String[] selectionArgs = new String[ViewAwardListParameters.VIEW_AWARD_LIST_FILTERS_MAX];
         generateSelectionForParameters(selection, selectionArgs, parameters);
 
         mViewAwardsCursorLoader = new CursorLoader(context,
@@ -381,6 +387,8 @@ public class AwardListFragment extends Fragment
     private void generateSelectionForParameters(@NonNull StringBuilder selection,
             @NonNull String[] selectionArgs, @NonNull ViewAwardListParameters parameters) {
         int argNumber = 0;
+        selection.append(" filterGenre=?");
+        selectionArgs[argNumber++] = parameters.getFilterGenre();
         selection.append(" filterWishlist=?");
         selectionArgs[argNumber++] = parameters.getFilterWishlist();
         selection.append(" filterWatched=?");
@@ -555,17 +563,20 @@ public class AwardListFragment extends Fragment
         }
         // If the sort order or a filter has changed, restart the loader to requery the data
         if (PrefUtils.isAwardListSortOrderKey(context, key)
+                || PrefUtils.isAwardListFilterGenreKey(context, key)
                 || PrefUtils.isAwardListFilterWishlistKey(context, key)
                 || PrefUtils.isAwardListFilterWatchedKey(context, key)
                 || PrefUtils.isAwardListFilterFavouriteKey(context, key)) {
 
             // Construct the URI using the sort and filter parameters
             String sortOrder = PrefUtils.getAwardListSortOrder(context);
+            String filterGenre = PrefUtils.getAwardListFilterGenre(context);
             String filterWishlist = PrefUtils.getAwardListFilterWishlist(context);
             String filterWatched = PrefUtils.getAwardListFilterWatched(context);
             String filterFavourite = PrefUtils.getAwardListFilterFavourite(context);
             ViewAwardListParameters parameters = new ViewAwardListParameters();
             parameters.setSortOrder(sortOrder);
+            parameters.setFilterGenre(filterGenre);
             parameters.setFilterWishlist(filterWishlist);
             parameters.setFilterWatched(filterWatched);
             parameters.setFilterFavourite(filterFavourite);

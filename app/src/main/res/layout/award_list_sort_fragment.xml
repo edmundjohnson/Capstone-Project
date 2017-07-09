@@ -18,10 +18,9 @@
         android:textColor="@android:color/white"
         android:text="@string/sort_title" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
         android:background="@color/green_50">
@@ -79,6 +78,6 @@
 
         </RadioGroup>
 
-    </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
