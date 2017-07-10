@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
  * This class contains methods available only to the free product flavour.
  * @author Edmund Johnson
  */
-public class MasterDatabaseFirebaseFree extends MasterDatabaseFirebaseBase {
+public class MasterDatabaseFirebaseFree extends MasterDatabaseFirebase {
 
     // The singleton instance of this class.
     private static MasterDatabaseFirebaseFree sMasterDatabase = null;

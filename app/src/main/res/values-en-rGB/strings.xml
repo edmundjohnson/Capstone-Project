@@ -1,0 +1,15 @@
+<resources>
+    <!-- Notes: -->
+    <!-- "movie" (vs "film") is the default, and is used for the GB locale. -->
+    <!-- "favourite" is the default, modified to "favorite" for the US locale. -->
+    <!-- "theatre" is the default, with "theater" for US and "cinema" for GB. -->
+
+    <!-- Award List Filter screen -->
+    <string name="filter_favourite_title">Favorite Movies</string>
+    <string name="filter_favourite_show">Show favorite movies</string>
+    <string name="filter_favourite_hide">Hide favorite movies</string>
+
+    <!-- Widgets -->
+    <string name="widget_title_in_cinemas">In Cinemas Now</string>
+
+</resources>

@@ -43,4 +43,14 @@
     <dimen name="detail_award_info_padding_vertical">16dp</dimen>
     <dimen name="detail_review_padding_bottom">16dp</dimen>
 
+    <!-- Widget dimensions: General -->
+    <!-- This way of doing widget_margin assumes that min version is >=14 -->
+    <dimen name="widget_margin">0dp</dimen>
+
+    <!-- Widget dimensions: In Cinemas Now -->
+    <dimen name="widget_default_width_in_cinemas">180dp</dimen>
+    <dimen name="widget_default_height_in_cinemas">180dp</dimen>
+    <dimen name="widget_min_resize_width_in_cinemas">@dimen/widget_default_width_in_cinemas</dimen>
+    <dimen name="widget_min_resize_height_in_cinemas">120dp</dimen>
+
 </resources>

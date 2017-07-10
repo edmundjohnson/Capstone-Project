@@ -86,7 +86,8 @@ android {
             //minSdkVersion 21
             // The following configuration limits the "dev" flavour to using
             // English string resources and xxhdpi screen-density resources.
-            resConfigs "en", "xxhdpi"
+//            resConfigs "en", "xxhdpi"
+            resConfigs "en", "en-rGB", "en-rUS", "xxhdpi"
         }
         prod {
             dimension "stage"

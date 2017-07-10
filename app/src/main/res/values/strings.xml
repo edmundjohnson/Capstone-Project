@@ -1,18 +1,22 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Notes: -->
+    <!-- "movie" (vs "film") is the default, and is used for the GB locale. -->
+    <!-- "favourite" is the default, modified to "favorite" for the US locale. -->
+    <!-- "theatre" is the default, with "theater" for US and "cinema" for GB. -->
+
+    <!-- App name -->
     <string name="app_name">Movie Companion</string>
 
     <!-- Content provider -->
     <string name="content_authority" translatable="false">uk.jumpingmouse.moviecompanion</string>
 
-    <!-- General UI -->
+    <!-- UI, general -->
     <string name="button_ok">OK</string>
 
     <!-- Error messages -->
     <string name="error_title">Error</string>
     <string name="connection_required_for_sign_in">An internet connection is required to sign into %s</string>
     <string name="unknown_error_on_sign_in">Something has gone wrong, please check your internet connection or try again later</string>
-    <!-- Error messages: Admin -->
-    <string name="error_mandatory_field_missing">A mandatory field is missing</string>
 
     <!-- App Bar and Menu -->
     <string name="appbar_title_award_list">@string/app_name</string>
@@ -42,18 +46,19 @@
         <item quantity="one">%d min</item>
         <item quantity="other">%d mins</item>
     </plurals>
+    <!-- Note: Genre display values are in values/arrays.xml -->
 
     <!-- Award fields -->
     <string name="category_text_movie">Movie of the Week</string>
     <string name="category_text_dvd">DVD of the Week</string>
     <string name="category_text_unknown">unknown</string>
 
-    <!-- View Award list -->
+    <!-- Award List screen -->
     <string name="no_data_available">There are no movies available.</string>
     <string name="no_data_no_connection">There are no movies available. Please check your internet connection.</string>
     <string name="no_data_filter_active">There are no movies to display. This may be because none of the movies match your filter settings.</string>
 
-    <!-- Sorting the list -->
+    <!-- Award List Sort screen -->
     <string name="sort_title">List Order</string>
     <string name="sort_order_award_date_desc">review date, latest first</string>
     <string name="sort_order_award_date_asc">review date, earliest first</string>
@@ -62,36 +67,9 @@
     <string name="sort_order_runtime_asc">runtime, shortest first</string>
     <string name="sort_order_runtime_desc">runtime, longest first</string>
 
-    <!-- View Award (Movie) screen-->
-    <string name="poster_description">Movie poster</string>
-    <string name="imdb_link_address" translatable="false">http://www.imdb.com/title/%s/</string>
-    <string name="imdb_link_text">IMDb</string>
-    <string name="imdb_link_description">Display IMDb page for movie</string>
-
-    <string name="added_to_wishlist">added to wishlist</string>
-    <string name="removed_from_wishlist">removed from wishlist</string>
-    <string name="added_to_watched">marked as watched</string>
-    <string name="removed_from_watched">marked as not watched</string>
-    <string name="added_to_favourites">added to favourites</string>
-    <string name="removed_from_favourites">removed from favourites</string>
-
-    <string name="example_movie_title">The Assassination of Jesse James by the Coward Robert Ford</string>
-    <string name="example_award_date">02 June 17</string>
-    <string name="example_movie_genre">Drama, Romance, Comedy, Biography</string>
-    <string name="example_movie_runtime">114 mins</string>
-    <!-- Short and long review for use in design view -->
-    <string name="example_review" tools:ignore="Typos">It\'s a beautiful beautiful work of art.</string>
-    <!-- <string name="example_review" tools:ignore="Typos">At the beginning we see a man in a boat who is washed up on a desert island.  Initially he builds rafts to get away, but the rafts are constantly scuppered by an unseen sea beast which turns out to be the turtle.  In a rage he overturns the turtle, and then he starts to feel an Ancient Mariner-style remorse and empathy for this creature, and then something magical starts to happen, a transformation starts to happen.  It turns into a meditation upon existence, upon loneliness, upon companionship, upon birth, death and rebirth. It is a film which is deeply compassionate and touching and funny and affectionate and insightful and I was in love with it, I just was so swept away by it.  It\'s a beautiful beautiful work of art.</string> -->
-
-    <!-- preferences -->
-    <string name="pref_award_list_sort_order_key" translatable="false">pref_award_list_sort_order_key</string>
-    <string name="pref_award_list_filter_genre_key" translatable="false">pref_award_list_filter_genre_key</string>
-    <string name="pref_award_list_filter_wishlist_key" translatable="false">pref_award_list_filter_wishlist_key</string>
-    <string name="pref_award_list_filter_watched_key" translatable="false">pref_award_list_filter_watched_key</string>
-    <string name="pref_award_list_filter_favourite_key" translatable="false">pref_award_list_filter_favourite_key</string>
-
     <!-- Award List Filter screen -->
     <string name="filter_title">List Filters</string>
+    <string name="button_clear_filters">Clear Filters</string>
 
     <string name="filter_genre_title">Genre</string>
     <string name="filter_genre_all">All genres</string>
@@ -124,6 +102,36 @@
     <string name="filter_favourite_show">Show favourite movies</string>
     <string name="filter_favourite_hide">Hide favourite movies</string>
 
-    <string name="button_clear_filters">Clear Filters</string>
+    <!-- View Award (Movie) screen-->
+    <string name="poster_description">Movie poster</string>
+    <string name="imdb_link_address" translatable="false">http://www.imdb.com/title/%s/</string>
+    <string name="imdb_link_text">IMDb</string>
+    <string name="imdb_link_description">Display IMDb page for movie</string>
+
+    <string name="added_to_wishlist">added to wishlist</string>
+    <string name="removed_from_wishlist">removed from wishlist</string>
+    <string name="added_to_watched">marked as watched</string>
+    <string name="removed_from_watched">marked as not watched</string>
+    <string name="added_to_favourites">added to favourites</string>
+    <string name="removed_from_favourites">removed from favourites</string>
+
+    <string name="example_movie_title">The Assassination of Jesse James by the Coward Robert Ford</string>
+    <string name="example_award_date">02 Jun 17</string>
+    <string name="example_movie_genre">Drama, Romance, Comedy, Biography</string>
+    <string name="example_movie_runtime">114 mins</string>
+    <!-- Short and long review for use in design view -->
+    <string name="example_review" tools:ignore="Typos">It\'s a beautiful beautiful work of art.</string>
+    <!-- <string name="example_review" tools:ignore="Typos">At the beginning we see a man in a boat who is washed up on a desert island.  Initially he builds rafts to get away, but the rafts are constantly scuppered by an unseen sea beast which turns out to be the turtle.  In a rage he overturns the turtle, and then he starts to feel an Ancient Mariner-style remorse and empathy for this creature, and then something magical starts to happen, a transformation starts to happen.  It turns into a meditation upon existence, upon loneliness, upon companionship, upon birth, death and rebirth. It is a film which is deeply compassionate and touching and funny and affectionate and insightful and I was in love with it, I just was so swept away by it.  It\'s a beautiful beautiful work of art.</string> -->
+
+    <!-- Widgets -->
+    <string name="widget_title_in_cinemas">In Theatres Now</string>
+    <string name="widget_empty_list_in_cinemas">No movies available.</string>
+
+    <!-- Preferences -->
+    <string name="pref_award_list_sort_order_key" translatable="false">pref_award_list_sort_order_key</string>
+    <string name="pref_award_list_filter_genre_key" translatable="false">pref_award_list_filter_genre_key</string>
+    <string name="pref_award_list_filter_wishlist_key" translatable="false">pref_award_list_filter_wishlist_key</string>
+    <string name="pref_award_list_filter_watched_key" translatable="false">pref_award_list_filter_watched_key</string>
+    <string name="pref_award_list_filter_favourite_key" translatable="false">pref_award_list_filter_favourite_key</string>
 
 </resources>

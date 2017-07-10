@@ -1,8 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
-// To get the dependency report, run gradle task 'dependencyUpdates'
-apply plugin: 'com.github.ben-manes.versions'
-
 buildscript {
     repositories {
         maven { url 'https://maven.google.com' }
@@ -10,15 +7,12 @@ buildscript {
     }
     dependencies {
         //classpath 'com.android.tools.build:gradle:2.3.2'
-        //classpath 'com.android.tools.build:gradle:3.0.0-alpha3'
         classpath 'com.android.tools.build:gradle:3.0.0-alpha5'
 
         // Required for Firebase
         classpath 'com.google.gms:google-services:3.0.0'
 
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
-
-        // NOTE: Do not place your application dependencies here; they belong
+        // NOTE: Do not place the application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }

@@ -4,8 +4,6 @@
     <color name="medium_gray">#ff404040</color>
     <color name="text_gray">#ff404040</color>
 
-    <color name="image_placeholder">@color/detail_card_background</color>
-    <!-- <color name="image_placeholder">#ccc</color> -->
     <!-- If modifying this colour, also modify ic_open_in_new_24dp.xml to match it -->
     <color name="partially_transparent">#B0FFFFFF</color>
 
@@ -80,10 +78,14 @@
     <color name="colorAccentDark">#a00037</color>
     <color name="colorAccentLight">#ff5c8d</color>
 
-    <!-- Detail -->
-    <color name="detail_card_background">@color/green_50</color>
-
     <!-- Buttons -->
     <color name="colorButtonBackground">@color/colorAccent</color>
+
+    <!-- View Awards List and Detail -->
+    <color name="detail_card_background">@color/green_50</color>
+    <color name="image_placeholder">@color/detail_card_background</color>
+
+    <!-- Widgets -->
+    <color name="widget_background_in_cinemas">@color/green_50</color>
 
 </resources>

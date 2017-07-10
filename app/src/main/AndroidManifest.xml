@@ -36,6 +36,19 @@
             </intent-filter>
         </activity>
 
+        <!-- List Widget -->
+        <receiver
+            android:name=".widget.InCinemasWidgetProvider"
+            android:label="@string/widget_title_in_cinemas"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="uk.jumpingmouse.moviecompanion.ACTION_DATA_UPDATED" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_in_cinemas" />
+        </receiver>
+
     </application>
 
 </manifest>

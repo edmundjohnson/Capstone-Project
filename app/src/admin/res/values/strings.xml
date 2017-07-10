@@ -13,6 +13,9 @@
     <string name="menu_option_add_movie">Add Movie</string>
     <string name="menu_option_add_award">Add Award</string>
 
+    <!-- Error messages -->
+    <string name="error_mandatory_field_missing">A mandatory field is missing</string>
+
     <!-- Admin Screens -->
     <string name="button_label_fetch_movie_details">Fetch Movie Details</string>
     <string name="button_label_save">Save</string>

@@ -1,0 +1,23 @@
+<resources>
+    <!-- Notes: -->
+    <!-- "movie" (vs "film") is the default, and is used for the GB locale. -->
+    <!-- "favourite" is the default, modified to "favorite" for the US locale. -->
+    <!-- "theatre" is the default, with "theater" for US and "cinema" for GB. -->
+
+    <!-- Menu -->
+    <string name="menu_option_add_to_favourites">Add to favorites</string>
+    <string name="menu_option_remove_from_favourites">Remove from favorites</string>
+
+    <!-- Award List Filter screen -->
+    <string name="filter_favourite_title">Favorite Movies</string>
+    <string name="filter_favourite_show">Show favorite movies</string>
+    <string name="filter_favourite_hide">Hide favorite movies</string>
+
+    <!-- View Award (Movie) screen-->
+    <string name="added_to_favourites">added to favorites</string>
+    <string name="removed_from_favourites">removed from favorites</string>
+
+    <!-- Widgets -->
+    <string name="widget_title_in_cinemas">In Theaters Now</string>
+
+</resources>

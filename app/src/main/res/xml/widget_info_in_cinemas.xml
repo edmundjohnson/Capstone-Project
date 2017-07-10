@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:initialKeyguardLayout="@layout/widget_in_cinemas"
+    android:initialLayout="@layout/widget_in_cinemas"
+    android:minHeight="@dimen/widget_default_height_in_cinemas"
+    android:minResizeHeight="@dimen/widget_min_resize_height_in_cinemas"
+    android:minResizeWidth="@dimen/widget_min_resize_width_in_cinemas"
+    android:minWidth="@dimen/widget_default_width_in_cinemas"
+    android:resizeMode="horizontal|vertical"
+    android:updatePeriodMillis="0"
+    android:widgetCategory="home_screen|keyguard"
+    tools:ignore="UnusedAttribute" />
+<!--
+    TODO:
+    android:previewImage="@drawable/widget_preview_in_cinemas"
+-->
