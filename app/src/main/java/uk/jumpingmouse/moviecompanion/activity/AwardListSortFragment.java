@@ -8,6 +8,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.RadioGroup;
 
 import uk.jumpingmouse.moviecompanion.R;
@@ -24,6 +25,8 @@ public class AwardListSortFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // do not display the default title bar, use the styled title bar in the layout xml
+        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         View view = inflater.inflate(R.layout.award_list_sort_fragment, container);
         Context context = getActivity();

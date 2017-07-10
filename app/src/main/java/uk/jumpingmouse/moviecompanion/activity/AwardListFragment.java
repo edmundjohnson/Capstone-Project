@@ -55,14 +55,11 @@ public class AwardListFragment extends Fragment
     private static final String KEY_VIEW_AWARD_URI = "KEY_VIEW_AWARD_URI";
 
     // Attributes for saving and restoring the fragment's state
-    private static final String KEY_ITEM_LAYOUT = "KEY_ITEM_LAYOUT";
+    private static final String KEY_LIST_LAYOUT = "KEY_LIST_LAYOUT";
     private static final String KEY_POSITION = "KEY_POSITION";
 
     /** The menu. */
     private Menu mMenu;
-
-    /** The cursor loader for view awards. */
-    private CursorLoader mViewAwardsCursorLoader;
 
     /** The content observer for view awards. */
     private ViewAwardContentObserver mViewAwardContentObserver;
@@ -115,7 +112,7 @@ public class AwardListFragment extends Fragment
 
         // Restore any saved state
         if (savedInstanceState != null) {
-            mViewAwardAdapter.setItemLayout(savedInstanceState.getInt(KEY_ITEM_LAYOUT));
+            mViewAwardAdapter.setListLayout(savedInstanceState.getInt(KEY_LIST_LAYOUT));
             mSelectedPosition = savedInstanceState.getInt(KEY_POSITION);
         }
 
@@ -128,7 +125,7 @@ public class AwardListFragment extends Fragment
         mRecyclerView.setHasFixedSize(true);
 
         // Display the list layout as either list view or grid view
-        setLayout(context, mViewAwardAdapter.isLayoutListView());
+        setListLayout(context, mViewAwardAdapter.isListLayoutList());
 
         return rootView;
     }
@@ -139,7 +136,7 @@ public class AwardListFragment extends Fragment
      */
     @Override
     public void onSaveInstanceState(final Bundle outState) {
-        outState.putInt(KEY_ITEM_LAYOUT, mViewAwardAdapter.getItemLayout());
+        outState.putInt(KEY_LIST_LAYOUT, mViewAwardAdapter.getListLayout());
         outState.putInt(KEY_POSITION, mSelectedPosition);
 
         super.onSaveInstanceState(outState);
@@ -190,9 +187,9 @@ public class AwardListFragment extends Fragment
         // Inflate the menu; this adds items to the app bar if it is present.
         inflater.inflate(R.menu.menu_award_list_fragment, menu);
 
-        boolean isItemLayoutGrid = mViewAwardAdapter != null && mViewAwardAdapter.isLayoutGridView();
-        menu.findItem(R.id.menu_option_list_view).setVisible(isItemLayoutGrid);
-        menu.findItem(R.id.menu_option_grid_view).setVisible(!isItemLayoutGrid);
+        boolean isListLayoutGrid = mViewAwardAdapter != null && mViewAwardAdapter.isListLayoutGrid();
+        menu.findItem(R.id.menu_option_list_view).setVisible(isListLayoutGrid);
+        menu.findItem(R.id.menu_option_grid_view).setVisible(!isListLayoutGrid);
 
         Context context = getActivity();
         displayMenuOptionForFilter(context, menu);
@@ -216,12 +213,12 @@ public class AwardListFragment extends Fragment
         switch (item.getItemId()) {
             // list view
             case R.id.menu_option_list_view:
-                setLayout(context, true);
+                setListLayout(context, true);
                 return true;
 
             // grid view
             case R.id.menu_option_grid_view:
-                setLayout(context, false);
+                setListLayout(context, false);
                 return true;
 
             // sort
@@ -243,24 +240,24 @@ public class AwardListFragment extends Fragment
     /**
      * Sets the list layout to list view or grid view.
      * @param context the context
-     * @param isLayoutListView if true, set the list to list view, otherwise set the layout to grid view
+     * @param isListLayoutList if true, set the list to list view, otherwise set the layout to grid view
      */
-    private void setLayout(@NonNull Context context, boolean isLayoutListView) {
+    private void setListLayout(@NonNull Context context, boolean isListLayoutList) {
         if (mRecyclerView != null && mViewAwardAdapter != null) {
-            if (isLayoutListView) {
+            if (isListLayoutList) {
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
                 mRecyclerView.addItemDecoration(
                         new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
-                mViewAwardAdapter.setLayoutListView();
+                mViewAwardAdapter.setListLayoutList();
             } else {
                 int columnCount = getResources().getInteger(R.integer.list_grid_column_count);
                 mRecyclerView.setLayoutManager(new GridLayoutManager(context, columnCount));
-                mViewAwardAdapter.setLayoutGridView();
+                mViewAwardAdapter.setListLayoutGrid();
             }
             // The grid icon is shown in list view and vice versa
             if (mMenu != null) {
-                mMenu.findItem(R.id.menu_option_list_view).setVisible(!isLayoutListView);
-                mMenu.findItem(R.id.menu_option_grid_view).setVisible(isLayoutListView);
+                mMenu.findItem(R.id.menu_option_list_view).setVisible(!isListLayoutList);
+                mMenu.findItem(R.id.menu_option_grid_view).setVisible(isListLayoutList);
             }
         }
     }
@@ -374,14 +371,12 @@ public class AwardListFragment extends Fragment
         String[] selectionArgs = new String[DataContract.ViewAwardEntry.LIST_FILTERS_MAX];
         generateSelectionForParameters(parameters, selection, selectionArgs);
 
-        mViewAwardsCursorLoader = new CursorLoader(context,
+        return new CursorLoader(context,
                 uri,
                 DataContract.ViewAwardEntry.ALL_COLUMNS,
                 selection.toString(),
                 selectionArgs,
                 sortOrder);
-
-        return mViewAwardsCursorLoader;
     }
 
     /**
@@ -467,7 +462,7 @@ public class AwardListFragment extends Fragment
      */
     @Override
     public void onLoaderReset(final Loader<Cursor> loader) {
-        if (mViewAwardsCursorLoader != null) {
+        if (loader != null) {
             mViewAwardAdapter.swapCursor(null);
         }
     }
@@ -477,8 +472,9 @@ public class AwardListFragment extends Fragment
      * so that onLoadFinished() can update the adapter data, hence updating the view.
      */
     private void onDataChanged() {
-        if (mViewAwardsCursorLoader != null) {
-            mViewAwardsCursorLoader.forceLoad();
+        Loader loader = getLoaderManager().getLoader(AWARD_LIST_LOADER_ID);
+        if (loader != null) {
+            loader.forceLoad();
         }
     }
 //    public void onDataChanged(Bundle bundle) {

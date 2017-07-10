@@ -39,7 +39,7 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
     private Cursor mCursor;
     private final AdapterOnClickHandler mClickHandler;
     private final View mEmptyListView;
-    private @LayoutRes int mItemLayout;
+    private @LayoutRes int mListLayout;
 
     /**
      * Private constructor to prevent direct instantiation from outside this class.
@@ -52,7 +52,7 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
         mContext = context;
         mClickHandler = clickHandler;
         mEmptyListView = emptyListView;
-        setLayoutListView();
+        setListLayoutList();
     }
 
     /**
@@ -69,7 +69,7 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
 
     @Override
     public @LayoutRes int getItemViewType(int position) {
-        return getItemLayout();
+        return getListLayout();
     }
 
     /**
@@ -224,23 +224,23 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
     // Getters and setters
 
 
-    public @LayoutRes int getItemLayout() {
-        return mItemLayout;
+    public @LayoutRes int getListLayout() {
+        return mListLayout;
     }
-    public void setItemLayout(final @LayoutRes int listLayout) {
-        mItemLayout = listLayout;
+    public void setListLayout(final @LayoutRes int listLayout) {
+        mListLayout = listLayout;
     }
-    public boolean isLayoutListView() {
-        return R.layout.award_list_item_list == getItemLayout();
+    public boolean isListLayoutList() {
+        return R.layout.award_list_item_list == getListLayout();
     }
-    public boolean isLayoutGridView() {
-        return R.layout.award_list_item_grid == getItemLayout();
+    public boolean isListLayoutGrid() {
+        return R.layout.award_list_item_grid == getListLayout();
     }
-    public void setLayoutListView() {
-        setItemLayout(R.layout.award_list_item_list);
+    public void setListLayoutList() {
+        setListLayout(R.layout.award_list_item_list);
     }
-    public void setLayoutGridView() {
-        setItemLayout(R.layout.award_list_item_grid);
+    public void setListLayoutGrid() {
+        setListLayout(R.layout.award_list_item_grid);
     }
 
     private int getSelectedPosition() {
