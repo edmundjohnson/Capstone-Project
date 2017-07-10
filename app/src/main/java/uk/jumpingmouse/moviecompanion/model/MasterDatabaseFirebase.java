@@ -19,7 +19,6 @@ import java.util.Map;
 import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
-import uk.jumpingmouse.moviecompanion.adapter.ViewAwardAdapter;
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.data.UserMovie;
@@ -53,8 +52,6 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
     private ChildEventListener mChildEventListenerAwards;
     // A listener which listens for database events at the "/users/[uid]/userMovies" node.
     private ChildEventListener mChildEventListenerUserMovies;
-
-    private ViewAwardAdapter mViewAwardAdapter;
 
     //---------------------------------------------------------------------
     // Instance handling methods

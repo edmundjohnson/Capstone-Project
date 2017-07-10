@@ -445,12 +445,6 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         if (projection != null) {
             Timber.d("selectViewAwards: projection is currently not supported");
         }
-//        if (selection != null) {
-//            Timber.d("selectViewAwards: selection is currently not supported");
-//        }
-//        if (selectionArgs != null) {
-//            Timber.d("selectViewAwards: selectionArgs is currently not supported");
-//        }
 
         // Generate an unsorted, unfiltered ViewAward list from the list of awards.
 //        // We use awardList rather than mAwards.values() in the call to generateViewAwardList(...)

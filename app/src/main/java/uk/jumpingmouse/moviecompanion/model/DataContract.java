@@ -50,14 +50,11 @@ public final class DataContract {
     public static final String PARAM_FILTER_FAVOURITE = "filterFavourite";
 
     // Values for sort direction (part of PARAM_SORT_ORDER)
-    public static final String SORT_DIRECTION_ASC = "ASC";
-    public static final String SORT_DIRECTION_DESC = "DESC";
+    static final String SORT_DIRECTION_ASC = "ASC";
+    static final String SORT_DIRECTION_DESC = "DESC";
 
     // Query parameters which are not columns
 //        public static final String PARAM_LIMIT = "limit";
-//        public static final String PARAM_EXCLUDINGNEWEST = "excludingnewest";
-//        public static final String PARAM_SORT_COLUMN = "sortColumn";
-//        public static final String PARAM_SORT_DIRECTION = "sortDirection";
 
 //    // Default values for limit queries
 //    private static final int MAX_ROWS_DEFAULT = 0;
@@ -314,12 +311,12 @@ public final class DataContract {
         static final String COLUMN_ID = ViewAwardEntry._ID;
         static final String COLUMN_MOVIE_ID = "movieId";
         static final String COLUMN_IMDB_ID = "imdbId";
-        public static final String COLUMN_AWARD_DATE = "awardDate";
+        static final String COLUMN_AWARD_DATE = "awardDate";
         static final String COLUMN_CATEGORY = "category";
         static final String COLUMN_REVIEW = "review";
         static final String COLUMN_DISPLAY_ORDER = "displayOrder";
-        public static final String COLUMN_TITLE = "title";
-        public static final String COLUMN_RUNTIME = "runtime";
+        static final String COLUMN_TITLE = "title";
+        static final String COLUMN_RUNTIME = "runtime";
         static final String COLUMN_GENRE = "genre";
         static final String COLUMN_POSTER = "poster";
         static final String COLUMN_ON_WISHLIST = "onWishlist";

@@ -45,21 +45,26 @@ public class UserMovie implements Parcelable {
 
     //---------------------------------------------------------------
     // Getters
+    // These MUST all be public - if not, Firebase will fail to
+    // load the UserMovie from the database.
 
     /** Returns the unique id, e.g. 4016934. */
     public int getId() {
         return id;
     }
 
-    boolean isOnWishlist() {
+    @SuppressWarnings("WeakerAccess")
+    public boolean isOnWishlist() {
         return onWishlist;
     }
 
-    boolean isWatched() {
+    @SuppressWarnings("WeakerAccess")
+    public boolean isWatched() {
         return watched;
     }
 
-    boolean isFavourite() {
+    @SuppressWarnings("WeakerAccess")
+    public boolean isFavourite() {
         return favourite;
     }
 

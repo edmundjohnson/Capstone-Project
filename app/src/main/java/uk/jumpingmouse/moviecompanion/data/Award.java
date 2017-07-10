@@ -72,6 +72,8 @@ public class Award implements Parcelable {
 
     //---------------------------------------------------------------
     // Getters
+    // These MUST all be public - if not, Firebase will fail to
+    // load the Award from the database.
 
     @NonNull
     public String getId() {
@@ -83,7 +85,7 @@ public class Award implements Parcelable {
     }
 
     @NonNull
-    String getAwardDate() {
+    public String getAwardDate() {
         return awardDate;
     }
 
@@ -97,7 +99,8 @@ public class Award implements Parcelable {
         return review;
     }
 
-    int getDisplayOrder() {
+    @SuppressWarnings("WeakerAccess")
+    public int getDisplayOrder() {
         return displayOrder;
     }
 

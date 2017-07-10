@@ -75,6 +75,8 @@ public class Movie implements Parcelable {
 
     //---------------------------------------------------------------
     // Getters
+    // These MUST all be public - if not, Firebase will fail to
+    // load the Movie from the database.
 
     /** Returns the unique id, e.g. 4016934. */
     public int getId() {

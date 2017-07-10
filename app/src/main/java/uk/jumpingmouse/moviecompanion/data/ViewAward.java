@@ -101,9 +101,12 @@ public class ViewAward {
 
     //---------------------------------------------------------------
     // Getters
+    // These MUST all be public - if not, Firebase will fail to
+    // load the ViewAward from the database.
+    // (though actually, ViewAward is currently not in database)
 
     @NonNull
-    private String getId() {
+    public String getId() {
         return id;
     }
 
@@ -131,7 +134,7 @@ public class ViewAward {
         return review;
     }
 
-    private int getDisplayOrder() {
+    public int getDisplayOrder() {
         return displayOrder;
     }
 
