@@ -8,7 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
 import uk.jumpingmouse.moviecompanion.R;
-import uk.jumpingmouse.moviecompanion.data.ViewAwardListParameters;
+import uk.jumpingmouse.moviecompanion.model.DataContract;
 
 /**
  * Preferences utility methods.
@@ -142,7 +142,7 @@ public class PrefUtils {
      */
     public static String getAwardListSortOrder(@Nullable Context context) {
         return getSharedPreferenceString(context, R.string.pref_award_list_sort_order_key,
-                ViewAwardListParameters.SORT_ORDER_DEFAULT);
+                DataContract.ViewAwardEntry.SORT_ORDER_DEFAULT);
     }
 
     /**
@@ -174,7 +174,7 @@ public class PrefUtils {
     @NonNull
     public static String getAwardListFilterGenre(@Nullable Context context) {
         return getSharedPreferenceString(context, R.string.pref_award_list_filter_genre_key,
-                ViewAwardListParameters.FILTER_GENRE_DEFAULT);
+                DataContract.ViewAwardEntry.FILTER_GENRE_DEFAULT);
     }
 
     /**
@@ -203,7 +203,7 @@ public class PrefUtils {
     @NonNull
     public static String getAwardListFilterWishlist(@Nullable Context context) {
         return getSharedPreferenceString(context, R.string.pref_award_list_filter_wishlist_key,
-                ViewAwardListParameters.FILTER_WISHLIST_DEFAULT);
+                DataContract.ViewAwardEntry.FILTER_WISHLIST_DEFAULT);
     }
 
     /**
@@ -232,7 +232,7 @@ public class PrefUtils {
     @NonNull
     public static String getAwardListFilterWatched(@Nullable Context context) {
         return getSharedPreferenceString(context, R.string.pref_award_list_filter_watched_key,
-                ViewAwardListParameters.FILTER_WATCHED_DEFAULT);
+                DataContract.ViewAwardEntry.FILTER_WATCHED_DEFAULT);
     }
 
     /**
@@ -261,7 +261,7 @@ public class PrefUtils {
     @NonNull
     public static String getAwardListFilterFavourite(@Nullable Context context) {
         return getSharedPreferenceString(context, R.string.pref_award_list_filter_favourite_key,
-                ViewAwardListParameters.FILTER_FAVOURITE_DEFAULT);
+                DataContract.ViewAwardEntry.FILTER_FAVOURITE_DEFAULT);
     }
 
     /**
@@ -292,13 +292,13 @@ public class PrefUtils {
     public static boolean isFilterActive(@Nullable Context context) {
         // return true if any filter is not set to its default value
         return !PrefUtils.getAwardListFilterGenre(context).equals(
-                ViewAwardListParameters.FILTER_GENRE_DEFAULT)
+                        DataContract.ViewAwardEntry.FILTER_GENRE_DEFAULT)
                 || !PrefUtils.getAwardListFilterWishlist(context).equals(
-                ViewAwardListParameters.FILTER_WISHLIST_DEFAULT)
+                        DataContract.ViewAwardEntry.FILTER_WISHLIST_DEFAULT)
                 || !PrefUtils.getAwardListFilterWatched(context).equals(
-                ViewAwardListParameters.FILTER_WATCHED_DEFAULT)
+                        DataContract.ViewAwardEntry.FILTER_WATCHED_DEFAULT)
                 || !PrefUtils.getAwardListFilterFavourite(context).equals(
-                ViewAwardListParameters.FILTER_FAVOURITE_DEFAULT);
+                        DataContract.ViewAwardEntry.FILTER_FAVOURITE_DEFAULT);
     }
 
 }

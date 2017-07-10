@@ -298,12 +298,6 @@ public class DataProvider extends ContentProvider {
         int rowsDeleted;
         Context context = getContext();
 
-//        // A null selection deletes all rows and returns 0.
-//        // A selection of "1" deletes all rows and returns the number of rows deleted.
-//        if (selection == null) {
-//            selection = "1";
-//        }
-
         // Use the uriMatcher to get the id of the URI being handled.
         // If there is no match, throw an UnsupportedOperationException.
         final int match = URI_MATCHER.match(uri);
@@ -326,6 +320,10 @@ public class DataProvider extends ContentProvider {
                 } else {
                     rowsDeleted = deleteAward(awardId);
                 }
+                break;
+            // delete ALL of the signed-in user's user movies from the local database
+            case USER_MOVIE:
+                rowsDeleted = deleteUserMoviesAll(context);
                 break;
             case USER_MOVIE_ID:
                 int userMovieId = ModelUtils.idToMovieId(uri.getLastPathSegment());
@@ -769,6 +767,14 @@ public class DataProvider extends ContentProvider {
                     "Id mismatch between URL and body of update user movie request");
         }
         return getLocalDatabase().addUserMovie(userMovie);
+    }
+
+    /**
+     * Deletes all of the signed-in user's user movies from the database.
+     * @return the number of rows deleted
+     */
+    private int deleteUserMoviesAll(@Nullable Context context) {
+        return getLocalDatabase().deleteUserMoviesAll();
     }
 
     /**

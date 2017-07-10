@@ -49,7 +49,7 @@ public class MasterDatabaseFirebaseAdmin extends MasterDatabaseFirebase {
      */
     @Override
     public int addMovie(@Nullable final Context context, @NonNull final Movie movie) {
-        return setNode(context, DataContract.MovieEntry.ROOT_NODE, Integer.toString(movie.getId()),
+        return setNode(context, NODE_MOVIES, Integer.toString(movie.getId()),
                 movie, true);
     }
 
@@ -64,8 +64,7 @@ public class MasterDatabaseFirebaseAdmin extends MasterDatabaseFirebase {
         if (id == Movie.ID_UNKNOWN) {
             return 0;
         }
-        return deleteNode(context, DataContract.MovieEntry.ROOT_NODE,
-                Integer.toString(id), true);
+        return deleteNode(context, NODE_MOVIES, Integer.toString(id), true);
     }
 
     //---------------------------------------------------------------------
@@ -81,8 +80,7 @@ public class MasterDatabaseFirebaseAdmin extends MasterDatabaseFirebase {
      */
     @Override
     public int addAward(@Nullable final Context context, @NonNull final Award award) {
-        return setNode(context, DataContract.AwardEntry.ROOT_NODE, award.getId(),
-                award, true);
+        return setNode(context, NODE_AWARDS, award.getId(), award, true);
     }
 
     /**
@@ -96,7 +94,7 @@ public class MasterDatabaseFirebaseAdmin extends MasterDatabaseFirebase {
         if (id == null) {
             return 0;
         }
-        return deleteNode(context, DataContract.AwardEntry.ROOT_NODE, id, true);
+        return deleteNode(context, NODE_AWARDS, id, true);
     }
 
     //---------------------------------------------------------------------

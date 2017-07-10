@@ -19,7 +19,6 @@ import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.data.UserMovie;
 import uk.jumpingmouse.moviecompanion.data.ViewAward;
-import uk.jumpingmouse.moviecompanion.data.ViewAwardListParameters;
 import uk.jumpingmouse.moviecompanion.utils.JavaUtils;
 
 /**
@@ -350,6 +349,17 @@ public class LocalDatabaseInMemory implements LocalDatabase {
     }
 
     /**
+     * Deletes all of the signed-in user's user movies from the database.
+     * @return the number of rows deleted
+     */
+    @Override
+    public int deleteUserMoviesAll() {
+        int rowsDeleted = mUserMovies.size();
+        mUserMovies.clear();
+        return rowsDeleted;
+    }
+
+    /**
      * Deletes a user movie from the database.
      * @param id the id of the user movie to be deleted
      * @return the number of rows deleted
@@ -557,15 +567,16 @@ public class LocalDatabaseInMemory implements LocalDatabase {
      * @return true if the ViewAward is allowed through the filter, false otherwise
      */
     private boolean isIncludedByFilterGenre(@NonNull ViewAward viewAward, @NonNull String keyGenre) {
-        if (keyGenre.equals(ViewAwardListParameters.FILTER_GENRE_ALL)) {
+        if (keyGenre.equals(DataContract.ViewAwardEntry.FILTER_GENRE_ALL)) {
             return true;
         }
-        String filterGenreStored = (String) ViewAwardListParameters.getGenresStored().get(keyGenre);
+        String filterGenreStored = DataContract.ViewAwardEntry.getGenreStoredForGenreKey(keyGenre);
         //noinspection SimplifiableIfStatement
         if (filterGenreStored == null) {
             return true;
         }
-        return viewAward.getGenre() != null && viewAward.getGenre().contains(filterGenreStored);
+        return viewAward.getGenre() != null
+                && viewAward.getGenre().contains(filterGenreStored);
     }
 
     /**
@@ -578,12 +589,12 @@ public class LocalDatabaseInMemory implements LocalDatabase {
             @NonNull ViewAward viewAward, @NonNull String filterValue) {
         boolean isIncluded = true;
         switch (filterValue) {
-            case ViewAwardListParameters.FILTER_WISHLIST_ANY:
+            case DataContract.ViewAwardEntry.FILTER_WISHLIST_ANY:
                 break;
-            case ViewAwardListParameters.FILTER_WISHLIST_SHOW:
+            case DataContract.ViewAwardEntry.FILTER_WISHLIST_SHOW:
                 isIncluded = viewAward.isOnWishlist();
                 break;
-            case ViewAwardListParameters.FILTER_WISHLIST_HIDE:
+            case DataContract.ViewAwardEntry.FILTER_WISHLIST_HIDE:
                 isIncluded = !viewAward.isOnWishlist();
                 break;
             default:
@@ -602,12 +613,12 @@ public class LocalDatabaseInMemory implements LocalDatabase {
             @NonNull ViewAward viewAward, @NonNull String filterValue) {
         boolean isIncluded = true;
         switch (filterValue) {
-            case ViewAwardListParameters.FILTER_WATCHED_ANY:
+            case DataContract.ViewAwardEntry.FILTER_WATCHED_ANY:
                 break;
-            case ViewAwardListParameters.FILTER_WATCHED_SHOW:
+            case DataContract.ViewAwardEntry.FILTER_WATCHED_SHOW:
                 isIncluded = viewAward.isWatched();
                 break;
-            case ViewAwardListParameters.FILTER_WATCHED_HIDE:
+            case DataContract.ViewAwardEntry.FILTER_WATCHED_HIDE:
                 isIncluded = !viewAward.isWatched();
                 break;
             default:
@@ -626,12 +637,12 @@ public class LocalDatabaseInMemory implements LocalDatabase {
             @NonNull ViewAward viewAward, @NonNull String filterValue) {
         boolean isIncluded = true;
         switch (filterValue) {
-            case ViewAwardListParameters.FILTER_FAVOURITE_ANY:
+            case DataContract.ViewAwardEntry.FILTER_FAVOURITE_ANY:
                 break;
-            case ViewAwardListParameters.FILTER_FAVOURITE_SHOW:
+            case DataContract.ViewAwardEntry.FILTER_FAVOURITE_SHOW:
                 isIncluded = viewAward.isFavourite();
                 break;
-            case ViewAwardListParameters.FILTER_FAVOURITE_HIDE:
+            case DataContract.ViewAwardEntry.FILTER_FAVOURITE_HIDE:
                 isIncluded = !viewAward.isFavourite();
                 break;
             default:

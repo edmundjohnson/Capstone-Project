@@ -32,6 +32,12 @@ import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
  */
 abstract class MasterDatabaseFirebase implements MasterDatabase {
 
+    /** Firebase database nodes. */
+    static final String NODE_MOVIES = "movies";
+    static final String NODE_AWARDS = "awards";
+    private static final String NODE_USERS = "users";
+    private static final String NODE_USER_MOVIES = "userMovies";
+
     // The Firebase Realtime Database.
     private static FirebaseDatabase sFirebaseDatabase;
     // A database reference to the "/movies" node.
@@ -142,9 +148,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
         if (context == null) {
             return 0;
         }
-        String userMoviesNode = DataContract.UserMovieEntry.getUserMoviesNode(
-                getSecurityManager().getUid());
-
+        String userMoviesNode = getUserMoviesNode(getSecurityManager().getUid());
         if (userMoviesNode == null) {
             return 0;
         }
@@ -163,12 +167,24 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
         if (context == null || id == Movie.ID_UNKNOWN) {
             return 0;
         }
-        String userMoviesNode = DataContract.UserMovieEntry.getUserMoviesNode(
-                getSecurityManager().getUid());
+        String userMoviesNode = getUserMoviesNode(getSecurityManager().getUid());
         if (userMoviesNode == null) {
             return 0;
         }
         return deleteNode(context, userMoviesNode, Integer.toString(id), false);
+    }
+
+    /**
+     * Returns the user movies node for a user, i.e. "/users/[uid]/userMovies".
+     * @param uid the user's uid
+     * @return the user movies node for a user
+     */
+    @Nullable
+    private String getUserMoviesNode(@Nullable String uid) {
+        if (uid == null) {
+            return null;
+        }
+        return NODE_USERS + "/" + uid + "/" + NODE_USER_MOVIES;
     }
 
     //---------------------------------------------------------------------
@@ -528,7 +544,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
     @NonNull
     private DatabaseReference getDatabaseReferenceMovies() {
         if (sDatabaseReferenceMovies == null) {
-            sDatabaseReferenceMovies = getDatabaseReference(DataContract.MovieEntry.ROOT_NODE);
+            sDatabaseReferenceMovies = getDatabaseReference(NODE_MOVIES);
         }
         return sDatabaseReferenceMovies;
     }
@@ -540,7 +556,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
     @NonNull
     private DatabaseReference getDatabaseReferenceAwards() {
         if (sDatabaseReferenceAwards == null) {
-            sDatabaseReferenceAwards = getDatabaseReference(DataContract.AwardEntry.ROOT_NODE);
+            sDatabaseReferenceAwards = getDatabaseReference(NODE_AWARDS);
         }
         return sDatabaseReferenceAwards;
     }
@@ -552,8 +568,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
     @NonNull
     private DatabaseReference getDatabaseReferenceUserMovies(@NonNull String uid) {
         if (sDatabaseReferenceUserMovies == null) {
-            sDatabaseReferenceUserMovies = getDatabaseReference(
-                    DataContract.UserMovieEntry.getUserMoviesNode(uid));
+            sDatabaseReferenceUserMovies = getDatabaseReference(getUserMoviesNode(uid));
         }
         return sDatabaseReferenceUserMovies;
     }

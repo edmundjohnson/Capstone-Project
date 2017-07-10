@@ -234,7 +234,7 @@ public class AwardListFilterFragment extends DialogFragment {
 //                    if (context != null) {
 //                        // Change the wishlist filter shared preference
 //                        String newFilterWishlist = getFilterValueForRadioButton(
-//                                checkedId, ViewAwardListParameters.FILTER_WISHLIST_DEFAULT);
+//                                checkedId, DataContract.ViewAwardEntry.FILTER_WISHLIST_DEFAULT);
 //                        PrefUtils.setAwardListFilterWishlist(context, newFilterWishlist);
 //                    }
 //                    // Dismiss the dialog
@@ -250,7 +250,7 @@ public class AwardListFilterFragment extends DialogFragment {
 //    /**
 //     * Check the radio button corresponding to a filter value.
 //     * @param radioGroup a radio group containing all the filter radio buttons
-//     * @param filterValue the filter value, e.g. ViewAward.FILTER_WISHLIST_SHOW
+//     * @param filterValue the filter value, e.g. DataContract.ViewAwardEntry.FILTER_WISHLIST_SHOW
 //     */
 //    private void checkRadioButtonForFilterValue(@NonNull RadioGroup radioGroup, @Nullable String filterValue,
 //                                                @IdRes int defaultRadioButton) {
@@ -269,11 +269,11 @@ public class AwardListFilterFragment extends DialogFragment {
 //            return defaultRadioButton;
 //        }
 //        switch (filterValue) {
-//            case ViewAwardListParameters.FILTER_WISHLIST_ANY:
+//            case DataContract.ViewAwardEntry.FILTER_WISHLIST_ANY:
 //                return  R.id.radioWishlistAny;
-//            case ViewAwardListParameters.FILTER_WISHLIST_SHOW:
+//            case DataContract.ViewAwardEntry.FILTER_WISHLIST_SHOW:
 //                return  R.id.radioWishlistShow;
-//            case ViewAwardListParameters.FILTER_WISHLIST_HIDE:
+//            case DataContract.ViewAwardEntry.FILTER_WISHLIST_HIDE:
 //                return  R.id.radioWishlistHide;
 //            default:
 //                return defaultRadioButton;
@@ -290,11 +290,11 @@ public class AwardListFilterFragment extends DialogFragment {
 //    private String getFilterValueForRadioButton(@IdRes int radioButtonResId, @NonNull String defaultValue) {
 //        switch (radioButtonResId) {
 //            case R.id.radioWishlistAny:
-//                return ViewAwardListParameters.FILTER_WISHLIST_ANY;
+//                return DataContract.ViewAwardEntry.FILTER_WISHLIST_ANY;
 //            case R.id.radioWishlistShow:
-//                return ViewAwardListParameters.FILTER_WISHLIST_SHOW;
+//                return DataContract.ViewAwardEntry.FILTER_WISHLIST_SHOW;
 //            case R.id.radioWishlistHide:
-//                return ViewAwardListParameters.FILTER_WISHLIST_HIDE;
+//                return DataContract.ViewAwardEntry.FILTER_WISHLIST_HIDE;
 //            default:
 //                return defaultValue;
 //        }

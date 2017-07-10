@@ -33,7 +33,7 @@ import android.widget.TextView;
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.adapter.ViewAwardAdapter;
-import uk.jumpingmouse.moviecompanion.data.ViewAwardListParameters;
+import uk.jumpingmouse.moviecompanion.data.ViewAwardQueryParameters;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.moviecompanion.model.LocalDatabase;
 import uk.jumpingmouse.moviecompanion.utils.NetUtils;
@@ -359,7 +359,7 @@ public class AwardListFragment extends Fragment
             filterFavourite = PrefUtils.getAwardListFilterFavourite(context);
         }
 
-        ViewAwardListParameters parameters = new ViewAwardListParameters();
+        ViewAwardQueryParameters parameters = new ViewAwardQueryParameters();
         parameters.setSortOrder(sortOrder);
         parameters.setFilterGenre(filterGenre);
         parameters.setFilterWishlist(filterWishlist);
@@ -371,8 +371,8 @@ public class AwardListFragment extends Fragment
         }
 
         StringBuilder selection = new StringBuilder();
-        String[] selectionArgs = new String[ViewAwardListParameters.VIEW_AWARD_LIST_FILTERS_MAX];
-        generateSelectionForParameters(selection, selectionArgs, parameters);
+        String[] selectionArgs = new String[DataContract.ViewAwardEntry.LIST_FILTERS_MAX];
+        generateSelectionForParameters(parameters, selection, selectionArgs);
 
         mViewAwardsCursorLoader = new CursorLoader(context,
                 uri,
@@ -384,16 +384,23 @@ public class AwardListFragment extends Fragment
         return mViewAwardsCursorLoader;
     }
 
-    private void generateSelectionForParameters(@NonNull StringBuilder selection,
-            @NonNull String[] selectionArgs, @NonNull ViewAwardListParameters parameters) {
+    /**
+     * Generates the selection and selection args for a query based on the query parameters.
+     * @param parameters the query parameters
+     * @param selection the selection, which is generated as:
+     *          " filterGenre=? AND filterWishlist=?  AND filterWatched=?  AND filterFavourite=? "
+     * @param selectionArgs this is set to the selection arguments
+     */
+    private void generateSelectionForParameters(@NonNull ViewAwardQueryParameters parameters,
+            @NonNull StringBuilder selection, @NonNull String[] selectionArgs) {
         int argNumber = 0;
-        selection.append(" filterGenre=?");
+        selection.append(" filterGenre=? ");
         selectionArgs[argNumber++] = parameters.getFilterGenre();
-        selection.append(" filterWishlist=?");
+        selection.append(" AND filterWishlist=? ");
         selectionArgs[argNumber++] = parameters.getFilterWishlist();
-        selection.append(" filterWatched=?");
+        selection.append(" AND filterWatched=? ");
         selectionArgs[argNumber++] = parameters.getFilterWatched();
-        selection.append(" filterFavourite=?");
+        selection.append(" AND filterFavourite=? ");
         selectionArgs[argNumber] = parameters.getFilterFavourite();
     }
 
@@ -569,17 +576,12 @@ public class AwardListFragment extends Fragment
                 || PrefUtils.isAwardListFilterFavouriteKey(context, key)) {
 
             // Construct the URI using the sort and filter parameters
-            String sortOrder = PrefUtils.getAwardListSortOrder(context);
-            String filterGenre = PrefUtils.getAwardListFilterGenre(context);
-            String filterWishlist = PrefUtils.getAwardListFilterWishlist(context);
-            String filterWatched = PrefUtils.getAwardListFilterWatched(context);
-            String filterFavourite = PrefUtils.getAwardListFilterFavourite(context);
-            ViewAwardListParameters parameters = new ViewAwardListParameters();
-            parameters.setSortOrder(sortOrder);
-            parameters.setFilterGenre(filterGenre);
-            parameters.setFilterWishlist(filterWishlist);
-            parameters.setFilterWatched(filterWatched);
-            parameters.setFilterFavourite(filterFavourite);
+            ViewAwardQueryParameters parameters = new ViewAwardQueryParameters();
+            parameters.setSortOrder(PrefUtils.getAwardListSortOrder(context));
+            parameters.setFilterGenre(PrefUtils.getAwardListFilterGenre(context));
+            parameters.setFilterWishlist(PrefUtils.getAwardListFilterWishlist(context));
+            parameters.setFilterWatched(PrefUtils.getAwardListFilterWatched(context));
+            parameters.setFilterFavourite(PrefUtils.getAwardListFilterFavourite(context));
             Uri uri = DataContract.ViewAwardEntry.buildUriWithParameters(parameters);
 
             // Restart the loader

@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
 import uk.jumpingmouse.moviecompanion.R;
-import uk.jumpingmouse.moviecompanion.data.ViewAwardListParameters;
+import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.moviecompanion.utils.PrefUtils;
 
 /**
@@ -73,17 +73,17 @@ public class AwardListSortFragment extends DialogFragment {
      */
     private @IdRes int getRadioButtonForSortOrder(@NonNull String sortOrder) {
         switch (sortOrder) {
-            case ViewAwardListParameters.SORT_ORDER_AWARD_DATE_ASC:
+            case DataContract.ViewAwardEntry.SORT_ORDER_AWARD_DATE_ASC:
                 return  R.id.radioAwardDateAsc;
-            case ViewAwardListParameters.SORT_ORDER_AWARD_DATE_DESC:
+            case DataContract.ViewAwardEntry.SORT_ORDER_AWARD_DATE_DESC:
                 return  R.id.radioAwardDateDesc;
-            case ViewAwardListParameters.SORT_ORDER_TITLE_ASC:
+            case DataContract.ViewAwardEntry.SORT_ORDER_TITLE_ASC:
                 return R.id.radioTitleAsc;
-            case ViewAwardListParameters.SORT_ORDER_TITLE_DESC:
+            case DataContract.ViewAwardEntry.SORT_ORDER_TITLE_DESC:
                 return R.id.radioTitleDesc;
-            case ViewAwardListParameters.SORT_ORDER_RUNTIME_ASC:
+            case DataContract.ViewAwardEntry.SORT_ORDER_RUNTIME_ASC:
                 return R.id.radioRuntimeAsc;
-            case ViewAwardListParameters.SORT_ORDER_RUNTIME_DESC:
+            case DataContract.ViewAwardEntry.SORT_ORDER_RUNTIME_DESC:
                 return R.id.radioRuntimeDesc;
             default:
                 return R.id.radioAwardDateDesc;
@@ -99,19 +99,19 @@ public class AwardListSortFragment extends DialogFragment {
     private String getSortOrderForRadioButton(@IdRes int radioButtonResId) {
         switch (radioButtonResId) {
             case R.id.radioAwardDateAsc:
-                return ViewAwardListParameters.SORT_ORDER_AWARD_DATE_ASC;
+                return DataContract.ViewAwardEntry.SORT_ORDER_AWARD_DATE_ASC;
             case R.id.radioAwardDateDesc:
-                return ViewAwardListParameters.SORT_ORDER_AWARD_DATE_DESC;
+                return DataContract.ViewAwardEntry.SORT_ORDER_AWARD_DATE_DESC;
             case R.id.radioTitleAsc:
-                return ViewAwardListParameters.SORT_ORDER_TITLE_ASC;
+                return DataContract.ViewAwardEntry.SORT_ORDER_TITLE_ASC;
             case R.id.radioTitleDesc:
-                return ViewAwardListParameters.SORT_ORDER_TITLE_DESC;
+                return DataContract.ViewAwardEntry.SORT_ORDER_TITLE_DESC;
             case R.id.radioRuntimeAsc:
-                return ViewAwardListParameters.SORT_ORDER_RUNTIME_ASC;
+                return DataContract.ViewAwardEntry.SORT_ORDER_RUNTIME_ASC;
             case R.id.radioRuntimeDesc:
-                return ViewAwardListParameters.SORT_ORDER_RUNTIME_DESC;
+                return DataContract.ViewAwardEntry.SORT_ORDER_RUNTIME_DESC;
             default:
-                return ViewAwardListParameters.SORT_ORDER_DEFAULT;
+                return DataContract.ViewAwardEntry.SORT_ORDER_DEFAULT;
         }
     }
 }

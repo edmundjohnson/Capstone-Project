@@ -3,6 +3,7 @@ package uk.jumpingmouse.moviecompanion.security;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -18,6 +19,7 @@ import java.util.Arrays;
 import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
+import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.moviecompanion.model.MasterDatabase;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
@@ -93,6 +95,11 @@ public class SecurityManagerFirebase implements SecurityManager {
 
                 } else {
                     // user has just signed out
+
+                    // delete all of the signed-in user's data from the local database
+                    Uri uri = DataContract.UserMovieEntry.buildUriForAllRows();
+                    activity.getContentResolver().delete(uri, null, null);
+
                     onSignedOutCleanup();
 
                     // display login screen

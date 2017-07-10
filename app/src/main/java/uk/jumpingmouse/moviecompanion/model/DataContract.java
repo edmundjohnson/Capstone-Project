@@ -6,17 +6,18 @@ import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import uk.jumpingmouse.moviecompanion.BuildConfig;
-import uk.jumpingmouse.moviecompanion.data.ViewAwardListParameters;
+import uk.jumpingmouse.moviecompanion.data.ViewAwardQueryParameters;
 
 /**
- * Class which defines the contract between the model (database) and view layers.
+ * Class which defines the contract between the model and view layers.
  * @author Edmund Johnson
  */
 public final class DataContract {
-
-    /** Database node for user-related data. */
-    private static final String ROOT_NODE_USERS = "users";
 
     /**
      * The "content authority" is a name for the entire content provider, similar to the
@@ -48,9 +49,9 @@ public final class DataContract {
     public static final String PARAM_FILTER_WATCHED = "filterWatched";
     public static final String PARAM_FILTER_FAVOURITE = "filterFavourite";
 
-    // Values for sort direction (PARAM_SORT_DIRECTION)
-    static final String SORT_DIRECTION_ASC = "ASC";
-    static final String SORT_DIRECTION_DESC = "DESC";
+    // Values for sort direction (part of PARAM_SORT_ORDER)
+    public static final String SORT_DIRECTION_ASC = "ASC";
+    public static final String SORT_DIRECTION_DESC = "DESC";
 
     // Query parameters which are not columns
 //        public static final String PARAM_LIMIT = "limit";
@@ -76,7 +77,7 @@ public final class DataContract {
     private DataContract() {
     }
 
-    /** Inner class that defines the contents of the movie node. */
+    /** Inner class that defines the contract for movie information. */
     public static final class MovieEntry implements BaseColumns {
 
         static final String CONTENT_DIR_TYPE =
@@ -84,9 +85,7 @@ public final class DataContract {
         static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + URI_PATH_MOVIE;
 
-        // Database
-
-        static final String ROOT_NODE = "movies";
+        // Data
 
         public static final String COLUMN_ID = MovieEntry._ID;
         public static final String COLUMN_IMDB_ID = "imdbId";
@@ -168,7 +167,7 @@ public final class DataContract {
 
     }
 
-    /** Inner class that defines the contents of the award node. */
+    /** Inner class that defines the contract for award information. */
     public static final class AwardEntry implements BaseColumns {
 
         static final String CONTENT_DIR_TYPE =
@@ -176,9 +175,7 @@ public final class DataContract {
         static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + URI_PATH_AWARD;
 
-        // Database
-
-        static final String ROOT_NODE = "awards";
+        // Data
 
         public static final String COLUMN_ID = MovieEntry._ID;
         public static final String COLUMN_MOVIE_ID = "movieId";
@@ -241,7 +238,7 @@ public final class DataContract {
 
     }
 
-    /** Inner class that defines the contents of a user movie node. */
+    /** Inner class that defines the contract for user movie information. */
     public static final class UserMovieEntry implements BaseColumns {
 
         static final String CONTENT_DIR_TYPE =
@@ -249,9 +246,7 @@ public final class DataContract {
         static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + URI_PATH_USER_MOVIE;
 
-        // Database
-
-        private static final String ROOT_NODE = "userMovies" ;
+        // Data
 
         public static final String COLUMN_ID = MovieEntry._ID;
         public static final String COLUMN_ON_WISHLIST = "onWishlist";
@@ -266,18 +261,18 @@ public final class DataContract {
                 COLUMN_WATCHED,
                 COLUMN_FAVOURITE
         };
-        public static String[] getAllColumns() {
+        static String[] getAllColumns() {
             return ALL_COLUMNS.clone();
         }
 
-        public static final int COL_ID = 0;
-        public static final int COL_ON_WISHLIST = COL_ID + 1;
-        public static final int COL_WATCHED = COL_ON_WISHLIST + 1;
-        public static final int COL_FAVOURITE = COL_WATCHED + 1;
+//        static final int COL_ID = 0;
+//        static final int COL_ON_WISHLIST = COL_ID + 1;
+//        static final int COL_WATCHED = COL_ON_WISHLIST + 1;
+//        static final int COL_FAVOURITE = COL_WATCHED + 1;
 
         // URIs
 
-        public static final Uri CONTENT_URI =
+        static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(URI_PATH_USER_MOVIE).build();
 
         /**
@@ -287,39 +282,26 @@ public final class DataContract {
          * @return the URI for obtaining the specific user movie
          */
         @NonNull
-        public static Uri buildUriForRowById(final int movieId) {
+        static Uri buildUriForRowById(final int movieId) {
             return CONTENT_URI.buildUpon()
                     .appendPath(Integer.toString(movieId))
                     .build();
         }
 
-//        /**
-//         * Create and return a URI for querying all userMovies.
-//         * i.e. "content://uk.jumpingmouse.moviecompanion/userMovie".
-//         * @return the URI for querying all user movies
-//         */
-//        @NonNull
-//        public static Uri buildUriForAllRows() {
-//            return CONTENT_URI;
-//        }
-
         /**
-         * Returns the user movies node for a user, i.e. "/users/[uid]/userMovies".
-         * @param uid the user's uid
-         * @return the user movies node for a user
+         * Create and return the URI for querying all of the user movies
+         * for the user who is signed into the app on this device.
+         * i.e. "content://uk.jumpingmouse.moviecompanion/userMovie".
+         * @return the URI for querying all of the user movies for the signed-in user
          */
-        @Nullable
-        public static String getUserMoviesNode(@Nullable String uid) {
-            if (uid == null) {
-                return null;
-            }
-            return ROOT_NODE_USERS + "/" + uid + "/" + ROOT_NODE;
+        @NonNull
+        public static Uri buildUriForAllRows() {
+            return CONTENT_URI;
         }
+
     }
 
-    /**
-     * Inner class that defines the contents of a ViewAward.
-     */
+    /** Inner class that defines the contract for view award information. */
     public static final class ViewAwardEntry implements BaseColumns {
 
         static final String CONTENT_DIR_TYPE =
@@ -332,12 +314,12 @@ public final class DataContract {
         static final String COLUMN_ID = ViewAwardEntry._ID;
         static final String COLUMN_MOVIE_ID = "movieId";
         static final String COLUMN_IMDB_ID = "imdbId";
-        static final String COLUMN_AWARD_DATE = "awardDate";
+        public static final String COLUMN_AWARD_DATE = "awardDate";
         static final String COLUMN_CATEGORY = "category";
         static final String COLUMN_REVIEW = "review";
         static final String COLUMN_DISPLAY_ORDER = "displayOrder";
-        static final String COLUMN_TITLE = "title";
-        static final String COLUMN_RUNTIME = "runtime";
+        public static final String COLUMN_TITLE = "title";
+        public static final String COLUMN_RUNTIME = "runtime";
         static final String COLUMN_GENRE = "genre";
         static final String COLUMN_POSTER = "poster";
         static final String COLUMN_ON_WISHLIST = "onWishlist";
@@ -382,6 +364,83 @@ public final class DataContract {
         public static final int COL_WATCHED = COL_ON_WISHLIST + 1;
         public static final int COL_FAVOURITE = COL_WATCHED + 1;
 
+        // Award List Sort Orders
+
+        // "awardDate ASC"
+        public static final String SORT_ORDER_AWARD_DATE_ASC = COLUMN_AWARD_DATE + " " + SORT_DIRECTION_ASC;
+        // "awardDate DESC"
+        public static final String SORT_ORDER_AWARD_DATE_DESC = COLUMN_AWARD_DATE + " " + SORT_DIRECTION_DESC;
+        // "title ASC"
+        public static final String SORT_ORDER_TITLE_ASC = COLUMN_TITLE + " " + SORT_DIRECTION_ASC;
+        // "title DESC"
+        public static final String SORT_ORDER_TITLE_DESC = COLUMN_TITLE + " " + SORT_DIRECTION_DESC;
+        // "runtime ASC"
+        public static final String SORT_ORDER_RUNTIME_ASC = COLUMN_RUNTIME + " " + SORT_DIRECTION_ASC;
+        // "runtime DESC"
+        public static final String SORT_ORDER_RUNTIME_DESC = COLUMN_RUNTIME + " " + SORT_DIRECTION_DESC;
+        // default sort order
+        public static final String SORT_ORDER_DEFAULT = SORT_ORDER_AWARD_DATE_DESC;
+
+        // Award List Filters
+        // Strings are used for the filter values so they can be used in URIs.
+
+        /** The number of filters which can be applied to the list. */
+        public static final int LIST_FILTERS_MAX = 4;
+
+        static final String FILTER_GENRE_ALL = "filter_genre_all";
+        public static final String FILTER_GENRE_DEFAULT = FILTER_GENRE_ALL;
+
+        // This map contains a mapping between genre filters and genres as stored in the database.
+        // The map keys must match the values in arrays.xml "filter_genre_pref_key".
+        // The map values must match the values stored in the database and hence
+        // MUST NOT be translated!
+        private static final Map<String, String> GENRES_STORED;
+        static {
+            Map<String, String> genresStoredModifiable = new HashMap<>();
+            genresStoredModifiable.put("filter_genre_action", "Action");
+            genresStoredModifiable.put("filter_genre_animation", "Animation");
+            genresStoredModifiable.put("filter_genre_biography", "Biography");
+            genresStoredModifiable.put("filter_genre_comedy", "Comedy");
+            genresStoredModifiable.put("filter_genre_crime", "Crime");
+            genresStoredModifiable.put("filter_genre_documentary", "Documentary");
+            genresStoredModifiable.put("filter_genre_drama", "Drama");
+            genresStoredModifiable.put("filter_genre_fantasy", "Fantasy");
+            genresStoredModifiable.put("filter_genre_horror", "Horror");
+            genresStoredModifiable.put("filter_genre_music", "Music");
+            genresStoredModifiable.put("filter_genre_mystery", "Mystery");
+            genresStoredModifiable.put("filter_genre_romance", "Romance");
+            genresStoredModifiable.put("filter_genre_thriller", "Thriller");
+            GENRES_STORED = Collections.unmodifiableMap(genresStoredModifiable);
+        }
+        /**
+         * Returns a genre as stored in the database for a supplied genre key.
+         * @param genreKey a genre key, e.g."filter_genre_comedy"
+         * @return the genre as stored in the database, e.g."Comedy", or null if there is
+         *         no stored genre corresponding to the genreKey
+         */
+        @Nullable
+        static String getGenreStoredForGenreKey(@NonNull String genreKey) {
+            return GENRES_STORED.get(genreKey);
+        }
+
+        // These values must match the values in arrays.xml "filter_wishlist_pref_key"
+        static final String FILTER_WISHLIST_ANY = "filter_wishlist_any";
+        static final String FILTER_WISHLIST_SHOW = "filter_wishlist_show";
+        static final String FILTER_WISHLIST_HIDE = "filter_wishlist_hide";
+        public static final String FILTER_WISHLIST_DEFAULT = FILTER_WISHLIST_ANY;
+
+        // These values must match the values in arrays.xml "filter_watched_pref_key"
+        static final String FILTER_WATCHED_ANY = "filter_watched_any";
+        static final String FILTER_WATCHED_SHOW = "filter_watched_show";
+        static final String FILTER_WATCHED_HIDE = "filter_watched_hide";
+        public static final String FILTER_WATCHED_DEFAULT = FILTER_WATCHED_ANY;
+
+        // These values must match the values in arrays.xml "filter_favourite_pref_key"
+        static final String FILTER_FAVOURITE_ANY = "filter_favourite_any";
+        static final String FILTER_FAVOURITE_SHOW = "filter_favourite_show";
+        static final String FILTER_FAVOURITE_HIDE = "filter_favourite_hide";
+        public static final String FILTER_FAVOURITE_DEFAULT = FILTER_FAVOURITE_ANY;
+
         // URIs
 
         static final Uri CONTENT_URI =
@@ -410,18 +469,6 @@ public final class DataContract {
             return CONTENT_URI;
         }
 
-//        /**
-//         * Create and return a URI for querying all the view awards.
-//         * i.e. "content://uk.jumpingmouse.moviecompanion/viewAward".
-//         * @return the URI for querying all awards for the movie
-//         */
-//        @NonNull
-//        public static Uri buildUriForAllRowsWithSortOrder(@NonNull String sortOrder) {
-//            return CONTENT_URI.buildUpon()
-//                    .appendQueryParameter(PARAM_SORT_ORDER, sortOrder)
-//                    .build();
-//        }
-
         /**
          * Create and return a URI for querying all the view awards.
          * e.g. "content://uk.jumpingmouse.moviecompanion/viewAward?sortOrder=awardDate DESC&filterWishlist=wishlistAll".
@@ -429,7 +476,7 @@ public final class DataContract {
          * @return the URI for querying all awards for the movie
          */
         @NonNull
-        public static Uri buildUriWithParameters(@NonNull ViewAwardListParameters parameters) {
+        public static Uri buildUriWithParameters(@NonNull ViewAwardQueryParameters parameters) {
             return CONTENT_URI.buildUpon()
                     .appendQueryParameter(PARAM_SORT_ORDER, parameters.getSortOrder())
                     .appendQueryParameter(PARAM_FILTER_GENRE, parameters.getFilterGenre())
