@@ -71,6 +71,11 @@
     <string name="filter_title">List Filters</string>
     <string name="button_clear_filters">Clear Filters</string>
 
+    <string name="filter_category_title">Movie / DVD of the Week</string>
+    <string name="filter_category_any">No filter</string>
+    <string name="filter_category_movie">@string/category_text_movie</string>
+    <string name="filter_category_dvd">@string/category_text_dvd</string>
+
     <string name="filter_genre_title">Genre</string>
     <string name="filter_genre_all">All genres</string>
     <string name="filter_genre_action">Action</string>
@@ -124,11 +129,12 @@
     <!-- <string name="example_review" tools:ignore="Typos">At the beginning we see a man in a boat who is washed up on a desert island.  Initially he builds rafts to get away, but the rafts are constantly scuppered by an unseen sea beast which turns out to be the turtle.  In a rage he overturns the turtle, and then he starts to feel an Ancient Mariner-style remorse and empathy for this creature, and then something magical starts to happen, a transformation starts to happen.  It turns into a meditation upon existence, upon loneliness, upon companionship, upon birth, death and rebirth. It is a film which is deeply compassionate and touching and funny and affectionate and insightful and I was in love with it, I just was so swept away by it.  It\'s a beautiful beautiful work of art.</string> -->
 
     <!-- Widgets -->
-    <string name="widget_title_in_cinemas">In Theatres Now</string>
+    <string name="widget_title_in_cinemas">In Theatres</string>
     <string name="widget_empty_list_in_cinemas">No movies available.</string>
 
     <!-- Preferences -->
     <string name="pref_award_list_sort_order_key" translatable="false">pref_award_list_sort_order_key</string>
+    <string name="pref_award_list_filter_category_key" translatable="false">pref_award_list_filter_category_key</string>
     <string name="pref_award_list_filter_genre_key" translatable="false">pref_award_list_filter_genre_key</string>
     <string name="pref_award_list_filter_wishlist_key" translatable="false">pref_award_list_filter_wishlist_key</string>
     <string name="pref_award_list_filter_watched_key" translatable="false">pref_award_list_filter_watched_key</string>

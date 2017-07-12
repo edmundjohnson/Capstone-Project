@@ -44,6 +44,7 @@ public final class DataContract {
 
     // Query parameters
     public static final String PARAM_SORT_ORDER = "sortOrder";
+    public static final String PARAM_FILTER_CATEGORY = "filterCategory";
     public static final String PARAM_FILTER_GENRE = "filterGenre";
     public static final String PARAM_FILTER_WISHLIST = "filterWishlist";
     public static final String PARAM_FILTER_WATCHED = "filterWatched";
@@ -381,10 +382,13 @@ public final class DataContract {
         // Award List Filters
         // Strings are used for the filter values so they can be used in URIs.
 
-        /** The number of filters which can be applied to the list. */
-        public static final int LIST_FILTERS_MAX = 4;
+        // These values must match the values in arrays.xml "filter_category_pref_key"
+        static final String FILTER_CATEGORY_ANY = "filter_category_any";
+        public static final String FILTER_CATEGORY_MOVIE = "filter_category_movie";
+        public static final String FILTER_CATEGORY_DVD = "filter_category_dvd";
+        public static final String FILTER_CATEGORY_DEFAULT = FILTER_CATEGORY_ANY;
 
-        static final String FILTER_GENRE_ALL = "filter_genre_all";
+        public static final String FILTER_GENRE_ALL = "filter_genre_all";
         public static final String FILTER_GENRE_DEFAULT = FILTER_GENRE_ALL;
 
         // This map contains a mapping between genre filters and genres as stored in the database.
@@ -421,19 +425,19 @@ public final class DataContract {
         }
 
         // These values must match the values in arrays.xml "filter_wishlist_pref_key"
-        static final String FILTER_WISHLIST_ANY = "filter_wishlist_any";
+        public static final String FILTER_WISHLIST_ANY = "filter_wishlist_any";
         static final String FILTER_WISHLIST_SHOW = "filter_wishlist_show";
         static final String FILTER_WISHLIST_HIDE = "filter_wishlist_hide";
         public static final String FILTER_WISHLIST_DEFAULT = FILTER_WISHLIST_ANY;
 
         // These values must match the values in arrays.xml "filter_watched_pref_key"
-        static final String FILTER_WATCHED_ANY = "filter_watched_any";
+        public static final String FILTER_WATCHED_ANY = "filter_watched_any";
         static final String FILTER_WATCHED_SHOW = "filter_watched_show";
         static final String FILTER_WATCHED_HIDE = "filter_watched_hide";
         public static final String FILTER_WATCHED_DEFAULT = FILTER_WATCHED_ANY;
 
         // These values must match the values in arrays.xml "filter_favourite_pref_key"
-        static final String FILTER_FAVOURITE_ANY = "filter_favourite_any";
+        public static final String FILTER_FAVOURITE_ANY = "filter_favourite_any";
         static final String FILTER_FAVOURITE_SHOW = "filter_favourite_show";
         static final String FILTER_FAVOURITE_HIDE = "filter_favourite_hide";
         public static final String FILTER_FAVOURITE_DEFAULT = FILTER_FAVOURITE_ANY;
@@ -476,6 +480,7 @@ public final class DataContract {
         public static Uri buildUriWithParameters(@NonNull ViewAwardQueryParameters parameters) {
             return CONTENT_URI.buildUpon()
                     .appendQueryParameter(PARAM_SORT_ORDER, parameters.getSortOrder())
+                    .appendQueryParameter(PARAM_FILTER_CATEGORY, parameters.getFilterCategory())
                     .appendQueryParameter(PARAM_FILTER_GENRE, parameters.getFilterGenre())
                     .appendQueryParameter(PARAM_FILTER_WISHLIST, parameters.getFilterWishlist())
                     .appendQueryParameter(PARAM_FILTER_WATCHED, parameters.getFilterWatched())

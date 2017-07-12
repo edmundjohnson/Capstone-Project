@@ -140,6 +140,7 @@ public class PrefUtils {
      * Returns the list sort order shared preference.
      * @param context the context
      */
+    @NonNull
     public static String getAwardListSortOrder(@Nullable Context context) {
         return getSharedPreferenceString(context, R.string.pref_award_list_sort_order_key,
                 DataContract.ViewAwardEntry.SORT_ORDER_DEFAULT);
@@ -166,6 +167,35 @@ public class PrefUtils {
 
     //--------------------------------------------------------------
     // Award list filter preferences
+
+    /**
+     * Returns the award list category filter shared preference.
+     * @param context the context
+     */
+    @NonNull
+    public static String getAwardListFilterCategory(@Nullable Context context) {
+        return getSharedPreferenceString(context, R.string.pref_award_list_filter_category_key,
+                DataContract.ViewAwardEntry.FILTER_CATEGORY_DEFAULT);
+    }
+
+    /**
+     * Sets the award list category filter shared preference to a supplied value.
+     * @param context the context
+     * @param value the new value for the award list category filter
+     */
+    public static void setAwardListFilterCategory(@NonNull Context context, @NonNull String value) {
+        setSharedPreferenceString(context, R.string.pref_award_list_filter_category_key, value);
+    }
+
+    /**
+     * Returns whether a string has the same value as the award list category filter preference key.
+     * @param context the context
+     * @param value the value to compare to the award list category filter preference key
+     * @return true if value is the award list category filter preference key, false otherwise
+     */
+    public static boolean isAwardListFilterCategoryKey(@NonNull Context context, @Nullable String value) {
+        return stringEqualsResId(context, value, R.string.pref_award_list_filter_category_key);
+    }
 
     /**
      * Returns the award list genre filter shared preference.
@@ -291,7 +321,9 @@ public class PrefUtils {
      */
     public static boolean isFilterActive(@Nullable Context context) {
         // return true if any filter is not set to its default value
-        return !PrefUtils.getAwardListFilterGenre(context).equals(
+        return !PrefUtils.getAwardListFilterCategory(context).equals(
+                        DataContract.ViewAwardEntry.FILTER_CATEGORY_DEFAULT)
+                || !PrefUtils.getAwardListFilterGenre(context).equals(
                         DataContract.ViewAwardEntry.FILTER_GENRE_DEFAULT)
                 || !PrefUtils.getAwardListFilterWishlist(context).equals(
                         DataContract.ViewAwardEntry.FILTER_WISHLIST_DEFAULT)

@@ -10,6 +10,6 @@
     <string name="filter_favourite_hide">Hide favorite movies</string>
 
     <!-- Widgets -->
-    <string name="widget_title_in_cinemas">In Cinemas Now</string>
+    <string name="widget_title_in_cinemas">In Cinemas</string>
 
 </resources>

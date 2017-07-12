@@ -48,6 +48,11 @@
             <meta-data android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info_in_cinemas" />
         </receiver>
+        <service
+            android:name=".widget.InCinemasWidgetRemoteViewsService"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
     </application>
 

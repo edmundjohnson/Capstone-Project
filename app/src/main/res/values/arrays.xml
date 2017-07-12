@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Category filter -->
+    <!-- The order of filter_category_pref_key must match the order of filter_category_pref_display. -->
+
+    <!-- The category filter option keys, as stored in the shared preferences. -->
+    <string-array name="filter_category_pref_key">
+        <item>filter_category_any</item>
+        <item>filter_category_movie</item>
+        <item>filter_category_dvd</item>
+    </string-array>
+    <!-- The category filter options, as displayed in the drop-down
+         (there is currently no drop-down for this filter) -->
+    <string-array name="filter_category_pref_display">
+        <item>@string/filter_category_any</item>
+        <item>@string/filter_category_movie</item>
+        <item>@string/filter_category_dvd</item>
+    </string-array>
+
     <!-- Genre filter -->
     <!-- The order of filter_genre_pref_key must match the order of filter_genre_pref_display. -->
 

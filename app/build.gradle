@@ -108,8 +108,7 @@ ext {
     // The compatible versions of firebase, firebase-ui and the support library are listed here:
     // https://github.com/firebase/FirebaseUI-Android/blob/master/constants.gradle
     SUPPORT_LIB_VERSION = '25.4.0'
-    // Version 11.0.2 not compatible at 3/7/17
-    FIREBASE_VERSION = '11.0.1'
+    FIREBASE_VERSION = '11.0.2'
     FIREBASE_UI_VERSION = '2.0.1'
 }
 
@@ -120,6 +119,12 @@ dependencies {
     implementation "com.android.support:design:$SUPPORT_LIB_VERSION"
     implementation "com.android.support:palette-v7:$SUPPORT_LIB_VERSION"
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    // firebase-ui-auth, or other modules, have dependencies on older versions of these
+    implementation "com.android.support:cardview-v7:$SUPPORT_LIB_VERSION"
+    implementation "com.android.support:customtabs:$SUPPORT_LIB_VERSION"
+    implementation "com.android.support:mediarouter-v7:$SUPPORT_LIB_VERSION"
+    implementation "com.google.android.gms:play-services-auth:$FIREBASE_VERSION"
 
     // Firebase
     implementation "com.google.firebase:firebase-core:$FIREBASE_VERSION"

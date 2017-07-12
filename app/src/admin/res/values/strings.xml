@@ -38,10 +38,6 @@
     <string name="label_award_date">Award Date (YYMMDD)</string>
     <string name="hint_award_date">YYMMDD</string>
     <string name="label_category">Category</string>
-    <!--
-    <string name="category_movie_value" translatable="false">M</string>
-    <string name="category_dvd_value" translatable="false">D</string>
-    -->
     <string name="label_review">Review</string>
     <string name="label_display_order">Award Display Order</string>
     <string name="display_order_default" translatable="false">1</string>

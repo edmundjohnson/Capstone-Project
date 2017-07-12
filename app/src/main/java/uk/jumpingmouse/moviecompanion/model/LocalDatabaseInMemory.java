@@ -527,31 +527,61 @@ public class LocalDatabaseInMemory implements LocalDatabase {
      */
     private boolean isIncludedByFilter(@NonNull ViewAward viewAward,
                        @NonNull final String selection, @NonNull final String[] selectionArgs) {
-        // genre filter
+        // category filter
         if (selectionArgs.length > 0) {
-            if (!isIncludedByFilterGenre(viewAward, selectionArgs[0])) {
+            if (!isIncludedByFilterCategory(viewAward, selectionArgs[0])) {
+                return false;
+            }
+        }
+        // genre filter
+        if (selectionArgs.length > 1) {
+            if (!isIncludedByFilterGenre(viewAward, selectionArgs[1])) {
                 return false;
             }
         }
         // wishlist filter
-        if (selectionArgs.length > 1) {
-            if (!isIncludedByFilterWishlist(viewAward, selectionArgs[1])) {
+        if (selectionArgs.length > 2) {
+            if (!isIncludedByFilterWishlist(viewAward, selectionArgs[2])) {
                 return false;
             }
         }
         // watched filter
-        if (selectionArgs.length > 2) {
-            if (!isIncludedByFilterWatched(viewAward, selectionArgs[2])) {
+        if (selectionArgs.length > 3) {
+            if (!isIncludedByFilterWatched(viewAward, selectionArgs[3])) {
                 return false;
             }
         }
         // favourite filter
-        if (selectionArgs.length > 3) {
-            if (!isIncludedByFilterFavourite(viewAward, selectionArgs[3])) {
+        if (selectionArgs.length > 4) {
+            if (!isIncludedByFilterFavourite(viewAward, selectionArgs[4])) {
                 return false;
             }
         }
         return true;
+    }
+
+    /**
+     * Returns whether a ViewAward is allowed through the category filter.
+     * @param viewAward the ViewAward
+     * @param filterValue the value of the category filter, e.g. "filter_category_movie"
+     * @return true if the ViewAward is allowed through the filter, false otherwise
+     */
+    private boolean isIncludedByFilterCategory(
+            @NonNull ViewAward viewAward, @NonNull String filterValue) {
+        boolean isIncluded = true;
+        switch (filterValue) {
+            case DataContract.ViewAwardEntry.FILTER_CATEGORY_ANY:
+                break;
+            case DataContract.ViewAwardEntry.FILTER_CATEGORY_MOVIE:
+                isIncluded = Award.CATEGORY_MOVIE.equals(viewAward.getCategory());
+                break;
+            case DataContract.ViewAwardEntry.FILTER_CATEGORY_DVD:
+                isIncluded = Award.CATEGORY_DVD.equals(viewAward.getCategory());
+                break;
+            default:
+                break;
+        }
+        return isIncluded;
     }
 
     /**
@@ -658,9 +688,8 @@ public class LocalDatabaseInMemory implements LocalDatabase {
                                              @Nullable String sortOrder) {
         Timber.d(String.format("applySortToViewAwardList: sortOrder = %s", sortOrder));
 
-        if (sortOrder == null) {
-            return viewAwardList;
-        }
+        // If sortOrder is null, the default sort order is used,
+        // rather than returning an unsorted list.
 
         String sortColumn = getSortColumn(sortOrder, VIEW_AWARD_SORT_COLUMN_DEFAULT);
         boolean sortAscending = isSortAscending(sortOrder, VIEW_AWARD_SORT_ASCENDING_DEFAULT);

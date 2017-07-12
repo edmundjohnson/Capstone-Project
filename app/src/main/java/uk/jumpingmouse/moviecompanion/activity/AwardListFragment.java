@@ -35,6 +35,7 @@ import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.adapter.ViewAwardAdapter;
 import uk.jumpingmouse.moviecompanion.data.ViewAwardQueryParameters;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
+import uk.jumpingmouse.moviecompanion.model.DataProvider;
 import uk.jumpingmouse.moviecompanion.model.LocalDatabase;
 import uk.jumpingmouse.moviecompanion.utils.NetUtils;
 import uk.jumpingmouse.moviecompanion.utils.PrefUtils;
@@ -324,6 +325,7 @@ public class AwardListFragment extends Fragment
 
         Uri uri = null;
         String sortOrder = null;
+        String filterCategory = null;
         String filterGenre = null;
         String filterWishlist = null;
         String filterWatched = null;
@@ -334,6 +336,7 @@ public class AwardListFragment extends Fragment
             uri = args.getParcelable(KEY_VIEW_AWARD_URI);
             if (uri != null) {
                 sortOrder = uri.getQueryParameter(DataContract.PARAM_SORT_ORDER);
+                filterCategory = uri.getQueryParameter(DataContract.PARAM_FILTER_CATEGORY);
                 filterGenre = uri.getQueryParameter(DataContract.PARAM_FILTER_GENRE);
                 filterWishlist = uri.getQueryParameter(DataContract.PARAM_FILTER_WISHLIST);
                 filterWatched = uri.getQueryParameter(DataContract.PARAM_FILTER_WATCHED);
@@ -342,6 +345,9 @@ public class AwardListFragment extends Fragment
         }
         if (sortOrder == null) {
             sortOrder = PrefUtils.getAwardListSortOrder(context);
+        }
+        if (filterCategory == null) {
+            filterCategory = PrefUtils.getAwardListFilterCategory(context);
         }
         if (filterGenre == null) {
             filterGenre = PrefUtils.getAwardListFilterGenre(context);
@@ -356,47 +362,29 @@ public class AwardListFragment extends Fragment
             filterFavourite = PrefUtils.getAwardListFilterFavourite(context);
         }
 
-        ViewAwardQueryParameters parameters = new ViewAwardQueryParameters();
-        parameters.setSortOrder(sortOrder);
-        parameters.setFilterGenre(filterGenre);
-        parameters.setFilterWishlist(filterWishlist);
-        parameters.setFilterWatched(filterWatched);
-        parameters.setFilterFavourite(filterFavourite);
+        ViewAwardQueryParameters parameters = ViewAwardQueryParameters.builder()
+                .sortOrder(sortOrder)
+                .filterCategory(filterCategory)
+                .filterGenre(filterGenre)
+                .filterWishlist(filterWishlist)
+                .filterWatched(filterWatched)
+                .filterFavourite(filterFavourite)
+                .build();
 
         if (uri == null) {
             uri = DataContract.ViewAwardEntry.buildUriWithParameters(parameters);
         }
 
-        StringBuilder selection = new StringBuilder();
-        String[] selectionArgs = new String[DataContract.ViewAwardEntry.LIST_FILTERS_MAX];
-        generateSelectionForParameters(parameters, selection, selectionArgs);
+        // Get the selection and selectionArgs corresponding to the parameters
+        String selection = DataProvider.getSelectionForViewAwardQueryParams();
+        String[] selectionArgs = DataProvider.getSelectionArgsForViewAwardQueryParams(parameters);
 
         return new CursorLoader(context,
                 uri,
                 DataContract.ViewAwardEntry.ALL_COLUMNS,
-                selection.toString(),
+                selection,
                 selectionArgs,
                 sortOrder);
-    }
-
-    /**
-     * Generates the selection and selection args for a query based on the query parameters.
-     * @param parameters the query parameters
-     * @param selection the selection, which is generated as:
-     *          " filterGenre=? AND filterWishlist=?  AND filterWatched=?  AND filterFavourite=? "
-     * @param selectionArgs this is set to the selection arguments
-     */
-    private void generateSelectionForParameters(@NonNull ViewAwardQueryParameters parameters,
-            @NonNull StringBuilder selection, @NonNull String[] selectionArgs) {
-        int argNumber = 0;
-        selection.append(" filterGenre=? ");
-        selectionArgs[argNumber++] = parameters.getFilterGenre();
-        selection.append(" AND filterWishlist=? ");
-        selectionArgs[argNumber++] = parameters.getFilterWishlist();
-        selection.append(" AND filterWatched=? ");
-        selectionArgs[argNumber++] = parameters.getFilterWatched();
-        selection.append(" AND filterFavourite=? ");
-        selectionArgs[argNumber] = parameters.getFilterFavourite();
     }
 
     /**
@@ -566,18 +554,21 @@ public class AwardListFragment extends Fragment
         }
         // If the sort order or a filter has changed, restart the loader to requery the data
         if (PrefUtils.isAwardListSortOrderKey(context, key)
+                || PrefUtils.isAwardListFilterCategoryKey(context, key)
                 || PrefUtils.isAwardListFilterGenreKey(context, key)
                 || PrefUtils.isAwardListFilterWishlistKey(context, key)
                 || PrefUtils.isAwardListFilterWatchedKey(context, key)
                 || PrefUtils.isAwardListFilterFavouriteKey(context, key)) {
 
             // Construct the URI using the sort and filter parameters
-            ViewAwardQueryParameters parameters = new ViewAwardQueryParameters();
-            parameters.setSortOrder(PrefUtils.getAwardListSortOrder(context));
-            parameters.setFilterGenre(PrefUtils.getAwardListFilterGenre(context));
-            parameters.setFilterWishlist(PrefUtils.getAwardListFilterWishlist(context));
-            parameters.setFilterWatched(PrefUtils.getAwardListFilterWatched(context));
-            parameters.setFilterFavourite(PrefUtils.getAwardListFilterFavourite(context));
+            ViewAwardQueryParameters parameters = ViewAwardQueryParameters.builder()
+                    .sortOrder(PrefUtils.getAwardListSortOrder(context))
+                    .filterCategory(PrefUtils.getAwardListFilterCategory(context))
+                    .filterGenre(PrefUtils.getAwardListFilterGenre(context))
+                    .filterWishlist(PrefUtils.getAwardListFilterWishlist(context))
+                    .filterWatched(PrefUtils.getAwardListFilterWatched(context))
+                    .filterFavourite(PrefUtils.getAwardListFilterFavourite(context))
+                    .build();
             Uri uri = DataContract.ViewAwardEntry.buildUriWithParameters(parameters);
 
             // Restart the loader

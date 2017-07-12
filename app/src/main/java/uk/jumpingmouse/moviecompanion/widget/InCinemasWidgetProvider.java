@@ -21,6 +21,7 @@ public class InCinemasWidgetProvider extends AppWidgetProvider {
 
     private static final String ACTION_DATA_UPDATED = "uk.jumpingmouse.moviecompanion.ACTION_DATA_UPDATED";
 
+    @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // Perform this loop for each app widget that belongs to this provider
         for (int appWidgetId : appWidgetIds) {
@@ -31,9 +32,8 @@ public class InCinemasWidgetProvider extends AppWidgetProvider {
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
             views.setOnClickPendingIntent(R.id.txtWidgetTitleInCinemas, pendingIntent);
 
-//TODO
-//            // Set up the collection
-//            setRemoteAdapter(context, views);
+            // Set up the collection
+            setRemoteAdapter(context, views);
 
             // If a list item is clicked on, launch the MovieActivity
             Intent clickIntentTemplate = new Intent(context, MovieActivity.class);
@@ -59,15 +59,16 @@ public class InCinemasWidgetProvider extends AppWidgetProvider {
         }
     }
 
-//    /**
-//     * Sets the remote adapter used to fill in the list items.
-//     * @param views RemoteViews to set the RemoteAdapter
-//     */
-//    private void setRemoteAdapter(Context context, @NonNull final RemoteViews views) {
-//        views.setRemoteAdapter(R.id.listWidgetInCinemas,
-//                new Intent(context, InCinemasWidgetRemoteViewsService.class));
-//    }
+    /**
+     * Sets the remote adapter used to fill in the list items.
+     * @param views RemoteViews to set the RemoteAdapter
+     */
+    private void setRemoteAdapter(Context context, @NonNull final RemoteViews views) {
+        views.setRemoteAdapter(R.id.listWidgetInCinemas,
+                new Intent(context, InCinemasWidgetRemoteViewsService.class));
+    }
 
+    //TODO call this from main app when list data changes
     /**
      * Notify any listening receivers (e.g. the widget provider) that the data has changed.
      * "notifyWidgetProvider" might be a better name.

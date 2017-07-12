@@ -18,6 +18,6 @@
     <string name="removed_from_favourites">removed from favorites</string>
 
     <!-- Widgets -->
-    <string name="widget_title_in_cinemas">In Theaters Now</string>
+    <string name="widget_title_in_cinemas">In Theaters</string>
 
 </resources>

@@ -19,6 +19,7 @@ import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.data.UserMovie;
 import uk.jumpingmouse.moviecompanion.data.ViewAward;
+import uk.jumpingmouse.moviecompanion.data.ViewAwardQueryParameters;
 import uk.jumpingmouse.moviecompanion.security.SecurityManager;
 import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 
@@ -39,6 +40,16 @@ public class DataProvider extends ContentProvider {
     private static final int USER_MOVIE_ID = 301;
     private static final int VIEW_AWARD = 400;
     private static final int VIEW_AWARD_ID = 401;
+
+    private static final String VIEW_AWARD_QUERY_SELECTION =
+            DataContract.PARAM_FILTER_CATEGORY + "=? "
+            + " AND " + DataContract.PARAM_FILTER_GENRE + "=? "
+            + " AND " + DataContract.PARAM_FILTER_WISHLIST + "=? "
+            + " AND " + DataContract.PARAM_FILTER_WATCHED + "=? "
+            + " AND " + DataContract.PARAM_FILTER_FAVOURITE + "=? ";
+
+    /** The number of selection arguments supplied to a view awards query. */
+    private static final int VIEW_AWARD_QUERY_SELECTION_ARGS_MAX = 5;
 
     //---------------------------------------------------------------------
     // URI matcher
@@ -875,6 +886,37 @@ public class DataProvider extends ContentProvider {
         matrixCursor.addRow(viewAward.toObjectArray());
 
         return matrixCursor;
+    }
+
+    /**
+     * Returns the selection string for a data provider query.
+     * The selection corresponds to the selectionArgs returned by getSelectionArgsForQueryParams(...).
+     * @return the selection, which is generated in the form:
+     *          " filterCategory=? AND filterGenre=? AND filterWishlist=?  AND [... etc] "
+     */
+    public static String getSelectionForViewAwardQueryParams() {
+        return VIEW_AWARD_QUERY_SELECTION;
+    }
+
+    /**
+     * Returns the selection args for a data provider query based on the query parameters.
+     * The selectionArgs corresponds to the selection returned by getSelectionForViewAwardQueryParams(...).
+     * @param parameters the query parameters
+     * @return the selectionArgs this is set to the selection argument values
+     */
+    public static String[] getSelectionArgsForViewAwardQueryParams(
+            @NonNull ViewAwardQueryParameters parameters) {
+
+        String[] selectionArgs = new String[VIEW_AWARD_QUERY_SELECTION_ARGS_MAX];
+
+        int argNumber = 0;
+        selectionArgs[argNumber++] = parameters.getFilterCategory();
+        selectionArgs[argNumber++] = parameters.getFilterGenre();
+        selectionArgs[argNumber++] = parameters.getFilterWishlist();
+        selectionArgs[argNumber++] = parameters.getFilterWatched();
+        selectionArgs[argNumber] = parameters.getFilterFavourite();
+
+        return selectionArgs;
     }
 
     //---------------------------------------------------------------------

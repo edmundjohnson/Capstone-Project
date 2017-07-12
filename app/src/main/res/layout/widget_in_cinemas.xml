@@ -11,11 +11,12 @@
     <TextView
         android:id="@+id/txtWidgetTitleInCinemas"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/abc_action_bar_default_height_material"
+        android:layout_height="?android:attr/listPreferredItemHeightSmall"
         android:gravity="center"
         android:background="@color/colorPrimary"
-        android:fontFamily="sans-serif-condensed"
         android:textAppearance="?android:textAppearanceLarge"
+        android:fontFamily="sans-serif-condensed"
+        android:textColor="@android:color/white"
         android:text="@string/widget_title_in_cinemas" />
 
     <FrameLayout
@@ -28,8 +29,8 @@
             android:id="@+id/listWidgetInCinemas"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@null"
-            android:dividerHeight="0dp"
+            android:divider="@color/green_100"
+            android:dividerHeight="1dp"
             tools:listitem="@layout/widget_in_cinemas_list_item" />
 
         <TextView
@@ -37,9 +38,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:fontFamily="sans-serif-condensed"
             android:textAppearance="?android:textAppearanceLarge"
-            android:text="@string/widget_empty_list_in_cinemas" />
+            android:fontFamily="sans-serif-condensed"
+            android:textColor="@color/text_gray"
+            android:text="@string/widget_empty_list_in_cinemas"
+            android:visibility="gone"
+            tools:visibility="visible" />
 <!--
             android:layout_marginTop="16dp"
             android:gravity="top|center_horizontal"

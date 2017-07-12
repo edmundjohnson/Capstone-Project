@@ -1,6 +1,11 @@
 package uk.jumpingmouse.moviecompanion.model;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import uk.jumpingmouse.moviecompanion.data.Award;
+import uk.jumpingmouse.moviecompanion.data.Movie;
 
 /**
  * Class for accessing the Firebase Realtime Database.
@@ -65,11 +70,10 @@ public class MasterDatabaseFirebaseFree extends MasterDatabaseFirebase {
      * If it already exists in the database, it is updated.
      * @param context the context
      * @param award the award to insert or update
-     * @return the id of the award, or null if the award was not added
+     * @return the number of rows inserted or updated
      */
-    @Nullable
     @Override
-    public String addAward(@Nullable final Context context, @NonNull final Award award) {
+    public int addAward(@Nullable final Context context, @NonNull final Award award) {
         throw new UnsupportedOperationException("Insufficient privileges for add award");
     }
 
