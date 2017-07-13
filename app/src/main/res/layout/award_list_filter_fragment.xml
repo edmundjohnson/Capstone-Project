@@ -80,9 +80,6 @@
                     android:text="@string/filter_wishlist_title"
                     style="@style/SpinnerLabelStyle" />
 
-                <!-- This is the container for the widest Spinner.
-                     Obsolete comment: If its width is set to "match_parent" (like the others),
-                     the layout collapses. This could be a problem in non-English languages. -->
                 <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -154,6 +151,38 @@
 
                     <Spinner
                         android:id="@+id/spnFilterFavourite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </FrameLayout>
+
+            </LinearLayout>
+
+            <!-- Category filter: Spinner -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="1dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="10dp"
+                android:paddingStart="@dimen/activity_margin_horizontal"
+                android:paddingEnd="@dimen/activity_margin_horizontal"
+                android:background="@android:color/white">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_category_title"
+                    style="@style/SpinnerLabelStyle" />
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/SpinnerContainer.Filter">
+
+                    <Spinner
+                        android:id="@+id/spnFilterCategory"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 

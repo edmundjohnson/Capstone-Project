@@ -197,6 +197,47 @@ public class AwardListFilterFragment extends DialogFragment {
                 }
             });
 
+            // Category filter
+
+            // Create an ArrayAdapter using the string array and a default spinner layout
+            ArrayAdapter<CharSequence> filterCategoryAdapter = ArrayAdapter.createFromResource(context,
+                    R.array.filter_category_pref_display, android.R.layout.simple_spinner_item);
+            // Specify the layout to use when the list of choices appears
+            filterCategoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            // Apply the adapter to the spinner
+            final Spinner spnFilterCategory = (Spinner) view.findViewById(R.id.spnFilterCategory);
+            spnFilterCategory.setAdapter(filterCategoryAdapter);
+
+            // Set the spinner to the position of the current filter value
+            String previousFilterCategory = PrefUtils.getAwardListFilterCategory(context);
+            final String[] filterCategoryPrefValues =
+                    context.getResources().getStringArray(R.array.filter_category_pref_key);
+            int positionCategory = JavaUtils.getPositionInArray(
+                    filterCategoryPrefValues, previousFilterCategory);
+            spnFilterCategory.setSelection(positionCategory == -1 ? 0 : positionCategory);
+
+            // Add a listener to the spinner
+            spnFilterCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    // The activity may no longer be there
+                    Context context = getActivity();
+                    if (context != null) {
+                        String previousFilterValue = PrefUtils.getAwardListFilterCategory(context);
+                        String newFilterValue = filterCategoryPrefValues[position];
+                        // If the filter has changed, update its shared preference
+                        if (!newFilterValue.equals(previousFilterValue)) {
+                            PrefUtils.setAwardListFilterCategory(context, newFilterValue);
+                        }
+                    }
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                    // do nothing
+                }
+            });
+
             // OK button
             View txtOk = view.findViewById(R.id.txtOk);
             txtOk.setOnClickListener(new View.OnClickListener() {

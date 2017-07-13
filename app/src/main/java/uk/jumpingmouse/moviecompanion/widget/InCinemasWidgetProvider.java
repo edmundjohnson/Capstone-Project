@@ -68,13 +68,12 @@ public class InCinemasWidgetProvider extends AppWidgetProvider {
                 new Intent(context, InCinemasWidgetRemoteViewsService.class));
     }
 
-    //TODO call this from main app when list data changes
     /**
      * Notify any listening receivers (e.g. the widget provider) that the data has changed.
      * "notifyWidgetProvider" might be a better name.
      * @param context the context
      */
-    public static void updateWidgets(Context context) {
+    public static void updateWidgets(@NonNull Context context) {
         // Setting the package ensures that only components in our app will receive the broadcast
         Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED).setPackage(context.getPackageName());
         context.sendBroadcast(dataUpdatedIntent);

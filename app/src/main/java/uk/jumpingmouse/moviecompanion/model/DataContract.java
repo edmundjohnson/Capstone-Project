@@ -49,6 +49,7 @@ public final class DataContract {
     public static final String PARAM_FILTER_WISHLIST = "filterWishlist";
     public static final String PARAM_FILTER_WATCHED = "filterWatched";
     public static final String PARAM_FILTER_FAVOURITE = "filterFavourite";
+    public static final String PARAM_LIMIT = "limit";
 
     // Values for sort direction (part of PARAM_SORT_ORDER)
     static final String SORT_DIRECTION_ASC = "ASC";

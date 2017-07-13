@@ -31,6 +31,13 @@ public class LocalDatabaseInMemory implements LocalDatabase {
     /** The singleton instance of this class. */
     private static LocalDatabase sLocalDatabase = null;
 
+    private static final int ARG_INDEX_FILTER_CATEGORY = 0;
+    private static final int ARG_INDEX_FILTER_GENRE = ARG_INDEX_FILTER_CATEGORY + 1;
+    private static final int ARG_INDEX_FILTER_WISHLIST = ARG_INDEX_FILTER_GENRE + 1;
+    private static final int ARG_INDEX_FILTER_WATCHED = ARG_INDEX_FILTER_WISHLIST + 1;
+    private static final int ARG_INDEX_FILTER_FAVOURITE = ARG_INDEX_FILTER_WATCHED + 1;
+    private static final int ARG_INDEX_LIMIT = ARG_INDEX_FILTER_FAVOURITE + 1;
+
     /** The movies. */
     private final SparseArray<Movie> mMovies;
     /** The awards. */
@@ -459,6 +466,9 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         // Sort the ViewAward list
         viewAwardList = applySortToViewAwardList(viewAwardList, sortOrder);
 
+        // Apply limit to the ViewAward list
+        viewAwardList = applyLimitToViewAwardList(viewAwardList, selection, selectionArgs);
+
         if (mCursorViewAwards != null) {
             mCursorViewAwards.close();
         }
@@ -493,8 +503,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
      * @param selectionArgs Any ?s included in selection will be replaced by
      *      the values from selectionArgs, in the order that they appear in the selection.
      *      The values will be bound as Strings.
-     * @return a cursor containing a list of all the ViewAwards in the local database
-     *         ordered by the specified column
+     * @return the list of ViewAwards, filtered according to the selection and selectionArgs
      */
     @NonNull
     private List<ViewAward> applyFilterToViewAwardList(@NonNull List<ViewAward> viewAwardList,
@@ -519,8 +528,8 @@ public class LocalDatabaseInMemory implements LocalDatabase {
     /**
      * Returns whether a view award is included after filtering
      * @param viewAward the view award
-     * @param selection the selection,
-     *             e.g. "filterWishlist=? AND filterWatched=? AND filterFavourite=?"
+     * @param selection the selection, of the form:
+     *             e.g. "filterWishlist=? AND filterWatched=? AND filterFavourite=? ... "
      * @param selectionArgs the selectionArgs,
      *             e.g. { "filter_wishlist_any", "filter_watched_show", "filter_favourite_hide" }
      * @return true if the view award is included after filtering, false otherwise
@@ -528,32 +537,32 @@ public class LocalDatabaseInMemory implements LocalDatabase {
     private boolean isIncludedByFilter(@NonNull ViewAward viewAward,
                        @NonNull final String selection, @NonNull final String[] selectionArgs) {
         // category filter
-        if (selectionArgs.length > 0) {
-            if (!isIncludedByFilterCategory(viewAward, selectionArgs[0])) {
+        if (selectionArgs.length > ARG_INDEX_FILTER_CATEGORY) {
+            if (!isIncludedByFilterCategory(viewAward, selectionArgs[ARG_INDEX_FILTER_CATEGORY])) {
                 return false;
             }
         }
         // genre filter
-        if (selectionArgs.length > 1) {
-            if (!isIncludedByFilterGenre(viewAward, selectionArgs[1])) {
+        if (selectionArgs.length > ARG_INDEX_FILTER_GENRE) {
+            if (!isIncludedByFilterGenre(viewAward, selectionArgs[ARG_INDEX_FILTER_GENRE])) {
                 return false;
             }
         }
         // wishlist filter
-        if (selectionArgs.length > 2) {
-            if (!isIncludedByFilterWishlist(viewAward, selectionArgs[2])) {
+        if (selectionArgs.length > ARG_INDEX_FILTER_WISHLIST) {
+            if (!isIncludedByFilterWishlist(viewAward, selectionArgs[ARG_INDEX_FILTER_WISHLIST])) {
                 return false;
             }
         }
         // watched filter
-        if (selectionArgs.length > 3) {
-            if (!isIncludedByFilterWatched(viewAward, selectionArgs[3])) {
+        if (selectionArgs.length > ARG_INDEX_FILTER_WATCHED) {
+            if (!isIncludedByFilterWatched(viewAward, selectionArgs[ARG_INDEX_FILTER_WATCHED])) {
                 return false;
             }
         }
         // favourite filter
-        if (selectionArgs.length > 4) {
-            if (!isIncludedByFilterFavourite(viewAward, selectionArgs[4])) {
+        if (selectionArgs.length > ARG_INDEX_FILTER_FAVOURITE) {
+            if (!isIncludedByFilterFavourite(viewAward, selectionArgs[ARG_INDEX_FILTER_FAVOURITE])) {
                 return false;
             }
         }
@@ -680,8 +689,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
      * @param viewAwardList a list of view awards to be sorted
      * @param sortOrder How the rows in the cursor should be sorted, e.g. "awardDate DESC".
      *      If this is {@code null}, the sort order is undefined.
-     * @return a cursor containing a list of all the ViewAwards in the local database
-     *         ordered by the specified column
+     * @return a cursor containing the list of ViewAwards ordered by the specified column
      */
     @NonNull
     private List<ViewAward> applySortToViewAwardList(@NonNull List<ViewAward> viewAwardList,
@@ -716,6 +724,44 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         }
         Collections.sort(viewAwardList, comparator);
 
+        return viewAwardList;
+    }
+
+    /**
+     * Limits a list of view awards to a maximum number and returns the truncated list.
+     * @param viewAwardList a list of view awards to be limited
+     * @param selection The selection criteria for the query.
+     *                  If this is {@code null} then all rows are included.
+     * @param selectionArgs Any ?s included in selection will be replaced by
+     *      the values from selectionArgs, in the order that they appear in the selection.
+     *      The values will be bound as Strings.
+     * @return the list of ViewAwards limited to the specified number
+     */
+    @NonNull
+    private List<ViewAward> applyLimitToViewAwardList(@NonNull List<ViewAward> viewAwardList,
+                @Nullable final String selection, @Nullable final String[] selectionArgs) {
+        //Timber.d(String.format("applyFilterToViewAwardList: selection = %s, selectionArgs = %s",
+        //        selection, selectionArgs.toString()));
+
+        // if there is no limit, return the original list
+        if (selection != null
+                && selectionArgs != null
+                && selectionArgs.length > ARG_INDEX_LIMIT
+                && selectionArgs[ARG_INDEX_LIMIT] != null) {
+            int limit = 0;
+            try {
+                limit = Integer.parseInt(selectionArgs[ARG_INDEX_LIMIT]);
+            } catch (Exception e) {
+                Timber.e("Exception while parsing limit parameter: "
+                        + selectionArgs[ARG_INDEX_LIMIT]);
+            }
+            if (limit > 0) {
+                if (limit > viewAwardList.size()) {
+                    limit = viewAwardList.size();
+                }
+                return viewAwardList.subList(0, limit);
+            }
+        }
         return viewAwardList;
     }
 

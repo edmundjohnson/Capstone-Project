@@ -24,6 +24,7 @@ import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.data.UserMovie;
 import uk.jumpingmouse.moviecompanion.security.SecurityManager;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
+import uk.jumpingmouse.moviecompanion.widget.InCinemasWidgetProvider;
 
 /**
  * Superclass for helper classes for accessing the Firebase Realtime Database.
@@ -330,6 +331,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
                     if (movie != null && context != null) {
                         Uri uriInserted = context.getContentResolver().insert(
                                 DataContract.MovieEntry.CONTENT_URI, movie.toContentValues());
+                        updateWidgets(context);
                     }
                 }
 
@@ -340,6 +342,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
                         int rowsUpdated = context.getContentResolver().update(
                                 DataContract.MovieEntry.buildUriForRowById(movie.getId()),
                                 movie.toContentValues(), null, null);
+                        updateWidgets(context);
                     }
                 }
 
@@ -350,6 +353,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
                         int rowsDeleted = context.getContentResolver().delete(
                                 DataContract.MovieEntry.buildUriForRowById(movie.getId()),
                                 null, null);
+                        updateWidgets(context);
                     }
                 }
 
@@ -387,6 +391,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
                     if (award != null && context != null) {
                         Uri uriInserted = context.getContentResolver().insert(
                                 DataContract.AwardEntry.CONTENT_URI, award.toContentValues());
+                        updateWidgets(context);
                     }
                 }
 
@@ -397,6 +402,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
                         int rowsUpdated = context.getContentResolver().update(
                                 DataContract.AwardEntry.buildUriForRowById(award.getId()),
                                 award.toContentValues(), null, null);
+                        updateWidgets(context);
                     }
                 }
 
@@ -407,6 +413,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
                         int rowsDeleted = context.getContentResolver().delete(
                                 DataContract.AwardEntry.buildUriForRowById(award.getId()),
                                 null, null);
+                        updateWidgets(context);
                     }
                 }
 
@@ -516,6 +523,14 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
             }
             mChildEventListenerUserMovies = null;
         }
+    }
+
+    /**
+     * Updates the content displayed by the widgets.
+     * @param context the context
+     */
+    private void updateWidgets(@NonNull Context context) {
+        InCinemasWidgetProvider.updateWidgets(context);
     }
 
     //---------------------------------------------------------------------

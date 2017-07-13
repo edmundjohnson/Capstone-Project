@@ -1,6 +1,7 @@
 package uk.jumpingmouse.moviecompanion.data;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 /**
  * This class represents the parameters which can be supplied to a ViewAward list query,
@@ -15,13 +16,15 @@ public class ViewAwardQueryParameters {
 
     private ViewAwardQueryParameters(@NonNull String sortOrder, @NonNull String filterCategory,
                                      @NonNull String filterGenre, @NonNull String filterWishlist,
-                                     @NonNull String filterWatched, @NonNull String filterFavourite) {
+                                     @NonNull String filterWatched, @NonNull String filterFavourite,
+                                     int limit) {
         this.sortOrder = sortOrder;
         this.filterCategory = filterCategory;
         this.filterGenre = filterGenre;
         this.filterWishlist = filterWishlist;
         this.filterWatched = filterWatched;
         this.filterFavourite = filterFavourite;
+        this.limit = limit;
     }
 
     // parameters
@@ -31,6 +34,7 @@ public class ViewAwardQueryParameters {
     private String filterWishlist;
     private String filterWatched;
     private String filterFavourite;
+    private int limit;
 
     //---------------------------------------------------------------
     // Getters
@@ -65,6 +69,10 @@ public class ViewAwardQueryParameters {
         return filterFavourite;
     }
 
+    public int getLimit() {
+        return limit;
+    }
+
     //---------------------------------------------------------------
     // Builder implementation
 
@@ -96,45 +104,60 @@ public class ViewAwardQueryParameters {
         private String filterWishlist;
         private String filterWatched;
         private String filterFavourite;
+        private int limit;
 
-        Builder() {
+        private Builder() {
+            this.limit = 0;
         }
 
-        Builder(ViewAwardQueryParameters source) {
-            this.sortOrder = source.sortOrder;
-            this.filterCategory = source.filterCategory;
-            this.filterGenre = source.filterGenre;
-            this.filterWishlist = source.filterWishlist;
-            this.filterWatched = source.filterWatched;
-            this.filterFavourite = source.filterFavourite;
-        }
+//        Builder(@NonNull ViewAwardQueryParameters source) {
+//            this.sortOrder = source.sortOrder;
+//            this.filterCategory = source.filterCategory;
+//            this.filterGenre = source.filterGenre;
+//            this.filterWishlist = source.filterWishlist;
+//            this.filterWatched = source.filterWatched;
+//            this.filterFavourite = source.filterFavourite;
+//            this.limit = source.limit;
+//        }
 
-        public ViewAwardQueryParameters.Builder sortOrder(String sortOrder) {
+        @NonNull
+        public ViewAwardQueryParameters.Builder sortOrder(@Nullable String sortOrder) {
             this.sortOrder = sortOrder;
             return this;
         }
-        public ViewAwardQueryParameters.Builder filterCategory(String filterCategory) {
+        @NonNull
+        public ViewAwardQueryParameters.Builder filterCategory(@Nullable String filterCategory) {
             this.filterCategory = filterCategory;
             return this;
         }
-        public ViewAwardQueryParameters.Builder filterGenre(String filterGenre) {
+        @NonNull
+        public ViewAwardQueryParameters.Builder filterGenre(@Nullable String filterGenre) {
             this.filterGenre = filterGenre;
             return this;
         }
-        public ViewAwardQueryParameters.Builder filterWishlist(String filterWishlist) {
+        @NonNull
+        public ViewAwardQueryParameters.Builder filterWishlist(@Nullable String filterWishlist) {
             this.filterWishlist = filterWishlist;
             return this;
         }
-        public ViewAwardQueryParameters.Builder filterWatched(String filterWatched) {
+        @NonNull
+        public ViewAwardQueryParameters.Builder filterWatched(@Nullable String filterWatched) {
             this.filterWatched = filterWatched;
             return this;
         }
-        public ViewAwardQueryParameters.Builder filterFavourite(String filterFavourite) {
+        @NonNull
+        public ViewAwardQueryParameters.Builder filterFavourite(@Nullable String filterFavourite) {
             this.filterFavourite = filterFavourite;
+            return this;
+        }
+        @NonNull
+        public ViewAwardQueryParameters.Builder limit(int limit) {
+            this.limit = limit;
             return this;
         }
 
         /** Builds and returns an object of this class. */
+        @NonNull
         public ViewAwardQueryParameters build() {
             String missing = "";
             if (sortOrder == null) {
@@ -164,7 +187,8 @@ public class ViewAwardQueryParameters {
                     this.filterGenre,
                     this.filterWishlist,
                     this.filterWatched,
-                    this.filterFavourite);
+                    this.filterFavourite,
+                    this.limit);
         }
     }
 

@@ -46,10 +46,11 @@ public class DataProvider extends ContentProvider {
             + " AND " + DataContract.PARAM_FILTER_GENRE + "=? "
             + " AND " + DataContract.PARAM_FILTER_WISHLIST + "=? "
             + " AND " + DataContract.PARAM_FILTER_WATCHED + "=? "
-            + " AND " + DataContract.PARAM_FILTER_FAVOURITE + "=? ";
+            + " AND " + DataContract.PARAM_FILTER_FAVOURITE + "=? "
+            + " AND " + DataContract.PARAM_LIMIT + "=? ";
 
     /** The number of selection arguments supplied to a view awards query. */
-    private static final int VIEW_AWARD_QUERY_SELECTION_ARGS_MAX = 5;
+    private static final int VIEW_AWARD_QUERY_SELECTION_ARGS_MAX = 6;
 
     //---------------------------------------------------------------------
     // URI matcher
@@ -914,7 +915,8 @@ public class DataProvider extends ContentProvider {
         selectionArgs[argNumber++] = parameters.getFilterGenre();
         selectionArgs[argNumber++] = parameters.getFilterWishlist();
         selectionArgs[argNumber++] = parameters.getFilterWatched();
-        selectionArgs[argNumber] = parameters.getFilterFavourite();
+        selectionArgs[argNumber++] = parameters.getFilterFavourite();
+        selectionArgs[argNumber] = Integer.toString(parameters.getLimit());
 
         return selectionArgs;
     }

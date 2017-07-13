@@ -28,6 +28,8 @@ import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
  */
 public class InCinemasWidgetRemoteViewsService extends RemoteViewsService {
 
+    private static final int IN_CINEMAS_WIDGET_VIEW_AWARD_LIMIT = 5;
+
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
         return new RemoteViewsFactory() {
@@ -43,14 +45,12 @@ public class InCinemasWidgetRemoteViewsService extends RemoteViewsService {
                 if (mCursor != null) {
                     mCursor.close();
                 }
-                // This method is called by the app hosting the widget (e.g., the launcher)
-                // However, our ContentProvider is not exported so it doesn't have access to the
+                // This method is called by the app hosting the widget.
+                // However, the ContentProvider is not exported so it doesn't have access to the
                 // data. Therefore we need to clear (and finally restore) the calling identity so
                 // that calls use our process and permission
                 final long identityToken = Binder.clearCallingIdentity();
 
-                // TODO Limit the query to Movie of the Week, maximum 4 or 6 items
-                // TODO Add new filter parameter: limit
                 ViewAwardQueryParameters parameters = ViewAwardQueryParameters.builder()
                         .sortOrder(DataContract.ViewAwardEntry.SORT_ORDER_AWARD_DATE_DESC)
                         .filterCategory(DataContract.ViewAwardEntry.FILTER_CATEGORY_MOVIE)
@@ -58,6 +58,7 @@ public class InCinemasWidgetRemoteViewsService extends RemoteViewsService {
                         .filterWishlist(DataContract.ViewAwardEntry.FILTER_WISHLIST_ANY)
                         .filterWatched(DataContract.ViewAwardEntry.FILTER_WATCHED_ANY)
                         .filterFavourite(DataContract.ViewAwardEntry.FILTER_FAVOURITE_ANY)
+                        .limit(IN_CINEMAS_WIDGET_VIEW_AWARD_LIMIT)
                         .build();
 
                 // Get the selection and selectionArgs corresponding to the parameters

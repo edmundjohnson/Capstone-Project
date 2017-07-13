@@ -71,10 +71,10 @@
     <string name="filter_title">List Filters</string>
     <string name="button_clear_filters">Clear Filters</string>
 
-    <string name="filter_category_title">Movie / DVD of the Week</string>
+    <string name="filter_category_title">Movies / DVDs of the week</string>
     <string name="filter_category_any">No filter</string>
-    <string name="filter_category_movie">@string/category_text_movie</string>
-    <string name="filter_category_dvd">@string/category_text_dvd</string>
+    <string name="filter_category_movie">Movies of the week</string>
+    <string name="filter_category_dvd">DVDs of the week</string>
 
     <string name="filter_genre_title">Genre</string>
     <string name="filter_genre_all">All genres</string>

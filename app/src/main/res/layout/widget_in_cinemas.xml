@@ -11,13 +11,16 @@
     <TextView
         android:id="@+id/txtWidgetTitleInCinemas"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+        android:layout_height="36dp"
         android:gravity="center"
         android:background="@color/colorPrimary"
         android:textAppearance="?android:textAppearanceLarge"
         android:fontFamily="sans-serif-condensed"
         android:textColor="@android:color/white"
         android:text="@string/widget_title_in_cinemas" />
+    <!--
+        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+    -->
 
     <FrameLayout
         android:layout_width="match_parent"
