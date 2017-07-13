@@ -41,7 +41,8 @@ public final class JavaUtils {
      *         or null if the String could not be parsed as a date
      */
     @Nullable
-    static Date toDate(@NonNull SimpleDateFormat format, @Nullable final String strDate) {
+    static Date toDate(@SuppressWarnings("SameParameterValue") @NonNull SimpleDateFormat format,
+                       @Nullable final String strDate) {
         if (strDate == null) {
             return null;
         }
@@ -61,7 +62,8 @@ public final class JavaUtils {
      * @return the Date as a String
      */
     @NonNull
-    public static String toString(@NonNull SimpleDateFormat format, @NonNull final Date date) {
+    public static String toString(@SuppressWarnings("SameParameterValue") @NonNull SimpleDateFormat format,
+                                  @NonNull final Date date) {
         return format.format(date);
     }
 

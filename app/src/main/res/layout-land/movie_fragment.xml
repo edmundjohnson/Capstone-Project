@@ -25,7 +25,8 @@
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
                 android:contentDescription="@string/poster_description"
-                tools:src="@mipmap/ic_launcher"/>
+                tools:src="@mipmap/ic_launcher"
+                tools:ignore="InconsistentLayout" />
 
             <!-- The image_background_protection is to ensure the appbar icons can be seen -->
             <View

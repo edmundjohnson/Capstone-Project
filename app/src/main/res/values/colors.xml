@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="medium_gray">#ff404040</color>
     <color name="text_gray">#ff404040</color>
 
     <!-- If modifying this colour, also modify ic_open_in_new_24dp.xml to match it -->
@@ -10,7 +9,7 @@
     <!-- Material palette: Green -->
     <color name="green_50">#e8f5e9</color>
     <color name="green_100">#c8e6c9</color>
-    <color name="green_200">#a5d6a7</color>
+    <!-- <color name="green_200">#a5d6a7</color> -->
 
     <!-- Material palette: Light Green -->
     <!-- see: https://material.io/guidelines/style/color.html#color-color-palette  -->
@@ -77,9 +76,6 @@
     <color name="colorPrimaryLight">#60ad5e</color>
     <color name="colorAccentDark">#a00037</color>
     <color name="colorAccentLight">#ff5c8d</color>
-
-    <!-- Buttons -->
-    <color name="colorButtonBackground">@color/colorAccent</color>
 
     <!-- View Awards List and Detail -->
     <color name="detail_card_background">@color/green_50</color>

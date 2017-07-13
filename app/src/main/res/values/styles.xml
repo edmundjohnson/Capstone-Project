@@ -73,11 +73,13 @@
         <item name="android:textColor">@color/text_gray</item>
     </style>
 
+    <!--
     <style name="RadioButton.Filter">
         <item name="android:layout_marginTop">2dp</item>
         <item name="android:layout_marginBottom">2dp</item>
         <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
     </style>
+    -->
 
     <style name="SpinnerLabelStyle">
         <item name="android:layout_marginStart">2dp</item>

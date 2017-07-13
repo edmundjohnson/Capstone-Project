@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layoutMovieInfo"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -12,6 +12,7 @@
     android:paddingTop="@dimen/detail_movie_info_padding_top"
     android:paddingBottom="@dimen/detail_movie_info_padding_bottom"
     android:elevation="@dimen/detail_movie_info_elevation"
+    app:elevation="@dimen/detail_movie_info_elevation"
     tools:context=".activity.MovieActivity">
     <!--
     android:background="#333"

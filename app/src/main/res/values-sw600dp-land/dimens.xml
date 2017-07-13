@@ -4,7 +4,7 @@
     <dimen name="appbar_title_padding_vertical">20dp</dimen>
 
     <!-- Detail -->
-    <bool name="detail_is_card">true</bool>
+    <!-- <bool name="detail_is_card">true</bool> -->
     <dimen name="detail_card_margin_top">256dp</dimen>
 
     <!-- In landscape, allow space for toolbar -->
