@@ -24,11 +24,9 @@ import uk.jumpingmouse.moviecompanion.model.DataProvider;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
 /**
- * RemoteViewsService which controls the data shown in the scrollable In Cinemas Now widget.
+ * RemoteViewsService which controls the data shown in the scrollable list widgets.
  */
-public class InCinemasWidgetRemoteViewsService extends RemoteViewsService {
-
-    private static final int IN_CINEMAS_WIDGET_VIEW_AWARD_LIMIT = 5;
+public abstract class RemoteViewsServiceBase extends RemoteViewsService {
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -53,12 +51,12 @@ public class InCinemasWidgetRemoteViewsService extends RemoteViewsService {
 
                 ViewAwardQueryParameters parameters = ViewAwardQueryParameters.builder()
                         .sortOrder(DataContract.ViewAwardEntry.SORT_ORDER_AWARD_DATE_DESC)
-                        .filterCategory(DataContract.ViewAwardEntry.FILTER_CATEGORY_MOVIE)
+                        .filterCategory(getFilterCategory())
                         .filterGenre(DataContract.ViewAwardEntry.FILTER_GENRE_ALL)
                         .filterWishlist(DataContract.ViewAwardEntry.FILTER_WISHLIST_ANY)
                         .filterWatched(DataContract.ViewAwardEntry.FILTER_WATCHED_ANY)
                         .filterFavourite(DataContract.ViewAwardEntry.FILTER_FAVOURITE_ANY)
-                        .limit(IN_CINEMAS_WIDGET_VIEW_AWARD_LIMIT)
+                        .limit(getViewAwardLimit())
                         .build();
 
                 // Get the selection and selectionArgs corresponding to the parameters
@@ -103,8 +101,7 @@ public class InCinemasWidgetRemoteViewsService extends RemoteViewsService {
                         mCursor.getString(DataContract.ViewAwardEntry.COL_AWARD_DATE));
                 String title = mCursor.getString(DataContract.ViewAwardEntry.COL_TITLE);
 
-                RemoteViews views = new RemoteViews(getPackageName(),
-                        R.layout.widget_in_cinemas_list_item);
+                RemoteViews views = new RemoteViews(getPackageName(), R.layout.widget_list_item);
 
                 // Load data into view
                 Context context = getBaseContext();
@@ -122,14 +119,14 @@ public class InCinemasWidgetRemoteViewsService extends RemoteViewsService {
                 final Intent fillInIntent = new Intent();
                 Uri uri = DataContract.ViewAwardEntry.buildUriForRowById(viewAwardId);
                 fillInIntent.setData(uri);
-                views.setOnClickFillInIntent(R.id.layoutWidgetInCinemasListItem, fillInIntent);
+                views.setOnClickFillInIntent(R.id.layoutWidgetListItem, fillInIntent);
 
                 return views;
             }
 
             @Override
             public RemoteViews getLoadingView() {
-                return new RemoteViews(getPackageName(), R.layout.widget_in_cinemas_list_item);
+                return new RemoteViews(getPackageName(), R.layout.widget_list_item);
             }
 
             @Override
@@ -157,6 +154,18 @@ public class InCinemasWidgetRemoteViewsService extends RemoteViewsService {
             }
         };
     }
+
+    /**
+     * Returns the category of ViewAwards displayed in the widget.
+     * @return the category of ViewAwards displayed in the widget
+     */
+    protected abstract String getFilterCategory();
+
+    /**
+     * Returns the number of ViewAwards displayed in the widget.
+     * @return the number of ViewAwards displayed in the widget
+     */
+    protected abstract int getViewAwardLimit();
 
     /**
      * Convenience method which returns a reference to a ViewUtils object.

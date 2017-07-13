@@ -24,7 +24,7 @@ import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.data.UserMovie;
 import uk.jumpingmouse.moviecompanion.security.SecurityManager;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
-import uk.jumpingmouse.moviecompanion.widget.InCinemasWidgetProvider;
+import uk.jumpingmouse.moviecompanion.widget.WidgetProviderBase;
 
 /**
  * Superclass for helper classes for accessing the Firebase Realtime Database.
@@ -530,7 +530,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
      * @param context the context
      */
     private void updateWidgets(@NonNull Context context) {
-        InCinemasWidgetProvider.updateWidgets(context);
+        WidgetProviderBase.updateWidgets(context);
     }
 
     //---------------------------------------------------------------------

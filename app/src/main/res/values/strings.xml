@@ -130,7 +130,8 @@
 
     <!-- Widgets -->
     <string name="widget_title_in_cinemas">In Theatres</string>
-    <string name="widget_empty_list_in_cinemas">No movies available.</string>
+    <string name="widget_title_latest_dvds">Latest DVDs</string>
+    <string name="widget_empty_list">No movies available.</string>
 
     <!-- Preferences -->
     <string name="pref_award_list_sort_order_key" translatable="false">pref_award_list_sort_order_key</string>

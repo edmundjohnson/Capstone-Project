@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Layout for list widget list item for a stock. -->
-<!-- Make the background of our selector a non-transparent color -->
+<!-- Layout for widget list items -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layoutWidgetInCinemasListItem"
+    android:id="@+id/layoutWidgetListItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"

@@ -2,7 +2,7 @@
 <appwidget-provider
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/widgetInCinemas"
+    android:id="@+id/widgetLatestDvds"
     android:initialKeyguardLayout="@layout/list_widget"
     android:initialLayout="@layout/list_widget"
     android:minHeight="@dimen/widget_default_height"
@@ -15,5 +15,5 @@
     tools:ignore="UnusedAttribute" />
 <!--
     TODO:
-    android:previewImage="@drawable/widget_preview_in_cinemas"
+    android:previewImage="@drawable/widget_preview_latest_dvds"
 -->

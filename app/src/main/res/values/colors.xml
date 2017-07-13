@@ -82,6 +82,6 @@
     <color name="image_placeholder">@color/detail_card_background</color>
 
     <!-- Widgets -->
-    <color name="widget_background_in_cinemas">@color/green_50</color>
+    <color name="widget_background">@color/green_50</color>
 
 </resources>
