@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.Arrays;
 
 import timber.log.Timber;
+
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
@@ -62,7 +63,7 @@ public class SecurityManagerFirebase implements SecurityManager {
      * @param activity the activity being created
      */
     @Override
-    public void onCreateActivity(@NonNull final FragmentActivity activity) {
+    public void onCreateActivity(@NonNull final AppCompatActivity activity) {
 
         // Create listener for change in signed-in state
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
@@ -147,7 +148,7 @@ public class SecurityManagerFirebase implements SecurityManager {
      * @param data the returned data
      */
     @Override
-    public void onActivityResult(@NonNull FragmentActivity activity, int requestCode,
+    public void onActivityResult(@NonNull AppCompatActivity activity, int requestCode,
                                  int resultCode, @Nullable Intent data) {
 
         // Are we returning from the sign-in screen?
@@ -234,7 +235,7 @@ public class SecurityManagerFirebase implements SecurityManager {
      * @param activity the current activity
      */
     @Override
-    public void signOut(@Nullable FragmentActivity activity) {
+    public void signOut(@Nullable AppCompatActivity activity) {
         if (activity != null) {
             AuthUI.getInstance().signOut(activity);
         }

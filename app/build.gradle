@@ -20,7 +20,7 @@ repositories {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    buildToolsVersion "26.0.0"
 
     // Load the properties in local.properties, so we can add them to resources below
     Properties properties = new Properties()
@@ -35,9 +35,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        // Add the required local.properties to the resources
-        // OMDb API key
-        resValue "string", "omdbapi_key", properties.getProperty("omdbapi.key", "")
+        vectorDrawables.useSupportLibrary = true
 
         // See:
         //   https://developer.android.com/studio/preview/features/new-android-plugin-migration.html
@@ -46,7 +44,12 @@ android {
                 includeCompileClasspath false
             }
         }
+
+        // Add the required local.properties to the resources
+        // OMDb API key
+        resValue "string", "omdbapi_key", properties.getProperty("omdbapi.key", "")
     }
+
     buildTypes {
         debug {
             debuggable true
@@ -86,8 +89,8 @@ android {
             //minSdkVersion 21
             // The following configuration limits the "dev" flavour to using
             // English string resources and xxhdpi screen-density resources.
-//            resConfigs "en", "xxhdpi"
-            resConfigs "en", "en-rGB", "en-rUS", "xxhdpi"
+            resConfigs "en", "xxhdpi"
+//            resConfigs "en", "en-rGB", "en-rUS", "xxhdpi"
         }
         prod {
             dimension "stage"
@@ -110,27 +113,37 @@ ext {
     SUPPORT_LIB_VERSION = '25.4.0'
     FIREBASE_VERSION = '11.0.2'
     FIREBASE_UI_VERSION = '2.0.1'
+
+//    SUPPORT_LIB_VERSION = '25.1.1'
+//    FIREBASE_VERSION = '10.2.0'
+//    FIREBASE_UI_VERSION = '1.2.0'
+
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     implementation "com.android.support:appcompat-v7:$SUPPORT_LIB_VERSION"
+    implementation "com.android.support:recyclerview-v7:$SUPPORT_LIB_VERSION"
     implementation "com.android.support:design:$SUPPORT_LIB_VERSION"
     implementation "com.android.support:palette-v7:$SUPPORT_LIB_VERSION"
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    //implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    //implementation "com.android.support:support-vector-drawable:$SUPPORT_LIB_VERSION"
 
-    // firebase-ui-auth, or other modules, have dependencies on older versions of these
-    implementation "com.android.support:cardview-v7:$SUPPORT_LIB_VERSION"
-    implementation "com.android.support:customtabs:$SUPPORT_LIB_VERSION"
-    implementation "com.android.support:mediarouter-v7:$SUPPORT_LIB_VERSION"
-    implementation "com.google.android.gms:play-services-auth:$FIREBASE_VERSION"
+//    // firebase-ui-auth, or other modules, have dependencies on these
+//    // See: https://github.com/firebase/FirebaseUI-Android
+//    implementation "com.android.support:cardview-v7:$SUPPORT_LIB_VERSION"
+//    implementation "com.android.support:customtabs:$SUPPORT_LIB_VERSION"
+////    implementation "com.android.support:mediarouter-v7:$SUPPORT_LIB_VERSION"
+//    implementation "com.android.support:support-v4:$SUPPORT_LIB_VERSION"
 
     // Firebase
     implementation "com.google.firebase:firebase-core:$FIREBASE_VERSION"
     implementation "com.google.firebase:firebase-auth:$FIREBASE_VERSION"
     implementation "com.google.firebase:firebase-database:$FIREBASE_VERSION"
 //    implementation "com.google.firebase:firebase-crash:$FIREBASE_VERSION"
+    implementation "com.google.android.gms:play-services-auth:$FIREBASE_VERSION"
+
     // Firebase UI Auth
     implementation "com.firebaseui:firebase-ui-auth:$FIREBASE_UI_VERSION"
 

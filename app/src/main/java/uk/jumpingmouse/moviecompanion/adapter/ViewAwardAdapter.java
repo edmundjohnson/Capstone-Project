@@ -2,8 +2,8 @@ package uk.jumpingmouse.moviecompanion.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -126,7 +126,7 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
         String awardDate = getViewUtils().getAwardDateDisplayable(
                 mCursor.getString(DataContract.ViewAwardEntry.COL_AWARD_DATE));
         String categoryCode = mCursor.getString(DataContract.ViewAwardEntry.COL_CATEGORY);
-        Drawable categoryDrawable = getViewUtils().getCategoryDrawable(mContext, categoryCode);
+        @DrawableRes int categoryRes = getViewUtils().getCategoryRes(categoryCode);
         String categoryText = getViewUtils().getCategoryText(mContext, categoryCode);
         int displayOrder = mCursor.getInt(DataContract.ViewAwardEntry.COL_DISPLAY_ORDER);
 
@@ -142,7 +142,7 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
         viewHolder.getTxtMovieTitle().setText(movieTitle);
         viewHolder.getTxtRuntime().setText(runtimeText);
         viewHolder.getTxtGenre().setText(genre);
-        viewHolder.getImgCategory().setImageDrawable(categoryDrawable);
+        viewHolder.getImgCategory().setImageResource(categoryRes);
         viewHolder.getImgCategory().setContentDescription(categoryText);
         viewHolder.getTxtAwardDate().setText(awardDate);
     }

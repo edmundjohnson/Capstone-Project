@@ -4,9 +4,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -135,7 +136,7 @@ public class MovieFragment extends Fragment
             @Override
             public void onClick(View v) {
                 if (mViewAward != null) {
-                    getNavUtils().displayWebLink(getActivity(),
+                    getNavUtils().displayWebLink((AppCompatActivity) getActivity(),
                             getString(R.string.imdb_link_address, mViewAward.getImdbId()));
                 }
             }
@@ -501,7 +502,7 @@ public class MovieFragment extends Fragment
 
         String runtimeText = getViewUtils().getRuntimeText(context, viewAward.getRuntime());
         String categoryCode = viewAward.getCategory();
-        Drawable categoryDrawable = getViewUtils().getCategoryDrawable(context, categoryCode);
+        @DrawableRes int categoryRes = getViewUtils().getCategoryRes(categoryCode);
         String awardDateText = getViewUtils().getAwardDateDisplayable(viewAward.getAwardDate());
 
         Picasso.with(context).load(viewAward.getPoster()).into(mImgPoster, new Callback() {
@@ -549,7 +550,7 @@ public class MovieFragment extends Fragment
         mTxtTitle.setText(viewAward.getTitle().trim());
         mTxtRuntime.setText(runtimeText);
         mTxtGenre.setText(viewAward.getGenre());
-        mImgCategory.setImageDrawable(categoryDrawable);
+        mImgCategory.setImageResource(categoryRes);
         mTxtCategory.setText(getViewUtils().getCategoryText(context, categoryCode));
         mTxtAwardDate.setText(awardDateText);
         mTxtReview.setText(viewAward.getReview());

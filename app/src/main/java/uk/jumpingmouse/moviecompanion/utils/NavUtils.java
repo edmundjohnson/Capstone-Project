@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
@@ -35,14 +35,14 @@ public abstract class NavUtils {
      *         true to consume it here.
      */
     public abstract boolean onOptionsItemSelected(
-            @Nullable FragmentActivity activity, @NonNull MenuItem item);
+            @Nullable AppCompatActivity activity, @NonNull MenuItem item);
 
     /**
      * Displays a web link in an external browser.
      * @param activity the activity invoking the activity to be displayed
      * @param url the web address to link to
      */
-    public void displayWebLink(@Nullable FragmentActivity activity, @NonNull String url) {
+    public void displayWebLink(@Nullable AppCompatActivity activity, @NonNull String url) {
         if (activity != null) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             Uri uri = Uri.parse(url);

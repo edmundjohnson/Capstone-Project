@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -203,24 +203,43 @@ public class ViewUtils {
         }
     }
 
+//    /**
+//     * Returns the category drawable corresponding to a category code.
+//     * @param context the context
+//     * @param categoryCode the category code, e.g. "M"
+//     * @return the category drawable corresponding to the category code
+//     */
+//    public Drawable getCategoryDrawable(@Nullable Context context, @Nullable String categoryCode) {
+//        if (context == null) {
+//            return null;
+//        } else if (categoryCode == null) {
+//            return context.getResources().getDrawable(R.drawable.ic_local_movies_24dp);
+//        }
+//        switch (categoryCode) {
+//            case Award.CATEGORY_DVD:
+//                return context.getResources().getDrawable(R.drawable.ic_album_24dp);
+//            case Award.CATEGORY_MOVIE:
+//            default:
+//                return context.getResources().getDrawable(R.drawable.ic_local_movies_24dp);
+//        }
+//    }
+
     /**
-     * Returns the category drawable corresponding to a category code.
-     * @param context the context
+     * Returns the category resource id corresponding to a category code.
      * @param categoryCode the category code, e.g. "M"
-     * @return the category drawable corresponding to the category code
+     * @return the category resource id corresponding to the category code
      */
-    public Drawable getCategoryDrawable(@Nullable Context context, @Nullable String categoryCode) {
-        if (context == null) {
-            return null;
-        } else if (categoryCode == null) {
-            return context.getResources().getDrawable(R.drawable.ic_local_movies_24dp);
-        }
-        switch (categoryCode) {
-            case Award.CATEGORY_DVD:
-                return context.getResources().getDrawable(R.drawable.ic_album_24dp);
-            case Award.CATEGORY_MOVIE:
-            default:
-                return context.getResources().getDrawable(R.drawable.ic_local_movies_24dp);
+    public @DrawableRes int getCategoryRes(@Nullable String categoryCode) {
+        if (categoryCode == null) {
+            return R.drawable.ic_local_movies_24dp;
+        } else {
+            switch (categoryCode) {
+                case Award.CATEGORY_DVD:
+                    return R.drawable.ic_album_24dp;
+                case Award.CATEGORY_MOVIE:
+                default:
+                    return R.drawable.ic_local_movies_24dp;
+            }
         }
     }
 

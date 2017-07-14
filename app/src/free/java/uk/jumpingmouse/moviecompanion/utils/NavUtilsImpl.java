@@ -2,7 +2,7 @@ package uk.jumpingmouse.moviecompanion.utils;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import uk.jumpingmouse.moviecompanion.R;
@@ -44,7 +44,7 @@ public class NavUtilsImpl extends NavUtils {
      */
     @Override
     public boolean onOptionsItemSelected(
-            @Nullable FragmentActivity activity, @NonNull MenuItem item) {
+            @Nullable AppCompatActivity activity, @NonNull MenuItem item) {
         switch (item.getItemId()) {
             // sign out
             case R.id.menu_option_sign_out:

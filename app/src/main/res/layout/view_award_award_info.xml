@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:scaleType="centerInside"
             android:contentDescription="@string/category_text_movie"
-            tools:src="@drawable/ic_local_movies_24dp"/>
+            tools:srcCompat="@drawable/ic_local_movies_24dp"/>
 
         <TextView
             android:id="@+id/txtCategory"

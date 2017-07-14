@@ -26,6 +26,10 @@ import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 public class MainActivity extends AppCompatActivity
         implements AwardListFragment.ListFragmentContainer {
 
+//    static {
+//        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+//    }
+
     //---------------------------------------------------------------------
     // Lifecycle methods
 

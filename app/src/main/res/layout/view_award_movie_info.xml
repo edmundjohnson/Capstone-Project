@@ -89,7 +89,7 @@
                 android:layout_marginStart="4dp"
                 android:scaleType="centerInside"
                 android:contentDescription="@string/imdb_link_description"
-                android:src="@drawable/ic_open_in_new_24dp"/>
+                app:srcCompat="@drawable/ic_open_in_new_24dp"/>
 
         </LinearLayout>
 

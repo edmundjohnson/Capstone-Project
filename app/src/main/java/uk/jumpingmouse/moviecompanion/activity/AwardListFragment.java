@@ -73,6 +73,10 @@ public class AwardListFragment extends Fragment
     /** The position in the list of the currently selected item. */
     private int mSelectedPosition = RecyclerView.NO_POSITION;
 
+//    static {
+//        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+//    }
+
     //--------------------------------------------------------------
     // Lifecycle Methods
 

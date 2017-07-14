@@ -3,7 +3,7 @@ package uk.jumpingmouse.moviecompanion.utils;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import uk.jumpingmouse.moviecompanion.R;
@@ -47,7 +47,7 @@ public class NavUtilsImpl extends NavUtils {
      *         true to consume it here.
      */
     @Override
-    public boolean onOptionsItemSelected(@Nullable FragmentActivity activity,
+    public boolean onOptionsItemSelected(@Nullable AppCompatActivity activity,
                                          @NonNull MenuItem item) {
         switch (item.getItemId()) {
             // add movie
@@ -76,7 +76,7 @@ public class NavUtilsImpl extends NavUtils {
      * Displays the add movie screen.
      * @param activity the activity invoking the activity to be displayed
      */
-    private void displayAddMovie(@Nullable FragmentActivity activity) {
+    private void displayAddMovie(@Nullable AppCompatActivity activity) {
         displayActivity(activity, AddMovieActivity.class, SecurityManager.RC_ADD_MOVIE);
     }
 
@@ -84,7 +84,7 @@ public class NavUtilsImpl extends NavUtils {
      * Displays the add award screen.
      * @param activity the activity invoking the activity to be displayed
      */
-    private void displayAddAward(@Nullable FragmentActivity activity) {
+    private void displayAddAward(@Nullable AppCompatActivity activity) {
         displayActivity(activity, AddAwardActivity.class, SecurityManager.RC_ADD_AWARD);
     }
 
@@ -93,7 +93,7 @@ public class NavUtilsImpl extends NavUtils {
      * @param activity the activity invoking the activity to be displayed
      * @param activityClass the class of the activity, e.g. AddMovieActivity.class
      */
-    private void displayActivity(@Nullable FragmentActivity activity, @NonNull Class activityClass,
+    private void displayActivity(@Nullable AppCompatActivity activity, @NonNull Class activityClass,
                                  int requestCode) {
         if (activity != null) {
             Intent intent = new Intent(activity, activityClass);
