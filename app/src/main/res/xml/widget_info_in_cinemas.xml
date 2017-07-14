@@ -12,8 +12,5 @@
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="0"
     android:widgetCategory="home_screen|keyguard"
-    tools:ignore="UnusedAttribute" />
-<!--
-    TODO:
     android:previewImage="@drawable/widget_preview_in_cinemas"
--->
+    tools:ignore="UnusedAttribute" />

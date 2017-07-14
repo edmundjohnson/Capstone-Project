@@ -26,8 +26,8 @@
         <item>filter_genre_all</item>
         <item>filter_genre_action</item>
         <item>filter_genre_animation</item>
-        <item>filter_genre_comedy</item>
         <item>filter_genre_biography</item>
+        <item>filter_genre_comedy</item>
         <item>filter_genre_crime</item>
         <item>filter_genre_documentary</item>
         <item>filter_genre_drama</item>
@@ -43,8 +43,8 @@
         <item>@string/filter_genre_all</item>
         <item>@string/filter_genre_action</item>
         <item>@string/filter_genre_animation</item>
-        <item>@string/filter_genre_comedy</item>
         <item>@string/filter_genre_biography</item>
+        <item>@string/filter_genre_comedy</item>
         <item>@string/filter_genre_crime</item>
         <item>@string/filter_genre_documentary</item>
         <item>@string/filter_genre_drama</item>

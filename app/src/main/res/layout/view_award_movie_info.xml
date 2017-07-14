@@ -18,12 +18,13 @@
     android:background="#333"
     -->
 
+    <!-- textAlignment="viewStart" is needed for RTL for any text that might wrap -->
     <TextView
         android:id="@+id/txtTitle"
-        style="?android:attr/textAppearanceLarge"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/detail_movie_info_title_padding_bottom"
+        android:textAlignment="viewStart"
         android:textColor="@android:color/white"
         android:textStyle="bold"
         android:textAppearance="@android:style/TextAppearance.Medium"
