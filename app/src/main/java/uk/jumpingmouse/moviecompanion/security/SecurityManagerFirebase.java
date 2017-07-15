@@ -71,27 +71,6 @@ public class SecurityManagerFirebase implements SecurityManager {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (isUserSignedIn()) {
                     // user has just signed in
-//                    FirebaseUser user = firebaseAuth.getCurrentUser();
-//                    String displayName = user.getDisplayName();
-//
-//                    // If the displayName was null, iterate the provider-specific data
-//                    // and set with the first non-null value
-//                    for (UserInfo userInfo : user.getProviderData()) {
-//
-//                        // Id of the provider (ex: google.com)
-//                        String providerId = userInfo.getProviderId();
-//
-//                        // UID specific to the provider
-//                        String uid = userInfo.getUid();
-//
-//                        // Name and email address
-//                        String name = userInfo.getDisplayName();
-//                        String email = userInfo.getEmail();
-//
-//                        if (displayName == null && userInfo.getDisplayName() != null) {
-//                            displayName = userInfo.getDisplayName();
-//                        }
-//                    }
                     onSignedInInitialise(activity);
 
                 } else {
@@ -169,14 +148,6 @@ public class SecurityManagerFirebase implements SecurityManager {
                 } else if (idpResponse.getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
                     getViewUtils().displayInfoMessage(activity, R.string.unknown_error_on_sign_in, true);
                 }
-
-//                if (resultCode == Activity.RESULT_CANCELED) {
-//                    // The sign-in was cancelled, e.g. the user hit the back button
-//                    // OR... there might be no internet connection !!!
-//                    //getViewUtils().displayInfoMessage(this, R.string.sign_in_cancelled);
-//                    // finish the activity
-//                    activity.finish();
-//                }
             }
         // Are we are returning from an admin screen (perhaps via back arrow on sign-in screen)?
         // (No longer possible)
@@ -208,11 +179,6 @@ public class SecurityManagerFirebase implements SecurityManager {
 
         getMasterDatabase().onSignedOut();
 
-        // TODO: Implement adapter sign out processing - pass adapters in?
-        // But, could sign out from anywhere - how to get a reference to the
-        // list adapter in the list fragment?
-        // If this isn't done, will the wrong list be displayed after signing in as
-        // a different user?
 //        mViewAwardAdapter.clear();
     }
 

@@ -1,5 +1,7 @@
 package uk.jumpingmouse.moviecompanion.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -11,7 +13,7 @@ import java.util.Comparator;
  * It contains fields from the Award and from the Movie which received the Award.
  * @author Edmund Johnson
  */
-public class ViewAward {
+public class ViewAward implements Parcelable {
 
     // the unique identifier for the award, a push id
     private String id;
@@ -185,30 +187,84 @@ public class ViewAward {
     }
 
     //---------------------------------------------------------------
-    // Utilities
+    // Parcelable implementation
 
     /**
-     * Returns a view award as an object array, one element per field value.
-     * @return the view award as an Object array
+     * Private constructor to create an object of this class from a parcel.
+     * @param in a Parcel containing the object
      */
-    public Object[] toObjectArray() {
-        return new Object[] {
-                // This must match the order of columns in DataContract.ViewAwardEntry.getAllColumns().
-                id,
-                movieId,
-                imdbId,
-                awardDate,
-                category,
-                review,
-                displayOrder,
-                title,
-                runtime,
-                genre,
-                poster,
-                onWishlist ? 1 : 0,
-                watched ? 1 : 0,
-                favourite ? 1 : 0
-        };
+    private ViewAward(@NonNull final Parcel in) {
+        id = in.readString();
+        movieId = in.readInt();
+        imdbId = in.readString();
+        awardDate = in.readString();
+        category = in.readString();
+        review = in.readString();
+        displayOrder = in.readInt();
+        title = in.readString();
+        runtime = in.readInt();
+        genre = in.readString();
+        poster = in.readString();
+        onWishlist = in.readInt() == 1;
+        watched = in.readInt() == 1;
+        favourite = in.readInt() == 1;
+    }
+
+    /**
+     * Flatten this object in to a Parcel.
+     *
+     * @param dest  The Parcel in which the object should be written.
+     * @param flags Additional flags about how the object should be written.
+     *              May be 0 or {@link #PARCELABLE_WRITE_RETURN_VALUE}.
+     */
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeInt(movieId);
+        dest.writeString(imdbId);
+        dest.writeString(awardDate);
+        dest.writeString(category);
+        dest.writeString(review);
+        dest.writeInt(displayOrder);
+        dest.writeString(title);
+        dest.writeInt(runtime);
+        dest.writeString(genre);
+        dest.writeString(poster);
+        dest.writeInt(onWishlist ? 1 : 0);
+        dest.writeInt(watched ? 1 : 0);
+        dest.writeInt(favourite ? 1 : 0);
+    }
+
+    /**
+     * Parcel creator object.
+     */
+    public static final Parcelable.Creator<ViewAward> CREATOR =
+            new Parcelable.Creator<ViewAward>() {
+                @NonNull
+                public ViewAward createFromParcel(@NonNull final Parcel in) {
+                    return new ViewAward(in);
+                }
+
+                @NonNull
+                public ViewAward[] newArray(final int size) {
+                    return new ViewAward[size];
+                }
+            };
+
+    /**
+     * Describe the kinds of special objects contained in this Parcelable
+     * instance's marshaled representation. For example, if the object will
+     * include a file descriptor in the output of {@link #writeToParcel(Parcel, int)},
+     * the return value of this method must include the
+     * {@link #CONTENTS_FILE_DESCRIPTOR} bit.
+     *
+     * @return a bitmask indicating the set of special object types marshaled
+     * by this Parcelable object instance.
+     * @see #CONTENTS_FILE_DESCRIPTOR
+     */
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     //---------------------------------------------------------------
@@ -376,6 +432,33 @@ public class ViewAward {
     }
 
     //---------------------------------------------------------------
+    // Utilities
+
+    /**
+     * Returns a view award as an object array, one element per field value.
+     * @return the view award as an Object array
+     */
+    public Object[] toObjectArray() {
+        return new Object[] {
+                // This must match the order of columns in DataContract.ViewAwardEntry.getAllColumns().
+                id,
+                movieId,
+                imdbId,
+                awardDate,
+                category,
+                review,
+                displayOrder,
+                title,
+                runtime,
+                genre,
+                poster,
+                onWishlist ? 1 : 0,
+                watched ? 1 : 0,
+                favourite ? 1 : 0
+        };
+    }
+
+    //---------------------------------------------------------------
     // Override object methods
 
     @Override
@@ -459,22 +542,6 @@ public class ViewAward {
 
     //---------------------------------------------------------------
     // Comparators
-
-//    /** Comparator for ordering by movie id. */
-//    public static final Comparator<ViewAward> VIEW_AWARD_COMPARATOR_MOVIE_ID
-//            = new Comparator<ViewAward>() {
-//        public int compare(ViewAward viewAward1, ViewAward viewAward2) {
-//            // ascending order
-//            if (viewAward1.movieId == viewAward2.movieId) {
-//                // movieId, then awardDate, then reverse category ("M" > "D")
-//                if (viewAward1.awardDate.equals(viewAward2.awardDate)) {
-//                    return viewAward2.category.compareTo(viewAward1.category);
-//                }
-//                return viewAward1.awardDate.compareTo(viewAward2.awardDate);
-//            }
-//            return viewAward1.movieId - viewAward2.movieId;
-//        }
-//    };
 
     /** Comparator for ordering by award date. */
     public static final Comparator<ViewAward> VIEW_AWARD_COMPARATOR_AWARD_DATE

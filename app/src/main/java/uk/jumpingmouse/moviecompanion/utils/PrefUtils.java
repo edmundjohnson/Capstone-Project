@@ -41,23 +41,6 @@ public class PrefUtils {
         return sharedPref.getString(prefKey, defaultValue);
     }
 
-//    /**
-//     * Returns the value of an integer user preference.
-//     * @param context the context
-//     * @param prefKeyResId the string resource id of the key of the shared preference to be updated
-//     * @param defaultValue the value to return if the preference has not been assigned a value
-//     * @return the value of the user preference
-//     */
-//    private static int getSharedPreferenceInt(@Nullable Context context,
-//                                              @StringRes int prefKeyResId, int defaultValue) {
-//        if (context == null) {
-//            return defaultValue;
-//        }
-//        String prefKey = context.getString(prefKeyResId);
-//        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-//        return sharedPref.getInt(prefKey, defaultValue);
-//    }
-
     /**
      * Returns the value of a boolean user preference.
      * @param context the context
@@ -89,21 +72,6 @@ public class PrefUtils {
         sharedPrefEditor.putString(prefKey, value);
         sharedPrefEditor.apply();
     }
-
-//    /**
-//     * Sets a shared preference to a supplied integer value.
-//     * @param context the context
-//     * @param prefKeyResId the string resource id of the key of the shared preference to be updated
-//     * @param value the value to which the shared preference is to be set
-//     */
-//    private static void setSharedPreferenceInt(@NonNull Context context,
-//                                               @StringRes int prefKeyResId, int value) {
-//        String prefKey = context.getString(prefKeyResId);
-//        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-//        SharedPreferences.Editor sharedPrefEditor = sharedPref.edit();
-//        sharedPrefEditor.putInt(prefKey, value);
-//        sharedPrefEditor.apply();
-//    }
 
     /**
      * Sets a shared preference to a supplied boolean value.

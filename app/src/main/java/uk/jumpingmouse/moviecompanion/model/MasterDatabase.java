@@ -59,35 +59,6 @@ public interface MasterDatabase {
             int id);
 
     //---------------------------------------------------------------------
-    // Movie query methods
-
-//    /**
-//     * Returns the movie with a specified id.
-//     * @param id the id of the movie to be returned
-//     * @return the movie with the specified id
-//     */
-//    @Nullable
-//    Movie selectMovieById(int id);
-
-//    /**
-//     * Returns a list of movies in the database.
-//     * @param projection The list of columns to put into the cursor.
-//     *                   If this is {@code null} all columns are included.
-//     * @param selection A selection criteria to apply when filtering rows.
-//     *                  If this is {@code null} then all rows are included.
-//     * @param selectionArgs Any ?s included in selection will be replaced by
-//     *      the values from selectionArgs, in the order that they appear in the selection.
-//     *      The values will be bound as Strings.
-//     * @param sortOrder How the rows in the cursor should be sorted.
-//     *      If this is {@code null}, the sort order is undefined.
-//     * @return a list of movies in the database
-//     */
-//    @Nullable
-//    List<Movie> selectMovies(
-//            @Nullable final String[] projection, @Nullable final String selection,
-//            @Nullable final String[] selectionArgs, @Nullable final String sortOrder);
-
-    //---------------------------------------------------------------------
     // Award modification methods
 
     /**
@@ -113,14 +84,6 @@ public interface MasterDatabase {
             // context is used, but lint gets confused by product flavours
             @SuppressWarnings("UnusedParameters") @Nullable Context context,
             @Nullable String id);
-
-//    /**
-//     * Returns the award with a specified id.
-//     * @param id the id of the award to be returned
-//     * @return the award with the specified id
-//     */
-//    @Nullable
-//    Award selectAwardById(@Nullable String id);
 
     //---------------------------------------------------------------------
     // UserMovie modification methods.

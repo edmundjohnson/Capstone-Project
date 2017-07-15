@@ -20,7 +20,7 @@ repositories {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "26.0.0"
+    buildToolsVersion "25.0.3"
 
     // Load the properties in local.properties, so we can add them to resources below
     Properties properties = new Properties()
@@ -89,8 +89,7 @@ android {
             //minSdkVersion 21
             // The following configuration limits the "dev" flavour to using
             // English string resources and xxhdpi screen-density resources.
-            resConfigs "en", "xxhdpi"
-//            resConfigs "en", "en-rGB", "en-rUS", "xxhdpi"
+            //resConfigs "en", "xxhdpi"
         }
         prod {
             dimension "stage"
@@ -127,22 +126,22 @@ dependencies {
     implementation "com.android.support:recyclerview-v7:$SUPPORT_LIB_VERSION"
     implementation "com.android.support:design:$SUPPORT_LIB_VERSION"
     implementation "com.android.support:palette-v7:$SUPPORT_LIB_VERSION"
-    //implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    // Not required
     //implementation "com.android.support:support-vector-drawable:$SUPPORT_LIB_VERSION"
 
-//    // firebase-ui-auth, or other modules, have dependencies on these
-//    // See: https://github.com/firebase/FirebaseUI-Android
-//    implementation "com.android.support:cardview-v7:$SUPPORT_LIB_VERSION"
-//    implementation "com.android.support:customtabs:$SUPPORT_LIB_VERSION"
-////    implementation "com.android.support:mediarouter-v7:$SUPPORT_LIB_VERSION"
-//    implementation "com.android.support:support-v4:$SUPPORT_LIB_VERSION"
+    // firebase-ui-auth, or other modules, have dependencies on these
+    // See: https://github.com/firebase/FirebaseUI-Android
+    implementation "com.android.support:cardview-v7:$SUPPORT_LIB_VERSION"
+    implementation "com.android.support:customtabs:$SUPPORT_LIB_VERSION"
+    implementation "com.android.support:support-v4:$SUPPORT_LIB_VERSION"
 
     // Firebase
-    implementation "com.google.firebase:firebase-core:$FIREBASE_VERSION"
-    implementation "com.google.firebase:firebase-auth:$FIREBASE_VERSION"
-    implementation "com.google.firebase:firebase-database:$FIREBASE_VERSION"
-//    implementation "com.google.firebase:firebase-crash:$FIREBASE_VERSION"
     implementation "com.google.android.gms:play-services-auth:$FIREBASE_VERSION"
+    implementation "com.google.firebase:firebase-core:$FIREBASE_VERSION"
+    implementation "com.google.firebase:firebase-analytics:$FIREBASE_VERSION"
+    implementation "com.google.firebase:firebase-auth:$FIREBASE_VERSION"
+    implementation "com.google.firebase:firebase-crash:$FIREBASE_VERSION"
+    implementation "com.google.firebase:firebase-database:$FIREBASE_VERSION"
 
     // Firebase UI Auth
     implementation "com.firebaseui:firebase-ui-auth:$FIREBASE_UI_VERSION"

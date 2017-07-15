@@ -33,10 +33,6 @@ public class MasterDatabaseFirebaseAdmin extends MasterDatabaseFirebase {
     }
 
     //---------------------------------------------------------------------
-    // Event-related methods
-    // Use defaults.
-
-    //---------------------------------------------------------------------
     // Movie modification methods
 
     /**
@@ -100,8 +96,5 @@ public class MasterDatabaseFirebaseAdmin extends MasterDatabaseFirebase {
     //---------------------------------------------------------------------
     // Query methods
     // Use the defaults.
-
-    //---------------------------------------------------------------------
-    // Getters
 
 }

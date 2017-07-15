@@ -190,13 +190,6 @@ public class AddAwardActivity extends AppCompatActivity {
         }
     }
 
-//    /**
-//     * Handles the user clicking one of the "Award Category" radio buttons (Movie/DVD of the week).
-//     * @param view the view that was clicked
-//     */
-//    public void onCategoryClicked(View view) {
-//    }
-
     /**
      * Handles the user clicking the "Cancel" button.
      * @param view the view that was clicked
@@ -347,7 +340,7 @@ public class AddAwardActivity extends AppCompatActivity {
     }
 
     //---------------------------------------------------------------
-    // Util methods
+    // Utility methods
 
     /**
      * Hides a view.

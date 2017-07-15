@@ -73,10 +73,6 @@ public class AwardListFragment extends Fragment
     /** The position in the list of the currently selected item. */
     private int mSelectedPosition = RecyclerView.NO_POSITION;
 
-//    static {
-//        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-//    }
-
     //--------------------------------------------------------------
     // Lifecycle Methods
 
@@ -524,11 +520,11 @@ public class AwardListFragment extends Fragment
     }
 
     /**
-     * Returns a NetUtils object.
-     * @return a NetUtils object
+     * Convenience method which returns a reference to a NetUtils object.
+     * @return a reference to a NetUtils object
      */
     private NetUtils getNetUtils() {
-        return NetUtils.getInstance();
+        return ObjectFactory.getNetUtils();
     }
 
     /**
@@ -616,6 +612,7 @@ public class AwardListFragment extends Fragment
     }
 
     //--------------------------------------------------------------------------
+    // Callbacks
 
     /**
      * A callback interface that all activities containing this fragment must

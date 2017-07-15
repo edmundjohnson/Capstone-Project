@@ -153,18 +153,6 @@ public class ViewUtils {
         view.setVisibility(View.GONE);
     }
 
-//    /**
-//     * Toggles the visibility of a view between VISIBLE and GONE.
-//     * @param view the view
-//     */
-//    public void toggleVisibility(View view) {
-//        if (view.getVisibility() == View.VISIBLE) {
-//            hideView(view);
-//        } else {
-//            showView(view);
-//        }
-//    }
-
     //---------------------------------------------------------------------
     // Conversion of field values into displayable strings
 
@@ -202,27 +190,6 @@ public class ViewUtils {
                 return context.getString(R.string.category_text_unknown);
         }
     }
-
-//    /**
-//     * Returns the category drawable corresponding to a category code.
-//     * @param context the context
-//     * @param categoryCode the category code, e.g. "M"
-//     * @return the category drawable corresponding to the category code
-//     */
-//    public Drawable getCategoryDrawable(@Nullable Context context, @Nullable String categoryCode) {
-//        if (context == null) {
-//            return null;
-//        } else if (categoryCode == null) {
-//            return context.getResources().getDrawable(R.drawable.ic_local_movies_24dp);
-//        }
-//        switch (categoryCode) {
-//            case Award.CATEGORY_DVD:
-//                return context.getResources().getDrawable(R.drawable.ic_album_24dp);
-//            case Award.CATEGORY_MOVIE:
-//            default:
-//                return context.getResources().getDrawable(R.drawable.ic_local_movies_24dp);
-//        }
-//    }
 
     /**
      * Returns the category resource id corresponding to a category code.
@@ -268,10 +235,6 @@ public class ViewUtils {
                 Math.min(Color.green(color), Color.blue(color)));
         float factor = getLighteningFactor(darkest);
 
-        //float r = Color.red(color) * getLighteningFactor(Color.red(color));
-        //float g = Color.green(color) * getLighteningFactor(Color.green(color));
-        //float b = Color.blue(color) * getLighteningFactor(Color.blue(color));
-
         float r = Color.red(color) * factor;
         float g = Color.green(color) * factor;
         float b = Color.blue(color) * factor;
@@ -302,19 +265,6 @@ public class ViewUtils {
         } else {
             return 1.0f;
         }
-//                if (colourComponent < 112) {
-//                    return 2.0f;
-//                } else if (colourComponent < 128) {
-//                    return 1.8f;
-//                } else if (colourComponent < 144) {
-//                    return 1.6f;
-//                } else if (colourComponent < 160) {
-//                    return 1.4f;
-//                } else if (colourComponent < 176) {
-//                    return 1.2f;
-//                } else {
-//                    return 1.0f;
-//                }
     }
 
     //---------------------------------------------------------------------

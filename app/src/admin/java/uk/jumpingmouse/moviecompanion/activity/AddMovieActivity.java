@@ -275,7 +275,7 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
     }
 
     //---------------------------------------------------------------
-    // Util methods
+    // Utility methods
 
     /**
      * Shows a view.

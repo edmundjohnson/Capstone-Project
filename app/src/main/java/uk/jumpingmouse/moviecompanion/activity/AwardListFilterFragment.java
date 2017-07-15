@@ -259,89 +259,9 @@ public class AwardListFilterFragment extends DialogFragment {
                 }
             });
 
-//            // Check the radio button which corresponds to the existing wishlist filter
-//            RadioGroup radioGroupFilterWishlist = (RadioGroup) view.findViewById(R.id.radioGroupFilterWishlist);
-//            checkRadioButtonForFilterValue(
-//                    radioGroupFilterWishlist, previousFilterWishlist, R.id.radioWishlistAny);
-//
-//            radioGroupFilterWishlist.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-//                /**
-//                 * Handle the clicking of a radio button.
-//                 *
-//                 * @param group     the radio group containing the button that was clicked
-//                 * @param checkedId the resource id of the button that was clicked
-//                 */
-//                @Override
-//                public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-//                    // The activity may no longer be there
-//                    Context context = getActivity();
-//                    if (context != null) {
-//                        // Change the wishlist filter shared preference
-//                        String newFilterWishlist = getFilterValueForRadioButton(
-//                                checkedId, DataContract.ViewAwardEntry.FILTER_WISHLIST_DEFAULT);
-//                        PrefUtils.setAwardListFilterWishlist(context, newFilterWishlist);
-//                    }
-//                    // Dismiss the dialog
-//                    dismiss();
-//                }
-//            });
-
         }
 
         return view;
     }
-
-//    /**
-//     * Check the radio button corresponding to a filter value.
-//     * @param radioGroup a radio group containing all the filter radio buttons
-//     * @param filterValue the filter value, e.g. DataContract.ViewAwardEntry.FILTER_WISHLIST_SHOW
-//     */
-//    private void checkRadioButtonForFilterValue(@NonNull RadioGroup radioGroup, @Nullable String filterValue,
-//                                                @IdRes int defaultRadioButton) {
-//        @IdRes int radioButtonResId = getRadioButtonForFilter(filterValue, R.id.radioWishlistAny);
-//        radioGroup.check(radioButtonResId);
-//    }
-
-//    /**
-//     * Returns the radio button corresponding to a filter value.
-//     * @param filterValue the filter value
-//     * @param defaultRadioButton the value to return if the radio button cannot be determined
-//     * @return the resource identifier of the radio button corresponding to the filter
-//     */
-//    private @IdRes int getRadioButtonForFilter(@Nullable String filterValue, @IdRes int defaultRadioButton) {
-//        if (filterValue == null) {
-//            return defaultRadioButton;
-//        }
-//        switch (filterValue) {
-//            case DataContract.ViewAwardEntry.FILTER_WISHLIST_ANY:
-//                return  R.id.radioWishlistAny;
-//            case DataContract.ViewAwardEntry.FILTER_WISHLIST_SHOW:
-//                return  R.id.radioWishlistShow;
-//            case DataContract.ViewAwardEntry.FILTER_WISHLIST_HIDE:
-//                return  R.id.radioWishlistHide;
-//            default:
-//                return defaultRadioButton;
-//        }
-//    }
-
-//    /**
-//     * Returns the filter value corresponding to a radio button.
-//     * @param radioButtonResId the resource identifier of a radio button representing a filter value
-//     * @param defaultValue the value to return if the filter value cannot be determined
-//     * @return the filter value corresponding to the radio button
-//     */
-//    @NonNull
-//    private String getFilterValueForRadioButton(@IdRes int radioButtonResId, @NonNull String defaultValue) {
-//        switch (radioButtonResId) {
-//            case R.id.radioWishlistAny:
-//                return DataContract.ViewAwardEntry.FILTER_WISHLIST_ANY;
-//            case R.id.radioWishlistShow:
-//                return DataContract.ViewAwardEntry.FILTER_WISHLIST_SHOW;
-//            case R.id.radioWishlistHide:
-//                return DataContract.ViewAwardEntry.FILTER_WISHLIST_HIDE;
-//            default:
-//                return defaultValue;
-//        }
-//    }
 
 }

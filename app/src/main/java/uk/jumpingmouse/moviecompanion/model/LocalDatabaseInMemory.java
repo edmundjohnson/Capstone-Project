@@ -841,7 +841,4 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         return sortAscendingDefault;
     }
 
-    //---------------------------------------------------------------------
-    // Getters and setters
-
 }

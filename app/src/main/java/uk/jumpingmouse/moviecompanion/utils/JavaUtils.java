@@ -23,12 +23,6 @@ public final class JavaUtils {
     //---------------------------------------------------------------------
     // Date utilities
 
-//    /**
-//     * A date format which allows dates to be compared chronologically.
-//     * This is not private as it is used in a test class.
-//     */
-//    static final String DATE_FORMAT_COMPARABLE = "yyyy-MM-dd HH:mm:ss";
-
     /** Private default constructor to prevent instantiation. */
     private JavaUtils() {
     }
@@ -57,35 +51,15 @@ public final class JavaUtils {
 
     /**
      * Returns a Date as a String.
-     * @param format the SimpleDateFormat used for returned String, e.g. "dd MMM yyyy"
+     * @param dateFormat the date format used for the returned String, e.g. "dd MMM yyyy"
      * @param date the Date
      * @return the Date as a String
      */
     @NonNull
-    public static String toString(@SuppressWarnings("SameParameterValue") @NonNull SimpleDateFormat format,
+    public static String toString(@SuppressWarnings("SameParameterValue") @NonNull SimpleDateFormat dateFormat,
                                   @NonNull final Date date) {
-        return format.format(date);
+        return dateFormat.format(date);
     }
-
-//    /**
-//     * Returns a Date in a String format which is suitable for comparison.
-//     * @param date the Date
-//     * @return the Date in a String format which is suitable for comparison
-//     */
-//    @Nullable
-//    public static String toStringComparable(@Nullable final Date date) {
-//        return toString(getDateFormatComparable(), date);
-//    }
-
-//    /**
-//     * Returns a String version of a Date in a format which is suitable for display.
-//     * @param date the Date
-//     * @return the String version of the Date in a format which is suitable for display
-//     */
-//    @Nullable
-//    public static String toStringForDisplay(@Nullable final Date date) {
-//        return toString(getDateFormatForDisplay(), date);
-//    }
 
     //---------------------------------------------------------------------
     // Type conversions

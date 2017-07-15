@@ -15,6 +15,7 @@ import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.BuildConfig;
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
+import uk.jumpingmouse.moviecompanion.analytics.AnalyticsManager;
 import uk.jumpingmouse.moviecompanion.security.SecurityManager;
 import uk.jumpingmouse.moviecompanion.utils.NavUtils;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
@@ -25,10 +26,6 @@ import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
  */
 public class MainActivity extends AppCompatActivity
         implements AwardListFragment.ListFragmentContainer {
-
-//    static {
-//        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-//    }
 
     //---------------------------------------------------------------------
     // Lifecycle methods
@@ -47,16 +44,20 @@ public class MainActivity extends AppCompatActivity
         // Initialise Timber
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
+        }
         //} else {
         //    // Read the Timber documentation for this
         //    Timber.plant(new CrashReportingTree());
-        }
+        //}
 
         // Initialise the app bar
         getViewUtils().initialiseAppBar(this, R.id.tbAppBar, "", false, 0);
 
         // Initialise the security manager
         getSecurityManager().onCreateActivity(this);
+
+        // Initialise the analytics manager
+        getAnalyticsManager().onCreateActivity(this);
     }
 
     /**
@@ -75,12 +76,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onPause() {
         getSecurityManager().onPauseActivity();
-
-//        mFilmAdapter.clear();
-//        mAwardAdapter.clear();
-
-//        detachDatabaseReadListener(mDatabaseReferenceFilms, mChildEventListenerFilms);
-//        detachDatabaseReadListener(mDatabaseReferenceAwards, mChildEventListenerAwards);
 
         super.onPause();
     }
@@ -169,6 +164,15 @@ public class MainActivity extends AppCompatActivity
     @NonNull
     private static SecurityManager getSecurityManager() {
         return ObjectFactory.getSecurityManager();
+    }
+
+    /**
+     * Convenience method which returns an AnalyticsManager.
+     * @return an AnalyticsManager
+     */
+    @NonNull
+    private static AnalyticsManager getAnalyticsManager() {
+        return ObjectFactory.getAnalyticsManager();
     }
 
     /**

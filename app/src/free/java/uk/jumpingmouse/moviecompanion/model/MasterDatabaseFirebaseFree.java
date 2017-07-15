@@ -33,12 +33,8 @@ public class MasterDatabaseFirebaseFree extends MasterDatabaseFirebase {
     }
 
     //---------------------------------------------------------------------
-    // Event-related methods
-    // Use defaults.
-
-    //---------------------------------------------------------------------
     // Firebase database movie modification methods.
-    // Use the defaults.
+    // Not supported.
 
     /**
      * Adds a movie's details to the Firebase database.

@@ -2,12 +2,15 @@ package uk.jumpingmouse.moviecompanion;
 
 import android.support.annotation.NonNull;
 
+import uk.jumpingmouse.moviecompanion.analytics.AnalyticsManager;
+import uk.jumpingmouse.moviecompanion.analytics.AnalyticsManagerFirebase;
 import uk.jumpingmouse.moviecompanion.model.LocalDatabase;
 import uk.jumpingmouse.moviecompanion.model.LocalDatabaseInMemory;
 import uk.jumpingmouse.moviecompanion.security.SecurityManager;
 import uk.jumpingmouse.moviecompanion.security.SecurityManagerFirebase;
 import uk.jumpingmouse.moviecompanion.utils.NavUtils;
 import uk.jumpingmouse.moviecompanion.utils.NavUtilsImpl;
+import uk.jumpingmouse.moviecompanion.utils.NetUtils;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
 /**
@@ -28,15 +31,15 @@ public abstract class ObjectFactoryBase {
         return SecurityManagerFirebase.getInstance();
     }
 
-//    /**
-//     * Returns an implementation of MasterDatabase.
-//     * Currently, the Firebase implementation is returned.
-//     * @return an implementation of MasterDatabase
-//     */
-//    @NonNull
-//    public static MasterDatabase getMasterDatabase() {
-//        return MasterDatabaseFirebase.getInstance();
-//    }
+    /**
+     * Returns an implementation of AnalyticsManager.
+     * Currently, the Firebase implementation is returned.
+     * @return an implementation of AnalyticsManager
+     */
+    @NonNull
+    public static AnalyticsManager getAnalyticsManager() {
+        return AnalyticsManagerFirebase.getInstance();
+    }
 
     /**
      * Returns an implementation of LocalDatabase.
@@ -51,6 +54,15 @@ public abstract class ObjectFactoryBase {
     }
 
     /**
+     * Returns a reference to a NavUtils object.
+     * @return a reference to a NavUtils object
+     */
+    @NonNull
+    public static NavUtils getNavUtils() {
+        return NavUtilsImpl.getInstance();
+    }
+
+    /**
      * Returns a reference to a ViewUtils object.
      * @return a reference to a ViewUtils object
      */
@@ -60,12 +72,12 @@ public abstract class ObjectFactoryBase {
     }
 
     /**
-     * Returns a reference to a NavUtils object.
-     * @return a reference to a NavUtils object
+     * Returns a reference to a NetUtils object.
+     * @return a reference to a NetUtils object
      */
     @NonNull
-    public static NavUtils getNavUtils() {
-        return NavUtilsImpl.getInstance();
+    public static NetUtils getNetUtils() {
+        return NetUtils.getInstance();
     }
 
 }

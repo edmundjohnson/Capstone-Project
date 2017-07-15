@@ -110,16 +110,6 @@ public class ViewAwardQueryParameters {
             this.limit = 0;
         }
 
-//        Builder(@NonNull ViewAwardQueryParameters source) {
-//            this.sortOrder = source.sortOrder;
-//            this.filterCategory = source.filterCategory;
-//            this.filterGenre = source.filterGenre;
-//            this.filterWishlist = source.filterWishlist;
-//            this.filterWatched = source.filterWatched;
-//            this.filterFavourite = source.filterFavourite;
-//            this.limit = source.limit;
-//        }
-
         @NonNull
         public ViewAwardQueryParameters.Builder sortOrder(@Nullable String sortOrder) {
             this.sortOrder = sortOrder;

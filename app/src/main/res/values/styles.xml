@@ -13,8 +13,6 @@
         <item name="colorAccent">@color/colorAccent</item>
 
         <item name="buttonStyle">@style/ButtonStyle</item>
-
-        <item name="android:supportsRtl">true</item>
     </style>
 
     <!-- App Bar theme -->

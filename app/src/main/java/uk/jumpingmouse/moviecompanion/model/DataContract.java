@@ -49,18 +49,11 @@ public final class DataContract {
     public static final String PARAM_FILTER_WISHLIST = "filterWishlist";
     public static final String PARAM_FILTER_WATCHED = "filterWatched";
     public static final String PARAM_FILTER_FAVOURITE = "filterFavourite";
-    public static final String PARAM_LIMIT = "limit";
+    static final String PARAM_LIMIT = "limit";
 
     // Values for sort direction (part of PARAM_SORT_ORDER)
     static final String SORT_DIRECTION_ASC = "ASC";
     static final String SORT_DIRECTION_DESC = "DESC";
-
-    // Query parameters which are not columns
-//        public static final String PARAM_LIMIT = "limit";
-
-//    // Default values for limit queries
-//    private static final int MAX_ROWS_DEFAULT = 0;
-//    private static final int OFFSET_DEFAULT = 0;
 
     static {
         // The content authority for the admin product flavour has a different name so that the
@@ -147,22 +140,6 @@ public final class DataContract {
         public static Uri buildUriForAllRows() {
             return CONTENT_URI;
         }
-
-//        /**
-//         * Create and return a URI for querying movies with a specified max number of rows,
-//         * using the default offset for the first returned row and the default sort order.
-//         * e.g. "content://org.balancedview.dailybenefit/movie/limit/100".
-//         * @param limit the maximum number of rows to return
-//         * @return the URI for querying movies with the specified max number of rows, using the
-//         *         default offset and sort order
-//         */
-//        @NonNull
-//        public static Uri buildUriForAllRowsWithLimit(final int limit) {
-//            return CONTENT_URI.buildUpon()
-//                    .appendPath(PARAM_LIMIT)
-//                    .appendPath(String.valueOf(limit))
-//                    .build();
-//        }
 
     }
 
@@ -263,11 +240,6 @@ public final class DataContract {
         static String[] getAllColumns() {
             return ALL_COLUMNS.clone();
         }
-
-//        static final int COL_ID = 0;
-//        static final int COL_ON_WISHLIST = COL_ID + 1;
-//        static final int COL_WATCHED = COL_ON_WISHLIST + 1;
-//        static final int COL_FAVOURITE = COL_WATCHED + 1;
 
         // URIs
 
@@ -414,6 +386,7 @@ public final class DataContract {
             genresStoredModifiable.put("filter_genre_thriller", "Thriller");
             GENRES_STORED = Collections.unmodifiableMap(genresStoredModifiable);
         }
+
         /**
          * Returns a genre as stored in the database for a supplied genre key.
          * @param genreKey a genre key, e.g."filter_genre_comedy"

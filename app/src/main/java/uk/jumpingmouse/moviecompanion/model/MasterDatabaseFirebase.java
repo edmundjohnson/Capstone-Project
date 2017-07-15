@@ -55,13 +55,6 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
     private ChildEventListener mChildEventListenerUserMovies;
 
     //---------------------------------------------------------------------
-    // Instance handling methods
-
-//    /** Default constructor. */
-//    MasterDatabaseFirebase() {
-//    }
-
-    //---------------------------------------------------------------------
     // Event-related methods
 
     /**

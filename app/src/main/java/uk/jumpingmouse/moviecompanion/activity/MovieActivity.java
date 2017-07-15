@@ -46,17 +46,6 @@ public class MovieActivity extends AppCompatActivity {
             movieFragment.setArgViewAwardUri(uri);
         }
 
-        //        Bundle extras = getIntent().getExtras();
-//        if (extras != null) {
-//            // Get the movie from the passed-in URI
-//            Uri movieUri = extras.getParcelable("VIEW_MOVIE_URI");
-//
-//            // Note: We are re-using an already-existing instance of MovieFragment to display the
-//            // selected movie.  Therefore, we cannot call movieFragment.setArguments(), as that can
-//            // only be done on new fragments.  Instead, we use custom setArg...() methods.
-//            movieFragment.setArgViewAwardUri(movieUri);
-//        }
-
         addFragmentToContainer(movieFragment);
     }
 

@@ -33,6 +33,7 @@ import com.squareup.picasso.Picasso;
 import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
+import uk.jumpingmouse.moviecompanion.analytics.AnalyticsManager;
 import uk.jumpingmouse.moviecompanion.data.UserMovie;
 import uk.jumpingmouse.moviecompanion.data.ViewAward;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
@@ -136,6 +137,13 @@ public class MovieFragment extends Fragment
             @Override
             public void onClick(View v) {
                 if (mViewAward != null) {
+
+                    // log the event in analytics
+                    int movieId = mViewAward.getMovieId();
+                    String movieTitle = mViewAward.getTitle();
+                    getAnalyticsManager().logImdbLink(movieId, movieTitle);
+
+                    // display the IMDb web page for the movie
                     getNavUtils().displayWebLink((AppCompatActivity) getActivity(),
                             getString(R.string.imdb_link_address, mViewAward.getImdbId()));
                 }
@@ -144,59 +152,17 @@ public class MovieFragment extends Fragment
 
     }
 
-//    /**
-//     * Performs processing required when the fragment is resumed.
-//     * i.e. display the required movie.
-//     */
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//
-//        // If there is no saved ViewAward (from onSaveInstanceState), display the latest
-//        // movie
-//        if (mDisplayedViewAward == null) {
-//            Context context = getActivity();
-//            ViewAward viewAward = getLocalDatabase().getViewAwardLatest(context);
-//            displayViewAward(context, viewAward);
-//        }
-//    }
+    /**
+     * Called to retrieve per-instance state from an activity before being killed so that the
+     * state can be restored in onCreate(Bundle) or onRestoreInstanceState(Bundle).
+     * @param outState the Bundle populated by this method
+     */
+    @Override
+    public final void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
 
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//    }
-
-//    /**
-//     * Called to retrieve per-instance state from an activity before being killed so that the
-//     * state can be restored in onCreate(Bundle) or onRestoreInstanceState(Bundle).
-//     * @param outState the Bundle populated by this method
-//     */
-//    @Override
-//    public final void onSaveInstanceState(final Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//
-//        outState.putParcelable(KEY_VIEW_AWARD, mDisplayedViewAward);
-//    }
-
-//    /**
-//     * Called when all saved state has been restored into the view hierarchy
-//     * of the fragment.  This can be used to do initialization based on saved
-//     * state that you are letting the view hierarchy track itself, such as
-//     * whether check box widgets are currently checked.  This is called
-//     * after {@link #onActivityCreated(Bundle)} and before
-//     * {@link #onStart()}.
-//     *
-//     * @param savedInstanceState If the fragment is being re-created from
-//     *     a previous saved state, this is the state.
-//     */
-//    @Override
-//    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-//        if (savedInstanceState != null) {
-//            displaySavedViewAward(getActivity(), savedInstanceState);
-//        }
-//
-//        super.onViewStateRestored(savedInstanceState);
-//    }
+        outState.putParcelable(KEY_VIEW_AWARD, mViewAward);
+    }
 
     //--------------------------------------------------------------
     // Construction
@@ -330,12 +296,8 @@ public class MovieFragment extends Fragment
      * @return the number of database rows updated
      */
     private int updateUserMovie(@NonNull Context context, @NonNull ViewAward viewAward) {
-//        if (!getNetUtils().isNetworkAvailable(context)) {
-//            getViewUtils().displayInfoMessage(context, R.string.error_internet_connection_required);
-//            return 0;
-//        }
 
-        // Update the Firebase database
+        // Update the master database
         UserMovie userMovie = ModelUtils.newUserMovie(viewAward);
         int rowsUpdated = getMasterDatabase().addUserMovie(context, userMovie);
         if (rowsUpdated == 0) {
@@ -344,8 +306,6 @@ public class MovieFragment extends Fragment
         }
 
         // Update the local database as the user may be offline
-        // TODO: test this in a variety of offline->online situations, to ensure
-        // that the Firebase updates are not lost even if the app is force stopped
         rowsUpdated = getLocalDatabase().addUserMovie(userMovie);
         if (rowsUpdated == 0) {
             Timber.e("updateUserMovie: 0 rows updated in local database");
@@ -471,23 +431,6 @@ public class MovieFragment extends Fragment
     //--------------------------------------------------------------
     // UI methods
 
-//    /**
-//     * Displays the requested ViewAward, i.e. one which was not saved.
-//     * @param context the context
-//     * @return the requested ViewAward, or null if no ViewAward was requested
-//     */
-//    private ViewAward getRequestedViewAward(@Nullable final Context context) {
-//        // display the ViewAward whose URI was passed in
-//        Uri uri = getArgViewAwardUri();
-//        if (uri != null) {
-//            String id = uri.getLastPathSegment();
-//            ViewAward viewAward = getLocalDatabase().selectViewAwardById(id);
-//            setArgViewAwardUri(null);
-//            return viewAward;
-//        }
-//        return null;
-//    }
-
     /**
      * Displays a ViewAward.
      * @param context the context
@@ -523,21 +466,9 @@ public class MovieFragment extends Fragment
                     mRootView.findViewById(R.id.layoutAwardInfo).setBackgroundColor(mLightMutedColor);
                     mRootView.findViewById(R.id.txtReview).setBackgroundColor(mLightMutedColor);
 
-                    //// Set the status bar background colour to match the meta bar
-                    //// Nice idea, but it's quite distracting, and the appbar goes green
-                    //// when the review is scrolled to the top.
-                    //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    //    if (getActivity() != null && getActivity().getWindow() != null) {
-                    //        getActivity().getWindow().setStatusBarColor(mDarkMutedColor);
-                    //    }
-                    //}
-                    //AppCompatActivity activity = (AppCompatActivity) getActivity();
-                    //// Set appbar to movie_info colour - no, this doesn't work, it sets the colour
-                    //// immediately, we want it set when the review is scrolled up.
-                    //if (getActivity() != null) {
-                    //    Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.tbAppBar);
-                    //    toolbar.setBackground(new ColorDrawable(mDarkMutedColor));
-                    //}
+                    // Note: Setting the app bar background colour to match the movie info bar
+                    // is a bad idea.  It's distracting, and the app bar goes green when the
+                    // review is scrolled to the top.
                 }
             }
 
@@ -557,22 +488,6 @@ public class MovieFragment extends Fragment
     }
 
     //--------------------------------------------------------------
-    // Utility methods
-
-//    /**
-//     * Displays the ViewAward (if any) which has been set as an argument.
-//     * @param context the context
-//     */
-//    public final void refreshUserInterface(@Nullable final Context context) {
-//        Uri uri = getArgViewAwardUri();
-//        if (uri != null) {
-//            ViewAward viewAward = getResolver().getContentProvider().etc(context, uri);
-//            displayViewAward(context, viewAward);
-//            setArgViewAwardUri(null);
-//        }
-//    }
-
-    //--------------------------------------------------------------
     // Getters and Setters
 
     @Nullable
@@ -584,6 +499,15 @@ public class MovieFragment extends Fragment
             mArgViewAwardUri = uri;
             loadData(uri);
         }
+    }
+
+    /**
+     * Convenience method which returns an AnalyticsManager.
+     * @return an AnalyticsManager
+     */
+    @NonNull
+    private static AnalyticsManager getAnalyticsManager() {
+        return ObjectFactory.getAnalyticsManager();
     }
 
     /**
@@ -604,19 +528,19 @@ public class MovieFragment extends Fragment
     }
 
     /**
-     * Returns a NetUtils object.
-     * @return a NetUtils object
-     */
-    private NetUtils getNetUtils() {
-        return NetUtils.getInstance();
-    }
-
-    /**
-     * Returns a NavUtils object.
-     * @return a NavUtils object
+     * Convenience method which returns a reference to a NavUtils object.
+     * @return a reference to a NavUtils object
      */
     private NavUtils getNavUtils() {
         return ObjectFactory.getNavUtils();
+    }
+
+    /**
+     * Convenience method which returns a reference to a NetUtils object.
+     * @return a reference to a NetUtils object
+     */
+    private NetUtils getNetUtils() {
+        return ObjectFactory.getNetUtils();
     }
 
     /**
@@ -627,19 +551,5 @@ public class MovieFragment extends Fragment
     private static ViewUtils getViewUtils() {
         return ObjectFactory.getViewUtils();
     }
-
-//    //------------------------------------------------------------------------------
-//    // Callbacks
-//
-//    /**
-//     * A callback interface that all activities containing this fragment must implement.
-//     */
-//    public interface MovieFragmentContainer {
-//        /**
-//         * Return whether a ViewAward is currently being displayed.
-//         * @return true if a ViewAward is currently being displayed, false otherwise
-//         */
-//        boolean isViewAwardDisplayed();
-//    }
 
 }

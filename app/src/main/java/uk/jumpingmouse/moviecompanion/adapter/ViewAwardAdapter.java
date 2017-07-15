@@ -23,16 +23,14 @@ import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
 /**
- * The adapter for the award list.
- * This adapter exposes a list of awards from a {@link Cursor}
+ * The adapter for the view award list.
+ * This adapter exposes a list of view awards from a {@link Cursor}
  * to a {@link android.support.v7.widget.RecyclerView}.
  * @author Edmund Johnson
  */
 public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapter.ViewHolder> {
-//    /** Log tag for this class. */
-//    private static final String TAG = "ViewAwardAdapter";
 
-    /** The position of the currently selected item. */
+    /** The position of the most recently clicked item. */
     private int mSelectedPosition = RecyclerView.NO_POSITION;
 
     private final Context mContext;
@@ -198,28 +196,11 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
         // Save the position of the item that was clicked
         setSelectedPosition(selectedPosition);
 
-//        // Ensure the newly-selected item is highlighted
-//        notifyItemChanged(getSelectedPosition());
-
         // Callback the list fragment container (i.e. the list activity), so it can
         // display the selected movie
         Uri uri = DataContract.ViewAwardEntry.buildUriForRowById(id);
         listFragmentContainer.onItemSelected(mContext, uri);
     }
-
-//    /**
-//     * Select one of the items on the list.
-//     * @param selectedPosition the position of the list item to be selected
-//     * @param listFragmentContainer the activity containing the fragment in which the list is displayed
-//     */
-//    public void selectItemAtPosition(final int selectedPosition,
-//                         final AwardListFragment.ListFragmentContainer listFragmentContainer) {
-//        Cursor cursor = getCursor();
-//        if (cursor != null && cursor.moveToPosition(selectedPosition)) {
-//            int movieId = cursor.getInt(DataContract.ViewAwardEntry.COL_MOVIE_ID);
-//            handleItemClick(movieId, selectedPosition, listFragmentContainer);
-//        }
-//    }
 
     // Getters and setters
 
