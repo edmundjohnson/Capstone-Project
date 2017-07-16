@@ -194,7 +194,7 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
         int rowsAdded = getMasterDatabase().addMovie(context, mMovie);
 
         if (rowsAdded == 0) {
-            getViewUtils().displayErrorMessage(context,
+            getViewUtils().displayErrorMessage(this,
                     getString(R.string.movie_not_saved, mMovie.getImdbId()));
         } else {
             getViewUtils().displayInfoMessage(context,

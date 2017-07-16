@@ -237,7 +237,7 @@ public class AddAwardActivity extends AppCompatActivity {
         Context context = view.getContext();
         int rowsAdded = getMasterDatabase().addAward(context, mAward);
         if (rowsAdded == 0) {
-            getViewUtils().displayErrorMessage(context,
+            getViewUtils().displayErrorMessage(this,
                     getString(R.string.award_not_saved, mMovie.getTitle()));
         } else {
             getViewUtils().displayInfoMessage(context,

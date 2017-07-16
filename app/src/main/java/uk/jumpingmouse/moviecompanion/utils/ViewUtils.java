@@ -341,45 +341,46 @@ public class ViewUtils {
 
     /**
      * Display an error message in a dialog.
-     * @param context the context
+     * @param activity the activity
      * @param messageResId the string resource id of the message to be displayed
      */
-    public void displayErrorMessage(@Nullable Context context, @StringRes int messageResId) {
-        if (context != null) {
-            displayAlertDialog(context, R.string.error_title, context.getString(messageResId));
+    public void displayErrorMessage(@Nullable Activity activity, @StringRes int messageResId) {
+        if (activity != null) {
+            displayAlertDialog(activity, R.string.error_title, activity.getString(messageResId));
         }
     }
 
     /**
      * Display an error message in a dialog.
-     * @param context the context
+     * @param activity the activity
      * @param message the message to be displayed
      */
-    public void displayErrorMessage(@Nullable Context context, @NonNull String message) {
-        if (context != null) {
-            displayAlertDialog(context, R.string.error_title, message);
+    public void displayErrorMessage(@Nullable Activity activity, @NonNull String message) {
+        if (activity != null) {
+            displayAlertDialog(activity, R.string.error_title, message);
         }
     }
 
     /**
      * Display an alert dialog.
-     * @param context the context
+     * @param activity the activity
      * @param titleResId the string resource id of the dialog title
      * @param message the dialog message
      */
-    private static void displayAlertDialog(@NonNull Context context,
+    private static void displayAlertDialog(@NonNull Activity activity,
             @SuppressWarnings("SameParameterValue") @StringRes int titleResId, @NonNull String message) {
 
-        new AlertDialog.Builder(context)
-                .setIconAttribute(android.R.attr.alertDialogIcon)
-                .setTitle(titleResId)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // do nothing
-                    }
-                })
-                .show();
+        if (!activity.isFinishing()) {
+            new AlertDialog.Builder(activity)
+                    .setIconAttribute(android.R.attr.alertDialogIcon)
+                    .setTitle(titleResId)
+                    .setMessage(message)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                        }
+                    }).show();
+        }
     }
 
 }
