@@ -1,12 +1,16 @@
 package uk.jumpingmouse.moviecompanion.adapter;
 
-import android.content.Context;
+import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +22,7 @@ import com.squareup.picasso.Picasso;
 
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
-import uk.jumpingmouse.moviecompanion.activity.AwardListFragment;
+import uk.jumpingmouse.moviecompanion.activity.MovieActivity;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
@@ -33,36 +37,30 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
     /** The position of the most recently clicked item. */
     private int mSelectedPosition = RecyclerView.NO_POSITION;
 
-    private final Context mContext;
+    private final Activity mActivity;
     private Cursor mCursor;
-    private final AdapterOnClickHandler mClickHandler;
     private final View mEmptyListView;
     private @LayoutRes int mListLayout;
 
     /**
      * Private constructor to prevent direct instantiation from outside this class.
-     * @param context the context
-     * @param clickHandler the item click handler
+     * @param activity the adapter's activity
      * @param emptyListView the view to display if the list is empty
      */
-    private ViewAwardAdapter(final Context context, final AdapterOnClickHandler clickHandler,
-                             final View emptyListView) {
-        mContext = context;
-        mClickHandler = clickHandler;
+    private ViewAwardAdapter(final Activity activity, final View emptyListView) {
+        mActivity = activity;
         mEmptyListView = emptyListView;
         setListLayoutList();
     }
 
     /**
      * Returns a new instance of the adapter.
-     * @param context the context
-     * @param clickHandler the item click handler
+     * @param activity the adapter's activity
      * @param emptyListView the view to display if the list is empty
      * @return a new instance of the adapter
      */
-    public static ViewAwardAdapter newInstance(final Context context, final AdapterOnClickHandler clickHandler,
-                                               final View emptyListView) {
-        return new ViewAwardAdapter(context, clickHandler, emptyListView);
+    public static ViewAwardAdapter newInstance(final Activity activity, final View emptyListView) {
+        return new ViewAwardAdapter(activity, emptyListView);
     }
 
     @Override
@@ -119,30 +117,39 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
         }
 
         // Extract the award info from the cursor
-        String awardId = mCursor.getString(DataContract.ViewAwardEntry.COL_ID);
+        String viewAwardId = mCursor.getString(DataContract.ViewAwardEntry.COL_ID);
         int movieId = mCursor.getInt(DataContract.ViewAwardEntry.COL_MOVIE_ID);
         String awardDate = getViewUtils().getAwardDateDisplayable(
                 mCursor.getString(DataContract.ViewAwardEntry.COL_AWARD_DATE));
         String categoryCode = mCursor.getString(DataContract.ViewAwardEntry.COL_CATEGORY);
         @DrawableRes int categoryRes = getViewUtils().getCategoryRes(categoryCode);
-        String categoryText = getViewUtils().getCategoryText(mContext, categoryCode);
+        String categoryText = getViewUtils().getCategoryText(mActivity, categoryCode);
         int displayOrder = mCursor.getInt(DataContract.ViewAwardEntry.COL_DISPLAY_ORDER);
 
         String movieTitle = mCursor.getString(DataContract.ViewAwardEntry.COL_TITLE);
         int runtime = mCursor.getInt(DataContract.ViewAwardEntry.COL_RUNTIME);
-        String runtimeText = getViewUtils().getRuntimeText(mContext, runtime);
+        String runtimeText = getViewUtils().getRuntimeText(mActivity, runtime);
         String genre = mCursor.getString(DataContract.ViewAwardEntry.COL_GENRE);
         String poster = mCursor.getString(DataContract.ViewAwardEntry.COL_POSTER);
         // the values of onWishlist etc. affect the menu only and are handled in the fragment
 
         // replace the contents of the item view with the data for the award
-        Picasso.with(mContext).load(poster).into(viewHolder.getImgPoster());
+        Picasso.with(mActivity).load(poster).into(viewHolder.getImgPoster());
         viewHolder.getTxtMovieTitle().setText(movieTitle);
         viewHolder.getTxtRuntime().setText(runtimeText);
         viewHolder.getTxtGenre().setText(genre);
         viewHolder.getImgCategory().setImageResource(categoryRes);
         viewHolder.getImgCategory().setContentDescription(categoryText);
         viewHolder.getTxtAwardDate().setText(awardDate);
+
+        // Assign the shared element name to the list item's poster
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            String transitionName = mActivity.getString(R.string.transition_movie, viewAwardId);
+            viewHolder.getImgPoster().setTransitionName(transitionName);
+            // Set the tag so the view can be found when the list activity is returned to.
+            viewHolder.getImgPoster().setTag(transitionName);
+        }
+
     }
 
     /**
@@ -173,33 +180,6 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
 
         int emptyViewVisibility = getItemCount() == 0 ? View.VISIBLE : View.GONE;
         mEmptyListView.setVisibility(emptyViewVisibility);
-    }
-
-    /**
-     * Interface for the item click handler.
-     */
-    public interface AdapterOnClickHandler {
-        void onClick(String id, int selectedPosition);
-    }
-
-    /**
-     * Handler method invoked when an item is clicked.
-     * @param id the id of the view award which has been clicked
-     * @param selectedPosition the item's position in the list
-     * @param listFragmentContainer the activity containing the fragment in which the list is displayed
-     */
-    public void handleItemClick(final String id, final int selectedPosition,
-                             final AwardListFragment.ListFragmentContainer listFragmentContainer) {
-//        // Ensure the previously-selected item is no longer highlighted
-//        notifyItemChanged(getSelectedPosition());
-
-        // Save the position of the item that was clicked
-        setSelectedPosition(selectedPosition);
-
-        // Callback the list fragment container (i.e. the list activity), so it can
-        // display the selected movie
-        Uri uri = DataContract.ViewAwardEntry.buildUriForRowById(id);
-        listFragmentContainer.onItemSelected(mContext, uri);
     }
 
     // Getters and setters
@@ -275,10 +255,34 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
 
         @Override
         public void onClick(View view) {
+            if (mActivity == null || mCursor == null) {
+                return;
+            }
+
             int position = getAdapterPosition();
             if (mCursor.moveToPosition(position)) {
-                String id = mCursor.getString(DataContract.ViewAwardEntry.COL_ID);
-                mClickHandler.onClick(id, position);
+                final String viewAwardId = mCursor.getString(DataContract.ViewAwardEntry.COL_ID);
+
+                // Build an intent for launching the movie activity
+                Uri uri = DataContract.ViewAwardEntry.buildUriForRowById(viewAwardId);
+                Intent intent = new Intent(mActivity, MovieActivity.class).setData(uri);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+                        && imgPoster != null) {
+
+                    // Start the movie activity with a shared element transition
+                    String transitionName = mActivity.getString(R.string.transition_movie, viewAwardId);
+                    intent.setAction(Intent.ACTION_VIEW);
+                    Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            mActivity,
+                            imgPoster,
+                            transitionName)
+                            .toBundle();
+                    mActivity.startActivity(intent, bundle);
+                } else {
+                    // Start the movie activity without a shared element transition
+                    mActivity.startActivity(intent);
+                }
             }
         }
 

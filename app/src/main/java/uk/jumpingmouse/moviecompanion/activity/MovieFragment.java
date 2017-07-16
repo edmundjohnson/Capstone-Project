@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -116,6 +117,15 @@ public class MovieFragment extends Fragment
         mTxtCategory = (TextView) mRootView.findViewById(R.id.txtCategory);
         mTxtAwardDate = (TextView) mRootView.findViewById(R.id.txtAwardDate);
         mTxtReview = (TextView) mRootView.findViewById(R.id.txtReview);
+
+        // Set the transition name for the poster
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (getArgViewAwardUri() != null) {
+                String viewAwardId = getArgViewAwardUri().getLastPathSegment();
+                String transitionName = getString(R.string.transition_movie, viewAwardId);
+                mImgPoster.setTransitionName(transitionName);
+            }
+        }
 
         Context context = getActivity();
         if (savedInstanceState != null) {

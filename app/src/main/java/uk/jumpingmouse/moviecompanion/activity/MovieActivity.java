@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
@@ -57,6 +58,35 @@ public class MovieActivity extends AppCompatActivity {
         super.onResume();
 
         this.supportInvalidateOptionsMenu();
+    }
+
+//    @Override
+//    public void finishAfterTransition() {
+//        Intent data = new Intent();
+//        //data.putExtra(MainActivity.KEY_SHARED_TRANSITION_NAME, mTransitionName);
+//        setResult(RESULT_OK, data);
+//        super.finishAfterTransition();
+//    }
+
+    //--------------------------------------------------------------
+    // Navigation methods
+
+    /**
+     * Handle selection of a menu item.
+     * @param item the menu item selected
+     * @return false to allow normal menu processing to
+     *         proceed, true to consume it here.
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // This allows the up arrow to reverse the shared element transition on
+            // exit from the activity.
+            case android.R.id.home:
+                supportFinishAfterTransition();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     //--------------------------------------------------------------

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge
+<!--
+     Notes:
+     The FrameLayout background shows while the shared element transition is in progress.
+     If this FrameLayout is replaced by a merge tag, the parallax scrolling stops working.
+ -->
+<FrameLayout
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -24,6 +29,6 @@
         android:background="@drawable/image_background_protection"
         />
 
-</merge>
+</FrameLayout>
 
     

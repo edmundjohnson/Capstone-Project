@@ -59,18 +59,18 @@ public class AwardListFragment extends Fragment
     private static final String KEY_LIST_LAYOUT = "KEY_LIST_LAYOUT";
     private static final String KEY_POSITION = "KEY_POSITION";
 
-    /** The menu. */
+    // The menu.
     private Menu mMenu;
 
-    /** The content observer for view awards. */
+    // The content observer for view awards.
     private ViewAwardContentObserver mViewAwardContentObserver;
 
-    /** The data adapter. */
+    // The data adapter.
     private ViewAwardAdapter mViewAwardAdapter;
 
-    /** The RecyclerView containing the list of awards. */
+    // The RecyclerView containing the list of awards.
     private RecyclerView mRecyclerView;
-    /** The position in the list of the currently selected item. */
+    // The position in the list of the most recently clicked item.
     private int mSelectedPosition = RecyclerView.NO_POSITION;
 
     //--------------------------------------------------------------
@@ -90,26 +90,12 @@ public class AwardListFragment extends Fragment
         View rootView = inflater.inflate(R.layout.award_list_fragment, container, false);
         View emptyListView = rootView.findViewById(R.id.viewAwardListEmpty);
 
-        // Create a click handler for the list items
-        ViewAwardAdapter.AdapterOnClickHandler clickHandler =
-                new ViewAwardAdapter.AdapterOnClickHandler() {
-                    @Override
-                    public void onClick(final String id, final int selectedPosition) {
-
-                        if (mViewAwardAdapter != null && getActivity() != null) {
-                            mSelectedPosition = selectedPosition;
-                            mViewAwardAdapter.handleItemClick(id, selectedPosition,
-                                    (AwardListFragment.ListFragmentContainer) getActivity());
-                        }
-                    }
-                };
-
-        Context context = getActivity();
+        Activity activity = getActivity();
 
         // The adapter will take data and populate the RecyclerView.
         // We cannot use FLAG_AUTO_REQUERY since it is deprecated, so we would end
         // up with an empty list the first time we run.
-        mViewAwardAdapter = ViewAwardAdapter.newInstance(context, clickHandler, emptyListView);
+        mViewAwardAdapter = ViewAwardAdapter.newInstance(activity, emptyListView);
 
         // Restore any saved state
         if (savedInstanceState != null) {
@@ -118,7 +104,7 @@ public class AwardListFragment extends Fragment
         }
 
         // Get a reference to the RecyclerView, and attach the adapter to it.
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.viewPostList);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.viewAwardList);
         mRecyclerView.setAdapter(mViewAwardAdapter);
 
         // This setting improves performance as long as changes in content do not change
@@ -126,7 +112,7 @@ public class AwardListFragment extends Fragment
         mRecyclerView.setHasFixedSize(true);
 
         // Display the list layout as either list view or grid view
-        setListLayout(context, mViewAwardAdapter.isListLayoutList());
+        setListLayout(activity, mViewAwardAdapter.isListLayoutList());
 
         return rootView;
     }
@@ -609,23 +595,6 @@ public class AwardListFragment extends Fragment
         public void onChange(boolean selfChange, Uri uri) {
             onDataChanged();
         }
-    }
-
-    //--------------------------------------------------------------------------
-    // Callbacks
-
-    /**
-     * A callback interface that all activities containing this fragment must
-     * implement. This mechanism allows activities to be notified of item
-     * selections, for example.
-     */
-    public interface ListFragmentContainer {
-        /**
-         * Callback for when an item has been selected.
-         * @param context the context
-         * @param uri the URI of the selected list item
-         */
-        void onItemSelected(Context context, Uri uri);
     }
 
 }

@@ -39,6 +39,9 @@
     <string name="databaseOperationSuccess">Success:\n%1$s \"%2$s\" at node /%3$s</string>
     <string name="databaseOperationFailure">FAILURE:\n%1$s \"%2$s\" at node /%3$s\nError code: %4$d, details: %5$s, message: %6$s</string>
 
+    <!-- Shared element transitions -->
+    <string name="transition_movie" translatable="false">transition_movie_%s</string>
+
     <!-- Movie fields -->
     <!-- It is unlikely that there will be a movie whose length is 1 minute, but more
          applicable distinctions in the runtime_text could occur in other languages -->

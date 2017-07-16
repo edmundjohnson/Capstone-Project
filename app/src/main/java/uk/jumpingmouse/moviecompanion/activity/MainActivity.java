@@ -1,8 +1,6 @@
 package uk.jumpingmouse.moviecompanion.activity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,8 +22,7 @@ import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
  * The main activity, i.e. the movie list.
  * @author Edmund Johnson
  */
-public class MainActivity extends AppCompatActivity
-        implements AwardListFragment.ListFragmentContainer {
+public class MainActivity extends AppCompatActivity {
 
     //---------------------------------------------------------------------
     // Lifecycle methods
@@ -122,36 +119,6 @@ public class MainActivity extends AppCompatActivity
         boolean consumed = getNavUtils().onOptionsItemSelected(this, item);
         //noinspection SimplifiableConditionalExpression
         return consumed ? true : super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * Callback for when an item has been selected.
-     * @param context the context
-     * @param uri     the URI of the selected list item
-     */
-    @Override
-    public void onItemSelected(Context context, Uri uri) {
-        displayViewMovie(context, uri);
-    }
-
-    /**
-     * Display the movie activity.
-     * @param context the context
-     * @param uri     the URI of the selected list item
-     */
-    private void displayViewMovie(Context context, Uri uri) {
-        // Launch movie activity
-        Intent intent = new Intent(this, MovieActivity.class).setData(uri);
-        startActivity(intent);
-
-// Use the following code for shared element transitions
-//        String transitionName = getString(R.string.detail_icon_transition_name);
-//
-//        @SuppressWarnings("unchecked")
-//        ActivityOptionsCompat activityOptions =
-//                ActivityOptionsCompat.makeSceneTransitionAnimation(this,
-//                        new Pair<View, String>(viewHolder.mIconView, transitionName));
-//        ActivityCompat.startActivity(this, intent, activityOptions.toBundle());
     }
 
     //---------------------------------------------------------------------
