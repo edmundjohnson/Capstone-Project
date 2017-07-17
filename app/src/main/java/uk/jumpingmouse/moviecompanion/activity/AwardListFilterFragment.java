@@ -2,6 +2,9 @@ package uk.jumpingmouse.moviecompanion.activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.ArrayRes;
+import android.support.annotation.ColorRes;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,23 +37,19 @@ public class AwardListFilterFragment extends DialogFragment {
         if (view != null && context != null && context.getResources() != null) {
 
             // Genre filter
-
-            // Create an ArrayAdapter using the string array and a default spinner layout
-            ArrayAdapter<CharSequence> filterGenreAdapter = ArrayAdapter.createFromResource(context,
-                    R.array.filter_genre_pref_display, android.R.layout.simple_spinner_item);
-            // Specify the layout to use when the list of choices appears
-            filterGenreAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-            // Apply the adapter to the spinner
             final Spinner spnFilterGenre = (Spinner) view.findViewById(R.id.spnFilterGenre);
-            spnFilterGenre.setAdapter(filterGenreAdapter);
+            View frameFilterGenre = view.findViewById(R.id.frameFilterGenre);
+            spinnerSetProperties(context, spnFilterGenre, frameFilterGenre);
+
+            // Set an adapter for the spinner
+            spinnerSetAdapter(context, spnFilterGenre, R.array.filter_genre_pref_display);
 
             // Set the spinner to the position of the current filter value
             final String[] filterGenrePrefValues =
                     context.getResources().getStringArray(R.array.filter_genre_pref_key);
-            String previousFilterGenre = PrefUtils.getAwardListFilterGenre(context);
+            String filterGenreValue = PrefUtils.getAwardListFilterGenre(context);
             int positionGenre = JavaUtils.getPositionInArray(
-                    filterGenrePrefValues, previousFilterGenre);
+                    filterGenrePrefValues, filterGenreValue);
             spnFilterGenre.setSelection(positionGenre == -1 ? 0 : positionGenre);
 
             // Add a listener to the spinner
@@ -75,23 +74,19 @@ public class AwardListFilterFragment extends DialogFragment {
             });
 
             // Wishlist filter
-
-            // Create an ArrayAdapter using the string array and a default spinner layout
-            ArrayAdapter<CharSequence> filterWishlistAdapter = ArrayAdapter.createFromResource(context,
-                    R.array.filter_wishlist_pref_display, android.R.layout.simple_spinner_item);
-            // Specify the layout to use when the list of choices appears
-            filterWishlistAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-            // Apply the adapter to the spinner
             final Spinner spnFilterWishlist = (Spinner) view.findViewById(R.id.spnFilterWishlist);
-            spnFilterWishlist.setAdapter(filterWishlistAdapter);
+            View frameFilterWishlist = view.findViewById(R.id.frameFilterWishlist);
+            spinnerSetProperties(context, spnFilterWishlist, frameFilterWishlist);
+
+            // Set an adapter for the spinner
+            spinnerSetAdapter(context, spnFilterWishlist, R.array.filter_wishlist_pref_display);
 
             // Set the spinner to the position of the current filter value
             final String[] filterWishlistPrefValues =
                     context.getResources().getStringArray(R.array.filter_wishlist_pref_key);
-            String previousFilterWishlist = PrefUtils.getAwardListFilterWishlist(context);
+            String filterWishlistValue = PrefUtils.getAwardListFilterWishlist(context);
             int positionWishlist = JavaUtils.getPositionInArray(
-                    filterWishlistPrefValues, previousFilterWishlist);
+                    filterWishlistPrefValues, filterWishlistValue);
             spnFilterWishlist.setSelection(positionWishlist == -1 ? 0 : positionWishlist);
 
             // Add a listener to the spinner
@@ -116,23 +111,19 @@ public class AwardListFilterFragment extends DialogFragment {
             });
 
             // Watched filter
-
-            // Create an ArrayAdapter using the string array and a default spinner layout
-            ArrayAdapter<CharSequence> filterWatchedAdapter = ArrayAdapter.createFromResource(context,
-                    R.array.filter_watched_pref_display, android.R.layout.simple_spinner_item);
-            // Specify the layout to use when the list of choices appears
-            filterWatchedAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-            // Apply the adapter to the spinner
             final Spinner spnFilterWatched = (Spinner) view.findViewById(R.id.spnFilterWatched);
-            spnFilterWatched.setAdapter(filterWatchedAdapter);
+            View frameFilterWatched = view.findViewById(R.id.frameFilterWatched);
+            spinnerSetProperties(context, spnFilterWatched, frameFilterWatched);
+
+            // Set an adapter for the spinner
+            spinnerSetAdapter(context, spnFilterWatched, R.array.filter_watched_pref_display);
 
             // Set the spinner to the position of the current filter value
-            String previousFilterWatched = PrefUtils.getAwardListFilterWatched(context);
+            String filterWatchedValue = PrefUtils.getAwardListFilterWatched(context);
             final String[] filterWatchedPrefValues =
                     context.getResources().getStringArray(R.array.filter_watched_pref_key);
             int positionWatched = JavaUtils.getPositionInArray(
-                    filterWatchedPrefValues, previousFilterWatched);
+                    filterWatchedPrefValues, filterWatchedValue);
             spnFilterWatched.setSelection(positionWatched == -1 ? 0 : positionWatched);
 
             // Add a listener to the spinner
@@ -157,23 +148,19 @@ public class AwardListFilterFragment extends DialogFragment {
             });
 
             // Favourite filter
-
-            // Create an ArrayAdapter using the string array and a default spinner layout
-            ArrayAdapter<CharSequence> filterFavouriteAdapter = ArrayAdapter.createFromResource(context,
-                    R.array.filter_favourite_pref_display, android.R.layout.simple_spinner_item);
-            // Specify the layout to use when the list of choices appears
-            filterFavouriteAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-            // Apply the adapter to the spinner
             final Spinner spnFilterFavourite = (Spinner) view.findViewById(R.id.spnFilterFavourite);
-            spnFilterFavourite.setAdapter(filterFavouriteAdapter);
+            View frameFilterFavourite = view.findViewById(R.id.frameFilterFavourite);
+            spinnerSetProperties(context, spnFilterFavourite, frameFilterFavourite);
+
+            // Set an adapter for the spinner
+            spinnerSetAdapter(context, spnFilterFavourite, R.array.filter_favourite_pref_display);
 
             // Set the spinner to the position of the current filter value
-            String previousFilterFavourite = PrefUtils.getAwardListFilterFavourite(context);
+            String filterFavouriteValue = PrefUtils.getAwardListFilterFavourite(context);
             final String[] filterFavouritePrefValues =
                     context.getResources().getStringArray(R.array.filter_favourite_pref_key);
             int positionFavourite = JavaUtils.getPositionInArray(
-                    filterFavouritePrefValues, previousFilterFavourite);
+                    filterFavouritePrefValues, filterFavouriteValue);
             spnFilterFavourite.setSelection(positionFavourite == -1 ? 0 : positionFavourite);
 
             // Add a listener to the spinner
@@ -198,23 +185,19 @@ public class AwardListFilterFragment extends DialogFragment {
             });
 
             // Category filter
-
-            // Create an ArrayAdapter using the string array and a default spinner layout
-            ArrayAdapter<CharSequence> filterCategoryAdapter = ArrayAdapter.createFromResource(context,
-                    R.array.filter_category_pref_display, android.R.layout.simple_spinner_item);
-            // Specify the layout to use when the list of choices appears
-            filterCategoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-            // Apply the adapter to the spinner
             final Spinner spnFilterCategory = (Spinner) view.findViewById(R.id.spnFilterCategory);
-            spnFilterCategory.setAdapter(filterCategoryAdapter);
+            View frameFilterCategory = view.findViewById(R.id.frameFilterCategory);
+            spinnerSetProperties(context, spnFilterCategory, frameFilterCategory);
+
+            // Set an adapter for the spinner
+            spinnerSetAdapter(context, spnFilterCategory, R.array.filter_category_pref_display);
 
             // Set the spinner to the position of the current filter value
-            String previousFilterCategory = PrefUtils.getAwardListFilterCategory(context);
+            String filterCategoryValue = PrefUtils.getAwardListFilterCategory(context);
             final String[] filterCategoryPrefValues =
                     context.getResources().getStringArray(R.array.filter_category_pref_key);
             int positionCategory = JavaUtils.getPositionInArray(
-                    filterCategoryPrefValues, previousFilterCategory);
+                    filterCategoryPrefValues, filterCategoryValue);
             spnFilterCategory.setSelection(positionCategory == -1 ? 0 : positionCategory);
 
             // Add a listener to the spinner
@@ -262,6 +245,42 @@ public class AwardListFilterFragment extends DialogFragment {
         }
 
         return view;
+    }
+
+    /**
+     * Creates an array adapter and applies it to a spinner.
+     * @param context the context
+     * @param spinner the spinner to which the adapter is to be applied
+     * @param textArrayResId an array of text strings to be displayed by the spinner
+     */
+    private void spinnerSetAdapter(@NonNull Context context, @NonNull Spinner spinner,
+                                   @ArrayRes int textArrayResId) {
+        // Create an ArrayAdapter using an array of strings to display and the default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context,
+                textArrayResId, android.R.layout.simple_spinner_item);
+
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+    }
+
+    private void spinnerSetProperties(@NonNull final Context context, @NonNull final Spinner spinner,
+                                      final View spinnerContainer) {
+
+        spinner.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                @ColorRes int backgroundResId;
+                if (hasFocus) {
+                    backgroundResId = R.color.green_100;
+                } else {
+                    backgroundResId = R.color.green_50;
+                }
+                spinnerContainer.setBackgroundColor(context.getResources().getColor(backgroundResId));
+            }
+        });
     }
 
 }
