@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- For D-Pad operation, change the background of the item when it has focus. -->
+    <item android:state_focused="true" android:drawable="@color/colorAccentDark" />
+
+    <!-- The default background. -->
+    <item android:drawable="@color/transparent" />
+</selector>
