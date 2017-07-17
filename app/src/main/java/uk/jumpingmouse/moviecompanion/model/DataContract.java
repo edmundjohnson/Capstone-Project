@@ -372,6 +372,7 @@ public final class DataContract {
         static {
             Map<String, String> genresStoredModifiable = new HashMap<>();
             genresStoredModifiable.put("filter_genre_action", "Action");
+            genresStoredModifiable.put("filter_genre_adventure", "Adventure");
             genresStoredModifiable.put("filter_genre_animation", "Animation");
             genresStoredModifiable.put("filter_genre_biography", "Biography");
             genresStoredModifiable.put("filter_genre_comedy", "Comedy");

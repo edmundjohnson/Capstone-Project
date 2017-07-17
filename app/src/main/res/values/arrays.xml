@@ -25,6 +25,7 @@
     <string-array name="filter_genre_pref_key">
         <item>filter_genre_all</item>
         <item>filter_genre_action</item>
+        <item>filter_genre_adventure</item>
         <item>filter_genre_animation</item>
         <item>filter_genre_biography</item>
         <item>filter_genre_comedy</item>
@@ -42,6 +43,7 @@
     <string-array name="filter_genre_pref_display">
         <item>@string/filter_genre_all</item>
         <item>@string/filter_genre_action</item>
+        <item>@string/filter_genre_adventure</item>
         <item>@string/filter_genre_animation</item>
         <item>@string/filter_genre_biography</item>
         <item>@string/filter_genre_comedy</item>

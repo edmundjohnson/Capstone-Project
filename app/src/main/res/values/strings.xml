@@ -82,6 +82,7 @@
     <string name="filter_genre_title">Genre</string>
     <string name="filter_genre_all">All genres</string>
     <string name="filter_genre_action">Action</string>
+    <string name="filter_genre_adventure">Adventure</string>
     <string name="filter_genre_animation">Animation</string>
     <string name="filter_genre_biography">Biography</string>
     <string name="filter_genre_comedy">Comedy</string>

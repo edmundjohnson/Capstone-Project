@@ -25,6 +25,7 @@ import java.util.Locale;
 
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.data.Award;
+import uk.jumpingmouse.moviecompanion.data.Movie;
 
 /**
  * Class containing utility methods related to the view.
@@ -160,11 +161,15 @@ public class ViewUtils {
      * Returns the runtime text corresponding to a runtime value.
      * @param context the context
      * @param runtime the runtime in minutes, e.g. 114
-     * @return the runtime text corresponding to runtime, e.g. "114 mins"
+     * @return the runtime text corresponding to runtime, e.g. "114 mins", or an empty
+     *         string if the runtime is unknown
      */
     public String getRuntimeText(@Nullable Context context, int runtime) {
         if (context == null || context.getResources() == null) {
             return "?";
+        }
+        if (runtime == Movie.RUNTIME_UNKNOWN || runtime <= 0) {
+            return "";
         }
         return context.getResources().getQuantityString(R.plurals.runtime_text, runtime, runtime);
     }
