@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- The FrameLayout and the LinearLayout are required to get the correct styling,
-     see styles.xml. -->
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:colorBackground"
+    android:focusable="true"
+    android:background="@drawable/background_list_item_list"
     tools:context=".activity.MainActivity">
 
     <LinearLayout

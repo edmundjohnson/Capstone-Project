@@ -266,9 +266,17 @@ public class AwardListFilterFragment extends DialogFragment {
         spinner.setAdapter(adapter);
     }
 
+    /**
+     * Set the properties of a spinner.
+     * @param context the context
+     * @param spinner the spinner
+     * @param spinnerContainer the view that contains the spinner
+     */
     private void spinnerSetProperties(@NonNull final Context context, @NonNull final Spinner spinner,
                                       final View spinnerContainer) {
 
+        // For D-Pad operation, change the background colour of the spinner container when the
+        // spinner has focus.
         spinner.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {

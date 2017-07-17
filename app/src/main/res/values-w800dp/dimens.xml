@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- List -->
+    <!-- grid view -->
     <integer name="list_grid_column_count">6</integer>
+    <dimen name="grid_image_width">123dp</dimen>
 
     <!-- Detail -->
     <!-- <dimen name="detail_card_max_width">704dp</dimen> -->

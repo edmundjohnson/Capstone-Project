@@ -184,7 +184,6 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
 
     // Getters and setters
 
-
     public @LayoutRes int getListLayout() {
         return mListLayout;
     }

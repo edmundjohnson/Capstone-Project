@@ -25,6 +25,7 @@
     <dimen name="list_item_padding_horizontal">12dp</dimen>
     <!-- grid view -->
     <integer name="list_grid_column_count">3</integer>
+    <dimen name="grid_image_width">190dp</dimen>
 
     <!-- Detail -->
     <!-- <dimen name="detail_scroll_up_distance">30dp</dimen> -->
