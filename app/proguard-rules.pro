@@ -28,6 +28,7 @@
 # Firebase
 # See  https://firebase.google.com/docs/database/android/start/
 -keepattributes Signature
+-keepattributes *Annotation*
 
 # This rule will properly ProGuard all the model classes.
 -keepclassmembers class uk.jumpingmouse.moviecompanion.data.** {

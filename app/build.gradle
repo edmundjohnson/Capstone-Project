@@ -50,17 +50,26 @@ android {
         //resValue "string", "omdbapi_key", properties.getProperty("omdbapi.key", "")
     }
 
+    signingConfigs {
+        release {
+            keyAlias 'keyCapstone'
+            keyPassword 'udacity'
+            storeFile file('../capstone.keystore')
+            storePassword 'udacity'
+        }
+    }
+
     buildTypes {
         debug {
             debuggable true
             minifyEnabled false
             testCoverageEnabled true
-            // disable crashlytics for debug builds
-            //ext.enableCrashlytics = false
         }
         release {
             // Use the defaultConfig applicationId for the build type which is uploaded
             // to the Play Store.
+            signingConfig signingConfigs.release
+
             debuggable false
             minifyEnabled true
             shrinkResources true
@@ -72,8 +81,8 @@ android {
     // The order in which each dimension is listed determines its priority, from
     // highest to lowest, when Gradle merges variant sources and configurations.
     // Each product flavour must be assigned to one of the flavour dimensions.
-    // Hence 'dev' and 'prod' are 'stage' flavours, while 'free' and 'admin' are
-    // 'mode' flavours.
+    // Hence 'dev' and 'prod' are 'stage' flavours,
+    // while 'free' and 'admin' are 'mode' flavours.
     flavorDimensions "stage", "mode"
 
     productFlavors {

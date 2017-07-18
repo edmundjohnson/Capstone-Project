@@ -239,6 +239,7 @@ public class AwardListFilterFragment extends DialogFragment {
                     spnFilterWishlist.setSelection(0);
                     spnFilterWatched.setSelection(0);
                     spnFilterFavourite.setSelection(0);
+                    spnFilterCategory.setSelection(0);
                 }
             });
 
