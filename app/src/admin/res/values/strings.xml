@@ -7,7 +7,10 @@
     <string name="content_authority" translatable="false">uk.jumpingmouse.moviecompanion.admin</string>
 
     <!-- OMDb -->
-    <string name="omdbapi_key_missing">Please add omdbapi.key to your local.properties file</string>
+    <!-- For now the OMDb API key is here, but it can be put in the local.properties file,
+         with a change to app/build.gradle to create a string resource from the property. -->
+    <string name="omdbapi_key" translatable="false">71092249</string>
+    <string name="omdbapi_key_missing">OMDb API key not found. Consider adding it to your local.properties file.</string>
 
     <!-- App Bar and Menu -->
     <string name="menu_option_add_movie">Add Movie</string>

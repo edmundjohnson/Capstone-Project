@@ -47,7 +47,7 @@ android {
 
         // Add the required local.properties to the resources
         // OMDb API key
-        resValue "string", "omdbapi_key", properties.getProperty("omdbapi.key", "")
+        //resValue "string", "omdbapi_key", properties.getProperty("omdbapi.key", "")
     }
 
     buildTypes {

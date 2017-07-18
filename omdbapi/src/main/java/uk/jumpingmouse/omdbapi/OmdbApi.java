@@ -81,16 +81,4 @@ public final class OmdbApi {
         return OmdbUtils.toLongOmdbReleased(omdbReleased);
     }
 
-    //---------------------------------------------------------------------
-    // Getters
-
-//    /**
-//     * Convenience method which returns a reference to a OmdbUtils object.
-//     * @return a reference to a OmdbUtils object
-//     */
-//    @NonNull
-//    private static OmdbUtils getOmdbUtils() {
-//        return OmdbUtils.getInstance();
-//    }
-
 }

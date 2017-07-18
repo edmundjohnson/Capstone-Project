@@ -15,7 +15,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 /**
- * A task which fetches a movie from the OMDb and displays it on the screen.
+ * A task which fetches a movie from the OMDb and returns it to a supplied handler.
  * @author Edmund Johnson
  */
 final class OmdbFetchMovieTask extends AsyncTask<String, Integer, OmdbMovie> {

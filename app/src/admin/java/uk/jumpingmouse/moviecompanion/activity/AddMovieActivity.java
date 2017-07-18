@@ -174,11 +174,11 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
      * @param view the view that was clicked
      */
     public void onCancel(@Nullable View view) {
-        resetData();
         if (view != null) {
             getViewUtils().displayInfoMessage(view.getContext(),
                     getString(R.string.movie_not_saved, mTxtTitle.getText()));
         }
+        resetData();
     }
 
     /**

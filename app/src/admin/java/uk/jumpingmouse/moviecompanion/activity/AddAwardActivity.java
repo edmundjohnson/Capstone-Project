@@ -195,11 +195,11 @@ public class AddAwardActivity extends AppCompatActivity {
      * @param view the view that was clicked
      */
     public void onCancel(@Nullable View view) {
-        resetData();
         if (view != null) {
             getViewUtils().displayInfoMessage(view.getContext(),
                     getString(R.string.award_not_saved, mTxtTitle.getText()));
         }
+        resetData();
     }
 
     /**
@@ -215,8 +215,9 @@ public class AddAwardActivity extends AppCompatActivity {
         String category = mRadioAwardCategory.getCheckedRadioButtonId() ==
                 R.id.radioCategoryMovie ? Award.CATEGORY_MOVIE : Award.CATEGORY_DVD;
         int displayOrder = JavaUtils.toInt(mTxtAwardDisplayOrder.getText().toString(), 1);
+        String review = mTxtReview.getText().toString();
 
-        if (awardDate.isEmpty() || category.isEmpty() || displayOrder <= 0) {
+        if (awardDate.isEmpty() || category.isEmpty() || displayOrder <= 0 || review.isEmpty()) {
             getViewUtils().displayErrorMessage(this, R.string.error_mandatory_field_missing);
             return;
         }
@@ -230,7 +231,7 @@ public class AddAwardActivity extends AppCompatActivity {
                 .movieId(movieId)
                 .awardDate(awardDate)
                 .category(category)
-                .review(mTxtReview.getText().toString())
+                .review(review)
                 .displayOrder(displayOrder)
                 .build();
 

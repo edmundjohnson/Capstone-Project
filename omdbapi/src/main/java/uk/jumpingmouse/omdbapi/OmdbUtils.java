@@ -22,28 +22,6 @@ final class OmdbUtils {
     /** The format for converting between OMDb-formatted date Strings and Dates. */
     private static SimpleDateFormat sDateFormatOmdbReleased = null;
 
-//    /** The singleton instance of this class. */
-//    private static OmdbUtils sOmdbUtils = null;
-
-    //---------------------------------------------------------------------
-    // Instance handling methods
-
-//    /**
-//     * Returns an instance of this class.
-//     * @return an instance of this class
-//     */
-//    @NonNull
-//    public static OmdbUtils getInstance() {
-//        if (sOmdbUtils == null) {
-//            sOmdbUtils = new OmdbUtils();
-//        }
-//        return sOmdbUtils;
-//    }
-
-//    /** Private default constructor, to prevent instantiation from outside this class. */
-//    private OmdbUtils() {
-//    }
-
     //---------------------------------------------------------------------
     // 'runtime' field
 
@@ -67,20 +45,6 @@ final class OmdbUtils {
         }
         return OmdbMovie.RUNTIME_UNKNOWN;
     }
-
-//    /**
-//     * Returns an OMDb-formatted runtime string representing a number of minutes, e.g. "144 min".
-//     * @param runtime the runtime in minutes, e.g. 144
-//     * @return an OMDb-formatted runtime string corresponding to runtime,
-//     *         or an empty String if runtime indicates an unknown runtime
-//     */
-//    @NonNull
-//    String toStringOmdbRuntime(final int runtime) {
-//        if (runtime == OmdbMovie.RUNTIME_UNKNOWN) {
-//            return "";
-//        }
-//        return runtime + " min";
-//    }
 
     //---------------------------------------------------------------------
     // 'released' field
@@ -110,31 +74,6 @@ final class OmdbUtils {
     private static Date toDateOmdbReleased(@Nullable final String strDate) {
         return toDate(getDateFormatOmdbReleased(), strDate);
     }
-
-//    /**
-//     * Returns an OMDb-formatted released date string representing a number of milliseconds.
-//     * @param released a release date as a number of milliseconds
-//     * @return an OMDb-formatted released date string corresponding to released,
-//     *         or an empty String if released indicates an unknown release date
-//     */
-//    @NonNull
-//    String toStringOmdbReleased(final long released) {
-//        if (released == OmdbMovie.RELEASED_UNKNOWN || released < 0) {
-//            return "";
-//        }
-//        Date dateReleased = new Date(released);
-//        return toStringOmdbReleased(dateReleased);
-//    }
-
-//    /**
-//     * Returns a Date as a String in the OMDb released date format, e.g. "12 Jun 2017".
-//     * @param date the date
-//     * @return the date in the OMDb released date string format
-//     */
-//    @NonNull
-//    private String toStringOmdbReleased(@NonNull final Date date) {
-//        return toString(getDateFormatOmdbReleased(), date);
-//    }
 
     //---------------------------------------------------------------------
     // Date utilities
@@ -171,16 +110,5 @@ final class OmdbUtils {
             return null;
         }
     }
-
-//    /**
-//     * Returns a Date as a String.
-//     * @param format the SimpleDateFormat used for returned String, e.g. "dd MMM yyyy"
-//     * @param date the Date
-//     * @return the Date as a String
-//     */
-//    @NonNull
-//    private static String toString(@NonNull SimpleDateFormat format, @NonNull final Date date) {
-//        return format.format(date);
-//    }
 
 }

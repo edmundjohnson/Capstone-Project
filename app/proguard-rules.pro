@@ -45,3 +45,13 @@
 #-keepattributes Signature  # this line is already included for Firebase
 # Retain declared checked exceptions for use by a Proxy instance.
 -keepattributes Exceptions
+
+-dontwarn okio.**
+-dontwarn javax.annotation.**
+
+#--------------------------------------------------
+# OKHttp
+#-dontwarn okio.**
+-dontwarn com.squareup.okhttp.**
+#-dontwarn javax.annotation.Nullable
+#-dontwarn javax.annotation.ParametersAreNonnullByDefault
