@@ -47,14 +47,14 @@ android {
 
         // Add the required local.properties to the resources
         // OMDb API key
-        //resValue "string", "omdbapi_key", properties.getProperty("omdbapi.key", "")
+        resValue "string", "omdbapi_key", properties.getProperty("omdbapi.key", "")
     }
 
     signingConfigs {
         release {
             keyAlias 'keyCapstone'
             keyPassword 'udacity'
-            storeFile file('../capstone.keystore')
+            storeFile file('../capstone.jks')
             storePassword 'udacity'
         }
     }
