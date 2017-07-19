@@ -47,7 +47,6 @@ public class ViewAward implements Parcelable {
     private ViewAward() {
     }
 
-
     private ViewAward(
             @NonNull String id,
             int movieId,
@@ -82,6 +81,12 @@ public class ViewAward implements Parcelable {
         this.favourite = favourite;
     }
 
+    /**
+     * Constructs ViewAward from its component data objects.
+     * @param award the award which the ViewAward presents
+     * @param movie the movie which received the award
+     * @param userMovie the user info for the movie (on wishlist, etc.)
+     */
     public ViewAward(@NonNull Award award, @NonNull Movie movie, @Nullable UserMovie userMovie) {
         this.id = award.getId();
         this.movieId = movie.getId();
@@ -259,7 +264,7 @@ public class ViewAward implements Parcelable {
      * {@link #CONTENTS_FILE_DESCRIPTOR} bit.
      *
      * @return a bitmask indicating the set of special object types marshaled
-     * by this Parcelable object instance.
+     *     by this Parcelable object instance.
      * @see #CONTENTS_FILE_DESCRIPTOR
      */
     @Override
@@ -546,42 +551,42 @@ public class ViewAward implements Parcelable {
     /** Comparator for ordering by award date. */
     public static final Comparator<ViewAward> VIEW_AWARD_COMPARATOR_AWARD_DATE
             = new Comparator<ViewAward>() {
-        public int compare(ViewAward viewAward1, ViewAward viewAward2) {
-            // ascending order
-            if (viewAward1.awardDate.equals(viewAward2.awardDate)) {
-                // awardDate ascending, then category ("D" before "M")
-                // This unintuitive ordering of category is so that when the comparator is
-                // reversed, as it is by default, Movie comes before DVD
-                return viewAward1.category.compareTo(viewAward2.category);
-            }
-            return viewAward1.awardDate.compareTo(viewAward2.awardDate);
-        }
-    };
+                public int compare(ViewAward viewAward1, ViewAward viewAward2) {
+                    // ascending order
+                    if (viewAward1.awardDate.equals(viewAward2.awardDate)) {
+                        // awardDate ascending, then category ("D" before "M")
+                        // This unintuitive ordering of category is so that when the comparator is
+                        // reversed, as it is by default, Movie comes before DVD
+                        return viewAward1.category.compareTo(viewAward2.category);
+                    }
+                    return viewAward1.awardDate.compareTo(viewAward2.awardDate);
+                }
+            };
 
     /** Comparator for ordering by movie title. */
     public static final Comparator<ViewAward> VIEW_AWARD_COMPARATOR_TITLE
             = new Comparator<ViewAward>() {
-        public int compare(ViewAward viewAward1, ViewAward viewAward2) {
-            // ascending order
-            if (viewAward1.title.equals(viewAward2.title)) {
-                // title ascending, then imdbId (released date would be better)
-                return viewAward1.imdbId.compareTo(viewAward2.imdbId);
-            }
-            return viewAward1.title.compareTo(viewAward2.title);
-        }
-    };
+                public int compare(ViewAward viewAward1, ViewAward viewAward2) {
+                    // ascending order
+                    if (viewAward1.title.equals(viewAward2.title)) {
+                        // title ascending, then imdbId (released date would be better)
+                        return viewAward1.imdbId.compareTo(viewAward2.imdbId);
+                    }
+                    return viewAward1.title.compareTo(viewAward2.title);
+                }
+            };
 
     /** Comparator for ordering by movie title. */
     public static final Comparator<ViewAward> VIEW_AWARD_COMPARATOR_RUNTIME
             = new Comparator<ViewAward>() {
-        public int compare(ViewAward viewAward1, ViewAward viewAward2) {
-            // ascending order
-            if (viewAward1.runtime == viewAward2.runtime) {
-                // runtime ascending, then title
-                return viewAward1.title.compareTo(viewAward2.title);
-            }
-            return viewAward1.runtime - viewAward2.runtime;
-        }
-    };
+                public int compare(ViewAward viewAward1, ViewAward viewAward2) {
+                    // ascending order
+                    if (viewAward1.runtime == viewAward2.runtime) {
+                        // runtime ascending, then title
+                        return viewAward1.title.compareTo(viewAward2.title);
+                    }
+                    return viewAward1.runtime - viewAward2.runtime;
+                }
+            };
 
 }

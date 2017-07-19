@@ -7,12 +7,12 @@ import android.support.annotation.UiThread;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
 
+import retrofit2.Call;
+import retrofit2.Response;
+
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
-
-import retrofit2.Call;
-import retrofit2.Response;
 
 /**
  * A task which fetches a movie from the OMDb and returns it to a supplied handler.
@@ -45,7 +45,7 @@ final class OmdbFetchMovieTask extends AsyncTask<String, Integer, OmdbMovie> {
     @WorkerThread
     @Nullable
     protected OmdbMovie doInBackground(@Nullable final String... args) {
-        if (mOmdbHandler == null || args == null || args.length < 2) {
+        if (args == null || args.length < 2) {
             return null;
         }
         String imdbId = args[0];
@@ -60,8 +60,8 @@ final class OmdbFetchMovieTask extends AsyncTask<String, Integer, OmdbMovie> {
      */
     @Override
     @UiThread
-    protected void onPostExecute(final OmdbMovie omdbMovie) {
-        if (mOmdbHandler != null && mOmdbHandler.get() != null) {
+    protected void onPostExecute(@NonNull final OmdbMovie omdbMovie) {
+        if (mOmdbHandler.get() != null) {
             mOmdbHandler.get().onFetchMovieCompleted(omdbMovie);
         }
     }

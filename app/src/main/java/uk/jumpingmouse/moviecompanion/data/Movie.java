@@ -6,11 +6,11 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import java.security.InvalidParameterException;
-import java.util.Comparator;
-
 import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.omdbapi.OmdbMovie;
+
+import java.security.InvalidParameterException;
+import java.util.Comparator;
 
 /**
  * The Movie model class.
@@ -224,7 +224,7 @@ public class Movie implements Parcelable {
      * {@link #CONTENTS_FILE_DESCRIPTOR} bit.
      *
      * @return a bitmask indicating the set of special object types marshalled
-     * by this Parcelable object instance.
+     *     by this Parcelable object instance.
      * @see #CONTENTS_FILE_DESCRIPTOR
      */
     @Override
@@ -252,7 +252,6 @@ public class Movie implements Parcelable {
     public static Builder builder() {
         return new Movie.Builder();
     }
-
 
     @SuppressWarnings("WeakerAccess")
     public static final class Builder {

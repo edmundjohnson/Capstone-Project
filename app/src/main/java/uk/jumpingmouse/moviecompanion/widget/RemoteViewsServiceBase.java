@@ -13,15 +13,16 @@ import android.widget.RemoteViewsService;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-
 import timber.log.Timber;
+
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.data.ViewAwardQueryParameters;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.moviecompanion.model.DataProvider;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
+
+import java.io.IOException;
 
 /**
  * RemoteViewsService which controls the data shown in the scrollable list widgets.
@@ -95,7 +96,7 @@ public abstract class RemoteViewsServiceBase extends RemoteViewsService {
                 }
 
                 // Get data from cursor
-                String viewAwardId = mCursor.getString(DataContract.ViewAwardEntry.COL_ID);
+                final String viewAwardId = mCursor.getString(DataContract.ViewAwardEntry.COL_ID);
                 String poster = mCursor.getString(DataContract.ViewAwardEntry.COL_POSTER);
                 String awardDate = getViewUtils().getAwardDateDisplayable(
                         mCursor.getString(DataContract.ViewAwardEntry.COL_AWARD_DATE));

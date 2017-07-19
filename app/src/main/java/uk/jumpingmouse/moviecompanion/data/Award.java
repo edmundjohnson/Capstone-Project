@@ -6,9 +6,9 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import java.util.Comparator;
-
 import uk.jumpingmouse.moviecompanion.model.DataContract;
+
+import java.util.Comparator;
 
 /**
  * The Award model class.
@@ -196,7 +196,7 @@ public class Award implements Parcelable {
      * {@link #CONTENTS_FILE_DESCRIPTOR} bit.
      *
      * @return a bitmask indicating the set of special object types marshalled
-     * by this Parcelable object instance.
+     *     by this Parcelable object instance.
      * @see #CONTENTS_FILE_DESCRIPTOR
      */
     @Override
@@ -368,30 +368,30 @@ public class Award implements Parcelable {
     /** Comparator for ordering by movie id. */
     public static final Comparator<Award> AWARD_COMPARATOR_MOVIE_ID
             = new Comparator<Award>() {
-        public int compare(Award award1, Award award2) {
+                public int compare(Award award1, Award award2) {
             // ascending order
-            if (award1.movieId == award2.movieId) {
-                // movieId, then awardDate, then reverse category ("M" > "D")
-                if (award1.awardDate.equals(award2.awardDate)) {
-                    return award2.category.compareTo(award1.category);
+                    if (award1.movieId == award2.movieId) {
+                        // movieId, then awardDate, then reverse category ("M" > "D")
+                        if (award1.awardDate.equals(award2.awardDate)) {
+                            return award2.category.compareTo(award1.category);
+                        }
+                        return award1.awardDate.compareTo(award2.awardDate);
+                    }
+                    return award1.movieId - award2.movieId;
                 }
-                return award1.awardDate.compareTo(award2.awardDate);
-            }
-            return award1.movieId - award2.movieId;
-        }
-    };
+            };
 
     /** Comparator for ordering by award date. */
     public static final Comparator<Award> AWARD_COMPARATOR_AWARD_DATE
             = new Comparator<Award>() {
-        public int compare(Award award1, Award award2) {
-            // ascending order
-            if (award1.awardDate.equals(award2.awardDate)) {
-                // awardDate, then reverse category ("M" > "D")
-                return award2.category.compareTo(award1.category);
-            }
-            return award1.awardDate.compareTo(award2.awardDate);
-        }
-    };
+                public int compare(Award award1, Award award2) {
+                    // ascending order
+                    if (award1.awardDate.equals(award2.awardDate)) {
+                        // awardDate, then reverse category ("M" > "D")
+                        return award2.category.compareTo(award1.category);
+                    }
+                    return award1.awardDate.compareTo(award2.awardDate);
+                }
+            };
 
 }

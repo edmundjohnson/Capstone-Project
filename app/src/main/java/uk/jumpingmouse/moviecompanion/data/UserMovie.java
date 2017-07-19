@@ -5,9 +5,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import java.security.InvalidParameterException;
-
 import uk.jumpingmouse.moviecompanion.model.DataContract;
+
+import java.security.InvalidParameterException;
 
 /**
  * The UserMovie model class.
@@ -153,7 +153,7 @@ public class UserMovie implements Parcelable {
      * {@link #CONTENTS_FILE_DESCRIPTOR} bit.
      *
      * @return a bitmask indicating the set of special object types marshalled
-     * by this Parcelable object instance.
+     *     by this Parcelable object instance.
      * @see #CONTENTS_FILE_DESCRIPTOR
      */
     @Override
@@ -181,7 +181,6 @@ public class UserMovie implements Parcelable {
     public static Builder builder() {
         return new UserMovie.Builder();
     }
-
 
     @SuppressWarnings("WeakerAccess")
     public static final class Builder {

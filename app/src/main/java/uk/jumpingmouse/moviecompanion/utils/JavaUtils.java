@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.SparseArray;
 
+import timber.log.Timber;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,8 +13,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-
-import timber.log.Timber;
 
 /**
  * Class for Java utilities.
@@ -51,13 +51,14 @@ public final class JavaUtils {
 
     /**
      * Returns a Date as a String.
-     * @param dateFormat the date format used for the returned String, e.g. "dd MMM yyyy"
+     * @param dateFormat the date format to be used for the returned String, e.g. "dd MMM yyyy"
      * @param date the Date
      * @return the Date as a String
      */
     @NonNull
-    public static String toString(@SuppressWarnings("SameParameterValue") @NonNull SimpleDateFormat dateFormat,
-                                  @NonNull final Date date) {
+    public static String toString(
+            @SuppressWarnings("SameParameterValue") @NonNull SimpleDateFormat dateFormat,
+            @NonNull final Date date) {
         return dateFormat.format(date);
     }
 
@@ -86,7 +87,7 @@ public final class JavaUtils {
     // Collection utilities
 
     /**
-     * Creates and returns a sorted list from the values of a SparseArray
+     * Creates and returns a sorted list from the values of a SparseArray.
      * @param sparseArray the SparseArray
      * @param comparator the comparator to use for sorting the list
      * @param <C> the class of the objects in the SparseArray
@@ -99,16 +100,19 @@ public final class JavaUtils {
     }
 
     /**
-     * Creates and returns a list from the values of a SparseArray
+     * Creates and returns a list from the values of a SparseArray.
      * @param sparseArray the SparseArray
      * @param <C> the class of the objects in the SparseArray
      * @return the list created from the values of the SparseArray
      */
     private static <C> List<C> asList(SparseArray<C> sparseArray) {
-        if (sparseArray == null) return null;
+        if (sparseArray == null) {
+            return null;
+        }
         List<C> arrayList = new ArrayList<>(sparseArray.size());
-        for (int i = 0; i < sparseArray.size(); i++)
+        for (int i = 0; i < sparseArray.size(); i++) {
             arrayList.add(sparseArray.valueAt(i));
+        }
         return arrayList;
     }
 

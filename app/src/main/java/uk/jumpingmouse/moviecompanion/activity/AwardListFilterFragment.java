@@ -1,6 +1,7 @@
 package uk.jumpingmouse.moviecompanion.activity;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ArrayRes;
 import android.support.annotation.ColorRes;
@@ -287,7 +288,13 @@ public class AwardListFilterFragment extends DialogFragment {
                 } else {
                     backgroundResId = R.color.green_50;
                 }
-                spinnerContainer.setBackgroundColor(context.getResources().getColor(backgroundResId));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    spinnerContainer.setBackgroundColor(context.getResources()
+                            .getColor(backgroundResId, view.getContext().getTheme()));
+                } else {
+                    spinnerContainer.setBackgroundColor(context.getResources()
+                            .getColor(backgroundResId));
+                }
             }
         });
     }

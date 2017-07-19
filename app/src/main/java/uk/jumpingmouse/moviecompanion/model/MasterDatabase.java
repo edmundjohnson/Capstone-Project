@@ -43,9 +43,9 @@ public interface MasterDatabase {
      * @return the number of rows inserted or updated
      */
     int addMovie(
-            // context is used - analyser confused by product flavours
+            // parameters are used, but lint gets confused by product flavours
             @SuppressWarnings("UnusedParameters") @Nullable final Context context,
-            @NonNull final Movie movie);
+            @SuppressWarnings("UnusedParameters") @NonNull final Movie movie);
 
     /**
      * Deletes a movie from the database.
@@ -54,9 +54,9 @@ public interface MasterDatabase {
      * @return the number of rows deleted
      */
     int deleteMovie(
-            // context is used, but lint gets confused by product flavours
+            // parameters are used, but lint gets confused by product flavours
             @SuppressWarnings("UnusedParameters") @Nullable Context context,
-            int id);
+            @SuppressWarnings("UnusedParameters") int id);
 
     //---------------------------------------------------------------------
     // Award modification methods
@@ -70,9 +70,9 @@ public interface MasterDatabase {
      * @return the number of rows inserted or updated
      */
     int addAward(
-            // context is used - analyser confused by product flavours
+            // parameters are used, but lint gets confused by product flavours
             @SuppressWarnings("UnusedParameters") @Nullable final Context context,
-            @NonNull final Award award);
+            @SuppressWarnings("UnusedParameters") @NonNull final Award award);
 
     /**
      * Deletes an award from the database.
@@ -81,9 +81,9 @@ public interface MasterDatabase {
      * @return the number of rows deleted
      */
     int deleteAward(
-            // context is used, but lint gets confused by product flavours
+            // parameters are used, but lint gets confused by product flavours
             @SuppressWarnings("UnusedParameters") @Nullable Context context,
-            @Nullable String id);
+            @SuppressWarnings("UnusedParameters") @Nullable String id);
 
     //---------------------------------------------------------------------
     // UserMovie modification methods.

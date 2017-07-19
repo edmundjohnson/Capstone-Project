@@ -1,6 +1,5 @@
 package uk.jumpingmouse.moviecompanion.activity;
 
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -60,14 +59,6 @@ public class MovieActivity extends AppCompatActivity {
         this.supportInvalidateOptionsMenu();
     }
 
-//    @Override
-//    public void finishAfterTransition() {
-//        Intent data = new Intent();
-//        //data.putExtra(MainActivity.KEY_SHARED_TRANSITION_NAME, mTransitionName);
-//        setResult(RESULT_OK, data);
-//        super.finishAfterTransition();
-//    }
-
     //--------------------------------------------------------------
     // Navigation methods
 
@@ -85,6 +76,8 @@ public class MovieActivity extends AppCompatActivity {
             case android.R.id.home:
                 supportFinishAfterTransition();
                 return true;
+            default:
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

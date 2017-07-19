@@ -23,9 +23,9 @@
     <color name="colorPrimary">#2e7d32</color>
     <color name="colorPrimaryDark">#005005</color>
     <color name="colorAccent">#d81b60</color>
-    <color name="colorPrimaryLight">#60ad5e</color>
+    <!-- <color name="colorPrimaryLight">#60ad5e</color> -->
     <color name="colorAccentDark">#a00037</color>
-    <color name="colorAccentLight">#ff5c8d</color>
+    <!-- <color name="colorAccentLight">#ff5c8d</color> -->
 
     <!-- View Awards List and Detail -->
     <color name="detail_card_background">@color/green_50</color>

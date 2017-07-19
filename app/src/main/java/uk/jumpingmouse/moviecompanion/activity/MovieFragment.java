@@ -230,7 +230,7 @@ public class MovieFragment extends Fragment
             // add to wishlist
             case R.id.menu_option_add_to_wishlist:
                 mViewAward.setOnWishlist(true);
-                if (updateViewAwardFlags(context, mMenu, mViewAward)) {
+                if (updateViewAwardFlags(context, mViewAward)) {
                     getViewUtils().displayInfoMessage(context, R.string.added_to_wishlist);
                 }
                 return true;
@@ -238,7 +238,7 @@ public class MovieFragment extends Fragment
             // remove from wishlist
             case R.id.menu_option_remove_from_wishlist:
                 mViewAward.setOnWishlist(false);
-                if (updateViewAwardFlags(context, mMenu, mViewAward)) {
+                if (updateViewAwardFlags(context, mViewAward)) {
                     getViewUtils().displayInfoMessage(context, R.string.removed_from_wishlist);
                 }
                 return true;
@@ -246,7 +246,7 @@ public class MovieFragment extends Fragment
             // add to watched
             case R.id.menu_option_add_to_watched:
                 mViewAward.setWatched(true);
-                if (updateViewAwardFlags(context, mMenu, mViewAward)) {
+                if (updateViewAwardFlags(context, mViewAward)) {
                     getViewUtils().displayInfoMessage(context, R.string.added_to_watched);
                 }
                 return true;
@@ -254,7 +254,7 @@ public class MovieFragment extends Fragment
             // remove from watched
             case R.id.menu_option_remove_from_watched:
                 mViewAward.setWatched(false);
-                if (updateViewAwardFlags(context, mMenu, mViewAward)) {
+                if (updateViewAwardFlags(context, mViewAward)) {
                     getViewUtils().displayInfoMessage(context, R.string.removed_from_watched);
                 }
                 return true;
@@ -262,7 +262,7 @@ public class MovieFragment extends Fragment
             // add to favourites
             case R.id.menu_option_add_to_favourites:
                 mViewAward.setFavourite(true);
-                if (updateViewAwardFlags(context, mMenu, mViewAward)) {
+                if (updateViewAwardFlags(context, mViewAward)) {
                     getViewUtils().displayInfoMessage(context, R.string.added_to_favourites);
                 }
                 return true;
@@ -270,7 +270,7 @@ public class MovieFragment extends Fragment
             // remove from favourites
             case R.id.menu_option_remove_from_favourites:
                 mViewAward.setFavourite(false);
-                if (updateViewAwardFlags(context, mMenu, mViewAward)) {
+                if (updateViewAwardFlags(context, mViewAward)) {
                     getViewUtils().displayInfoMessage(context, R.string.removed_from_favourites);
                 }
                 return true;
@@ -283,12 +283,10 @@ public class MovieFragment extends Fragment
     /**
      * Perform updates based on the values of the boolean flag fields in a view award.
      * @param context the context
-     * @param menu the menu
      * @param viewAward the view award
      * @return true if successful, false otherwise
      */
-    private boolean updateViewAwardFlags(@Nullable Context context, @Nullable Menu menu,
-                                         @Nullable ViewAward viewAward) {
+    private boolean updateViewAwardFlags(@Nullable Context context, @Nullable ViewAward viewAward) {
         if (context != null && viewAward != null) {
             int rowsUpdated = updateUserMovie(context, viewAward);
             if (rowsUpdated > 0) {
@@ -453,11 +451,6 @@ public class MovieFragment extends Fragment
         // Update the menu to reflect the latest values
         setMenuItemVisibility(mMenu, mViewAward);
 
-        String runtimeText = getViewUtils().getRuntimeText(context, viewAward.getRuntime());
-        String categoryCode = viewAward.getCategory();
-        @DrawableRes int categoryRes = getViewUtils().getCategoryRes(categoryCode);
-        String awardDateText = getViewUtils().getAwardDateDisplayable(viewAward.getAwardDate());
-
         Picasso.with(context).load(viewAward.getPoster()).into(mImgPoster, new Callback() {
             @Override
             public void onSuccess() {
@@ -469,7 +462,8 @@ public class MovieFragment extends Fragment
                     Palette.Builder paletteBuilder = new Palette.Builder(bitmap);
                     Palette palette = paletteBuilder.generate();
                     mDarkMutedColor = palette.getDarkMutedColor(DARK_MUTED_COLOR_DEFAULT);
-                    mLightMutedColor = getViewUtils().lightenColor(palette.getLightMutedColor(LIGHT_MUTED_COLOR_DEFAULT));
+                    mLightMutedColor = getViewUtils().lightenColor(
+                            palette.getLightMutedColor(LIGHT_MUTED_COLOR_DEFAULT));
 
                     mRootView.findViewById(R.id.layoutMovieInfo).setBackgroundColor(mDarkMutedColor);
                     mRootView.findViewById(R.id.layoutMovieFragment).setBackgroundColor(mLightMutedColor);
@@ -488,11 +482,18 @@ public class MovieFragment extends Fragment
             }
         });
 
+        final String runtimeText = getViewUtils().getRuntimeText(context, viewAward.getRuntime());
+        String categoryCode = viewAward.getCategory();
+        @DrawableRes final int categoryRes = getViewUtils().getCategoryRes(categoryCode);
+        final String categoryText = getViewUtils().getCategoryText(context, categoryCode);
+        final String awardDateText = getViewUtils().getAwardDateDisplayable(viewAward.getAwardDate());
+
         mTxtTitle.setText(viewAward.getTitle().trim());
         mTxtRuntime.setText(runtimeText);
         mTxtGenre.setText(viewAward.getGenre());
         mImgCategory.setImageResource(categoryRes);
-        mTxtCategory.setText(getViewUtils().getCategoryText(context, categoryCode));
+        mImgCategory.setContentDescription(categoryText);
+        mTxtCategory.setText(categoryText);
         mTxtAwardDate.setText(awardDateText);
         mTxtReview.setText(viewAward.getReview());
     }
@@ -504,6 +505,12 @@ public class MovieFragment extends Fragment
     private Uri getArgViewAwardUri() {
         return mArgViewAwardUri;
     }
+
+    /**
+     * Sets the value of the URI of the ViewAward argument to a passed in value.
+     * The value of the URI is NOT changed if the uri parameter is null.
+     * @param uri the value to which the ViewAward argument URI is to be set
+     */
     public final void setArgViewAwardUri(@Nullable final Uri uri) {
         if (uri != null) {
             mArgViewAwardUri = uri;

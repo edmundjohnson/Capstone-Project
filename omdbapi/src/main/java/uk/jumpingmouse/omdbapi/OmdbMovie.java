@@ -14,31 +14,44 @@ public final class OmdbMovie {
     // returned by the OMDb API.
 
     // The title, e.g. "The Handmaiden"
+    @SuppressWarnings("CheckStyle")
     private String Title;
     // The year of the movie's release, e.g. "2016"
+    @SuppressWarnings("CheckStyle")
     private String Year;
     // The US rating, e.g. "R"
+    @SuppressWarnings("CheckStyle")
     private String Rated;
     // The release date, e.g. "01 Jun 2016"
+    @SuppressWarnings("CheckStyle")
     private String Released;
     // The length in minutes, e.g. "144 min"
+    @SuppressWarnings("CheckStyle")
     private String Runtime;
     // A comma-separated list of genres, e.g. "Drama, Mystery, Romance"
+    @SuppressWarnings("CheckStyle")
     private String Genre;
     // The director, e.g. "Chan-wook Park"
+    @SuppressWarnings("CheckStyle")
     private String Director;
     // The writer, e.g. "Sarah Waters"
+    @SuppressWarnings("CheckStyle")
     private String Writer;
     // A comma-separated list of actors, e.g. "Min-hee Kim, Tae-ri Kim, Jung-woo Ha, Jin-woong Jo"
+    @SuppressWarnings("CheckStyle")
     private String Actors;
     // The short-form plot, e.g. "A woman is hired as a handmaiden to a Japanese heiress, but
+    @SuppressWarnings("CheckStyle")
     // secretly she is involved in a plot to defraud her."
     private String Plot;
+    @SuppressWarnings("CheckStyle")
     // A comma-separated list of languages, e.g. "Korean, Japanese"
     private String Language;
     // The country, e.g. "South Korea"
+    @SuppressWarnings("CheckStyle")
     private String Country;
     // The poster URL, formatted as "[protocol]:[full path]/[name].jpg
+    @SuppressWarnings("CheckStyle")
     private String Poster;
     // The IMDb id, e.g. "tt4016934"
     private String imdbID;
@@ -53,48 +66,48 @@ public final class OmdbMovie {
     public String getTitle() {
         return Title;
     }
-    public void setTitle(@Nullable String Title) {
-        this.Title = Title;
+    public void setTitle(@Nullable String title) {
+        this.Title = title;
     }
 
     @Nullable
     public String getYear() {
         return Year;
     }
-    public void setYear(@Nullable String Year) {
-        this.Year = Year;
+    public void setYear(@Nullable String year) {
+        this.Year = year;
     }
 
     @Nullable
     public String getRated() {
         return Rated;
     }
-    public void setRated(@Nullable String Rated) {
-        this.Rated = Rated;
+    public void setRated(@Nullable String rated) {
+        this.Rated = rated;
     }
 
     @Nullable
     public String getReleased() {
         return Released;
     }
-    public void setReleased(@Nullable String Released) {
-        this.Released = Released;
+    public void setReleased(@Nullable String released) {
+        this.Released = released;
     }
 
     @Nullable
     public String getRuntime() {
         return Runtime;
     }
-    public void setRuntime(@Nullable String Runtime) {
-        this.Runtime = Runtime;
+    public void setRuntime(@Nullable String runtime) {
+        this.Runtime = runtime;
     }
 
     @Nullable
     public String getGenre() {
         return Genre;
     }
-    public void setGenre(@Nullable String Genre) {
-        this.Genre = Genre;
+    public void setGenre(@Nullable String genre) {
+        this.Genre = genre;
     }
 
     public String getDirector() {
@@ -148,8 +161,8 @@ public final class OmdbMovie {
     public String getPoster() {
         return Poster;
     }
-    public void setPoster(@Nullable String Poster) {
-        this.Poster = Poster;
+    public void setPoster(@Nullable String poster) {
+        this.Poster = poster;
     }
 
     @Nullable
@@ -198,11 +211,13 @@ public final class OmdbMovie {
                             : this.Released.equals(that.Released))
                     && ((this.Runtime == null) ? (that.Runtime == null) : this.Runtime.equals(that.Runtime))
                     && ((this.Genre == null) ? (that.Genre == null) : this.Genre.equals(that.Genre))
-                    && ((this.Director == null) ? (that.Director == null) : this.Director.equals(that.Director))
+                    && ((this.Director == null) ? (that.Director == null)
+                            : this.Director.equals(that.Director))
                     && ((this.Writer == null) ? (that.Writer == null) : this.Writer.equals(that.Writer))
                     && ((this.Actors == null) ? (that.Actors == null) : this.Actors.equals(that.Actors))
                     && ((this.Plot == null) ? (that.Plot == null) : this.Plot.equals(that.Plot))
-                    && ((this.Language == null) ? (that.Language == null) : this.Language.equals(that.Language))
+                    && ((this.Language == null) ? (that.Language == null)
+                            : this.Language.equals(that.Language))
                     && ((this.Country == null) ? (that.Country == null) : this.Country.equals(that.Country))
                     && ((this.Poster == null) ? (that.Poster == null) : this.Poster.equals(that.Poster))
                     && ((this.imdbID == null) ? (that.imdbID == null) : this.imdbID.equals(that.imdbID));

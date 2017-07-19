@@ -118,13 +118,13 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
 
         // Extract the award info from the cursor
         String viewAwardId = mCursor.getString(DataContract.ViewAwardEntry.COL_ID);
-        int movieId = mCursor.getInt(DataContract.ViewAwardEntry.COL_MOVIE_ID);
+        //int movieId = mCursor.getInt(DataContract.ViewAwardEntry.COL_MOVIE_ID);
         String awardDate = getViewUtils().getAwardDateDisplayable(
                 mCursor.getString(DataContract.ViewAwardEntry.COL_AWARD_DATE));
         String categoryCode = mCursor.getString(DataContract.ViewAwardEntry.COL_CATEGORY);
         @DrawableRes int categoryRes = getViewUtils().getCategoryRes(categoryCode);
         String categoryText = getViewUtils().getCategoryText(mActivity, categoryCode);
-        int displayOrder = mCursor.getInt(DataContract.ViewAwardEntry.COL_DISPLAY_ORDER);
+        //int displayOrder = mCursor.getInt(DataContract.ViewAwardEntry.COL_DISPLAY_ORDER);
 
         String movieTitle = mCursor.getString(DataContract.ViewAwardEntry.COL_TITLE);
         int runtime = mCursor.getInt(DataContract.ViewAwardEntry.COL_RUNTIME);
@@ -222,7 +222,7 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
     /**
      * The ViewHolder class, which provides a cache of the views within a list item.
      */
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         /** The image view containing the poster. */
         private final ImageView imgPoster;
         /** The view containing the movie title. */

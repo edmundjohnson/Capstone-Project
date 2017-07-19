@@ -6,6 +6,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.SparseArray;
 
+import timber.log.Timber;
+
+import uk.jumpingmouse.moviecompanion.data.Award;
+import uk.jumpingmouse.moviecompanion.data.Movie;
+import uk.jumpingmouse.moviecompanion.data.UserMovie;
+import uk.jumpingmouse.moviecompanion.data.ViewAward;
+import uk.jumpingmouse.moviecompanion.utils.JavaUtils;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -13,13 +21,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import timber.log.Timber;
-import uk.jumpingmouse.moviecompanion.data.Award;
-import uk.jumpingmouse.moviecompanion.data.Movie;
-import uk.jumpingmouse.moviecompanion.data.UserMovie;
-import uk.jumpingmouse.moviecompanion.data.ViewAward;
-import uk.jumpingmouse.moviecompanion.utils.JavaUtils;
 
 /**
  * Class giving access to a local copy of the database.
@@ -79,7 +80,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
      * If it already exists in the database, it is updated.
      * @param movie the movie to insert or update
      * @return the number of rows inserted or updated. This is currently always 1,
-     * but that could change if the local database is implemented in SQLite.
+     *     but that could change if the local database is implemented in SQLite.
      */
     @Override
     public int addMovie(@NonNull Movie movie) {
@@ -205,7 +206,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
      * If it already exists in the database, it is updated.
      * @param award the award to insert or update
      * @return the number of rows inserted or updated. This is currently always 1,
-     * but that could change if the local database is implemented in SQLite.
+     *     but that could change if the local database is implemented in SQLite.
      */
     @Override
     public int addAward(@NonNull Award award) {
@@ -339,7 +340,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
      * If it already exists in the database, it is updated.
      * @param userMovie the user movie to insert or update
      * @return the number of rows inserted or updated. This is currently always 1,
-     * but that could change if the local database is implemented in SQLite.
+     *     but that could change if the local database is implemented in SQLite.
      */
     @Override
     public int addUserMovie(@NonNull UserMovie userMovie) {
@@ -517,7 +518,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
 
         List<ViewAward> filteredViewAwardList = new ArrayList<>();
         for (ViewAward viewAward : viewAwardList) {
-            if (isIncludedByFilter(viewAward, selection, selectionArgs)) {
+            if (isIncludedByFilter(viewAward, selectionArgs)) {
                 filteredViewAwardList.add(viewAward);
             }
         }
@@ -528,14 +529,12 @@ public class LocalDatabaseInMemory implements LocalDatabase {
     /**
      * Returns whether a view award is included after filtering
      * @param viewAward the view award
-     * @param selection the selection, of the form:
-     *             e.g. "filterWishlist=? AND filterWatched=? AND filterFavourite=? ... "
      * @param selectionArgs the selectionArgs,
      *             e.g. { "filter_wishlist_any", "filter_watched_show", "filter_favourite_hide" }
      * @return true if the view award is included after filtering, false otherwise
      */
     private boolean isIncludedByFilter(@NonNull ViewAward viewAward,
-                       @NonNull final String selection, @NonNull final String[] selectionArgs) {
+                                       @NonNull final String[] selectionArgs) {
         // category filter
         if (selectionArgs.length > ARG_INDEX_FILTER_CATEGORY) {
             if (!isIncludedByFilterCategory(viewAward, selectionArgs[ARG_INDEX_FILTER_CATEGORY])) {

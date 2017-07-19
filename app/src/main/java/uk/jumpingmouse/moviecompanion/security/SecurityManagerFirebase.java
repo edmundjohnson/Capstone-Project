@@ -1,5 +1,8 @@
 package uk.jumpingmouse.moviecompanion.security;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -11,10 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
-import java.util.Arrays;
 
 import timber.log.Timber;
 
@@ -23,6 +22,8 @@ import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.moviecompanion.model.MasterDatabase;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
+
+import java.util.Arrays;
 
 /**
  * A Firebase implementation of SecurityManager.
@@ -82,6 +83,11 @@ public class SecurityManagerFirebase implements SecurityManager {
 
                     onSignedOutCleanup();
 
+                    AuthUI.IdpConfig idpConfigGoogle
+                            = new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build();
+                    AuthUI.IdpConfig idpConfigEmail
+                            = new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build();
+
                     // display login screen
                     activity.startActivityForResult(
                             AuthUI.getInstance()
@@ -89,9 +95,7 @@ public class SecurityManagerFirebase implements SecurityManager {
                                     //.setTheme(R.style.AppThemeWithActionBar)
                                     .setIsSmartLockEnabled(false)
                                     .setAvailableProviders(
-                                            Arrays.asList(
-                                                    new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
-                                                    new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build()))
+                                            Arrays.asList(idpConfigGoogle, idpConfigEmail))
                                     .build(),
                             RC_SIGN_IN);
                 }

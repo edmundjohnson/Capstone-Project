@@ -410,6 +410,11 @@ public final class ModelUtils {
         final boolean watched = cursor.getInt(DataContract.ViewAwardEntry.COL_WATCHED) == 1;
         final boolean favourite = cursor.getInt(DataContract.ViewAwardEntry.COL_FAVOURITE) == 1;
 
+        // if the runtime is invalid, set it to unknown
+        if (runtime < 1 && runtime != Movie.RUNTIME_UNKNOWN) {
+            Timber.w("newViewAward(Cursor): invalid runtime: " + runtime);
+            runtime = Movie.RUNTIME_UNKNOWN;
+        }
         // if the id mandatory attribute is missing, return null
         if (id == null) {
             Timber.e("newViewAward(Cursor): missing id");
@@ -429,11 +434,6 @@ public final class ModelUtils {
         if (title == null) {
             Timber.e("newViewAward(Cursor): missing title");
             return null;
-        }
-        // if the runtime is invalid, set it to unknown
-        if (runtime < 1 && runtime != Movie.RUNTIME_UNKNOWN) {
-            Timber.w("newViewAward(Cursor): invalid runtime: " + runtime);
-            runtime = Movie.RUNTIME_UNKNOWN;
         }
 
         return ViewAward.builder()

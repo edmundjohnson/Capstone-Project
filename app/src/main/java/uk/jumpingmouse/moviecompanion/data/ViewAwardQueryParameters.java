@@ -95,7 +95,6 @@ public class ViewAwardQueryParameters {
         return new ViewAwardQueryParameters.Builder();
     }
 
-
     @SuppressWarnings("WeakerAccess")
     public static final class Builder {
         private String sortOrder;

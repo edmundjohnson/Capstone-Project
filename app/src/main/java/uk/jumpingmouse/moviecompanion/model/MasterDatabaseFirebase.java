@@ -322,6 +322,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     Movie movie = dataSnapshot.getValue(Movie.class);
                     if (movie != null && context != null) {
+                        @SuppressWarnings("UnusedAssignment")
                         Uri uriInserted = context.getContentResolver().insert(
                                 DataContract.MovieEntry.CONTENT_URI, movie.toContentValues());
                         updateWidgets(context);
@@ -332,6 +333,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                     Movie movie = dataSnapshot.getValue(Movie.class);
                     if (movie != null && context != null) {
+                        @SuppressWarnings("UnusedAssignment")
                         int rowsUpdated = context.getContentResolver().update(
                                 DataContract.MovieEntry.buildUriForRowById(movie.getId()),
                                 movie.toContentValues(), null, null);
@@ -343,6 +345,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
                     Movie movie = dataSnapshot.getValue(Movie.class);
                     if (movie != null && context != null) {
+                        @SuppressWarnings("UnusedAssignment")
                         int rowsDeleted = context.getContentResolver().delete(
                                 DataContract.MovieEntry.buildUriForRowById(movie.getId()),
                                 null, null);
@@ -382,6 +385,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     Award award = dataSnapshot.getValue(Award.class);
                     if (award != null && context != null) {
+                        @SuppressWarnings("UnusedAssignment")
                         Uri uriInserted = context.getContentResolver().insert(
                                 DataContract.AwardEntry.CONTENT_URI, award.toContentValues());
                         updateWidgets(context);
@@ -392,6 +396,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                     Award award = dataSnapshot.getValue(Award.class);
                     if (award != null && context != null) {
+                        @SuppressWarnings("UnusedAssignment")
                         int rowsUpdated = context.getContentResolver().update(
                                 DataContract.AwardEntry.buildUriForRowById(award.getId()),
                                 award.toContentValues(), null, null);
@@ -403,6 +408,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
                     Award award = dataSnapshot.getValue(Award.class);
                     if (award != null && context != null) {
+                        @SuppressWarnings("UnusedAssignment")
                         int rowsDeleted = context.getContentResolver().delete(
                                 DataContract.AwardEntry.buildUriForRowById(award.getId()),
                                 null, null);
@@ -442,6 +448,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     UserMovie userMovie = dataSnapshot.getValue(UserMovie.class);
                     if (userMovie != null && context != null) {
+                        @SuppressWarnings("UnusedAssignment")
                         Uri uriInserted = context.getContentResolver().insert(
                                 DataContract.UserMovieEntry.CONTENT_URI, userMovie.toContentValues());
                     }
@@ -451,6 +458,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                     UserMovie userMovie = dataSnapshot.getValue(UserMovie.class);
                     if (userMovie != null && context != null) {
+                        @SuppressWarnings("UnusedAssignment")
                         int rowsUpdated = context.getContentResolver().update(
                                 DataContract.UserMovieEntry.buildUriForRowById(userMovie.getId()),
                                 userMovie.toContentValues(), null, null);
@@ -461,15 +469,15 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
                     UserMovie userMovie = dataSnapshot.getValue(UserMovie.class);
                     if (userMovie != null && context != null) {
-                        String uid = getSecurityManager().getUid();
                         Uri uri = DataContract.UserMovieEntry.buildUriForRowById(userMovie.getId());
+                        @SuppressWarnings("UnusedAssignment")
                         int rowsDeleted = context.getContentResolver().delete(uri, null, null);
                     }
                 }
 
                 @Override
                 public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                    Timber.e("Unexpected operation detected at \"/users/%s/userMovies\" node: onChildMoved(...)",
+                    Timber.e("onChildMoved: Unexpected operation detected at \"/users/%s/userMovies\" node",
                             getSecurityManager().getUid());
                 }
 
@@ -477,8 +485,8 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                     Timber.e(String.format(Locale.getDefault(),
-                            "Unexpected operation detected at node \"/users/%s/userMovies\": onCancelled(...)."
-                                    + "Error code: %d, details: %s, message: %s",
+                            "onCancelled: Unexpected operation detected at node \"/users/%s/userMovies\","
+                                    + " Error code: %d, details: %s, message: %s",
                             getSecurityManager().getUid(), databaseError.getCode(),
                             databaseError.getDetails(), databaseError.getMessage()));
                 }
@@ -486,7 +494,8 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
 
             String uid = getSecurityManager().getUid();
             if (uid != null) {
-                getDatabaseReferenceUserMovies(uid).addChildEventListener(mChildEventListenerUserMovies);
+                DatabaseReference databaseReferenceUserMovies = getDatabaseReferenceUserMovies(uid);
+                databaseReferenceUserMovies.addChildEventListener(mChildEventListenerUserMovies);
             }
         }
     }
@@ -512,7 +521,8 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
         if (mChildEventListenerUserMovies != null) {
             String uid = getSecurityManager().getUid();
             if (uid != null) {
-                getDatabaseReferenceUserMovies(uid).removeEventListener(mChildEventListenerUserMovies);
+                DatabaseReference databaseReferenceUserMovies = getDatabaseReferenceUserMovies(uid);
+                databaseReferenceUserMovies.removeEventListener(mChildEventListenerUserMovies);
             }
             mChildEventListenerUserMovies = null;
         }
@@ -568,12 +578,14 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
 
     /**
      * Returns a reference to the "/users/[uid]/userMovies" part of the database.
+     * @param uid the user's Firebase uid
      * @return a reference to the "/users/[uid]/userMovies" part of the database
      */
     @NonNull
     private DatabaseReference getDatabaseReferenceUserMovies(@NonNull String uid) {
         if (sDatabaseReferenceUserMovies == null) {
-            sDatabaseReferenceUserMovies = getDatabaseReference(getUserMoviesNode(uid));
+            String userMoviesNode = getUserMoviesNode(uid);
+            sDatabaseReferenceUserMovies = getDatabaseReference(userMoviesNode);
         }
         return sDatabaseReferenceUserMovies;
     }

@@ -6,12 +6,12 @@ import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import uk.jumpingmouse.moviecompanion.BuildConfig;
+import uk.jumpingmouse.moviecompanion.data.ViewAwardQueryParameters;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import uk.jumpingmouse.moviecompanion.BuildConfig;
-import uk.jumpingmouse.moviecompanion.data.ViewAwardQueryParameters;
 
 /**
  * Class which defines the contract between the model and view layers.
@@ -58,9 +58,9 @@ public final class DataContract {
     static {
         // The content authority for the admin product flavour has a different name so that the
         // different apps can coexist on the same device.
-        CONTENT_AUTHORITY = BuildConfig.FLAVOR_mode.equals("admin") ?
-                "uk.jumpingmouse.moviecompanion.admin" :
-                "uk.jumpingmouse.moviecompanion";
+        CONTENT_AUTHORITY = BuildConfig.FLAVOR_mode.equals("admin")
+                ? "uk.jumpingmouse.moviecompanion.admin"
+                : "uk.jumpingmouse.moviecompanion";
 
         BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
     }

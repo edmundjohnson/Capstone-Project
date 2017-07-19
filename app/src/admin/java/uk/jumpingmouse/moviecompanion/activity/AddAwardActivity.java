@@ -160,9 +160,10 @@ public class AddAwardActivity extends AppCompatActivity {
 
     /**
      * Handles the user clicking the "Fetch Movie Details" button.
-     * @param view the view that was clicked
+     * @param view the view that was clicked, required because this method is set as
+     *             an 'onClick' method in the layout xml
      */
-    public void onFetchMovieDetails(@Nullable View view) {
+    public void onFetchMovieDetails(@SuppressWarnings("UnusedParameters") @Nullable View view) {
         String imdbId = mTxtImdbId.getText().toString();
         if (imdbId.trim().isEmpty()) {
             return;
@@ -212,8 +213,9 @@ public class AddAwardActivity extends AppCompatActivity {
         }
 
         String awardDate = mTxtAwardDate.getText().toString();
-        String category = mRadioAwardCategory.getCheckedRadioButtonId() ==
-                R.id.radioCategoryMovie ? Award.CATEGORY_MOVIE : Award.CATEGORY_DVD;
+        String category =
+                mRadioAwardCategory.getCheckedRadioButtonId() == R.id.radioCategoryMovie
+                        ? Award.CATEGORY_MOVIE : Award.CATEGORY_DVD;
         int displayOrder = JavaUtils.toInt(mTxtAwardDisplayOrder.getText().toString(), 1);
         String review = mTxtReview.getText().toString();
 

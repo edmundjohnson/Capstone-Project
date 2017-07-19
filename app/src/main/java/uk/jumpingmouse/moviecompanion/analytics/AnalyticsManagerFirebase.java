@@ -1,12 +1,12 @@
 package uk.jumpingmouse.moviecompanion.analytics;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-
-import com.google.firebase.analytics.FirebaseAnalytics;
 
 /**
  * A Firebase implementation of AnalyticsManager.
@@ -92,7 +92,7 @@ public class AnalyticsManagerFirebase implements AnalyticsManager {
      * @param contentType the event content type
      */
     private void logSelectContentEvent(@NonNull String id, @NonNull String name,
-                                      @NonNull String contentType) {
+                                       @SuppressWarnings("SameParameterValue") @NonNull String contentType) {
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, id);
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, name);

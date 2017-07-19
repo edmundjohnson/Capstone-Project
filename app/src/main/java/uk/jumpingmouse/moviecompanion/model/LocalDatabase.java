@@ -4,12 +4,12 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import java.util.List;
-
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.data.UserMovie;
 import uk.jumpingmouse.moviecompanion.data.ViewAward;
+
+import java.util.List;
 
 /**
  * Interface for database implementation classes.
@@ -34,6 +34,7 @@ public interface LocalDatabase {
      * @param movie the movie to insert or update
      * @return the number of rows inserted or updated
      */
+    @SuppressWarnings("SameReturnValue")
     int addMovie(@NonNull Movie movie);
 
     /**
@@ -79,6 +80,7 @@ public interface LocalDatabase {
      * @param award the award to insert or update
      * @return the number of rows inserted or updated
      */
+    @SuppressWarnings("SameReturnValue")
     int addAward(@NonNull Award award);
 
     /**
@@ -123,8 +125,9 @@ public interface LocalDatabase {
      * If it already exists in the database, it is updated.
      * @param userMovie the user movie to insert or update
      * @return the number of rows inserted or updated. This is currently always 1,
-     * but that could change if the local database is implemented in SQLite.
+     *     but that could change if the local database is implemented in SQLite.
      */
+    @SuppressWarnings("SameReturnValue")
     int addUserMovie(@NonNull UserMovie userMovie);
 
     /**

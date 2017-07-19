@@ -11,9 +11,8 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import java.util.List;
-
 import timber.log.Timber;
+
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
@@ -22,6 +21,8 @@ import uk.jumpingmouse.moviecompanion.data.ViewAward;
 import uk.jumpingmouse.moviecompanion.data.ViewAwardQueryParameters;
 import uk.jumpingmouse.moviecompanion.security.SecurityManager;
 import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
+
+import java.util.List;
 
 /**
  * The content provider, through which the local database is accessed.
@@ -512,7 +513,8 @@ public class DataProvider extends ContentProvider {
      * @param id the movie's id
      * @return the number of rows deleted
      */
-    private int deleteMovie(@Nullable Context context, final int id) {
+    private int deleteMovie(@SuppressWarnings("UnusedParameters") @Nullable Context context,
+                            final int id) {
         return getLocalDatabase().deleteMovie(id);
     }
 
@@ -551,7 +553,8 @@ public class DataProvider extends ContentProvider {
     private Cursor selectMovies(
             @Nullable final String[] projection, @Nullable final String selection,
             @Nullable final String[] selectionArgs, @Nullable final String sortOrder) {
-        return toCursorMovies(getLocalDatabase().selectMovies(projection, selection, selectionArgs, sortOrder));
+        return toCursorMovies(getLocalDatabase()
+                .selectMovies(projection, selection, selectionArgs, sortOrder));
     }
 
     /**
@@ -688,7 +691,8 @@ public class DataProvider extends ContentProvider {
     private Cursor selectAwards(
             @Nullable final String[] projection, @Nullable final String selection,
             @Nullable final String[] selectionArgs, @Nullable final String sortOrder) {
-        return toCursorAwards(getLocalDatabase().selectAwards(projection, selection, selectionArgs, sortOrder));
+        return toCursorAwards(getLocalDatabase()
+                .selectAwards(projection, selection, selectionArgs, sortOrder));
     }
 
     /**
@@ -785,7 +789,7 @@ public class DataProvider extends ContentProvider {
      * Deletes all of the signed-in user's user movies from the database.
      * @return the number of rows deleted
      */
-    private int deleteUserMoviesAll(@Nullable Context context) {
+    private int deleteUserMoviesAll(@SuppressWarnings("UnusedParameters") @Nullable Context context) {
         return getLocalDatabase().deleteUserMoviesAll();
     }
 
@@ -794,7 +798,8 @@ public class DataProvider extends ContentProvider {
      * @param id the user movie's id
      * @return the number of rows deleted
      */
-    private int deleteUserMovie(@Nullable Context context, final int id) {
+    private int deleteUserMovie(@SuppressWarnings("UnusedParameters") @Nullable Context context,
+                                final int id) {
         return getLocalDatabase().deleteUserMovie(id);
     }
 
