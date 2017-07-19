@@ -129,46 +129,44 @@ ext {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(include: ['*.jar'], dir: 'libs')
 
-    implementation "com.android.support:appcompat-v7:$SUPPORT_LIB_VERSION"
-    implementation "com.android.support:recyclerview-v7:$SUPPORT_LIB_VERSION"
-    implementation "com.android.support:design:$SUPPORT_LIB_VERSION"
-    implementation "com.android.support:palette-v7:$SUPPORT_LIB_VERSION"
-    // Not required
-    //implementation "com.android.support:support-vector-drawable:$SUPPORT_LIB_VERSION"
+    compile "com.android.support:appcompat-v7:$SUPPORT_LIB_VERSION"
+    compile "com.android.support:recyclerview-v7:$SUPPORT_LIB_VERSION"
+    compile "com.android.support:design:$SUPPORT_LIB_VERSION"
+    compile "com.android.support:palette-v7:$SUPPORT_LIB_VERSION"
 
     // firebase-ui-auth, or other modules, have dependencies on these
     // See: https://github.com/firebase/FirebaseUI-Android
-    implementation "com.android.support:cardview-v7:$SUPPORT_LIB_VERSION"
-    implementation "com.android.support:customtabs:$SUPPORT_LIB_VERSION"
-    implementation "com.android.support:support-v4:$SUPPORT_LIB_VERSION"
+    compile "com.android.support:cardview-v7:$SUPPORT_LIB_VERSION"
+    compile "com.android.support:customtabs:$SUPPORT_LIB_VERSION"
+    compile "com.android.support:support-v4:$SUPPORT_LIB_VERSION"
 
     // Firebase
-    implementation "com.google.android.gms:play-services-auth:$FIREBASE_VERSION"
-    implementation "com.google.firebase:firebase-core:$FIREBASE_VERSION"
-    implementation "com.google.firebase:firebase-analytics:$FIREBASE_VERSION"
-    implementation "com.google.firebase:firebase-auth:$FIREBASE_VERSION"
-    implementation "com.google.firebase:firebase-crash:$FIREBASE_VERSION"
-    implementation "com.google.firebase:firebase-database:$FIREBASE_VERSION"
+    compile "com.google.android.gms:play-services-auth:$FIREBASE_VERSION"
+    compile "com.google.firebase:firebase-core:$FIREBASE_VERSION"
+    compile "com.google.firebase:firebase-analytics:$FIREBASE_VERSION"
+    compile "com.google.firebase:firebase-auth:$FIREBASE_VERSION"
+    compile "com.google.firebase:firebase-crash:$FIREBASE_VERSION"
+    compile "com.google.firebase:firebase-database:$FIREBASE_VERSION"
 
     // Firebase UI Auth
-    implementation "com.firebaseui:firebase-ui-auth:$FIREBASE_UI_VERSION"
+    compile "com.firebaseui:firebase-ui-auth:$FIREBASE_UI_VERSION"
 
     // Picasso
-    implementation 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 
     // Timber
-    implementation 'com.jakewharton.timber:timber:4.5.1'
+    compile 'com.jakewharton.timber:timber:4.5.1'
 
     // OmdbApi
-    implementation project(':omdbapi')
+    compile project(':omdbapi')
 
     // test
-    testImplementation 'junit:junit:4.12'
+    testCompile 'junit:junit:4.12'
 
     // androidTest
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 }

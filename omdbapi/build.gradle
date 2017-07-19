@@ -27,20 +27,20 @@ ext {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(dir: 'libs', include: ['*.jar'])
 
     // support library
-    implementation "com.android.support:appcompat-v7:$SUPPORT_LIB_VERSION"
+    compile "com.android.support:appcompat-v7:$SUPPORT_LIB_VERSION"
 
     // Retrofit
-    implementation "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
-    implementation "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
+    compile "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
+    compile "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
 
     // test
-    testImplementation 'junit:junit:4.12'
+    testCompile 'junit:junit:4.12'
 
     // androidTest
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
