@@ -74,11 +74,6 @@
     <string name="filter_title">List Filters</string>
     <string name="button_clear_filters">Clear Filters</string>
 
-    <string name="filter_category_title">Movies / DVDs of the week</string>
-    <string name="filter_category_any">No filter</string>
-    <string name="filter_category_movie">Movies of the week</string>
-    <string name="filter_category_dvd">DVDs of the week</string>
-
     <string name="filter_genre_title">Genre</string>
     <string name="filter_genre_all">All genres</string>
     <string name="filter_genre_action">Action</string>
@@ -111,6 +106,11 @@
     <string name="filter_favourite_show">Show favourite movies</string>
     <string name="filter_favourite_hide">Hide favourite movies</string>
 
+    <string name="filter_category_title">Movies / DVDs of the week</string>
+    <string name="filter_category_any">No filter</string>
+    <string name="filter_category_movie">Movies of the week</string>
+    <string name="filter_category_dvd">DVDs of the week</string>
+
     <!-- View Award (Movie) screen-->
     <string name="poster_description">Movie poster</string>
     <string name="imdb_link_address" translatable="false">http://www.imdb.com/title/%s/</string>
@@ -139,10 +139,10 @@
 
     <!-- Preferences -->
     <string name="pref_award_list_sort_order_key" translatable="false">pref_award_list_sort_order_key</string>
-    <string name="pref_award_list_filter_category_key" translatable="false">pref_award_list_filter_category_key</string>
     <string name="pref_award_list_filter_genre_key" translatable="false">pref_award_list_filter_genre_key</string>
     <string name="pref_award_list_filter_wishlist_key" translatable="false">pref_award_list_filter_wishlist_key</string>
     <string name="pref_award_list_filter_watched_key" translatable="false">pref_award_list_filter_watched_key</string>
     <string name="pref_award_list_filter_favourite_key" translatable="false">pref_award_list_filter_favourite_key</string>
+    <string name="pref_award_list_filter_category_key" translatable="false">pref_award_list_filter_category_key</string>
 
 </resources>

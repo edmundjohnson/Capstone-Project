@@ -14,7 +14,7 @@ import uk.jumpingmouse.moviecompanion.model.DataContract;
  * Preferences utility methods.
  * @author Edmund Johnson
  */
-public class PrefUtils {
+public final class PrefUtils {
 
     /** Private constructor to prevent instantiation. */
     private PrefUtils() {
@@ -31,7 +31,7 @@ public class PrefUtils {
      * @return the value of the user preference
      */
     @NonNull
-    private static String getSharedPreferenceString(@Nullable Context context,
+    public static String getSharedPreferenceString(@Nullable Context context,
                                 @StringRes int prefKeyResId, @NonNull String defaultValue) {
         if (context == null) {
             return defaultValue;
@@ -64,7 +64,7 @@ public class PrefUtils {
      * @param prefKeyResId the string resource id of the key of the shared preference to be updated
      * @param value the value to which the shared preference is to be set
      */
-    private static void setSharedPreferenceString(@NonNull Context context,
+    public static void setSharedPreferenceString(@NonNull Context context,
                                  @StringRes int prefKeyResId, @NonNull String value) {
         String prefKey = context.getString(prefKeyResId);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
@@ -105,8 +105,9 @@ public class PrefUtils {
     // Award list sort order preferences
 
     /**
-     * Returns the list sort order shared preference.
+     * Returns the value of the list sort order shared preference.
      * @param context the context
+     * @return the value of the list sort order shared preference
      */
     @NonNull
     public static String getAwardListSortOrder(@Nullable Context context) {
@@ -137,51 +138,14 @@ public class PrefUtils {
     // Award list filter preferences
 
     /**
-     * Returns the award list category filter shared preference.
+     * Returns the value of the award list genre filter shared preference.
      * @param context the context
-     */
-    @NonNull
-    public static String getAwardListFilterCategory(@Nullable Context context) {
-        return getSharedPreferenceString(context, R.string.pref_award_list_filter_category_key,
-                DataContract.ViewAwardEntry.FILTER_CATEGORY_DEFAULT);
-    }
-
-    /**
-     * Sets the award list category filter shared preference to a supplied value.
-     * @param context the context
-     * @param value the new value for the award list category filter
-     */
-    public static void setAwardListFilterCategory(@NonNull Context context, @NonNull String value) {
-        setSharedPreferenceString(context, R.string.pref_award_list_filter_category_key, value);
-    }
-
-    /**
-     * Returns whether a string has the same value as the award list category filter preference key.
-     * @param context the context
-     * @param value the value to compare to the award list category filter preference key
-     * @return true if value is the award list category filter preference key, false otherwise
-     */
-    public static boolean isAwardListFilterCategoryKey(@NonNull Context context, @Nullable String value) {
-        return stringEqualsResId(context, value, R.string.pref_award_list_filter_category_key);
-    }
-
-    /**
-     * Returns the award list genre filter shared preference.
-     * @param context the context
+     * @return the value of the award list genre filter shared preference
      */
     @NonNull
     public static String getAwardListFilterGenre(@Nullable Context context) {
         return getSharedPreferenceString(context, R.string.pref_award_list_filter_genre_key,
                 DataContract.ViewAwardEntry.FILTER_GENRE_DEFAULT);
-    }
-
-    /**
-     * Sets the award list genre filter shared preference to a supplied value.
-     * @param context the context
-     * @param value the new value for the award list genre filter
-     */
-    public static void setAwardListFilterGenre(@NonNull Context context, @NonNull String value) {
-        setSharedPreferenceString(context, R.string.pref_award_list_filter_genre_key, value);
     }
 
     /**
@@ -195,22 +159,14 @@ public class PrefUtils {
     }
 
     /**
-     * Returns the award list wishlist filter shared preference.
+     * Returns the value of the award list wishlist filter shared preference.
      * @param context the context
+     * @return the value of the award list wishlist filter shared preference
      */
     @NonNull
     public static String getAwardListFilterWishlist(@Nullable Context context) {
         return getSharedPreferenceString(context, R.string.pref_award_list_filter_wishlist_key,
                 DataContract.ViewAwardEntry.FILTER_WISHLIST_DEFAULT);
-    }
-
-    /**
-     * Sets the award list wishlist filter shared preference to a supplied value.
-     * @param context the context
-     * @param value the new value for the award list wishlist filter
-     */
-    public static void setAwardListFilterWishlist(@NonNull Context context, @NonNull String value) {
-        setSharedPreferenceString(context, R.string.pref_award_list_filter_wishlist_key, value);
     }
 
     /**
@@ -224,22 +180,14 @@ public class PrefUtils {
     }
 
     /**
-     * Returns the award list watched filter shared preference.
+     * Returns the value of the award list watched filter shared preference.
      * @param context the context
+     * @return the value of the award list watched filter shared preference
      */
     @NonNull
     public static String getAwardListFilterWatched(@Nullable Context context) {
         return getSharedPreferenceString(context, R.string.pref_award_list_filter_watched_key,
                 DataContract.ViewAwardEntry.FILTER_WATCHED_DEFAULT);
-    }
-
-    /**
-     * Sets the award list watched filter shared preference to a supplied value.
-     * @param context the context
-     * @param value the new value for the award list watched filter
-     */
-    public static void setAwardListFilterWatched(@NonNull Context context, @NonNull String value) {
-        setSharedPreferenceString(context, R.string.pref_award_list_filter_watched_key, value);
     }
 
     /**
@@ -253,22 +201,14 @@ public class PrefUtils {
     }
 
     /**
-     * Returns the award list favourite filter shared preference.
+     * Returns the value of the award list favourite filter shared preference.
      * @param context the context
+     * @return the value of the award list favourite filter shared preference
      */
     @NonNull
     public static String getAwardListFilterFavourite(@Nullable Context context) {
         return getSharedPreferenceString(context, R.string.pref_award_list_filter_favourite_key,
                 DataContract.ViewAwardEntry.FILTER_FAVOURITE_DEFAULT);
-    }
-
-    /**
-     * Sets the award list favourite filter shared preference to a supplied value.
-     * @param context the context
-     * @param value the new value for the award list favourite filter
-     */
-    public static void setAwardListFilterFavourite(@NonNull Context context, @NonNull String value) {
-        setSharedPreferenceString(context, R.string.pref_award_list_filter_favourite_key, value);
     }
 
     /**
@@ -282,6 +222,27 @@ public class PrefUtils {
     }
 
     /**
+     * Returns the value of the award list category filter shared preference.
+     * @param context the context
+     * @return the value of the award list category filter shared preference
+     */
+    @NonNull
+    public static String getAwardListFilterCategory(@Nullable Context context) {
+        return getSharedPreferenceString(context, R.string.pref_award_list_filter_category_key,
+                DataContract.ViewAwardEntry.FILTER_CATEGORY_DEFAULT);
+    }
+
+    /**
+     * Returns whether a string has the same value as the award list category filter preference key.
+     * @param context the context
+     * @param value the value to compare to the award list category filter preference key
+     * @return true if value is the award list category filter preference key, false otherwise
+     */
+    public static boolean isAwardListFilterCategoryKey(@NonNull Context context, @Nullable String value) {
+        return stringEqualsResId(context, value, R.string.pref_award_list_filter_category_key);
+    }
+
+    /**
      * Returns whether there are any active filters, i.e. whether any filter is set to
      * a non-default value.
      * @param context the context
@@ -289,16 +250,16 @@ public class PrefUtils {
      */
     public static boolean isFilterActive(@Nullable Context context) {
         // return true if any filter is not set to its default value
-        return !PrefUtils.getAwardListFilterCategory(context).equals(
-                        DataContract.ViewAwardEntry.FILTER_CATEGORY_DEFAULT)
-                || !PrefUtils.getAwardListFilterGenre(context).equals(
+        return !PrefUtils.getAwardListFilterGenre(context).equals(
                         DataContract.ViewAwardEntry.FILTER_GENRE_DEFAULT)
                 || !PrefUtils.getAwardListFilterWishlist(context).equals(
                         DataContract.ViewAwardEntry.FILTER_WISHLIST_DEFAULT)
                 || !PrefUtils.getAwardListFilterWatched(context).equals(
                         DataContract.ViewAwardEntry.FILTER_WATCHED_DEFAULT)
                 || !PrefUtils.getAwardListFilterFavourite(context).equals(
-                        DataContract.ViewAwardEntry.FILTER_FAVOURITE_DEFAULT);
+                        DataContract.ViewAwardEntry.FILTER_FAVOURITE_DEFAULT)
+                || !PrefUtils.getAwardListFilterCategory(context).equals(
+                        DataContract.ViewAwardEntry.FILTER_CATEGORY_DEFAULT);
     }
 
 }

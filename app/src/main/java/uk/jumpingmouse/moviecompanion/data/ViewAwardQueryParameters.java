@@ -9,68 +9,68 @@ import android.support.annotation.Nullable;
  * @author Edmund Johnson
  */
 
-public class ViewAwardQueryParameters {
+public final class ViewAwardQueryParameters {
+
+    // parameters
+    private String mSortOrder;
+    private String mFilterGenre;
+    private String mFilterWishlist;
+    private String mFilterWatched;
+    private String mFilterFavourite;
+    private String mFilterCategory;
+    private int mLimit;
 
     private ViewAwardQueryParameters() {
     }
 
-    private ViewAwardQueryParameters(@NonNull String sortOrder, @NonNull String filterCategory,
-                                     @NonNull String filterGenre, @NonNull String filterWishlist,
-                                     @NonNull String filterWatched, @NonNull String filterFavourite,
+    private ViewAwardQueryParameters(@NonNull String sortOrder, @NonNull String filterGenre,
+                                     @NonNull String filterWishlist, @NonNull String filterWatched,
+                                     @NonNull String filterFavourite, @NonNull String filterCategory,
                                      int limit) {
-        this.sortOrder = sortOrder;
-        this.filterCategory = filterCategory;
-        this.filterGenre = filterGenre;
-        this.filterWishlist = filterWishlist;
-        this.filterWatched = filterWatched;
-        this.filterFavourite = filterFavourite;
-        this.limit = limit;
+        this.mSortOrder = sortOrder;
+        this.mFilterGenre = filterGenre;
+        this.mFilterWishlist = filterWishlist;
+        this.mFilterWatched = filterWatched;
+        this.mFilterFavourite = filterFavourite;
+        this.mFilterCategory = filterCategory;
+        this.mLimit = limit;
     }
-
-    // parameters
-    private String sortOrder;
-    private String filterCategory;
-    private String filterGenre;
-    private String filterWishlist;
-    private String filterWatched;
-    private String filterFavourite;
-    private int limit;
 
     //---------------------------------------------------------------
     // Getters
 
     @NonNull
     public String getSortOrder() {
-        return sortOrder;
-    }
-
-    @NonNull
-    public String getFilterCategory() {
-        return filterCategory;
+        return mSortOrder;
     }
 
     @NonNull
     public String getFilterGenre() {
-        return filterGenre;
+        return mFilterGenre;
     }
 
     @NonNull
     public String getFilterWishlist() {
-        return filterWishlist;
+        return mFilterWishlist;
     }
 
     @NonNull
     public String getFilterWatched() {
-        return filterWatched;
+        return mFilterWatched;
     }
 
     @NonNull
     public String getFilterFavourite() {
-        return filterFavourite;
+        return mFilterFavourite;
+    }
+
+    @NonNull
+    public String getFilterCategory() {
+        return mFilterCategory;
     }
 
     public int getLimit() {
-        return limit;
+        return mLimit;
     }
 
     //---------------------------------------------------------------
@@ -82,7 +82,6 @@ public class ViewAwardQueryParameters {
      * {@code
      *   ViewAwardQueryParameters movie = ViewAwardQueryParameters.builder()
      *         .sortOrder("awardDate DESC")
-     *         .filterCategory("filter_category_movie")
      *         .filterGenre("filter_genre_comedy")
      *         .filterWishlist("filter_wishlist_any")
      *         // etc
@@ -97,87 +96,90 @@ public class ViewAwardQueryParameters {
 
     @SuppressWarnings("WeakerAccess")
     public static final class Builder {
-        private String sortOrder;
-        private String filterCategory;
-        private String filterGenre;
-        private String filterWishlist;
-        private String filterWatched;
-        private String filterFavourite;
-        private int limit;
+        private String mSortOrder;
+        private String mFilterGenre;
+        private String mFilterWishlist;
+        private String mFilterWatched;
+        private String mFilterFavourite;
+        private String mFilterCategory;
+        private int mLimit;
 
         private Builder() {
-            this.limit = 0;
+            this.mLimit = 0;
         }
 
         @NonNull
         public ViewAwardQueryParameters.Builder sortOrder(@Nullable String sortOrder) {
-            this.sortOrder = sortOrder;
-            return this;
-        }
-        @NonNull
-        public ViewAwardQueryParameters.Builder filterCategory(@Nullable String filterCategory) {
-            this.filterCategory = filterCategory;
+            this.mSortOrder = sortOrder;
             return this;
         }
         @NonNull
         public ViewAwardQueryParameters.Builder filterGenre(@Nullable String filterGenre) {
-            this.filterGenre = filterGenre;
+            this.mFilterGenre = filterGenre;
             return this;
         }
         @NonNull
         public ViewAwardQueryParameters.Builder filterWishlist(@Nullable String filterWishlist) {
-            this.filterWishlist = filterWishlist;
+            this.mFilterWishlist = filterWishlist;
             return this;
         }
         @NonNull
         public ViewAwardQueryParameters.Builder filterWatched(@Nullable String filterWatched) {
-            this.filterWatched = filterWatched;
+            this.mFilterWatched = filterWatched;
             return this;
         }
         @NonNull
         public ViewAwardQueryParameters.Builder filterFavourite(@Nullable String filterFavourite) {
-            this.filterFavourite = filterFavourite;
+            this.mFilterFavourite = filterFavourite;
+            return this;
+        }
+        @NonNull
+        public ViewAwardQueryParameters.Builder filterCategory(@Nullable String filterCategory) {
+            this.mFilterCategory = filterCategory;
             return this;
         }
         @NonNull
         public ViewAwardQueryParameters.Builder limit(int limit) {
-            this.limit = limit;
+            this.mLimit = limit;
             return this;
         }
 
-        /** Builds and returns an object of this class. */
+        /**
+         * Builds and returns a ViewAwardQueryParameters object.
+         * @return a ViewAwardQueryParameters object
+         */
         @NonNull
         public ViewAwardQueryParameters build() {
             String missing = "";
-            if (sortOrder == null) {
+            if (mSortOrder == null) {
                 missing += " sortOrder";
             }
-            if (filterCategory == null) {
-                missing += " filterCategory";
-            }
-            if (filterGenre == null) {
+            if (mFilterGenre == null) {
                 missing += " filterGenre";
             }
-            if (filterWishlist == null) {
+            if (mFilterWishlist == null) {
                 missing += " filterWishlist";
             }
-            if (filterWatched == null) {
+            if (mFilterWatched == null) {
                 missing += " filterWatched";
             }
-            if (filterFavourite == null) {
+            if (mFilterFavourite == null) {
                 missing += " filterFavourite";
+            }
+            if (mFilterCategory == null) {
+                missing += " filterCategory";
             }
             if (!missing.isEmpty()) {
                 throw new IllegalStateException("Missing required properties:" + missing);
             }
             return new ViewAwardQueryParameters(
-                    this.sortOrder,
-                    this.filterCategory,
-                    this.filterGenre,
-                    this.filterWishlist,
-                    this.filterWatched,
-                    this.filterFavourite,
-                    this.limit);
+                    this.mSortOrder,
+                    this.mFilterGenre,
+                    this.mFilterWishlist,
+                    this.mFilterWatched,
+                    this.mFilterFavourite,
+                    this.mFilterCategory,
+                    this.mLimit);
         }
     }
 

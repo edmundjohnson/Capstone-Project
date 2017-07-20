@@ -45,7 +45,7 @@ import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
  * The fragment class for the list of posts.
  * @author Edmund Johnson
  */
-public class AwardListFragment extends Fragment
+public final class AwardListFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor>,
         SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -311,29 +311,26 @@ public class AwardListFragment extends Fragment
 
         Uri uri = null;
         String sortOrder = null;
-        String filterCategory = null;
         String filterGenre = null;
         String filterWishlist = null;
         String filterWatched = null;
         String filterFavourite = null;
+        String filterCategory = null;
 
         // URI, sort order and filters are fiddly!
         if (args != null) {
             uri = args.getParcelable(KEY_VIEW_AWARD_URI);
             if (uri != null) {
                 sortOrder = uri.getQueryParameter(DataContract.PARAM_SORT_ORDER);
-                filterCategory = uri.getQueryParameter(DataContract.PARAM_FILTER_CATEGORY);
                 filterGenre = uri.getQueryParameter(DataContract.PARAM_FILTER_GENRE);
                 filterWishlist = uri.getQueryParameter(DataContract.PARAM_FILTER_WISHLIST);
                 filterWatched = uri.getQueryParameter(DataContract.PARAM_FILTER_WATCHED);
                 filterFavourite = uri.getQueryParameter(DataContract.PARAM_FILTER_FAVOURITE);
+                filterCategory = uri.getQueryParameter(DataContract.PARAM_FILTER_CATEGORY);
             }
         }
         if (sortOrder == null) {
             sortOrder = PrefUtils.getAwardListSortOrder(context);
-        }
-        if (filterCategory == null) {
-            filterCategory = PrefUtils.getAwardListFilterCategory(context);
         }
         if (filterGenre == null) {
             filterGenre = PrefUtils.getAwardListFilterGenre(context);
@@ -347,14 +344,17 @@ public class AwardListFragment extends Fragment
         if (filterFavourite == null) {
             filterFavourite = PrefUtils.getAwardListFilterFavourite(context);
         }
+        if (filterCategory == null) {
+            filterCategory = PrefUtils.getAwardListFilterCategory(context);
+        }
 
         ViewAwardQueryParameters parameters = ViewAwardQueryParameters.builder()
                 .sortOrder(sortOrder)
-                .filterCategory(filterCategory)
                 .filterGenre(filterGenre)
                 .filterWishlist(filterWishlist)
                 .filterWatched(filterWatched)
                 .filterFavourite(filterFavourite)
+                .filterCategory(filterCategory)
                 .build();
 
         if (uri == null) {
@@ -538,22 +538,22 @@ public class AwardListFragment extends Fragment
         if (context == null) {
             return;
         }
-        // If the sort order or a filter has changed, restart the loader to requery the data
+        // If the sort order or any of the filters has changed, restart the loader to requery the data
         if (PrefUtils.isAwardListSortOrderKey(context, key)
-                || PrefUtils.isAwardListFilterCategoryKey(context, key)
                 || PrefUtils.isAwardListFilterGenreKey(context, key)
                 || PrefUtils.isAwardListFilterWishlistKey(context, key)
                 || PrefUtils.isAwardListFilterWatchedKey(context, key)
-                || PrefUtils.isAwardListFilterFavouriteKey(context, key)) {
+                || PrefUtils.isAwardListFilterFavouriteKey(context, key)
+                || PrefUtils.isAwardListFilterCategoryKey(context, key)) {
 
             // Construct the URI using the sort and filter parameters
             ViewAwardQueryParameters parameters = ViewAwardQueryParameters.builder()
                     .sortOrder(PrefUtils.getAwardListSortOrder(context))
-                    .filterCategory(PrefUtils.getAwardListFilterCategory(context))
                     .filterGenre(PrefUtils.getAwardListFilterGenre(context))
                     .filterWishlist(PrefUtils.getAwardListFilterWishlist(context))
                     .filterWatched(PrefUtils.getAwardListFilterWatched(context))
                     .filterFavourite(PrefUtils.getAwardListFilterFavourite(context))
+                    .filterCategory(PrefUtils.getAwardListFilterCategory(context))
                     .build();
             Uri uri = DataContract.ViewAwardEntry.buildUriWithParameters(parameters);
 
@@ -581,7 +581,7 @@ public class AwardListFragment extends Fragment
      * A class whose implementations can be used to observe changes to data at a URI,
      * and update the cursor loader when there is a change.
      */
-    public class ViewAwardContentObserver extends ContentObserver {
+    public final class ViewAwardContentObserver extends ContentObserver {
 
         /**
          * Creates a content observer.

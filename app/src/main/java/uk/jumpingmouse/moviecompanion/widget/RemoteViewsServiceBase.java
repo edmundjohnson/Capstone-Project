@@ -13,8 +13,9 @@ import android.widget.RemoteViewsService;
 
 import com.squareup.picasso.Picasso;
 
-import timber.log.Timber;
+import java.io.IOException;
 
+import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.data.ViewAwardQueryParameters;
@@ -22,15 +23,13 @@ import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.moviecompanion.model.DataProvider;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
-import java.io.IOException;
-
 /**
  * RemoteViewsService which controls the data shown in the scrollable list widgets.
  */
 public abstract class RemoteViewsServiceBase extends RemoteViewsService {
 
     @Override
-    public RemoteViewsFactory onGetViewFactory(Intent intent) {
+    public final RemoteViewsFactory onGetViewFactory(Intent intent) {
         return new RemoteViewsFactory() {
             private Cursor mCursor = null;
 
@@ -52,11 +51,11 @@ public abstract class RemoteViewsServiceBase extends RemoteViewsService {
 
                 ViewAwardQueryParameters parameters = ViewAwardQueryParameters.builder()
                         .sortOrder(DataContract.ViewAwardEntry.SORT_ORDER_AWARD_DATE_DESC)
-                        .filterCategory(getFilterCategory())
                         .filterGenre(DataContract.ViewAwardEntry.FILTER_GENRE_ALL)
                         .filterWishlist(DataContract.ViewAwardEntry.FILTER_WISHLIST_ANY)
                         .filterWatched(DataContract.ViewAwardEntry.FILTER_WATCHED_ANY)
                         .filterFavourite(DataContract.ViewAwardEntry.FILTER_FAVOURITE_ANY)
+                        .filterCategory(getFilterCategory())
                         .limit(getViewAwardLimit())
                         .build();
 

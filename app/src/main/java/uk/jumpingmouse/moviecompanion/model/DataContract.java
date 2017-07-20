@@ -6,12 +6,12 @@ import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import uk.jumpingmouse.moviecompanion.BuildConfig;
-import uk.jumpingmouse.moviecompanion.data.ViewAwardQueryParameters;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import uk.jumpingmouse.moviecompanion.BuildConfig;
+import uk.jumpingmouse.moviecompanion.data.ViewAwardQueryParameters;
 
 /**
  * Class which defines the contract between the model and view layers.
@@ -44,11 +44,11 @@ public final class DataContract {
 
     // Query parameters
     public static final String PARAM_SORT_ORDER = "sortOrder";
-    public static final String PARAM_FILTER_CATEGORY = "filterCategory";
     public static final String PARAM_FILTER_GENRE = "filterGenre";
     public static final String PARAM_FILTER_WISHLIST = "filterWishlist";
     public static final String PARAM_FILTER_WATCHED = "filterWatched";
     public static final String PARAM_FILTER_FAVOURITE = "filterFavourite";
+    public static final String PARAM_FILTER_CATEGORY = "filterCategory";
     static final String PARAM_LIMIT = "limit";
 
     // Values for sort direction (part of PARAM_SORT_ORDER)
@@ -355,12 +355,6 @@ public final class DataContract {
         // Award List Filters
         // Strings are used for the filter values so they can be used in URIs.
 
-        // These values must match the values in arrays.xml "filter_category_pref_key"
-        static final String FILTER_CATEGORY_ANY = "filter_category_any";
-        public static final String FILTER_CATEGORY_MOVIE = "filter_category_movie";
-        public static final String FILTER_CATEGORY_DVD = "filter_category_dvd";
-        public static final String FILTER_CATEGORY_DEFAULT = FILTER_CATEGORY_ANY;
-
         public static final String FILTER_GENRE_ALL = "filter_genre_all";
         public static final String FILTER_GENRE_DEFAULT = FILTER_GENRE_ALL;
 
@@ -417,6 +411,12 @@ public final class DataContract {
         static final String FILTER_FAVOURITE_HIDE = "filter_favourite_hide";
         public static final String FILTER_FAVOURITE_DEFAULT = FILTER_FAVOURITE_ANY;
 
+        // These values must match the values in arrays.xml "filter_category_pref_key"
+        static final String FILTER_CATEGORY_ANY = "filter_category_any";
+        public static final String FILTER_CATEGORY_MOVIE = "filter_category_movie";
+        public static final String FILTER_CATEGORY_DVD = "filter_category_dvd";
+        public static final String FILTER_CATEGORY_DEFAULT = FILTER_CATEGORY_ANY;
+
         // URIs
 
         static final Uri CONTENT_URI =
@@ -455,11 +455,11 @@ public final class DataContract {
         public static Uri buildUriWithParameters(@NonNull ViewAwardQueryParameters parameters) {
             return CONTENT_URI.buildUpon()
                     .appendQueryParameter(PARAM_SORT_ORDER, parameters.getSortOrder())
-                    .appendQueryParameter(PARAM_FILTER_CATEGORY, parameters.getFilterCategory())
                     .appendQueryParameter(PARAM_FILTER_GENRE, parameters.getFilterGenre())
                     .appendQueryParameter(PARAM_FILTER_WISHLIST, parameters.getFilterWishlist())
                     .appendQueryParameter(PARAM_FILTER_WATCHED, parameters.getFilterWatched())
                     .appendQueryParameter(PARAM_FILTER_FAVOURITE, parameters.getFilterFavourite())
+                    .appendQueryParameter(PARAM_FILTER_CATEGORY, parameters.getFilterCategory())
                     .build();
         }
 
