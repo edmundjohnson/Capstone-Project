@@ -9,13 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import timber.log.Timber;
+
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.data.UserMovie;
 import uk.jumpingmouse.moviecompanion.data.ViewAward;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
-import uk.jumpingmouse.omdbapi.OmdbApi;
-import uk.jumpingmouse.omdbapi.OmdbMovie;
 
 /**
  * Class for model utilities.
@@ -51,44 +50,6 @@ public final class ModelUtils {
             return JavaUtils.toInt(imdbId.substring(2), Movie.ID_UNKNOWN);
         }
         return Movie.ID_UNKNOWN;
-    }
-
-    /**
-     * Creates a Movie from an OmdbMovie and returns it.
-     * @param omdbMovie the OmdbMovie
-     * @return a Movie corresponding to omdbMovie
-     */
-    @Nullable
-    public static Movie newMovie(OmdbMovie omdbMovie) {
-        if (omdbMovie == null) {
-            Timber.w("newMovie: omdbMovie is null");
-            return null;
-        } else if (omdbMovie.getImdbID() == null) {
-            Timber.w("newMovie: omdbMovie.imdbId is null");
-            return null;
-        } else if (omdbMovie.getTitle() == null) {
-            Timber.w("newMovie: omdbMovie.title is null");
-            return null;
-        }
-
-        // Build and return the movie
-        int id = imdbIdToMovieId(omdbMovie.getImdbID());
-        if (id == Movie.ID_UNKNOWN) {
-            Timber.w("newMovie: could not obtain valid id from imdbID: " + omdbMovie.getImdbID());
-            return null;
-        }
-        int runtime = OmdbApi.toIntOmdbRuntime(omdbMovie.getRuntime());
-        long released = OmdbApi.toLongOmdbReleased(omdbMovie.getReleased());
-        return Movie.builder()
-                .id(id)
-                .imdbId(omdbMovie.getImdbID())
-                .title(omdbMovie.getTitle())
-                .genre(omdbMovie.getGenre())
-                .runtime(runtime)
-                .poster(omdbMovie.getPoster())
-                .year(omdbMovie.getYear())
-                .released(released)
-                .build();
     }
 
     /**

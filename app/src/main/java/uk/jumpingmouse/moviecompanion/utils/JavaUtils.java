@@ -4,8 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.SparseArray;
 
-import timber.log.Timber;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,6 +11,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+
+import timber.log.Timber;
 
 /**
  * Class for Java utilities.
@@ -35,7 +35,7 @@ public final class JavaUtils {
      *         or null if the String could not be parsed as a date
      */
     @Nullable
-    static Date toDate(@SuppressWarnings("SameParameterValue") @NonNull SimpleDateFormat format,
+    public static Date toDate(@SuppressWarnings("SameParameterValue") @NonNull SimpleDateFormat format,
                        @Nullable final String strDate) {
         if (strDate == null) {
             return null;

@@ -13,7 +13,6 @@ import java.util.List;
 import uk.jumpingmouse.moviecompanion.AndroidTestUtils;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
-import uk.jumpingmouse.omdbapi.OmdbApi;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -31,7 +30,7 @@ public class ModelUtilsTest {
     private static final String MOVIE_TITLE = "Test Movie";
     private static final String MOVIE_YEAR = "2011";
     private static final String MOVIE_RELEASED_OMDB = "01 Jun 2011";
-    private static final long MOVIE_RELEASED = OmdbApi.toLongOmdbReleased(MOVIE_RELEASED_OMDB);
+    private static final long MOVIE_RELEASED = AndroidTestUtils.toLongOmdbReleased(MOVIE_RELEASED_OMDB);
     private static final String MOVIE_RELEASED_INVALID = "this is not a date";
     //private static final String MOVIE_RUNTIME_OMDB = "114 min";
     private static final int MOVIE_RUNTIME = 114;

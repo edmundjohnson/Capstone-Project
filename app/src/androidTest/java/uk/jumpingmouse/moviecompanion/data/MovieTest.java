@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
-import uk.jumpingmouse.omdbapi.OmdbApi;
+import uk.jumpingmouse.moviecompanion.AndroidTestUtils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -43,7 +43,7 @@ public class MovieTest {
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
                 .year("2017")
-                .released(OmdbApi.toLongOmdbReleased("01 Jun 2017"))
+                .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2017"))
                 .runtime(144)
                 .genre("Drama, Mystery, Romance")
                 .poster(POSTER)
@@ -77,7 +77,7 @@ public class MovieTest {
         assertEquals("tt4016934", mMovie.getImdbId());
         assertEquals("The Handmaiden", mMovie.getTitle());
         assertEquals("2017", mMovie.getYear());
-        assertEquals(OmdbApi.toLongOmdbReleased("01 Jun 2017"), mMovie.getReleased());
+        assertEquals(AndroidTestUtils.toLongOmdbReleased("01 Jun 2017"), mMovie.getReleased());
         assertEquals(144, mMovie.getRuntime());
         assertEquals("Drama, Mystery, Romance", mMovie.getGenre());
         assertEquals(POSTER, mMovie.getPoster());
@@ -111,7 +111,7 @@ public class MovieTest {
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
                 .year("2017")
-                .released(OmdbApi.toLongOmdbReleased("01 Jun 2017"))
+                .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2017"))
                 .runtime(144)
                 .genre("Drama, Mystery, Romance")
                 .poster(POSTER)
@@ -133,7 +133,7 @@ public class MovieTest {
                 .imdbId(null)
                 .title("The Handmaiden")
                 .year("2017")
-                .released(OmdbApi.toLongOmdbReleased("01 Jun 2017"))
+                .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2017"))
                 .runtime(144)
                 .genre("Drama, Mystery, Romance")
                 .poster(POSTER)
@@ -155,7 +155,7 @@ public class MovieTest {
                 .imdbId("tt4016934")
                 .title(null)
                 .year("2017")
-                .released(OmdbApi.toLongOmdbReleased("01 Jun 2017"))
+                .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2017"))
                 .runtime(144)
                 .genre("Drama, Mystery, Romance")
                 .poster(POSTER)
@@ -178,7 +178,7 @@ public class MovieTest {
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
                 .year("2017")
-                .released(OmdbApi.toLongOmdbReleased("01 Jun 2017"))
+                .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2017"))
                 .runtime(144)
                 .genre("Drama, Mystery, Romance")
                 .poster(POSTER)
@@ -204,7 +204,7 @@ public class MovieTest {
                 .imdbId("tt4016935")
                 .title("The Handmaiden")
                 .year("2017")
-                .released(OmdbApi.toLongOmdbReleased("01 Jun 2017"))
+                .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2017"))
                 .runtime(144)
                 .genre("Drama, Mystery, Romance")
                 .poster(POSTER)
@@ -222,7 +222,8 @@ public class MovieTest {
     public void testToString() {
         assertEquals(
                 "Movie{id=4016934, imdbId=tt4016934, title=The Handmaiden" +
-                        ", year=2017, released=" + OmdbApi.toLongOmdbReleased("01 Jun 2017") +
+                        ", year=2017, released="
+                        + AndroidTestUtils.toLongOmdbReleased("01 Jun 2017") +
                         ", runtime=144, genre=Drama, Mystery, Romance, poster=" + POSTER +
                         "}",
                 mMovie.toString());

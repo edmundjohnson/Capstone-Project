@@ -18,7 +18,7 @@ import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.moviecompanion.model.MasterDatabase;
 import uk.jumpingmouse.moviecompanion.security.SecurityManager;
-import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
+import uk.jumpingmouse.moviecompanion.utils.OmdbAdminUtils;
 import uk.jumpingmouse.moviecompanion.utils.NavUtils;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 import uk.jumpingmouse.omdbapi.OmdbApi;
@@ -159,7 +159,7 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
      */
     @Override
     public void onFetchMovieCompleted(@Nullable OmdbMovie omdbMovie) {
-        Movie movie = ModelUtils.newMovie(omdbMovie);
+        Movie movie = OmdbAdminUtils.newMovie(omdbMovie);
         if (movie == null) {
             // Display a "Data found did not represent a Movie" error message
             getViewUtils().displayErrorMessage(this, R.string.movie_data_not_found);

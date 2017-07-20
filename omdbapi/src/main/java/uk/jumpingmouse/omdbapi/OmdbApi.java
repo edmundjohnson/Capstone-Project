@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 
 import java.security.InvalidParameterException;
+import java.util.Date;
 
 /**
  * The manager class for the OMDb library.
@@ -13,7 +14,9 @@ import java.security.InvalidParameterException;
  */
 public final class OmdbApi {
 
-    /** The singleton instance of this class. */
+    /**
+     * The singleton instance of this class.
+     */
     private static OmdbApi sOmdbApi = null;
 
     //---------------------------------------------------------------------
@@ -21,6 +24,7 @@ public final class OmdbApi {
 
     /**
      * Returns an instance of this class.
+     *
      * @return an instance of this class
      */
     @NonNull
@@ -31,7 +35,9 @@ public final class OmdbApi {
         return sOmdbApi;
     }
 
-    /** Private default constructor, to prevent instantiation from outside this class. */
+    /**
+     * Private default constructor, to prevent instantiation from outside this class.
+     */
     private OmdbApi() {
     }
 
@@ -41,8 +47,9 @@ public final class OmdbApi {
     /**
      * Asynchronously fetches an OMDb movie, calling omdbHandler.onFetchMovieCompleted(OmdbMovie)
      * when the OMDb movie has been fetched.
-     * @param omdbApiKey the OMDb API key
-     * @param imdbId the IMDb id of the movie to fetch
+     *
+     * @param omdbApiKey  the OMDb API key
+     * @param imdbId      the IMDb id of the movie to fetch
      * @param omdbHandler the OMDb handler to be called back on completion
      */
     @UiThread
@@ -62,23 +69,13 @@ public final class OmdbApi {
     }
 
     /**
-     * Returns an OMDb 'runtime' String as an int, e.g. returns "144 min" as 144
-     * @param omdbRuntime the OMDb runtime, e.g. "144 min"
-     * @return the runtime as an int, e.g. 144,
-     *         or OmdbMovie.RUNTIME_UNKNOWN if omdbRuntime could not be converted to an int
+     * Returns a Date object representing an OMDb-formatted date string, e.g. "11 Jun 2016".
+     * @param strDate an OMDb-formatted date string, e.g. "11 Jun 2016"
+     * @return a Date object representing the supplied String,
+     *         or null if the String could not be parsed as a date
      */
-    public static int toIntOmdbRuntime(@Nullable String omdbRuntime) {
-        return OmdbUtils.toIntOmdbRuntime(omdbRuntime);
-    }
-
-    /**
-     * Returns a long representing an OMDb-formatted released date as a number of milliseconds.
-     * @param omdbReleased an OMDb released date, formatted as "dd MMM yyyy"
-     * @return a long representing omdbReleased as a number of milliseconds,
-     *         or OmdbMovie.RELEASED_UNKNOWN if omdbReleased could not be converted to a long
-     */
-    public static long toLongOmdbReleased(@Nullable final String omdbReleased) {
-        return OmdbUtils.toLongOmdbReleased(omdbReleased);
+    public static Date toDateOmdbReleased(@Nullable final String strDate) {
+        return OmdbUtils.toDateOmdbReleased(strDate);
     }
 
 }

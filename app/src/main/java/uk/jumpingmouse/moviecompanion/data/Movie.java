@@ -6,11 +6,10 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import uk.jumpingmouse.moviecompanion.model.DataContract;
-import uk.jumpingmouse.omdbapi.OmdbMovie;
-
 import java.security.InvalidParameterException;
 import java.util.Comparator;
+
+import uk.jumpingmouse.moviecompanion.model.DataContract;
 
 /**
  * The Movie model class.
@@ -21,8 +20,8 @@ import java.util.Comparator;
  */
 public class Movie implements Parcelable {
     public static final int ID_UNKNOWN = -1;
-    public static final int RUNTIME_UNKNOWN = OmdbMovie.RUNTIME_UNKNOWN;
-    public static final int RELEASED_UNKNOWN = OmdbMovie.RELEASED_UNKNOWN;
+    public static final int RUNTIME_UNKNOWN = -1;
+    public static final int RELEASED_UNKNOWN = -1;
 
     // The unique identifier of the movie, e.g. 4016934.
     // This is the numeric part of the imdbId.
@@ -121,47 +120,6 @@ public class Movie implements Parcelable {
     @Nullable
     public String getPoster() {
         return poster;
-    }
-
-    //---------------------------------------------------------------
-    // Utilities
-
-    /**
-     * Returns a set of ContentValues corresponding to the movie.
-     * @return the set of ContentValues corresponding to the movie
-     */
-    @NonNull
-    public ContentValues toContentValues() {
-        ContentValues values = new ContentValues();
-
-        values.put(DataContract.MovieEntry.COLUMN_ID, getId());
-        values.put(DataContract.MovieEntry.COLUMN_IMDB_ID, getImdbId());
-        values.put(DataContract.MovieEntry.COLUMN_TITLE, getTitle());
-        values.put(DataContract.MovieEntry.COLUMN_YEAR, getYear());
-        values.put(DataContract.MovieEntry.COLUMN_RELEASED, getReleased());
-        values.put(DataContract.MovieEntry.COLUMN_RUNTIME, getRuntime());
-        values.put(DataContract.MovieEntry.COLUMN_GENRE, getGenre());
-        values.put(DataContract.MovieEntry.COLUMN_POSTER, getPoster());
-
-        return values;
-    }
-
-    /**
-     * Returns the movie as an object array, one element per field value.
-     * @return the movie as an Object array
-     */
-    public Object[] toObjectArray() {
-        return new Object[] {
-                // This must match the order of columns in DataContract.MovieEntry.getAllColumns().
-                id,
-                imdbId,
-                title,
-                year,
-                released,
-                runtime,
-                genre,
-                poster
-        };
     }
 
     //---------------------------------------------------------------
@@ -341,6 +299,47 @@ public class Movie implements Parcelable {
                     this.genre,
                     this.poster);
         }
+    }
+
+    //---------------------------------------------------------------
+    // Utilities
+
+    /**
+     * Returns a set of ContentValues corresponding to the movie.
+     * @return the set of ContentValues corresponding to the movie
+     */
+    @NonNull
+    public ContentValues toContentValues() {
+        ContentValues values = new ContentValues();
+
+        values.put(DataContract.MovieEntry.COLUMN_ID, getId());
+        values.put(DataContract.MovieEntry.COLUMN_IMDB_ID, getImdbId());
+        values.put(DataContract.MovieEntry.COLUMN_TITLE, getTitle());
+        values.put(DataContract.MovieEntry.COLUMN_YEAR, getYear());
+        values.put(DataContract.MovieEntry.COLUMN_RELEASED, getReleased());
+        values.put(DataContract.MovieEntry.COLUMN_RUNTIME, getRuntime());
+        values.put(DataContract.MovieEntry.COLUMN_GENRE, getGenre());
+        values.put(DataContract.MovieEntry.COLUMN_POSTER, getPoster());
+
+        return values;
+    }
+
+    /**
+     * Returns the movie as an object array, one element per field value.
+     * @return the movie as an Object array
+     */
+    public Object[] toObjectArray() {
+        return new Object[] {
+                // This must match the order of columns in DataContract.MovieEntry.getAllColumns().
+                id,
+                imdbId,
+                title,
+                year,
+                released,
+                runtime,
+                genre,
+                poster
+        };
     }
 
     //---------------------------------------------------------------

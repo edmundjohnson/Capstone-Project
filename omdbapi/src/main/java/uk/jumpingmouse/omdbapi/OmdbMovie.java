@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
  * @author Edmund Johnson
  */
 public final class OmdbMovie {
-    public static final int RUNTIME_UNKNOWN = -1;
     public static final int RELEASED_UNKNOWN = -1;
 
     // Many attribute names must have a leading uppercase letter to match the JSON
