@@ -106,9 +106,16 @@ public final class ModelUtils {
                 .imdbId(imdbId)
                 .title(title)
                 .year(values.getAsString(DataContract.MovieEntry.COLUMN_YEAR))
+                .rated(values.getAsString(DataContract.MovieEntry.COLUMN_RATED))
                 .released(values.getAsLong(DataContract.MovieEntry.COLUMN_RELEASED))
                 .runtime(values.getAsInteger(DataContract.MovieEntry.COLUMN_RUNTIME))
                 .genre(values.getAsString(DataContract.MovieEntry.COLUMN_GENRE))
+                .director(values.getAsString(DataContract.MovieEntry.COLUMN_DIRECTOR))
+                .writer(values.getAsString(DataContract.MovieEntry.COLUMN_WRITER))
+                .actors(values.getAsString(DataContract.MovieEntry.COLUMN_ACTORS))
+                .plot(values.getAsString(DataContract.MovieEntry.COLUMN_PLOT))
+                .language(values.getAsString(DataContract.MovieEntry.COLUMN_LANGUAGE))
+                .country(values.getAsString(DataContract.MovieEntry.COLUMN_COUNTRY))
                 .poster(values.getAsString(DataContract.MovieEntry.COLUMN_POSTER))
                 .build();
     }
@@ -125,7 +132,14 @@ public final class ModelUtils {
         final String imdbId = cursor.getString(DataContract.MovieEntry.COL_IMDB_ID);
         final String title = cursor.getString(DataContract.MovieEntry.COL_TITLE);
         final String year = cursor.getString(DataContract.MovieEntry.COL_YEAR);
+        final String rated = cursor.getString(DataContract.MovieEntry.COL_RATED);
         final String genre = cursor.getString(DataContract.MovieEntry.COL_GENRE);
+        final String director = cursor.getString(DataContract.MovieEntry.COL_DIRECTOR);
+        final String writer = cursor.getString(DataContract.MovieEntry.COL_WRITER);
+        final String actors = cursor.getString(DataContract.MovieEntry.COL_ACTORS);
+        final String plot = cursor.getString(DataContract.MovieEntry.COL_PLOT);
+        final String language = cursor.getString(DataContract.MovieEntry.COL_LANGUAGE);
+        final String country = cursor.getString(DataContract.MovieEntry.COL_COUNTRY);
         final String poster = cursor.getString(DataContract.MovieEntry.COL_POSTER);
 
         // if the id mandatory attribute is missing, return null
@@ -161,9 +175,16 @@ public final class ModelUtils {
                 .imdbId(imdbId)
                 .title(title)
                 .year(year)
+                .rated(rated)
                 .released(released)
                 .runtime(runtime)
                 .genre(genre)
+                .director(director)
+                .writer(writer)
+                .actors(actors)
+                .plot(plot)
+                .language(language)
+                .country(country)
                 .poster(poster)
                 .build();
     }
@@ -189,6 +210,34 @@ public final class ModelUtils {
             }
         }
         return movieList;
+    }
+
+    /**
+     * Returns a set of ContentValues corresponding to a movie.
+     * @param movie the movie
+     * @return the set of ContentValues corresponding to the movie
+     */
+    @NonNull
+    private static ContentValues toContentValues(@NonNull Movie movie) {
+        ContentValues values = new ContentValues();
+
+        values.put(DataContract.MovieEntry.COLUMN_ID, movie.getId());
+        values.put(DataContract.MovieEntry.COLUMN_IMDB_ID, movie.getImdbId());
+        values.put(DataContract.MovieEntry.COLUMN_TITLE, movie.getTitle());
+        values.put(DataContract.MovieEntry.COLUMN_YEAR, movie.getYear());
+        values.put(DataContract.MovieEntry.COLUMN_RATED, movie.getRated());
+        values.put(DataContract.MovieEntry.COLUMN_RELEASED, movie.getReleased());
+        values.put(DataContract.MovieEntry.COLUMN_RUNTIME, movie.getRuntime());
+        values.put(DataContract.MovieEntry.COLUMN_GENRE, movie.getGenre());
+        values.put(DataContract.MovieEntry.COLUMN_DIRECTOR, movie.getDirector());
+        values.put(DataContract.MovieEntry.COLUMN_WRITER, movie.getWriter());
+        values.put(DataContract.MovieEntry.COLUMN_ACTORS, movie.getActors());
+        values.put(DataContract.MovieEntry.COLUMN_PLOT, movie.getPlot());
+        values.put(DataContract.MovieEntry.COLUMN_LANGUAGE, movie.getLanguage());
+        values.put(DataContract.MovieEntry.COLUMN_COUNTRY, movie.getCountry());
+        values.put(DataContract.MovieEntry.COLUMN_POSTER, movie.getPoster());
+
+        return values;
     }
 
     //---------------------------------------------------------------------
@@ -336,8 +385,8 @@ public final class ModelUtils {
      * @return a UserMovie based on the values in the ViewAward
      */
     public static UserMovie newUserMovie(@Nullable ViewAward viewAward) {
-        return viewAward == null ? null :
-                UserMovie.builder()
+        return viewAward == null ? null
+                : UserMovie.builder()
                         .id(viewAward.getMovieId())
                         .onWishlist(viewAward.isOnWishlist())
                         .watched(viewAward.isWatched())

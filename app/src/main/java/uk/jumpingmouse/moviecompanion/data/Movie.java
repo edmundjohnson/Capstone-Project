@@ -18,7 +18,7 @@ import uk.jumpingmouse.moviecompanion.model.DataContract;
  * e.g. runtime is stored as an int (e.g. 144), rather than a String (e.g. "144 min").
  * @author Edmund Johnson
  */
-public class Movie implements Parcelable {
+public final class Movie implements Parcelable {
     public static final int ID_UNKNOWN = -1;
     public static final int RUNTIME_UNKNOWN = -1;
     public static final int RELEASED_UNKNOWN = -1;
@@ -32,12 +32,27 @@ public class Movie implements Parcelable {
     private String title;
     // The year of the movie's release (not the year of this award), e.g. "2017"
     private String year;
+    // The US rating, e.g. "R"
+    private String rated;
     // The release date, as a millisecond value
     private long released;
     // The length in minutes
     private int runtime;
     // A comma-separated list of genres, e.g. "Drama, Mystery, Romance"
     private String genre;
+    // The director, e.g. "Chan-wook Park"
+    private String director;
+    // The writer, e.g. "Sarah Waters"
+    private String writer;
+    // A comma-separated list of actors, e.g. "Min-hee Kim, Tae-ri Kim, Jung-woo Ha, Jin-woong Jo"
+    private String actors;
+    // The short-form plot, e.g. "A woman is hired as a handmaiden to a Japanese heiress, but
+    // secretly she is involved in a plot to defraud her."
+    private String plot;
+    // A comma-separated list of languages, e.g. "Korean, Japanese"
+    private String language;
+    // The country, e.g. "South Korea"
+    private String country;
     // The URL of the movie poster image
     private String poster;
 
@@ -49,9 +64,16 @@ public class Movie implements Parcelable {
             @Nullable String imdbId,
             @Nullable String title,
             @Nullable String year,
+            @Nullable String rated,
             long released,
             int runtime,
             @Nullable String genre,
+            @Nullable String director,
+            @Nullable String writer,
+            @Nullable String actors,
+            @Nullable String plot,
+            @Nullable String language,
+            @Nullable String country,
             @Nullable String poster) {
         if (id <= 0) {
             throw new InvalidParameterException("id zero or negative");
@@ -66,9 +88,16 @@ public class Movie implements Parcelable {
         this.imdbId = imdbId;
         this.title = title;
         this.year = year;
+        this.rated = rated;
         this.released = released;
         this.runtime = runtime;
         this.genre = genre;
+        this.director = director;
+        this.writer = writer;
+        this.actors = actors;
+        this.plot = plot;
+        this.language = language;
+        this.country = country;
         this.poster = poster;
     }
 
@@ -77,46 +106,109 @@ public class Movie implements Parcelable {
     // These MUST all be public - if not, Firebase will fail to
     // load the Movie from the database.
 
-    /** Returns the unique id, e.g. 4016934. */
+    /**
+     * Returns the movie's unique id, e.g. 4016934.
+     * @return the movie's unique id
+     */
     public int getId() {
         return id;
     }
 
-    /** Returns the IMDb id, e.g. "tt4016934". */
+    /**
+     * Returns the movie's IMDb id, e.g. "tt4016934".
+     * @return the movie's IMDb id
+     */
     @NonNull
     public String getImdbId() {
         return imdbId;
     }
 
-    /** Returns the title, e.g. "The Handmaiden". */
+    /**
+     * Returns the movie's title, e.g. "The Handmaiden".
+     * @return the movie's title
+     */
     @NonNull
     public String getTitle() {
         return title;
     }
 
-    /** Returns the year of the movie's release (not the year of this award), e.g. "2017". */
+    /**
+     * Returns the year of the movie's release (not the year of this award), e.g. "2017".
+     * @return the year of the movie's release
+     */
     @Nullable
     public String getYear() {
         return year;
     }
 
-    /** Returns the released date, as a millisecond value. */
+    /**
+     * Returns the US rating, e.g. "R".
+     * @return the US rating
+     */
+    @Nullable
+    public String getRated() {
+        return rated;
+    }
+
+    /**
+     * Returns the released date as a millisecond value.
+     * @return the released date as a millisecond value
+     */
     public long getReleased() {
         return released;
     }
 
-    /** Returns the runtime in minutes, e.g. 144. */
+    /**
+     * Returns the runtime in minutes, e.g. 144.
+     * @return the runtime in minutes
+     */
     public int getRuntime() {
         return runtime;
     }
 
-    /** Returns a comma-separated list of genres, e.g. "Drama, Mystery, Romance". */
+    /**
+     * Returns a comma-separated list of genres, e.g. "Drama, Mystery, Romance".
+     * @return a comma-separated list of genres
+     */
     @Nullable
     public String getGenre() {
         return genre;
     }
 
-    /** Returns the poster URL. */
+    @Nullable
+    public String getDirector() {
+        return director;
+    }
+
+    @Nullable
+    public String getWriter() {
+        return writer;
+    }
+
+    @Nullable
+    public String getActors() {
+        return actors;
+    }
+
+    @Nullable
+    public String getPlot() {
+        return plot;
+    }
+
+    @Nullable
+    public String getLanguage() {
+        return language;
+    }
+
+    @Nullable
+    public String getCountry() {
+        return country;
+    }
+
+    /**
+     * Returns the poster URL.
+     * @return the poster URL
+     */
     @Nullable
     public String getPoster() {
         return poster;
@@ -134,9 +226,16 @@ public class Movie implements Parcelable {
         imdbId = in.readString();
         title = in.readString();
         year = in.readString();
+        rated = in.readString();
         released = in.readLong();
         runtime = in.readInt();
         genre = in.readString();
+        director = in.readString();
+        writer = in.readString();
+        actors = in.readString();
+        plot = in.readString();
+        language = in.readString();
+        country = in.readString();
         poster = in.readString();
     }
 
@@ -152,9 +251,16 @@ public class Movie implements Parcelable {
         dest.writeString(imdbId);
         dest.writeString(title);
         dest.writeString(year);
+        dest.writeString(rated);
         dest.writeLong(released);
         dest.writeInt(runtime);
         dest.writeString(genre);
+        dest.writeString(director);
+        dest.writeString(writer);
+        dest.writeString(actors);
+        dest.writeString(plot);
+        dest.writeString(language);
+        dest.writeString(country);
         dest.writeString(poster);
     }
 
@@ -217,9 +323,16 @@ public class Movie implements Parcelable {
         private String imdbId;
         private String title;
         private String year;
+        private String rated;
         private Long released;
         private Integer runtime;
         private String genre;
+        private String director;
+        private String writer;
+        private String actors;
+        private String plot;
+        private String language;
+        private String country;
         private String poster;
 
         Builder() {
@@ -230,9 +343,16 @@ public class Movie implements Parcelable {
             this.imdbId = source.imdbId;
             this.title = source.title;
             this.year = source.year;
+            this.rated = source.rated;
             this.released = source.released;
             this.runtime = source.runtime;
             this.genre = source.genre;
+            this.director = source.director;
+            this.writer = source.writer;
+            this.actors = source.actors;
+            this.plot = source.plot;
+            this.language = source.language;
+            this.country = source.country;
             this.poster = source.poster;
         }
 
@@ -252,6 +372,10 @@ public class Movie implements Parcelable {
             this.year = year;
             return this;
         }
+        public Movie.Builder rated(@Nullable String rated) {
+            this.rated = rated;
+            return this;
+        }
         public Movie.Builder released(long released) {
             this.released = released;
             return this;
@@ -264,11 +388,38 @@ public class Movie implements Parcelable {
             this.genre = genre;
             return this;
         }
+        public Movie.Builder director(@Nullable String director) {
+            this.director = director;
+            return this;
+        }
+        public Movie.Builder writer(@Nullable String writer) {
+            this.writer = writer;
+            return this;
+        }
+        public Movie.Builder actors(@Nullable String actors) {
+            this.actors = actors;
+            return this;
+        }
+        public Movie.Builder plot(@Nullable String plot) {
+            this.plot = plot;
+            return this;
+        }
+        public Movie.Builder language(@Nullable String language) {
+            this.language = language;
+            return this;
+        }
+        public Movie.Builder country(@Nullable String country) {
+            this.country = country;
+            return this;
+        }
         public Movie.Builder poster(@Nullable String poster) {
             this.poster = poster;
             return this;
         }
-        /** Builds and returns an object of this class. */
+        /**
+         * Builds and returns a Movie object.
+         * @return a Movie object
+         */
         public Movie build() {
             String missing = "";
             if (id <= 0) {
@@ -294,9 +445,16 @@ public class Movie implements Parcelable {
                     this.imdbId,
                     this.title,
                     this.year,
+                    this.rated,
                     this.released,
                     this.runtime,
                     this.genre,
+                    this.director,
+                    this.writer,
+                    this.actors,
+                    this.plot,
+                    this.language,
+                    this.country,
                     this.poster);
         }
     }
@@ -316,9 +474,16 @@ public class Movie implements Parcelable {
         values.put(DataContract.MovieEntry.COLUMN_IMDB_ID, getImdbId());
         values.put(DataContract.MovieEntry.COLUMN_TITLE, getTitle());
         values.put(DataContract.MovieEntry.COLUMN_YEAR, getYear());
+        values.put(DataContract.MovieEntry.COLUMN_RATED, getRated());
         values.put(DataContract.MovieEntry.COLUMN_RELEASED, getReleased());
         values.put(DataContract.MovieEntry.COLUMN_RUNTIME, getRuntime());
         values.put(DataContract.MovieEntry.COLUMN_GENRE, getGenre());
+        values.put(DataContract.MovieEntry.COLUMN_DIRECTOR, getDirector());
+        values.put(DataContract.MovieEntry.COLUMN_WRITER, getWriter());
+        values.put(DataContract.MovieEntry.COLUMN_ACTORS, getActors());
+        values.put(DataContract.MovieEntry.COLUMN_PLOT, getPlot());
+        values.put(DataContract.MovieEntry.COLUMN_LANGUAGE, getLanguage());
+        values.put(DataContract.MovieEntry.COLUMN_COUNTRY, getCountry());
         values.put(DataContract.MovieEntry.COLUMN_POSTER, getPoster());
 
         return values;
@@ -335,9 +500,16 @@ public class Movie implements Parcelable {
                 imdbId,
                 title,
                 year,
+                rated,
                 released,
                 runtime,
                 genre,
+                director,
+                writer,
+                actors,
+                plot,
+                language,
+                country,
                 poster
         };
     }
@@ -352,9 +524,16 @@ public class Movie implements Parcelable {
                 + ", imdbId=" + imdbId
                 + ", title=" + title
                 + ", year=" + year
+                + ", rated=" + rated
                 + ", released=" + released
                 + ", runtime=" + runtime
                 + ", genre=" + genre
+                + ", director=" + director
+                + ", writer=" + writer
+                + ", actors=" + actors
+                + ", plot=" + plot
+                + ", language=" + language
+                + ", country=" + country
                 + ", poster=" + poster
                 + "}";
     }
@@ -370,11 +549,21 @@ public class Movie implements Parcelable {
                     && (this.imdbId.equals(that.imdbId))
                     && (this.title.equals(that.title))
                     && ((this.year == null) ? (that.year == null) : this.year.equals(that.year))
+                    && ((this.rated == null) ? (that.rated == null) : this.rated.equals(that.rated))
                     && (this.released == that.released)
                     && (this.runtime == that.runtime)
                     && ((this.genre == null) ? (that.genre == null) : this.genre.equals(that.genre))
-                    && ((this.poster == null) ? (that.poster == null) :
-                            this.poster.equals(that.poster));
+                    && ((this.director == null) ? (that.director == null)
+                            : this.director.equals(that.director))
+                    && ((this.writer == null) ? (that.writer == null) : this.writer.equals(that.writer))
+                    && ((this.actors == null) ? (that.actors == null) : this.actors.equals(that.actors))
+                    && ((this.plot == null) ? (that.plot == null) : this.plot.equals(that.plot))
+                    && ((this.language == null) ? (that.language == null)
+                            : this.language.equals(that.language))
+                    && ((this.country == null) ? (that.country == null)
+                            : this.country.equals(that.country))
+                    && ((this.poster == null) ? (that.poster == null)
+                            : this.poster.equals(that.poster));
         }
         return false;
     }
@@ -391,11 +580,25 @@ public class Movie implements Parcelable {
         h *= 1000003;
         h ^= (year == null) ? 0 : this.year.hashCode();
         h *= 1000003;
+        h ^= (rated == null) ? 0 : this.rated.hashCode();
+        h *= 1000003;
         h ^= (this.released >>> 32) ^ this.released;
         h *= 1000003;
         h ^= this.runtime;
         h *= 1000003;
         h ^= (genre == null) ? 0 : this.genre.hashCode();
+        h *= 1000003;
+        h ^= (director == null) ? 0 : this.director.hashCode();
+        h *= 1000003;
+        h ^= (writer == null) ? 0 : this.writer.hashCode();
+        h *= 1000003;
+        h ^= (actors == null) ? 0 : this.actors.hashCode();
+        h *= 1000003;
+        h ^= (plot == null) ? 0 : this.plot.hashCode();
+        h *= 1000003;
+        h ^= (language == null) ? 0 : this.language.hashCode();
+        h *= 1000003;
+        h ^= (country == null) ? 0 : this.country.hashCode();
         h *= 1000003;
         h ^= (poster == null) ? 0 : this.poster.hashCode();
         return h;

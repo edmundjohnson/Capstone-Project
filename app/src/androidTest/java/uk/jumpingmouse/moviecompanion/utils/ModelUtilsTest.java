@@ -29,6 +29,7 @@ public class ModelUtilsTest {
     private static final String MOVIE_IMDB_ID = "tt9999991";
     private static final String MOVIE_TITLE = "Test Movie";
     private static final String MOVIE_YEAR = "2011";
+    private static final String MOVIE_RATED = "R";
     private static final String MOVIE_RELEASED_OMDB = "01 Jun 2011";
     private static final long MOVIE_RELEASED = AndroidTestUtils.toLongOmdbReleased(MOVIE_RELEASED_OMDB);
     private static final String MOVIE_RELEASED_INVALID = "this is not a date";
@@ -277,6 +278,7 @@ public class ModelUtilsTest {
         assertEquals(movie.getImdbId(), MOVIE_IMDB_ID);
         assertEquals(movie.getTitle(), MOVIE_TITLE);
         assertEquals(movie.getYear(), MOVIE_YEAR);
+        assertEquals(movie.getRated(), MOVIE_RATED);
         assertEquals(movie.getReleased(), MOVIE_RELEASED);
         assertEquals(movie.getRuntime(), MOVIE_RUNTIME);
         assertEquals(movie.getGenre(), MOVIE_GENRE);

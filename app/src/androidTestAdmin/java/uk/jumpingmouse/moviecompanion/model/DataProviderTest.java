@@ -536,6 +536,7 @@ public class DataProviderTest {
         assertEquals("imdbId should be unchanged", TEST_MOVIE_1.getImdbId(), movieUpdated.getImdbId());
         assertEquals("title should be updated", TEST_MOVIE_1_MODIFIED.getTitle(), movieUpdated.getTitle());
         assertEquals("year should be updated", TEST_MOVIE_1_MODIFIED.getYear(), movieUpdated.getYear());
+        assertEquals("rated should be updated", TEST_MOVIE_1_MODIFIED.getRated(), movieUpdated.getRated());
         assertEquals("released should be updated", TEST_MOVIE_1_MODIFIED.getReleased(), movieUpdated.getReleased());
         assertEquals("runtime should be updated", TEST_MOVIE_1_MODIFIED.getRuntime(), movieUpdated.getRuntime());
         assertEquals("genre should be updated", TEST_MOVIE_1_MODIFIED.getGenre(), movieUpdated.getGenre());

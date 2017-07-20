@@ -57,11 +57,18 @@ public final class OmdbAdminUtils {
                 .id(id)
                 .imdbId(omdbMovie.getImdbID())
                 .title(omdbMovie.getTitle())
-                .genre(omdbMovie.getGenre())
-                .runtime(runtime)
-                .poster(omdbMovie.getPoster())
                 .year(omdbMovie.getYear())
+                .rated(omdbMovie.getRated())
                 .released(released)
+                .runtime(runtime)
+                .genre(omdbMovie.getGenre())
+                .director(omdbMovie.getDirector())
+                .writer(omdbMovie.getWriter())
+                .actors(omdbMovie.getActors())
+                .plot(omdbMovie.getPlot())
+                .language(omdbMovie.getLanguage())
+                .country(omdbMovie.getCountry())
+                .poster(omdbMovie.getPoster())
                 .build();
     }
 

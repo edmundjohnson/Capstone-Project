@@ -1,6 +1,5 @@
 package uk.jumpingmouse.moviecompanion.activity;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,11 +14,10 @@ import android.widget.TextView;
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.data.Movie;
-import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.moviecompanion.model.MasterDatabase;
 import uk.jumpingmouse.moviecompanion.security.SecurityManager;
-import uk.jumpingmouse.moviecompanion.utils.OmdbAdminUtils;
 import uk.jumpingmouse.moviecompanion.utils.NavUtils;
+import uk.jumpingmouse.moviecompanion.utils.OmdbAdminUtils;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 import uk.jumpingmouse.omdbapi.OmdbApi;
 import uk.jumpingmouse.omdbapi.OmdbHandler;
@@ -292,26 +290,6 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
      */
     private void hideView(View view) {
         getViewUtils().hideView(view);
-    }
-
-    /**
-     * Returns a set of ContentValues corresponding to the movie.
-     * @return the set of ContentValues corresponding to the movie
-     */
-    @NonNull
-    private ContentValues toContentValues(@NonNull Movie movie) {
-        ContentValues values = new ContentValues();
-
-        values.put(DataContract.MovieEntry.COLUMN_ID, movie.getId());
-        values.put(DataContract.MovieEntry.COLUMN_IMDB_ID, movie.getImdbId());
-        values.put(DataContract.MovieEntry.COLUMN_TITLE, movie.getTitle());
-        values.put(DataContract.MovieEntry.COLUMN_YEAR, movie.getYear());
-        values.put(DataContract.MovieEntry.COLUMN_RELEASED, movie.getReleased());
-        values.put(DataContract.MovieEntry.COLUMN_RUNTIME, movie.getRuntime());
-        values.put(DataContract.MovieEntry.COLUMN_GENRE, movie.getGenre());
-        values.put(DataContract.MovieEntry.COLUMN_POSTER, movie.getPoster());
-
-        return values;
     }
 
     //---------------------------------------------------------------------

@@ -222,7 +222,7 @@ public class MovieTest {
     public void testToString() {
         assertEquals(
                 "Movie{id=4016934, imdbId=tt4016934, title=The Handmaiden" +
-                        ", year=2017, released="
+                        ", year=2017, rated=R, released="
                         + AndroidTestUtils.toLongOmdbReleased("01 Jun 2017") +
                         ", runtime=144, genre=Drama, Mystery, Romance, poster=" + POSTER +
                         "}",
