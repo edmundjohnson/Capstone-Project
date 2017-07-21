@@ -17,8 +17,8 @@ public interface AnalyticsManager {
 
     /**
      * Logs a user clicking on the IMDb link to a movie.
-     * @param movieId the movie id
+     * @param imdbId the movie imdbId
      * @param movieTitle the movie title
      */
-    void logImdbLink(int movieId, @NonNull String movieTitle);
+    void logImdbLink(@NonNull String imdbId, @NonNull String movieTitle);
 }

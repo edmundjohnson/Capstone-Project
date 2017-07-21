@@ -142,13 +142,13 @@ public final class DataContract {
         /**
          * Build and return the URI for a movie identified by its id.
          * e.g. "content://uk.jumpingmouse.moviecompanion/movie/4016934"
-         * @param id the id of the movie, e.g. 4016934
+         * @param id the id of the movie, e.g. "4016934"
          * @return the URI for obtaining the specific movie
          */
         @NonNull
-        public static Uri buildUriForRowById(final int id) {
+        public static Uri buildUriForRowById(@NonNull final String id) {
             return CONTENT_URI.buildUpon()
-                    .appendPath(Integer.toString(id))
+                    .appendPath(id)
                     .build();
         }
 
@@ -270,13 +270,13 @@ public final class DataContract {
         /**
          * Build and return the URI for a user movie identified by its movie id.
          * e.g. "content://uk.jumpingmouse.moviecompanion/userMovies/4016934"
-         * @param movieId the id of the user movie, e.g. 4016934
+         * @param movieId the id of the user movie, e.g. "4016934"
          * @return the URI for obtaining the specific user movie
          */
         @NonNull
-        static Uri buildUriForRowById(final int movieId) {
+        static Uri buildUriForRowById(@NonNull final String movieId) {
             return CONTENT_URI.buildUpon()
-                    .appendPath(Integer.toString(movieId))
+                    .appendPath(movieId)
                     .build();
         }
 

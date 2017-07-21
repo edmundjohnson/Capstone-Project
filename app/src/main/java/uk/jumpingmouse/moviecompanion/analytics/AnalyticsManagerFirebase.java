@@ -1,12 +1,12 @@
 package uk.jumpingmouse.moviecompanion.analytics;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 /**
  * A Firebase implementation of AnalyticsManager.
@@ -56,12 +56,12 @@ public class AnalyticsManagerFirebase implements AnalyticsManager {
 
     /**
      * Logs a user clicking on the IMDb link to a movie.
-     * @param movieId the movie id
+     * @param imdbId the movie imdbId
      * @param movieTitle the movie title
      */
     @Override
-    public void logImdbLink(int movieId, @NonNull String movieTitle) {
-        logSelectContentEvent(Integer.toString(movieId), movieTitle, CONTENT_TYPE_IMDB_LINK_MOVIE);
+    public void logImdbLink(@NonNull String imdbId, @NonNull String movieTitle) {
+        logSelectContentEvent(imdbId, movieTitle, CONTENT_TYPE_IMDB_LINK_MOVIE);
     }
 
     /**

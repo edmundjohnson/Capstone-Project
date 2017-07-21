@@ -48,8 +48,8 @@ public final class OmdbApi {
      * Asynchronously fetches an OMDb movie, calling omdbHandler.onFetchMovieCompleted(OmdbMovie)
      * when the OMDb movie has been fetched.
      *
-     * @param omdbApiKey  the OMDb API key
-     * @param imdbId      the IMDb id of the movie to fetch
+     * @param omdbApiKey the OMDb API key
+     * @param imdbId the IMDb id of the movie to fetch
      * @param omdbHandler the OMDb handler to be called back on completion
      */
     @UiThread

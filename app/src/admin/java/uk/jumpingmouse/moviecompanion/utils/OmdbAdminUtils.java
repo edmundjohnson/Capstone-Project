@@ -44,8 +44,8 @@ public final class OmdbAdminUtils {
         }
 
         // Build and return the movie
-        int id = ModelUtils.imdbIdToMovieId(omdbMovie.getImdbID());
-        if (id == Movie.ID_UNKNOWN) {
+        String id = ModelUtils.imdbIdToMovieId(omdbMovie.getImdbID());
+        if (id == null) {
             Timber.w("newMovie: could not obtain valid id from imdbID: " + omdbMovie.getImdbID());
             return null;
         }

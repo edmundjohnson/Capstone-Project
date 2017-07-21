@@ -15,6 +15,7 @@
 
     <!-- Error messages -->
     <string name="error_mandatory_field_missing">A mandatory field is missing</string>
+    <string name="invalid_imdb">Invalid IMDb</string>
 
     <!-- Admin Screens -->
     <string name="button_label_fetch_movie_details">Fetch Movie Details</string>

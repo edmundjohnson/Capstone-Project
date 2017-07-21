@@ -4,12 +4,12 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.List;
+
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.data.UserMovie;
 import uk.jumpingmouse.moviecompanion.data.ViewAward;
-
-import java.util.List;
 
 /**
  * Interface for database implementation classes.
@@ -42,7 +42,7 @@ public interface LocalDatabase {
      * @param id the id of the movie to be deleted
      * @return the number of rows deleted
      */
-    int deleteMovie(int id);
+    int deleteMovie(@NonNull String id);
 
     /**
      * Returns the movie with a specified id.
@@ -50,7 +50,7 @@ public interface LocalDatabase {
      * @return the movie with the specified id
      */
     @Nullable
-    Movie selectMovieById(int id);
+    Movie selectMovieById(@NonNull String id);
 
     /**
      * Returns a list of movies from the database.
@@ -67,8 +67,8 @@ public interface LocalDatabase {
      */
     @Nullable
     List<Movie> selectMovies(
-            @Nullable final String[] projection, @Nullable final String selection,
-            @Nullable final String[] selectionArgs, @Nullable final String sortOrder);
+            @Nullable String[] projection, @Nullable String selection,
+            @Nullable String[] selectionArgs, @Nullable String sortOrder);
 
     //---------------------------------------------------------------------
     // Award methods
@@ -113,8 +113,8 @@ public interface LocalDatabase {
      */
     @Nullable
     List<Award> selectAwards(
-            @Nullable final String[] projection, @Nullable final String selection,
-            @Nullable final String[] selectionArgs, @Nullable final String sortOrder);
+            @Nullable String[] projection, @Nullable String selection,
+            @Nullable String[] selectionArgs, @Nullable String sortOrder);
 
     //---------------------------------------------------------------------
     // UserMovie methods
@@ -141,7 +141,7 @@ public interface LocalDatabase {
      * @param id the id of the user movie to be deleted
      * @return the number of rows deleted
      */
-    int deleteUserMovie(int id);
+    int deleteUserMovie(@NonNull String id);
 
     /**
      * Returns the movie with a specified movie id.
@@ -149,7 +149,7 @@ public interface LocalDatabase {
      * @return the user movie with the specified id, or null if there is no matching user movie
      */
     @Nullable
-    UserMovie selectUserMovieById(int id);
+    UserMovie selectUserMovieById(@NonNull String id);
 
     //---------------------------------------------------------------------
     // ViewAward methods
@@ -177,7 +177,7 @@ public interface LocalDatabase {
      */
     @Nullable
     Cursor selectViewAwards(
-            @Nullable final String[] projection, @Nullable final String selection,
-            @Nullable final String[] selectionArgs, @Nullable final String sortOrder);
+            @Nullable String[] projection, @Nullable String selection,
+            @Nullable String[] selectionArgs, @Nullable String sortOrder);
 
 }

@@ -4,15 +4,6 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.SparseArray;
-
-import timber.log.Timber;
-
-import uk.jumpingmouse.moviecompanion.data.Award;
-import uk.jumpingmouse.moviecompanion.data.Movie;
-import uk.jumpingmouse.moviecompanion.data.UserMovie;
-import uk.jumpingmouse.moviecompanion.data.ViewAward;
-import uk.jumpingmouse.moviecompanion.utils.JavaUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,13 +13,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import timber.log.Timber;
+import uk.jumpingmouse.moviecompanion.data.Award;
+import uk.jumpingmouse.moviecompanion.data.Movie;
+import uk.jumpingmouse.moviecompanion.data.UserMovie;
+import uk.jumpingmouse.moviecompanion.data.ViewAward;
+
 /**
  * Class giving access to a local copy of the database.
  * This class is used by all product flavours; it is only access to the master database
  * which is restricted.
  * @author Edmund Johnson
  */
-public class LocalDatabaseInMemory implements LocalDatabase {
+public final class LocalDatabaseInMemory implements LocalDatabase {
     /** The singleton instance of this class. */
     private static LocalDatabase sLocalDatabase = null;
 
@@ -40,11 +37,11 @@ public class LocalDatabaseInMemory implements LocalDatabase {
     private static final int ARG_INDEX_LIMIT = ARG_INDEX_FILTER_FAVOURITE + 1;
 
     /** The movies. */
-    private final SparseArray<Movie> mMovies;
+    private final Map<String, Movie> mMovies;
     /** The awards. */
     private final Map<String, Award> mAwards;
     /** The user movies. */
-    private final SparseArray<UserMovie> mUserMovies;
+    private final Map<String, UserMovie> mUserMovies;
 
     /** The cursor for the view award list. It is assumed there is only ever one. */
     private Cursor mCursorViewAwards;
@@ -66,9 +63,9 @@ public class LocalDatabaseInMemory implements LocalDatabase {
 
     /** Private default constructor to prevent instantiation from outside this class. */
     private LocalDatabaseInMemory() {
-        mMovies = new SparseArray<>();
+        mMovies = new HashMap<>();
         mAwards = new HashMap<>();
-        mUserMovies = new SparseArray<>();
+        mUserMovies = new HashMap<>();
     }
 
     //---------------------------------------------------------------------
@@ -84,7 +81,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
      */
     @Override
     public int addMovie(@NonNull Movie movie) {
-        int id = movie.getId();
+        String id = movie.getId();
         // remove the movie if it already exists
         Movie existingMovie = selectMovieById(id);
         if (existingMovie != null) {
@@ -102,7 +99,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
      * @return the number of rows deleted
      */
     @Override
-    public int deleteMovie(int id) {
+    public int deleteMovie(@NonNull String id) {
         Movie existingMovie = selectMovieById(id);
         if (existingMovie == null) {
             Timber.w("deleteMovie: Movie not found with id: " + id);
@@ -123,7 +120,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
      */
     @Override
     @Nullable
-    public Movie selectMovieById(int id) {
+    public Movie selectMovieById(@NonNull String id) {
         Movie movie = mMovies.get(id);
         if (movie == null) {
             Timber.d("selectMovieById: No movies found with matching id: " + id);
@@ -194,7 +191,9 @@ public class LocalDatabaseInMemory implements LocalDatabase {
         if (!sortAscending) {
             comparator = Collections.reverseOrder(comparator);
         }
-        return JavaUtils.asSortedList(mMovies, comparator);
+        List<Movie> movieList = new ArrayList<>(mMovies.values());
+        Collections.sort(movieList, comparator);
+        return movieList;
     }
 
     //---------------------------------------------------------------------
@@ -296,6 +295,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
 
     /**
      * Sorts a list of awards and returns the sorted award list.
+     * @param awardList an unsorted list of awards
      * @param sortColumn the column to sort by
      * @param sortAscending whether the sort is ascending
      * @return the award list sorted by the specified column and direction
@@ -344,7 +344,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
      */
     @Override
     public int addUserMovie(@NonNull UserMovie userMovie) {
-        int id = userMovie.getId();
+        String id = userMovie.getId();
         // remove the user movie if it already exists
         UserMovie existingUserMovie = selectUserMovieById(id);
         if (existingUserMovie != null) {
@@ -373,7 +373,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
      * @return the number of rows deleted
      */
     @Override
-    public int deleteUserMovie(int id) {
+    public int deleteUserMovie(@NonNull String id) {
         UserMovie existingUserMovie = selectUserMovieById(id);
         if (existingUserMovie == null) {
             Timber.w("deleteUserMovie: UserMovie not found with id: " + id);
@@ -394,12 +394,8 @@ public class LocalDatabaseInMemory implements LocalDatabase {
      */
     @Override
     @Nullable
-    public UserMovie selectUserMovieById(int id) {
-        //UserMovie userMovie = mUserMovies.get(id);
-        // There may not yet be a UserMovie for this movie
-        //if (userMovie == null) {
-        //    Timber.d("selectUserMovieById: No user movies found with matching id: " + id);
-        //}
+    public UserMovie selectUserMovieById(@NonNull String id) {
+        // It is legitimate to return null, as there may not yet be a UserMovie for this movie.
         return mUserMovies.get(id);
     }
 
@@ -527,7 +523,7 @@ public class LocalDatabaseInMemory implements LocalDatabase {
     }
 
     /**
-     * Returns whether a view award is included after filtering
+     * Returns whether a view award is included after filtering.
      * @param viewAward the view award
      * @param selectionArgs the selectionArgs,
      *             e.g. { "filter_wishlist_any", "filter_watched_show", "filter_favourite_hide" }

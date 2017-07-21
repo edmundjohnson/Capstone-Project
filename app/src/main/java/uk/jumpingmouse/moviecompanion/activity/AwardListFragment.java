@@ -50,7 +50,7 @@ public final class AwardListFragment extends Fragment
         SharedPreferences.OnSharedPreferenceChangeListener {
 
     /** The cursor loader id. */
-    private static  final int AWARD_LIST_LOADER_ID = 1;
+    private static final int AWARD_LIST_LOADER_ID = 1;
 
     // Attributes for the bundle passed in
     private static final String KEY_VIEW_AWARD_URI = "KEY_VIEW_AWARD_URI";
@@ -295,7 +295,7 @@ public final class AwardListFragment extends Fragment
     /**
      * Instantiate and return a new Loader for the given ID.
      *
-     * @param id   The ID whose loader is to be created.
+     * @param id The ID whose loader is to be created.
      * @param args Any arguments supplied by the caller.
      * @return Return a new Loader instance that is ready to start loading.
      */
@@ -529,8 +529,8 @@ public final class AwardListFragment extends Fragment
      * Called when a shared preference is changed, added or removed. This
      * may be called even if a preference is set to its existing value.
      * This callback will be run on the main thread.
-     * @param sharedPreferences The {@link SharedPreferences} that received the change.
-     * @param key               The key of the preference that was changed, added or removed
+     * @param sharedPreferences The {@link SharedPreferences} that received the change
+     * @param key The key of the preference that was changed, added or removed
      */
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {

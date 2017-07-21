@@ -49,7 +49,7 @@ import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
  * The fragment class for displaying a movie (view award).
  * @author Edmund Johnson
  */
-public class MovieFragment extends Fragment
+public final class MovieFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
     /** The cursor loader id. */
@@ -145,13 +145,13 @@ public class MovieFragment extends Fragment
 
         mLayoutImdbLink.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 if (mViewAward != null) {
 
                     // log the event in analytics
-                    int movieId = mViewAward.getMovieId();
+                    String imdbId = mViewAward.getImdbId();
                     String movieTitle = mViewAward.getTitle();
-                    getAnalyticsManager().logImdbLink(movieId, movieTitle);
+                    getAnalyticsManager().logImdbLink(imdbId, movieTitle);
 
                     // display the IMDb web page for the movie
                     getNavUtils().displayWebLink((AppCompatActivity) getActivity(),
@@ -168,7 +168,7 @@ public class MovieFragment extends Fragment
      * @param outState the Bundle populated by this method
      */
     @Override
-    public final void onSaveInstanceState(final Bundle outState) {
+    public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
 
         outState.putParcelable(KEY_VIEW_AWARD, mViewAward);
@@ -179,7 +179,7 @@ public class MovieFragment extends Fragment
 
     /**
      * Returns a new instance of this class.
-     * @return  a new instance of this class
+     * @return a new instance of this class
      */
     @NonNull
     public static MovieFragment newInstance() {
@@ -511,7 +511,7 @@ public class MovieFragment extends Fragment
      * The value of the URI is NOT changed if the uri parameter is null.
      * @param uri the value to which the ViewAward argument URI is to be set
      */
-    public final void setArgViewAwardUri(@Nullable final Uri uri) {
+    public void setArgViewAwardUri(@Nullable final Uri uri) {
         if (uri != null) {
             mArgViewAwardUri = uri;
             loadData(uri);

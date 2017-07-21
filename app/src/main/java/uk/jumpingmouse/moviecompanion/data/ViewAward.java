@@ -13,12 +13,12 @@ import java.util.Comparator;
  * It contains fields from the Award and from the Movie which received the Award.
  * @author Edmund Johnson
  */
-public class ViewAward implements Parcelable {
+public final class ViewAward implements Parcelable {
 
     // the unique identifier for the award, a push id
     private String id;
     // the unique identifier for the movie, e.g. 4016934
-    private int movieId;
+    private String movieId;
     // The IMDb identifier for the movie, e.g. "tt4016934"
     private String imdbId;
     // awardDate is formatted as "YYMMDD"
@@ -49,7 +49,7 @@ public class ViewAward implements Parcelable {
 
     private ViewAward(
             @NonNull String id,
-            int movieId,
+            @NonNull String movieId,
             @NonNull String imdbId,
             @NonNull String awardDate,
             @NonNull String category,
@@ -62,9 +62,6 @@ public class ViewAward implements Parcelable {
             boolean onWishlist,
             boolean watched,
             boolean favourite) {
-        if (movieId <= 0) {
-            throw new NullPointerException("Invalid movieId");
-        }
         this.id = id;
         this.movieId = movieId;
         this.imdbId = imdbId;
@@ -117,7 +114,7 @@ public class ViewAward implements Parcelable {
         return id;
     }
 
-    public int getMovieId() {
+    public String getMovieId() {
         return movieId;
     }
 
@@ -200,7 +197,7 @@ public class ViewAward implements Parcelable {
      */
     private ViewAward(@NonNull final Parcel in) {
         id = in.readString();
-        movieId = in.readInt();
+        movieId = in.readString();
         imdbId = in.readString();
         awardDate = in.readString();
         category = in.readString();
@@ -218,14 +215,14 @@ public class ViewAward implements Parcelable {
     /**
      * Flatten this object in to a Parcel.
      *
-     * @param dest  The Parcel in which the object should be written.
+     * @param dest The Parcel in which the object should be written.
      * @param flags Additional flags about how the object should be written.
      *              May be 0 or {@link #PARCELABLE_WRITE_RETURN_VALUE}.
      */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
-        dest.writeInt(movieId);
+        dest.writeString(movieId);
         dest.writeString(imdbId);
         dest.writeString(awardDate);
         dest.writeString(category);
@@ -297,7 +294,7 @@ public class ViewAward implements Parcelable {
     @SuppressWarnings("WeakerAccess")
     public static final class Builder {
         private String id;
-        private int movieId;
+        private String movieId;
         private String imdbId;
         private String awardDate;
         private String category;
@@ -335,7 +332,7 @@ public class ViewAward implements Parcelable {
             this.id = id;
             return this;
         }
-        public ViewAward.Builder movieId(int movieId) {
+        public ViewAward.Builder movieId(String movieId) {
             this.movieId = movieId;
             return this;
         }
@@ -388,13 +385,16 @@ public class ViewAward implements Parcelable {
             return this;
         }
 
-        /** Builds and returns an object of this class. */
+        /**
+         * Builds and returns a ViewAward object.
+         * @return a ViewAward object
+         */
         public ViewAward build() {
             String missing = "";
             if (id == null) {
                 missing += " id";
             }
-            if (movieId <= 0) {
+            if (movieId == null) {
                 missing += " movieId";
             }
             if (imdbId == null) {
@@ -487,14 +487,14 @@ public class ViewAward implements Parcelable {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (o == this) {
             return true;
         }
         if (o instanceof ViewAward) {
             ViewAward that = (ViewAward) o;
             return (this.id.equals(that.id))
-                    && (this.movieId == that.movieId)
+                    && (this.movieId.equals(that.movieId))
                     && (this.imdbId.equals(that.imdbId))
                     && (this.awardDate.equals(that.awardDate))
                     && (this.category.equals(that.category))
@@ -517,7 +517,7 @@ public class ViewAward implements Parcelable {
         h *= 1000003;
         h ^= this.id.hashCode();
         h *= 1000003;
-        h ^= this.movieId;
+        h ^= this.movieId.hashCode();
         h *= 1000003;
         h ^= this.imdbId.hashCode();
         h *= 1000003;

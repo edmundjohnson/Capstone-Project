@@ -6,9 +6,9 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import uk.jumpingmouse.moviecompanion.model.DataContract;
-
 import java.util.Comparator;
+
+import uk.jumpingmouse.moviecompanion.model.DataContract;
 
 /**
  * The Award model class.
@@ -17,14 +17,14 @@ import java.util.Comparator;
  * The Movie-Award relationship is one-many.
  * @author Edmund Johnson
  */
-public class Award implements Parcelable {
+public final class Award implements Parcelable {
     public static final String CATEGORY_MOVIE = "M";
     public static final String CATEGORY_DVD = "D";
 
     // id is a unique identifier for award
     private String id;
     // movieId is a "foreign key" to Movie
-    private int movieId;
+    private String movieId;
     // awardDate is formatted as "YYMMDD"
     private String awardDate;
     // categoryId is one of CATEGORY_MOVIE, CATEGORY_DVD
@@ -39,7 +39,7 @@ public class Award implements Parcelable {
 
     private Award(
             @Nullable String id,
-            int movieId,
+            @Nullable String movieId,
             @Nullable String awardDate,
             @Nullable String category,
             @Nullable String review,
@@ -47,7 +47,7 @@ public class Award implements Parcelable {
         if (id == null) {
             throw new NullPointerException("Null id");
         }
-        if (movieId <= 0) {
+        if (movieId == null) {
             throw new NullPointerException("Invalid movieId");
         }
         if (awardDate == null) {
@@ -80,7 +80,7 @@ public class Award implements Parcelable {
         return id;
     }
 
-    public int getMovieId() {
+    public String getMovieId() {
         return movieId;
     }
 
@@ -149,7 +149,7 @@ public class Award implements Parcelable {
      */
     private Award(@NonNull final Parcel in) {
         id = in.readString();
-        movieId = in.readInt();
+        movieId = in.readString();
         awardDate = in.readString();
         category = in.readString();
         review = in.readString();
@@ -158,14 +158,14 @@ public class Award implements Parcelable {
 
     /**
      * Flatten this object into a Parcel.
-     * @param dest  The Parcel in which the object should be written.
+     * @param dest The Parcel in which the object should be written.
      * @param flags Additional flags about how the object should be written.
      *              May be 0 or {@link #PARCELABLE_WRITE_RETURN_VALUE}.
      */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
-        dest.writeInt(movieId);
+        dest.writeString(movieId);
         dest.writeString(awardDate);
         dest.writeString(category);
         dest.writeString(review);
@@ -213,7 +213,7 @@ public class Award implements Parcelable {
      * {@code
      *   Award award = Award.builder()
      *         .id([null or push_id])
-     *         .movieId(4016934)
+     *         .movieId("4016934")
      *         .awardDate("170512")
      *         .category(Award.CATEGORY_MOVIE)
      *         .review("A great movie")
@@ -230,7 +230,7 @@ public class Award implements Parcelable {
     @SuppressWarnings("WeakerAccess")
     public static final class Builder {
         private String id;
-        private int movieId;
+        private String movieId;
         private String awardDate;
         private String category;
         private String review;
@@ -239,7 +239,7 @@ public class Award implements Parcelable {
         Builder() {
         }
 
-        Builder(Award source) {
+        Builder(@NonNull Award source) {
             this.id = source.id;
             this.movieId = source.movieId;
             this.awardDate = source.awardDate;
@@ -253,7 +253,7 @@ public class Award implements Parcelable {
             return this;
         }
 
-        public Award.Builder movieId(int movieId) {
+        public Award.Builder movieId(String movieId) {
             this.movieId = movieId;
             return this;
         }
@@ -278,13 +278,16 @@ public class Award implements Parcelable {
             return this;
         }
 
-        /** Builds and returns an object of this class. */
+        /**
+         * Builds and returns an Award object.
+         * @return an Award object
+         */
         public Award build() {
             String missing = "";
             if (id == null) {
                 missing += " id";
             }
-            if (movieId <= 0) {
+            if (movieId == null) {
                 missing += " movieId";
             }
             if (awardDate == null) {
@@ -328,14 +331,14 @@ public class Award implements Parcelable {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (o == this) {
             return true;
         }
         if (o instanceof Award) {
             Award that = (Award) o;
             return (this.id.equals(that.id))
-                    && (this.movieId == that.movieId)
+                    && (this.movieId.equals(that.movieId))
                     && (this.awardDate.equals(that.awardDate))
                     && (this.category.equals(that.category))
                     && (this.review.equals(that.review))
@@ -350,7 +353,7 @@ public class Award implements Parcelable {
         h *= 1000003;
         h ^= this.id.hashCode();
         h *= 1000003;
-        h ^= this.movieId;
+        h ^= this.movieId.hashCode();
         h *= 1000003;
         h ^= this.awardDate.hashCode();
         h *= 1000003;
@@ -370,14 +373,14 @@ public class Award implements Parcelable {
             = new Comparator<Award>() {
                 public int compare(Award award1, Award award2) {
             // ascending order
-                    if (award1.movieId == award2.movieId) {
+                    if (award1.movieId.equals(award2.movieId)) {
                         // movieId, then awardDate, then reverse category ("M" > "D")
                         if (award1.awardDate.equals(award2.awardDate)) {
                             return award2.category.compareTo(award1.category);
                         }
                         return award1.awardDate.compareTo(award2.awardDate);
                     }
-                    return award1.movieId - award2.movieId;
+                    return award1.movieId.compareTo(award2.movieId);
                 }
             };
 

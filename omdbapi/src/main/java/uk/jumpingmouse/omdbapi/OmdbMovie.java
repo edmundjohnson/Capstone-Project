@@ -203,7 +203,7 @@ public final class OmdbMovie {
         }
         if (o instanceof OmdbMovie) {
             OmdbMovie that = (OmdbMovie) o;
-            return  ((this.Title == null) ? (that.Title == null) : this.Title.equals(that.Title))
+            return ((this.Title == null) ? (that.Title == null) : this.Title.equals(that.Title))
                     && ((this.Year == null) ? (that.Year == null) : this.Year.equals(that.Year))
                     && ((this.Rated == null) ? (that.Rated == null) : this.Rated.equals(that.Rated))
                     && ((this.Released == null) ? (that.Released == null)

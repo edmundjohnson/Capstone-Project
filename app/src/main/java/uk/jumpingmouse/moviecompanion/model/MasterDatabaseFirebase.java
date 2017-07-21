@@ -87,7 +87,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
      * @return the number of rows inserted or updated
      */
     @Override
-    public abstract int addMovie(@Nullable final Context context, @NonNull final Movie movie);
+    public abstract int addMovie(@Nullable Context context, @NonNull Movie movie);
 
     /**
      * Deletes a movie from the Firebase database.
@@ -96,7 +96,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
      * @return the number of rows deleted
      */
     @Override
-    public abstract int deleteMovie(@Nullable Context context, int id);
+    public abstract int deleteMovie(@Nullable Context context, @Nullable String id);
 
     //---------------------------------------------------------------------
     // Firebase database award modification methods.
@@ -111,7 +111,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
      * @return the number of rows inserted or updated
      */
     @Override
-    public abstract int addAward(@Nullable final Context context, @NonNull final Award award);
+    public abstract int addAward(@Nullable Context context, @NonNull Award award);
 
     /**
      * Deletes an award from the Firebase database.
@@ -143,7 +143,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
         if (userMoviesNode == null) {
             return 0;
         }
-        return setNode(context, userMoviesNode, Integer.toString(userMovie.getId()),
+        return setNode(context, userMoviesNode, userMovie.getId(),
                 userMovie, false);
     }
 
@@ -154,15 +154,15 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
      * @return the number of rows deleted
      */
     @Override
-    public int deleteUserMovie(@Nullable Context context, int id) {
-        if (context == null || id == Movie.ID_UNKNOWN) {
+    public int deleteUserMovie(@Nullable Context context, @Nullable String id) {
+        if (context == null || id == null) {
             return 0;
         }
         String userMoviesNode = getUserMoviesNode(getSecurityManager().getUid());
         if (userMoviesNode == null) {
             return 0;
         }
-        return deleteNode(context, userMoviesNode, Integer.toString(id), false);
+        return deleteNode(context, userMoviesNode, id, false);
     }
 
     /**
@@ -319,7 +319,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
             mChildEventListenerMovies = new ChildEventListener() {
                 // This is called for each existing child when the listener is attached
                 @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
                     Movie movie = dataSnapshot.getValue(Movie.class);
                     if (movie != null && context != null) {
                         @SuppressWarnings("UnusedAssignment")
@@ -330,7 +330,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
                 }
 
                 @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
                     Movie movie = dataSnapshot.getValue(Movie.class);
                     if (movie != null && context != null) {
                         @SuppressWarnings("UnusedAssignment")
@@ -354,7 +354,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
                 }
 
                 @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
                     Timber.e("Unexpected operation detected at \"/movies\" node: onChildMoved(...)");
                 }
 
@@ -382,7 +382,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
             mChildEventListenerAwards = new ChildEventListener() {
                 // This is called for each existing child when the listener is attached
                 @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
                     Award award = dataSnapshot.getValue(Award.class);
                     if (award != null && context != null) {
                         @SuppressWarnings("UnusedAssignment")
@@ -393,7 +393,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
                 }
 
                 @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
                     Award award = dataSnapshot.getValue(Award.class);
                     if (award != null && context != null) {
                         @SuppressWarnings("UnusedAssignment")
@@ -417,7 +417,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
                 }
 
                 @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
                     Timber.e("Unexpected operation detected at \"/awards\" node: onChildMoved(...)");
                 }
 
@@ -445,7 +445,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
             mChildEventListenerUserMovies = new ChildEventListener() {
                 // This is called for each existing child when the listener is attached
                 @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
                     UserMovie userMovie = dataSnapshot.getValue(UserMovie.class);
                     if (userMovie != null && context != null) {
                         @SuppressWarnings("UnusedAssignment")
@@ -455,7 +455,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
                 }
 
                 @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
                     UserMovie userMovie = dataSnapshot.getValue(UserMovie.class);
                     if (userMovie != null && context != null) {
                         @SuppressWarnings("UnusedAssignment")
@@ -476,7 +476,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
                 }
 
                 @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
                     Timber.e("onChildMoved: Unexpected operation detected at \"/users/%s/userMovies\" node",
                             getSecurityManager().getUid());
                 }

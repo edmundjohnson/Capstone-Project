@@ -45,7 +45,7 @@ public class MasterDatabaseFirebaseAdmin extends MasterDatabaseFirebase {
      */
     @Override
     public int addMovie(@Nullable final Context context, @NonNull final Movie movie) {
-        return setNode(context, NODE_MOVIES, Integer.toString(movie.getId()),
+        return setNode(context, NODE_MOVIES, movie.getId(),
                 movie, true);
     }
 
@@ -56,11 +56,11 @@ public class MasterDatabaseFirebaseAdmin extends MasterDatabaseFirebase {
      * @return the number of rows deleted
      */
     @Override
-    public int deleteMovie(@Nullable Context context, int id) {
-        if (id == Movie.ID_UNKNOWN) {
+    public int deleteMovie(@Nullable Context context, @Nullable String id) {
+        if (id == null) {
             return 0;
         }
-        return deleteNode(context, NODE_MOVIES, Integer.toString(id), true);
+        return deleteNode(context, NODE_MOVIES, id, true);
     }
 
     //---------------------------------------------------------------------

@@ -77,9 +77,9 @@ public class AwardListSortFragment extends DialogFragment {
     private @IdRes int getRadioButtonForSortOrder(@NonNull String sortOrder) {
         switch (sortOrder) {
             case DataContract.ViewAwardEntry.SORT_ORDER_AWARD_DATE_ASC:
-                return  R.id.radioAwardDateAsc;
+                return R.id.radioAwardDateAsc;
             case DataContract.ViewAwardEntry.SORT_ORDER_AWARD_DATE_DESC:
-                return  R.id.radioAwardDateDesc;
+                return R.id.radioAwardDateDesc;
             case DataContract.ViewAwardEntry.SORT_ORDER_TITLE_ASC:
                 return R.id.radioTitleAsc;
             case DataContract.ViewAwardEntry.SORT_ORDER_TITLE_DESC:

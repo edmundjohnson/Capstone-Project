@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import java.security.InvalidParameterException;
 import java.util.Comparator;
 
 import uk.jumpingmouse.moviecompanion.model.DataContract;
@@ -19,13 +18,11 @@ import uk.jumpingmouse.moviecompanion.model.DataContract;
  * @author Edmund Johnson
  */
 public final class Movie implements Parcelable {
-    public static final int ID_UNKNOWN = -1;
     public static final int RUNTIME_UNKNOWN = -1;
     public static final int RELEASED_UNKNOWN = -1;
 
-    // The unique identifier of the movie, e.g. 4016934.
-    // This is the numeric part of the imdbId.
-    private int id;
+    // The unique identifier of the movie, e.g. "4016934".
+    private String id;
     // The IMDb id, e.g. "tt4016934"
     private String imdbId;
     // The title, e.g. "The Handmaiden"
@@ -60,7 +57,7 @@ public final class Movie implements Parcelable {
     }
 
     private Movie(
-            int id,
+            @Nullable String id,
             @Nullable String imdbId,
             @Nullable String title,
             @Nullable String year,
@@ -75,8 +72,8 @@ public final class Movie implements Parcelable {
             @Nullable String language,
             @Nullable String country,
             @Nullable String poster) {
-        if (id <= 0) {
-            throw new InvalidParameterException("id zero or negative");
+        if (id == null) {
+            throw new NullPointerException("Null id");
         }
         if (imdbId == null) {
             throw new NullPointerException("Null imdbId");
@@ -107,10 +104,10 @@ public final class Movie implements Parcelable {
     // load the Movie from the database.
 
     /**
-     * Returns the movie's unique id, e.g. 4016934.
+     * Returns the movie's unique id, e.g. "4016934".
      * @return the movie's unique id
      */
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -222,7 +219,7 @@ public final class Movie implements Parcelable {
      * @param in a Parcel containing the object
      */
     private Movie(@NonNull final Parcel in) {
-        id = in.readInt();
+        id = in.readString();
         imdbId = in.readString();
         title = in.readString();
         year = in.readString();
@@ -241,13 +238,13 @@ public final class Movie implements Parcelable {
 
     /**
      * Flatten this object into a Parcel.
-     * @param dest  The Parcel in which the object should be written.
+     * @param dest The Parcel in which the object should be written.
      * @param flags Additional flags about how the object should be written.
      *              May be 0 or {@link #PARCELABLE_WRITE_RETURN_VALUE}.
      */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
+        dest.writeString(id);
         dest.writeString(imdbId);
         dest.writeString(title);
         dest.writeString(year);
@@ -304,7 +301,7 @@ public final class Movie implements Parcelable {
      * <blockquote><pre>
      * {@code
      *   Movie movie = Movie.builder()
-     *         .id("tt4016934")
+     *         .id("4016934")
      *         .imdbId("tt4016934")
      *         .title("The Handmaiden")
      *         // etc
@@ -319,7 +316,7 @@ public final class Movie implements Parcelable {
 
     @SuppressWarnings("WeakerAccess")
     public static final class Builder {
-        private int id;
+        private String id;
         private String imdbId;
         private String title;
         private String year;
@@ -338,7 +335,7 @@ public final class Movie implements Parcelable {
         Builder() {
         }
 
-        Builder(Movie source) {
+        Builder(@NonNull Movie source) {
             this.id = source.id;
             this.imdbId = source.imdbId;
             this.title = source.title;
@@ -356,7 +353,7 @@ public final class Movie implements Parcelable {
             this.poster = source.poster;
         }
 
-        public Movie.Builder id(int id) {
+        public Movie.Builder id(@NonNull String id) {
             this.id = id;
             return this;
         }
@@ -422,7 +419,7 @@ public final class Movie implements Parcelable {
          */
         public Movie build() {
             String missing = "";
-            if (id <= 0) {
+            if (id == null) {
                 missing += " id";
             }
             if (imdbId == null) {
@@ -539,13 +536,13 @@ public final class Movie implements Parcelable {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (o == this) {
             return true;
         }
         if (o instanceof Movie) {
             Movie that = (Movie) o;
-            return (this.id == that.id)
+            return (this.id.equals(that.id))
                     && (this.imdbId.equals(that.imdbId))
                     && (this.title.equals(that.title))
                     && ((this.year == null) ? (that.year == null) : this.year.equals(that.year))
@@ -572,7 +569,7 @@ public final class Movie implements Parcelable {
     public int hashCode() {
         int h = 1;
         h *= 1000003;
-        h ^= this.id;
+        h ^= this.id.hashCode();
         h *= 1000003;
         h ^= this.imdbId.hashCode();
         h *= 1000003;

@@ -32,24 +32,16 @@ public final class ModelUtils {
     // Movie methods
 
     /**
-     * Converts a String movie id to an int movie id and returns it.
-     * @param strId the id as a String, e.g. "4061234"
-     * @return the movie id, e.g. 4061234
-     */
-    public static int idToMovieId(String strId) {
-        return JavaUtils.toInt(strId, Movie.ID_UNKNOWN);
-    }
-
-    /**
      * Converts an IMDb id to a movie id and returns it.
      * @param imdbId the IMDb id, e.g. "tt4061234"
-     * @return the movie id, e.g. 4061234
+     * @return the movie id, e.g. "4061234"
      */
-    public static int imdbIdToMovieId(String imdbId) {
+    @Nullable
+    public static String imdbIdToMovieId(String imdbId) {
         if (imdbId != null && imdbId.length() > 2) {
-            return JavaUtils.toInt(imdbId.substring(2), Movie.ID_UNKNOWN);
+            return imdbId.substring(2);
         }
-        return Movie.ID_UNKNOWN;
+        return null;
     }
 
     /**
@@ -63,11 +55,10 @@ public final class ModelUtils {
         // if any mandatory attribute is missing, return null
 
         // id
-        int id;
+        String id = values.getAsString(DataContract.MovieEntry.COLUMN_ID);
         try {
-            id = values.getAsInteger(DataContract.MovieEntry.COLUMN_ID);
-            if (id <= 0) {
-                Timber.e("newMovie: invalid id");
+            if (id == null) {
+                Timber.e("newMovie: missing id");
                 return null;
             }
         } catch (NullPointerException e) {
@@ -128,7 +119,7 @@ public final class ModelUtils {
      */
     @Nullable
     public static Movie newMovie(@NonNull Cursor cursor) {
-        final int id = cursor.getInt(DataContract.MovieEntry.COL_ID);
+        final String id = cursor.getString(DataContract.MovieEntry.COL_ID);
         final String imdbId = cursor.getString(DataContract.MovieEntry.COL_IMDB_ID);
         final String title = cursor.getString(DataContract.MovieEntry.COL_TITLE);
         final String year = cursor.getString(DataContract.MovieEntry.COL_YEAR);
@@ -143,8 +134,8 @@ public final class ModelUtils {
         final String poster = cursor.getString(DataContract.MovieEntry.COL_POSTER);
 
         // if the id mandatory attribute is missing, return null
-        if (id <= 0) {
-            Timber.e("newMovie(Cursor): invalid id");
+        if (id == null) {
+            Timber.e("newMovie(Cursor): missing id");
             return null;
         }
         // if the imdbId mandatory attribute is missing, return null
@@ -267,11 +258,11 @@ public final class ModelUtils {
         }
 
         // movieId
-        int movieId;
+        String movieId;
         try {
-            movieId = values.getAsInteger(DataContract.AwardEntry.COLUMN_MOVIE_ID);
-            if (movieId <= 0) {
-                Timber.e("newAward: invalid movieId in ContentValues");
+            movieId = values.getAsString(DataContract.AwardEntry.COLUMN_MOVIE_ID);
+            if (movieId == null) {
+                Timber.e("newAward: movieId is null in ContentValues");
                 return null;
             }
         } catch (NullPointerException e) {
@@ -355,11 +346,11 @@ public final class ModelUtils {
         // if any mandatory attribute is missing, return null
 
         // id
-        int id;
+        String id;
         try {
-            id = values.getAsInteger(DataContract.UserMovieEntry.COLUMN_ID);
-            if (id <= 0) {
-                Timber.e("newUserMovie: invalid id");
+            id = values.getAsString(DataContract.UserMovieEntry.COLUMN_ID);
+            if (id == null) {
+                Timber.e("newUserMovie: missing id");
                 return null;
             }
         } catch (NullPointerException e) {
@@ -406,7 +397,7 @@ public final class ModelUtils {
     @Nullable
     public static ViewAward newViewAward(@NonNull Cursor cursor) {
         final String id = cursor.getString(DataContract.ViewAwardEntry.COL_ID);
-        final int movieId = cursor.getInt(DataContract.ViewAwardEntry.COL_MOVIE_ID);
+        final String movieId = cursor.getString(DataContract.ViewAwardEntry.COL_MOVIE_ID);
         final String imdbId = cursor.getString(DataContract.ViewAwardEntry.COL_IMDB_ID);
         final String awardDate = cursor.getString(DataContract.ViewAwardEntry.COL_AWARD_DATE);
         final String category = cursor.getString(DataContract.ViewAwardEntry.COL_CATEGORY);
@@ -430,14 +421,14 @@ public final class ModelUtils {
             Timber.e("newViewAward(Cursor): missing id");
             return null;
         }
-        // if the movieId mandatory attribute is invalid, return null
-        if (movieId <= 0) {
-            Timber.e("newViewAward(Cursor): missing or invalid movieId");
+        // if the movieId mandatory attribute is missing, return null
+        if (movieId == null) {
+            Timber.e("newViewAward(Cursor): missing movieId");
             return null;
         }
-        // if the imdbId mandatory attribute is invalid, return null
+        // if the imdbId mandatory attribute is missing, return null
         if (imdbId == null) {
-            Timber.e("newViewAward(Cursor): missing or invalid imdbId");
+            Timber.e("newViewAward(Cursor): missing imdbId");
             return null;
         }
         // if the title mandatory attribute is missing, return null

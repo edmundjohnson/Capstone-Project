@@ -4,10 +4,9 @@ import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import uk.jumpingmouse.moviecompanion.model.DataContract;
-
-import java.security.InvalidParameterException;
 
 /**
  * The UserMovie model class.
@@ -15,10 +14,10 @@ import java.security.InvalidParameterException;
  * such as whether the movie is on the user's wishlist.
  * @author Edmund Johnson
  */
-public class UserMovie implements Parcelable {
+public final class UserMovie implements Parcelable {
 
-    // The unique identifier of the movie, e.g. 4016934.
-    private int id;
+    // The unique identifier of the movie, e.g. "4016934".
+    private String id;
     // Whether the movie is on the current user's wishlist
     private boolean onWishlist;
     // Whether the movie is on the current user's watched list
@@ -30,13 +29,10 @@ public class UserMovie implements Parcelable {
     }
 
     private UserMovie(
-            int id,
+            @NonNull String id,
             boolean onWishlist,
             boolean watched,
             boolean favourite) {
-        if (id <= 0) {
-            throw new InvalidParameterException("id zero or negative");
-        }
         this.id = id;
         this.onWishlist = onWishlist;
         this.watched = watched;
@@ -48,8 +44,12 @@ public class UserMovie implements Parcelable {
     // These MUST all be public - if not, Firebase will fail to
     // load the UserMovie from the database.
 
-    /** Returns the unique id, e.g. 4016934. */
-    public int getId() {
+    /**
+     * Returns the unique id, e.g. 4016934.
+     * @return the movie's unique id
+     */
+    @NonNull
+    public String getId() {
         return id;
     }
 
@@ -109,7 +109,7 @@ public class UserMovie implements Parcelable {
      * @param in a Parcel containing the object
      */
     private UserMovie(@NonNull final Parcel in) {
-        id = in.readInt();
+        id = in.readString();
         onWishlist = in.readInt() == 1;
         watched = in.readInt() == 1;
         favourite = in.readInt() == 1;
@@ -117,13 +117,13 @@ public class UserMovie implements Parcelable {
 
     /**
      * Flatten this object into a Parcel.
-     * @param dest  The Parcel in which the object should be written.
+     * @param dest The Parcel in which the object should be written.
      * @param flags Additional flags about how the object should be written.
      *              May be 0 or {@link #PARCELABLE_WRITE_RETURN_VALUE}.
      */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
+        dest.writeString(id);
         dest.writeInt(onWishlist ? 1 : 0);
         dest.writeInt(watched ? 1 : 0);
         dest.writeInt(favourite ? 1 : 0);
@@ -184,7 +184,7 @@ public class UserMovie implements Parcelable {
 
     @SuppressWarnings("WeakerAccess")
     public static final class Builder {
-        private int id;
+        private String id;
         private boolean onWishlist;
         private boolean watched;
         private boolean favourite;
@@ -192,14 +192,14 @@ public class UserMovie implements Parcelable {
         Builder() {
         }
 
-        Builder(UserMovie source) {
+        Builder(@NonNull UserMovie source) {
             this.id = source.id;
             this.onWishlist = source.onWishlist;
             this.watched = source.watched;
             this.favourite = source.favourite;
         }
 
-        public UserMovie.Builder id(int id) {
+        public UserMovie.Builder id(@Nullable String id) {
             this.id = id;
             return this;
         }
@@ -215,10 +215,13 @@ public class UserMovie implements Parcelable {
             this.favourite = favourite;
             return this;
         }
-        /** Builds and returns an object of this class. */
+        /**
+         * Builds and returns a UserMovie object.
+         * @return a UserMovie object
+         */
         public UserMovie build() {
             String missing = "";
-            if (id <= 0) {
+            if (id == null) {
                 missing += " id";
             }
             if (!missing.isEmpty()) {
@@ -246,13 +249,13 @@ public class UserMovie implements Parcelable {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (o == this) {
             return true;
         }
         if (o instanceof UserMovie) {
             UserMovie that = (UserMovie) o;
-            return (this.id == that.id)
+            return (this.id.equals(that.id))
                     && (this.onWishlist == that.onWishlist)
                     && (this.watched == that.watched)
                     && (this.favourite == that.favourite);
@@ -264,7 +267,7 @@ public class UserMovie implements Parcelable {
     public int hashCode() {
         int h = 1;
         h *= 1000003;
-        h ^= this.id;
+        h ^= this.id.hashCode();
         h *= 1000003;
         h ^= this.onWishlist ? 1 : 0;
         h *= 1000003;

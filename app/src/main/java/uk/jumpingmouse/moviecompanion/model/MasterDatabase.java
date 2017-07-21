@@ -44,8 +44,8 @@ public interface MasterDatabase {
      */
     int addMovie(
             // parameters are used, but lint gets confused by product flavours
-            @SuppressWarnings("UnusedParameters") @Nullable final Context context,
-            @SuppressWarnings("UnusedParameters") @NonNull final Movie movie);
+            @SuppressWarnings("UnusedParameters") @Nullable Context context,
+            @SuppressWarnings("UnusedParameters") @NonNull Movie movie);
 
     /**
      * Deletes a movie from the database.
@@ -56,7 +56,7 @@ public interface MasterDatabase {
     int deleteMovie(
             // parameters are used, but lint gets confused by product flavours
             @SuppressWarnings("UnusedParameters") @Nullable Context context,
-            @SuppressWarnings("UnusedParameters") int id);
+            @SuppressWarnings("UnusedParameters") @Nullable String id);
 
     //---------------------------------------------------------------------
     // Award modification methods
@@ -71,8 +71,8 @@ public interface MasterDatabase {
      */
     int addAward(
             // parameters are used, but lint gets confused by product flavours
-            @SuppressWarnings("UnusedParameters") @Nullable final Context context,
-            @SuppressWarnings("UnusedParameters") @NonNull final Award award);
+            @SuppressWarnings("UnusedParameters") @Nullable Context context,
+            @SuppressWarnings("UnusedParameters") @NonNull Award award);
 
     /**
      * Deletes an award from the database.
@@ -96,7 +96,7 @@ public interface MasterDatabase {
      * @param userMovie the user movie to insert or update
      * @return the number of rows inserted or updated
      */
-    int addUserMovie(@Nullable final Context context, @NonNull final UserMovie userMovie);
+    int addUserMovie(@Nullable Context context, @NonNull UserMovie userMovie);
 
     /**
      * Deletes a user movie from the Firebase database.
@@ -104,6 +104,6 @@ public interface MasterDatabase {
      * @param id the id of the user movie to be deleted
      * @return the number of rows deleted
      */
-    int deleteUserMovie(@Nullable Context context, int id);
+    int deleteUserMovie(@Nullable Context context, @Nullable String id);
 
 }

@@ -11,8 +11,9 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import timber.log.Timber;
+import java.util.List;
 
+import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
@@ -21,8 +22,6 @@ import uk.jumpingmouse.moviecompanion.data.ViewAward;
 import uk.jumpingmouse.moviecompanion.data.ViewAwardQueryParameters;
 import uk.jumpingmouse.moviecompanion.security.SecurityManager;
 import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
-
-import java.util.List;
 
 /**
  * The content provider, through which the local database is accessed.
@@ -250,8 +249,8 @@ public class DataProvider extends ContentProvider {
 
         switch (match) {
             case MOVIE_ID:
-                int movieId = ModelUtils.idToMovieId(uri.getLastPathSegment());
-                if (movieId == Movie.ID_UNKNOWN) {
+                String movieId = uri.getLastPathSegment();
+                if (movieId == null) {
                     Timber.w("Could not obtain movie id from URI: " + uri);
                     rowsUpdated = 0;
                 } else {
@@ -263,8 +262,8 @@ public class DataProvider extends ContentProvider {
                 rowsUpdated = updateAward(awardId, values);
                 break;
             case USER_MOVIE_ID:
-                int userMovieId = ModelUtils.idToMovieId(uri.getLastPathSegment());
-                if (userMovieId == Movie.ID_UNKNOWN) {
+                String userMovieId = uri.getLastPathSegment();
+                if (userMovieId == null) {
                     Timber.w("Could not obtain userMovie id from URI: " + uri);
                     rowsUpdated = 0;
                 } else {
@@ -317,8 +316,8 @@ public class DataProvider extends ContentProvider {
 
         switch (match) {
             case MOVIE_ID:
-                int movieId = ModelUtils.idToMovieId(uri.getLastPathSegment());
-                if (movieId == Movie.ID_UNKNOWN) {
+                String movieId = uri.getLastPathSegment();
+                if (movieId == null) {
                     Timber.e("Could not obtain movie id from URI: " + uri);
                     rowsDeleted = 0;
                 } else {
@@ -339,8 +338,8 @@ public class DataProvider extends ContentProvider {
                 rowsDeleted = deleteUserMoviesAll(context);
                 break;
             case USER_MOVIE_ID:
-                int userMovieId = ModelUtils.idToMovieId(uri.getLastPathSegment());
-                if (userMovieId == Movie.ID_UNKNOWN) {
+                String userMovieId = uri.getLastPathSegment();
+                if (userMovieId == null) {
                     Timber.e("Could not obtain user movie id from URI: " + uri);
                     rowsDeleted = 0;
                 } else {
@@ -403,8 +402,8 @@ public class DataProvider extends ContentProvider {
                 break;
             // "movie/*"
             case MOVIE_ID:
-                int movieId = ModelUtils.idToMovieId(uri.getLastPathSegment());
-                if (movieId == Movie.ID_UNKNOWN) {
+                String movieId = uri.getLastPathSegment();
+                if (movieId == null) {
                     Timber.w("Could not obtain movie id from URI" + uri);
                     cursor = null;
                 } else {
@@ -427,8 +426,8 @@ public class DataProvider extends ContentProvider {
                 break;
             // "userMovie"
             case USER_MOVIE_ID:
-                int userMovieId = ModelUtils.idToMovieId(uri.getLastPathSegment());
-                if (userMovieId == Movie.ID_UNKNOWN) {
+                String userMovieId = uri.getLastPathSegment();
+                if (userMovieId == null) {
                     Timber.w("Could not obtain user movie id from URI" + uri);
                     cursor = null;
                 } else {
@@ -494,14 +493,14 @@ public class DataProvider extends ContentProvider {
      * @param values the new values to use for the movie
      * @return the number of rows updated
      */
-    private int updateMovie(final int id, @Nullable final ContentValues values) {
+    private int updateMovie(final @NonNull String id, @Nullable final ContentValues values) {
         if (values == null) {
             return 0;
         }
         Movie movie = ModelUtils.newMovie(values);
         if (movie == null) {
             return 0;
-        } else if (id != movie.getId()) {
+        } else if (!id.equals(movie.getId())) {
             throw new UnsupportedOperationException(
                     "Id mismatch between URL and body of update movie request");
         }
@@ -510,11 +509,12 @@ public class DataProvider extends ContentProvider {
 
     /**
      * Deletes a movie from the database.
+     * @param context the context
      * @param id the movie's id
      * @return the number of rows deleted
      */
     private int deleteMovie(@SuppressWarnings("UnusedParameters") @Nullable Context context,
-                            final int id) {
+                            @NonNull final String id) {
         return getLocalDatabase().deleteMovie(id);
     }
 
@@ -527,7 +527,7 @@ public class DataProvider extends ContentProvider {
      * @return a cursor whose first row is the row with the specified id
      */
     @Nullable
-    private Cursor selectMovieById(final int id) {
+    private Cursor selectMovieById(@NonNull final String id) {
         Movie movie = getLocalDatabase().selectMovieById(id);
         if (movie == null) {
             Timber.w("", "Movie not found with id: " + id);
@@ -771,14 +771,14 @@ public class DataProvider extends ContentProvider {
      * @param values the new values to use for the user movie
      * @return the number of rows updated
      */
-    private int updateUserMovie(final int id, @Nullable final ContentValues values) {
+    private int updateUserMovie(@NonNull final String id, @Nullable final ContentValues values) {
         if (values == null) {
             return 0;
         }
         UserMovie userMovie = ModelUtils.newUserMovie(values);
         if (userMovie == null) {
             return 0;
-        } else if (id != userMovie.getId()) {
+        } else if (!id.equals(userMovie.getId())) {
             throw new UnsupportedOperationException(
                     "Id mismatch between URL and body of update user movie request");
         }
@@ -787,6 +787,7 @@ public class DataProvider extends ContentProvider {
 
     /**
      * Deletes all of the signed-in user's user movies from the database.
+     * @param context the context
      * @return the number of rows deleted
      */
     private int deleteUserMoviesAll(@SuppressWarnings("UnusedParameters") @Nullable Context context) {
@@ -795,11 +796,12 @@ public class DataProvider extends ContentProvider {
 
     /**
      * Deletes a user movie from the database.
+     * @param context the context
      * @param id the user movie's id
      * @return the number of rows deleted
      */
     private int deleteUserMovie(@SuppressWarnings("UnusedParameters") @Nullable Context context,
-                                final int id) {
+                                @NonNull final String id) {
         return getLocalDatabase().deleteUserMovie(id);
     }
 
@@ -812,7 +814,7 @@ public class DataProvider extends ContentProvider {
      * @return a cursor whose first row is the row with the specified id
      */
     @Nullable
-    private Cursor selectUserMovieById(final int id) {
+    private Cursor selectUserMovieById(@NonNull final String id) {
         UserMovie userMovie = getLocalDatabase().selectUserMovieById(id);
         if (userMovie == null) {
             Timber.w("", "UserMovie not found with id: " + id);

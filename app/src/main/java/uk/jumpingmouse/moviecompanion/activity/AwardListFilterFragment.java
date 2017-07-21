@@ -133,7 +133,7 @@ public final class AwardListFilterFragment extends DialogFragment {
         /**
          * Construct the list filter.
          * @param filterPrefKeyResId the id of the shared preference which stores the filter value
-         * @param filterValues  an array of Strings containing the valid values of the filter
+         * @param filterValues an array of Strings containing the valid values of the filter
          * @param filterValueDefault the default value of the filter
          */
         ListFilter(@StringRes final int filterPrefKeyResId, @Nullable String[] filterValues,
@@ -200,7 +200,7 @@ public final class AwardListFilterFragment extends DialogFragment {
         /**
          * Returns the index of the current filter value in the array of filter values.
          * @param context the context
-         * @return  the index of the current filter value in the array of filter values
+         * @return the index of the current filter value in the array of filter values
          */
         int getFilterIndex(@NonNull Context context) {
             return getFilterIndexForValue(getValue(context));
@@ -209,7 +209,7 @@ public final class AwardListFilterFragment extends DialogFragment {
         /**
          * Returns the index of a filter value in the array of filter values.
          * @param filterValue the filter value
-         * @return  the index of a filter value in the array of filter values
+         * @return the index of a filter value in the array of filter values
          */
         private int getFilterIndexForValue(@NonNull String filterValue) {
             return JavaUtils.getPositionInArray(getFilterValues(), filterValue);

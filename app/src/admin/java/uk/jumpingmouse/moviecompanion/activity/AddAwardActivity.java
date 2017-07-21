@@ -168,7 +168,13 @@ public class AddAwardActivity extends AppCompatActivity {
         if (imdbId.trim().isEmpty()) {
             return;
         }
-        int id = ModelUtils.imdbIdToMovieId(imdbId);
+        String id = ModelUtils.imdbIdToMovieId(imdbId);
+        if (id == null) {
+            // Display an "Invalid IMDb" error message
+            getViewUtils().displayErrorMessage(this, R.string.invalid_imdb);
+            return;
+        }
+
         Uri uri = DataContract.MovieEntry.buildUriForRowById(id);
         Cursor cursor = getContentResolver().query(uri, null, null, null, null);
         if (cursor == null || cursor.getCount() == 0) {
@@ -225,7 +231,7 @@ public class AddAwardActivity extends AppCompatActivity {
         }
 
         // Generate the unique award id, e.g. "3666024_170522_M"
-        int movieId = mMovie.getId();
+        String movieId = mMovie.getId();
         String id = movieId + "_" + awardDate + "_" + category;
 
         mAward = Award.builder()
