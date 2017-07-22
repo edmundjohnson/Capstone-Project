@@ -19,10 +19,11 @@ repositories {
 }
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.0"
 
-    // Load the properties in local.properties, so we can add them to resources below
+    // Load the properties in local.properties (e.g. 'omdbapi.key') into a properties object.
+    // Properties from the properties object are added to the app resources below.
     Properties properties = new Properties()
     properties.load(project.rootProject.file("local.properties").newDataInputStream())
 
@@ -30,7 +31,7 @@ android {
     defaultConfig {
         applicationId "uk.jumpingmouse.moviecompanion"
         minSdkVersion 17
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -44,10 +45,6 @@ android {
                 includeCompileClasspath false
             }
         }
-
-        // Add the required local.properties to the resources
-        // OMDb API key
-        resValue "string", "omdbapi_key", properties.getProperty("omdbapi.key", "")
     }
 
     signingConfigs {
@@ -111,6 +108,11 @@ android {
             dimension "mode"
             applicationIdSuffix ".admin"
             versionNameSuffix "-admin"
+
+            // Add the required properties from the properties object (which was loaded from
+            // local.properties) to the app resources.
+            // OMDb API key
+            resValue "string", "omdbapi_key", properties.getProperty("omdbapi.key", "")
         }
     }
 }
@@ -119,6 +121,7 @@ ext {
     // The compatible versions of firebase, firebase-ui and the support library are listed here:
     // https://github.com/firebase/FirebaseUI-Android/blob/master/constants.gradle
     SUPPORT_LIB_VERSION = '25.4.0'
+    //SUPPORT_LIB_VERSION = '26.0.0-beta'
     FIREBASE_VERSION = '11.0.2'
     FIREBASE_UI_VERSION = '2.0.1'
 
@@ -129,44 +132,44 @@ ext {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    compile "com.android.support:appcompat-v7:$SUPPORT_LIB_VERSION"
-    compile "com.android.support:recyclerview-v7:$SUPPORT_LIB_VERSION"
-    compile "com.android.support:design:$SUPPORT_LIB_VERSION"
-    compile "com.android.support:palette-v7:$SUPPORT_LIB_VERSION"
+    implementation "com.android.support:appcompat-v7:$SUPPORT_LIB_VERSION"
+    implementation "com.android.support:recyclerview-v7:$SUPPORT_LIB_VERSION"
+    implementation "com.android.support:design:$SUPPORT_LIB_VERSION"
+    implementation "com.android.support:palette-v7:$SUPPORT_LIB_VERSION"
 
     // firebase-ui-auth, or other modules, have dependencies on these
     // See: https://github.com/firebase/FirebaseUI-Android
-    compile "com.android.support:cardview-v7:$SUPPORT_LIB_VERSION"
-    compile "com.android.support:customtabs:$SUPPORT_LIB_VERSION"
-    compile "com.android.support:support-v4:$SUPPORT_LIB_VERSION"
+    implementation "com.android.support:cardview-v7:$SUPPORT_LIB_VERSION"
+    implementation "com.android.support:customtabs:$SUPPORT_LIB_VERSION"
+    implementation "com.android.support:support-v4:$SUPPORT_LIB_VERSION"
 
     // Firebase
-    compile "com.google.android.gms:play-services-auth:$FIREBASE_VERSION"
-    compile "com.google.firebase:firebase-core:$FIREBASE_VERSION"
-    compile "com.google.firebase:firebase-analytics:$FIREBASE_VERSION"
-    compile "com.google.firebase:firebase-auth:$FIREBASE_VERSION"
-    compile "com.google.firebase:firebase-crash:$FIREBASE_VERSION"
-    compile "com.google.firebase:firebase-database:$FIREBASE_VERSION"
+    implementation "com.google.android.gms:play-services-auth:$FIREBASE_VERSION"
+    implementation "com.google.firebase:firebase-core:$FIREBASE_VERSION"
+    implementation "com.google.firebase:firebase-analytics:$FIREBASE_VERSION"
+    implementation "com.google.firebase:firebase-auth:$FIREBASE_VERSION"
+    implementation "com.google.firebase:firebase-crash:$FIREBASE_VERSION"
+    implementation "com.google.firebase:firebase-database:$FIREBASE_VERSION"
 
     // Firebase UI Auth
-    compile "com.firebaseui:firebase-ui-auth:$FIREBASE_UI_VERSION"
+    implementation "com.firebaseui:firebase-ui-auth:$FIREBASE_UI_VERSION"
 
     // Picasso
-    compile 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
 
     // Timber
-    compile 'com.jakewharton.timber:timber:4.5.1'
+    implementation 'com.jakewharton.timber:timber:4.5.1'
 
     // OmdbApi
-    adminCompile project(':omdbapi')
+    adminImplementation project(':omdbapi')
 
     // test
-    testCompile 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
 
     // androidTest
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 }

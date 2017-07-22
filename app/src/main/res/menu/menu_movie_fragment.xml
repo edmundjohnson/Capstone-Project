@@ -18,29 +18,32 @@
         android:title="@string/menu_option_remove_from_wishlist"
         android:orderInCategory="1"
         app:showAsAction="always"
+        tools:showAsAction="never"
         tools:ignore="AlwaysShowAction" />
     <item
         android:id="@+id/menu_option_add_to_watched"
         android:icon="@drawable/ic_visibility_off_24dp"
         android:title="@string/menu_option_add_to_watched"
         android:orderInCategory="2"
-        app:showAsAction="always"/>
+        app:showAsAction="always"
+        tools:showAsAction="never" />
     <item
         android:id="@+id/menu_option_remove_from_watched"
         android:icon="@drawable/ic_visibility_24dp"
         android:title="@string/menu_option_remove_from_watched"
         android:orderInCategory="2"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
     <item
         android:id="@+id/menu_option_add_to_favourites"
         android:icon="@drawable/ic_favorite_border_24dp"
         android:title="@string/menu_option_add_to_favourites"
         android:orderInCategory="3"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
     <item
         android:id="@+id/menu_option_remove_from_favourites"
         android:icon="@drawable/ic_favorite_24dp"
         android:title="@string/menu_option_remove_from_favourites"
         android:orderInCategory="3"
-        app:showAsAction="always"/>
+        app:showAsAction="always"
+        tools:showAsAction="never" />
 </menu>

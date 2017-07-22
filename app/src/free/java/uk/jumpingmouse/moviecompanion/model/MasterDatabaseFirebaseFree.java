@@ -56,7 +56,7 @@ public class MasterDatabaseFirebaseFree extends MasterDatabaseFirebase {
      * @return the number of rows deleted
      */
     @Override
-    public int deleteMovie(@Nullable Context context, int id) {
+    public int deleteMovie(@Nullable Context context, @NonNull String id) {
         throw new UnsupportedOperationException("Insufficient privileges for delete movie");
     }
 

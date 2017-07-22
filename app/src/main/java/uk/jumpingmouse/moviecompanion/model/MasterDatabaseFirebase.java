@@ -298,9 +298,10 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
                     Timber.e(message);
 
                     // For admin function failures, display a detailed error message.
-                    // Display it as a long duration toast, as a dialog will not work from a background task
+                    // Display it as a toast, as a dialog will not work from a background task
                     if (isAdminFunction) {
-                        getViewUtils().displayInfoMessage(context, message, true);
+                        getViewUtils().displayInfoMessage(context.getApplicationContext(),
+                                message, true);
                     }
                 }
             }

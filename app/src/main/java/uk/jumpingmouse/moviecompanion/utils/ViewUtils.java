@@ -19,19 +19,19 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import uk.jumpingmouse.moviecompanion.R;
-import uk.jumpingmouse.moviecompanion.data.Award;
-import uk.jumpingmouse.moviecompanion.data.Movie;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import uk.jumpingmouse.moviecompanion.R;
+import uk.jumpingmouse.moviecompanion.data.Award;
+import uk.jumpingmouse.moviecompanion.data.Movie;
 
 /**
  * Class containing utility methods related to the view.
  * @author Edmund Johnson
  */
-public class ViewUtils {
+public final class ViewUtils {
 
     /** The singleton instance of this class. */
     private static ViewUtils sViewUtils = null;
@@ -71,6 +71,8 @@ public class ViewUtils {
      * @param toolbarResId the resource identifier of the toolbar View, e.g. R.id.tbAppBar
      * @param titleText the app bar title text, e.g. "Daily Benefit Settings"
      * @param isUpArrowDisplayed whether the up arrow is to be displayed in the app bar
+     * @param backgroundResId the resource id for the background colour.  If this is 0, the
+     *                        default background colour is used
      */
     public void initialiseAppBar(@NonNull final AppCompatActivity activity,
                                  @SuppressWarnings("SameParameterValue") @IdRes final int toolbarResId,
@@ -92,13 +94,15 @@ public class ViewUtils {
      * @param activity the activity containing the toolbar
      * @param toolbarResId the resource identifier of the toolbar View, e.g. R.id.tbAppBar
      * @param titleText the title text
+     * @param backgroundResId the resource id for the background colour.  If this is 0, the
+     *                        default background colour is used
      * @return the initialised toolbar
      */
     @Nullable
     private Toolbar initialiseToolbar(@NonNull final Activity activity, @IdRes final int toolbarResId,
                                       @Nullable final String titleText, @ColorRes int backgroundResId) {
         // Find the toolbar
-        Toolbar toolbar = (Toolbar) activity.findViewById(toolbarResId);
+        Toolbar toolbar = activity.findViewById(toolbarResId);
         if (toolbar != null) {
             // Set the title text
             toolbar.setTitle(titleText);
@@ -226,8 +230,8 @@ public class ViewUtils {
             return "?";
         }
         Date dateAwardDate = JavaUtils.toDate(AWARD_DATE_FORMAT_STORED, awardDate);
-        return dateAwardDate == null ? "?" :
-                JavaUtils.toString(AWARD_DATE_FORMAT_DISPLAYED, dateAwardDate);
+        return dateAwardDate == null
+                ? "?" : JavaUtils.toString(AWARD_DATE_FORMAT_DISPLAYED, dateAwardDate);
     }
 
     /**
@@ -277,7 +281,7 @@ public class ViewUtils {
     // Message display methods
 
     /**
-     * Display an informational message as a toast.
+     * Display an informational message as a short toast.
      * @param context the context
      * @param messageResId the string resource id of the message to be displayed
      */
@@ -289,7 +293,7 @@ public class ViewUtils {
      * Display an informational message as a toast.
      * @param context the context
      * @param messageResId the string resource id of the message to be displayed
-     * @param longDuration if true, a long duration message is displayed,
+     * @param longDuration if true, a long duration toast is displayed,
      *                    otherwise a short duration one
      */
     public void displayInfoMessage(@Nullable Context context, @StringRes int messageResId,
@@ -300,47 +304,47 @@ public class ViewUtils {
     }
 
     /**
-     * Display an informational message as a toast.
-     * @param context the context
+     * Display an informational message as a short toast.
+     * @param applicationContext the application context
      * @param message the message to be displayed
      */
-    public void displayInfoMessage(@Nullable Context context, @NonNull String message) {
-        displayInfoMessage(context, message, false);
+    public void displayInfoMessage(@Nullable Context applicationContext, @NonNull String message) {
+        displayInfoMessage(applicationContext, message, false);
     }
 
     /**
      * Display an informational message as a toast.
-     * @param context the context
-     * @param message the message to be displayed
-     * @param longDuration if true, a long duration message is displayed,
-     *                    otherwise a short duration one
-     */
-    public void displayInfoMessage(@Nullable Context context, @NonNull String message,
-                                   boolean longDuration) {
-        if (context != null) {
-            displayToast(context, message, longDuration);
-        }
-    }
-
-    /**
-     * Display a message as a short toast.
-     * @param context the context
-     * @param message the message to be displayed
-     */
-    private void displayToast(@NonNull Context context, @NonNull String message) {
-        displayToast(context, message, false);
-    }
-
-    /**
-     * Display a message as a toast.
-     * @param context the context
+     * @param applicationContext the application context
      * @param message the message to be displayed
      * @param longDuration if true, a long duration toast is displayed,
      *                    otherwise a short duration one
      */
-    private void displayToast(@NonNull Context context, @NonNull String message, boolean longDuration) {
+    public void displayInfoMessage(@Nullable Context applicationContext, @NonNull String message,
+                                   @SuppressWarnings("SameParameterValue") boolean longDuration) {
+        if (applicationContext != null) {
+            displayToast(applicationContext, message, longDuration);
+        }
+    }
+
+//    /**
+//     * Display a message as a short toast.
+//     * @param applicationContext the application context
+//     * @param message the message to be displayed
+//     */
+//    private void displayToast(@NonNull Context applicationContext, @NonNull String message) {
+//        displayToast(applicationContext, message, false);
+//    }
+
+    /**
+     * Display a message as a toast.
+     * @param applicationContext the application context
+     * @param message the message to be displayed
+     * @param longDuration if true, a long duration toast is displayed,
+     *                    otherwise a short duration one
+     */
+    private void displayToast(@NonNull Context applicationContext, @NonNull String message, boolean longDuration) {
         int length = longDuration ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(context, message, length);
+        Toast toast = Toast.makeText(applicationContext, message, length);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
     }

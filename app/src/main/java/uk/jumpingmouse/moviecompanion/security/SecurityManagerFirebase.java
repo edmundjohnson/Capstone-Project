@@ -1,8 +1,5 @@
 package uk.jumpingmouse.moviecompanion.security;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -14,22 +11,23 @@ import android.support.v7.app.AppCompatActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Arrays;
 
 import timber.log.Timber;
-
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.moviecompanion.model.MasterDatabase;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
-import java.util.Arrays;
-
 /**
  * A Firebase implementation of SecurityManager.
  * @author Edmund Johnson
  */
-public class SecurityManagerFirebase implements SecurityManager {
+public final class SecurityManagerFirebase implements SecurityManager {
 
     /** The singleton instance of this class. */
     private static SecurityManagerFirebase sSecurityManager;
@@ -145,12 +143,13 @@ public class SecurityManagerFirebase implements SecurityManager {
                     // finish the activity
                     activity.finish();
                 } else if (idpResponse.getErrorCode() == ErrorCodes.NO_NETWORK) {
-                    getViewUtils().displayInfoMessage(activity,
+                    getViewUtils().displayInfoMessage(activity.getApplicationContext(),
                             activity.getString(R.string.connection_required_for_sign_in,
                                     activity.getString(R.string.app_name)), true);
                     activity.finish();
                 } else if (idpResponse.getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
-                    getViewUtils().displayInfoMessage(activity, R.string.unknown_error_on_sign_in, true);
+                    getViewUtils().displayInfoMessage(activity.getApplicationContext(),
+                            R.string.unknown_error_on_sign_in, true);
                 }
             }
         // Are we are returning from an admin screen (perhaps via back arrow on sign-in screen)?
