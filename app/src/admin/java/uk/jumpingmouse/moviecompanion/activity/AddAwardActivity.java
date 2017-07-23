@@ -1,7 +1,6 @@
 package uk.jumpingmouse.moviecompanion.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -124,22 +123,6 @@ public class AddAwardActivity extends AppCompatActivity {
         getSecurityManager().onPauseActivity();
 
         super.onPause();
-    }
-
-    /**
-     * Check whether the user has clicked the back button from the sign-in screen.
-     * If so, exit the app rather than displaying the sign-in screen again.
-     * Note that this method is called before onResume(), which displays the sign-in screen
-     * if the user is not signed in.
-     * @param requestCode the request code
-     * @param resultCode the result code
-     * @param data the returned data
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        getSecurityManager().onActivityResult(this, requestCode, resultCode, data);
     }
 
     /**

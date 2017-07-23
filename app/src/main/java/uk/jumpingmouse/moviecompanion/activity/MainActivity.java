@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
+        inflater.inflate(R.menu.menu_main_activity, menu);
         return true;
     }
 
@@ -116,9 +116,24 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        boolean consumed = getNavUtils().onOptionsItemSelected(this, item);
-        //noinspection SimplifiableConditionalExpression
-        return consumed ? true : super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+
+            // handle menu options which are common to all product flavours here
+
+            // sign out
+            case R.id.menu_option_sign_out:
+                getSecurityManager().signOut(this);
+                return true;
+
+            default:
+                // handle menu options which are specific to a product flavour here
+                boolean consumed = getNavUtils().onFlavourSpecificItemSelectedMainActivity(this, item);
+                //noinspection SimplifiableIfStatement
+                if (consumed) {
+                    return true;
+                }
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     //---------------------------------------------------------------------

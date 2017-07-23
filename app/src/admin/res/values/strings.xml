@@ -12,6 +12,7 @@
     <!-- App Bar and Menu -->
     <string name="menu_option_add_movie">Add Movie</string>
     <string name="menu_option_add_award">Add Award</string>
+    <string name="menu_option_edit_award">Edit Award</string>
 
     <!-- Error messages -->
     <string name="error_mandatory_field_missing">A mandatory field is missing</string>

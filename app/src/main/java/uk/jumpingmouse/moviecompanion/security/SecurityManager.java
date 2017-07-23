@@ -12,10 +12,11 @@ import android.support.v7.app.AppCompatActivity;
 public interface SecurityManager {
 
     // Request codes
-    // Use RC_SIGN_IN rather than the Firebase automatically-generated static import
+    // Use this RC_SIGN_IN rather than the Firebase automatically-generated static import
     int RC_SIGN_IN = 1;
     int RC_ADD_MOVIE = 2;
     int RC_ADD_AWARD = 3;
+    int RC_EDIT_AWARD = 4;
 
     /**
      * Perform security processing required when creating activity.
@@ -38,6 +39,7 @@ public interface SecurityManager {
      * If so, exit the app rather than displaying the sign-in screen again.
      * Note that this method is called before onResume(), which displays the sign-in screen
      * if the user is not signed in.
+     * @param activity the activity which received the result
      * @param requestCode the request code
      * @param resultCode the result code
      * @param data the returned data

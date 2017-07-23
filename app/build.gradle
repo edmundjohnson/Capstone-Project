@@ -19,8 +19,8 @@ repositories {
 }
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.0"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.3"
 
     // Load the properties in local.properties (e.g. 'omdbapi.key') into a properties object.
     // Properties from the properties object are added to the app resources below.
@@ -31,7 +31,7 @@ android {
     defaultConfig {
         applicationId "uk.jumpingmouse.moviecompanion"
         minSdkVersion 17
-        targetSdkVersion 26
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

@@ -68,17 +68,17 @@ public final class ViewUtils {
     /**
      * Initialise the app bar for an AppCompatActivity which is using a Toolbar.
      * @param activity the activity for which the app bar is displayed
-     * @param toolbarResId the resource identifier of the toolbar View, e.g. R.id.tbAppBar
+     * @param toolbarIdRes the resource identifier of the toolbar View, e.g. R.id.tbAppBar
      * @param titleText the app bar title text, e.g. "Daily Benefit Settings"
      * @param isUpArrowDisplayed whether the up arrow is to be displayed in the app bar
-     * @param backgroundResId the resource id for the background colour.  If this is 0, the
+     * @param backgroundColorRes the resource id for the background colour.  If this is 0, the
      *                        default background colour is used
      */
     public void initialiseAppBar(@NonNull final AppCompatActivity activity,
-                                 @SuppressWarnings("SameParameterValue") @IdRes final int toolbarResId,
+                                 @SuppressWarnings("SameParameterValue") @IdRes final int toolbarIdRes,
                                  @Nullable final String titleText,
-                                 final boolean isUpArrowDisplayed, @ColorRes int backgroundResId) {
-        Toolbar toolbar = initialiseToolbar(activity, toolbarResId, titleText, backgroundResId);
+                                 final boolean isUpArrowDisplayed, @ColorRes int backgroundColorRes) {
+        Toolbar toolbar = initialiseToolbar(activity, toolbarIdRes, titleText, backgroundColorRes);
 
         // Set the app bar to be the toolbar
         activity.setSupportActionBar(toolbar);
@@ -92,23 +92,23 @@ public final class ViewUtils {
     /**
      * Initialises and returns a toolbar, i.e. sets its title text and font.
      * @param activity the activity containing the toolbar
-     * @param toolbarResId the resource identifier of the toolbar View, e.g. R.id.tbAppBar
+     * @param toolbarIdRes the resource identifier of the toolbar View, e.g. R.id.tbAppBar
      * @param titleText the title text
-     * @param backgroundResId the resource id for the background colour.  If this is 0, the
+     * @param backgroundColorRes the resource id for the background colour.  If this is 0, the
      *                        default background colour is used
      * @return the initialised toolbar
      */
     @Nullable
-    private Toolbar initialiseToolbar(@NonNull final Activity activity, @IdRes final int toolbarResId,
-                                      @Nullable final String titleText, @ColorRes int backgroundResId) {
+    private Toolbar initialiseToolbar(@NonNull final Activity activity, @IdRes final int toolbarIdRes,
+                                      @Nullable final String titleText, @ColorRes int backgroundColorRes) {
         // Find the toolbar
-        Toolbar toolbar = activity.findViewById(toolbarResId);
+        Toolbar toolbar = (Toolbar) activity.findViewById(toolbarIdRes);
         if (toolbar != null) {
             // Set the title text
             toolbar.setTitle(titleText);
             // Set the background
-            if (backgroundResId != 0) {
-                toolbar.setBackgroundResource(backgroundResId);
+            if (backgroundColorRes != 0) {
+                toolbar.setBackgroundResource(backgroundColorRes);
             }
         }
         return toolbar;
@@ -283,23 +283,23 @@ public final class ViewUtils {
     /**
      * Display an informational message as a short toast.
      * @param context the context
-     * @param messageResId the string resource id of the message to be displayed
+     * @param messageStringRes the string resource id of the message to be displayed
      */
-    public void displayInfoMessage(@Nullable Context context, @StringRes int messageResId) {
-        displayInfoMessage(context, messageResId, false);
+    public void displayInfoMessage(@Nullable Context context, @StringRes int messageStringRes) {
+        displayInfoMessage(context, messageStringRes, false);
     }
 
     /**
      * Display an informational message as a toast.
      * @param context the context
-     * @param messageResId the string resource id of the message to be displayed
+     * @param messageStringRes the string resource id of the message to be displayed
      * @param longDuration if true, a long duration toast is displayed,
      *                    otherwise a short duration one
      */
-    public void displayInfoMessage(@Nullable Context context, @StringRes int messageResId,
+    public void displayInfoMessage(@Nullable Context context, @StringRes int messageStringRes,
                                     @SuppressWarnings("SameParameterValue") boolean longDuration) {
         if (context != null) {
-            displayToast(context, context.getString(messageResId), longDuration);
+            displayToast(context, context.getString(messageStringRes), longDuration);
         }
     }
 
@@ -352,11 +352,11 @@ public final class ViewUtils {
     /**
      * Display an error message in a dialog.
      * @param activity the activity
-     * @param messageResId the string resource id of the message to be displayed
+     * @param messageStringRes the string resource id of the message to be displayed
      */
-    public void displayErrorMessage(@Nullable Activity activity, @StringRes int messageResId) {
+    public void displayErrorMessage(@Nullable Activity activity, @StringRes int messageStringRes) {
         if (activity != null) {
-            displayAlertDialog(activity, R.string.error_title, activity.getString(messageResId));
+            displayAlertDialog(activity, R.string.error_title, activity.getString(messageStringRes));
         }
     }
 
@@ -374,16 +374,16 @@ public final class ViewUtils {
     /**
      * Display an alert dialog.
      * @param activity the activity
-     * @param titleResId the string resource id of the dialog title
+     * @param titleStringRes the string resource id of the dialog title
      * @param message the dialog message
      */
     private static void displayAlertDialog(@NonNull Activity activity,
-            @SuppressWarnings("SameParameterValue") @StringRes int titleResId, @NonNull String message) {
+            @SuppressWarnings("SameParameterValue") @StringRes int titleStringRes, @NonNull String message) {
 
         if (!activity.isFinishing()) {
             new AlertDialog.Builder(activity)
                     .setIconAttribute(android.R.attr.alertDialogIcon)
-                    .setTitle(titleResId)
+                    .setTitle(titleStringRes)
                     .setMessage(message)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {

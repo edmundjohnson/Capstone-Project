@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
@@ -120,8 +121,8 @@ public final class MovieFragment extends Fragment
 
         // Set the transition name for the poster
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            if (getArgViewAwardUri() != null) {
-                String viewAwardId = getArgViewAwardUri().getLastPathSegment();
+            if (mArgViewAwardUri != null) {
+                String viewAwardId = mArgViewAwardUri.getLastPathSegment();
                 String transitionName = getString(R.string.transition_movie, viewAwardId);
                 mImgPoster.setTransitionName(transitionName);
             }
@@ -131,7 +132,9 @@ public final class MovieFragment extends Fragment
         if (savedInstanceState != null) {
             // Retrieve and display the saved ViewAward
             mViewAward = savedInstanceState.getParcelable(KEY_VIEW_AWARD);
-            displayViewAward(context, mViewAward);
+            if (context != null && mViewAward != null) {
+                displayViewAward(context, mViewAward);
+            }
         }
 
         return mRootView;
@@ -141,12 +144,14 @@ public final class MovieFragment extends Fragment
     public void onActivityCreated(@Nullable Bundle bundle) {
         super.onActivityCreated(bundle);
 
-        loadData(getArgViewAwardUri());
+        if (mArgViewAwardUri != null) {
+            loadData(mArgViewAwardUri);
+        }
 
         mLayoutImdbLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mViewAward != null) {
+                if (getActivity() != null && mViewAward != null) {
 
                     // log the event in analytics
                     String imdbId = mViewAward.getImdbId();
@@ -193,7 +198,9 @@ public final class MovieFragment extends Fragment
     public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
         // Inflate the menu; this adds items to the app bar if it is present.
         inflater.inflate(R.menu.menu_movie_fragment, menu);
-        setMenuItemVisibility(menu, mViewAward);
+        if (menu != null && mViewAward != null) {
+            setMenuItemVisibility(menu, mViewAward);
+        }
         mMenu = menu;
     }
 
@@ -202,19 +209,17 @@ public final class MovieFragment extends Fragment
      * @param menu the menu
      * @param viewAward the view award
      */
-    private void setMenuItemVisibility(@Nullable Menu menu, @Nullable ViewAward viewAward) {
-        if (menu != null && viewAward != null) {
-            boolean isOnWishlist = mViewAward != null && mViewAward.isOnWishlist();
-            boolean isWatched = mViewAward != null && mViewAward.isWatched();
-            boolean isFavourite = mViewAward != null && mViewAward.isFavourite();
+    private void setMenuItemVisibility(@NonNull Menu menu, @NonNull ViewAward viewAward) {
+        boolean isOnWishlist = mViewAward.isOnWishlist();
+        boolean isWatched = mViewAward.isWatched();
+        boolean isFavourite = mViewAward.isFavourite();
 
-            menu.findItem(R.id.menu_option_add_to_wishlist).setVisible(!isOnWishlist);
-            menu.findItem(R.id.menu_option_remove_from_wishlist).setVisible(isOnWishlist);
-            menu.findItem(R.id.menu_option_add_to_watched).setVisible(!isWatched);
-            menu.findItem(R.id.menu_option_remove_from_watched).setVisible(isWatched);
-            menu.findItem(R.id.menu_option_add_to_favourites).setVisible(!isFavourite);
-            menu.findItem(R.id.menu_option_remove_from_favourites).setVisible(isFavourite);
-        }
+        menu.findItem(R.id.menu_option_add_to_wishlist).setVisible(!isOnWishlist);
+        menu.findItem(R.id.menu_option_remove_from_wishlist).setVisible(isOnWishlist);
+        menu.findItem(R.id.menu_option_add_to_watched).setVisible(!isWatched);
+        menu.findItem(R.id.menu_option_remove_from_watched).setVisible(isWatched);
+        menu.findItem(R.id.menu_option_add_to_favourites).setVisible(!isFavourite);
+        menu.findItem(R.id.menu_option_remove_from_favourites).setVisible(isFavourite);
     }
 
     /**
@@ -225,58 +230,103 @@ public final class MovieFragment extends Fragment
      */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Context context = getActivity();
-        switch (item.getItemId()) {
-            // add to wishlist
-            case R.id.menu_option_add_to_wishlist:
-                mViewAward.setOnWishlist(true);
-                if (updateViewAwardFlags(context, mViewAward)) {
-                    getViewUtils().displayInfoMessage(context, R.string.added_to_wishlist);
-                }
-                return true;
+        if (getActivity() != null) {
+            Context context = getActivity();
+            switch (item.getItemId()) {
 
-            // remove from wishlist
-            case R.id.menu_option_remove_from_wishlist:
-                mViewAward.setOnWishlist(false);
-                if (updateViewAwardFlags(context, mViewAward)) {
-                    getViewUtils().displayInfoMessage(context, R.string.removed_from_wishlist);
-                }
-                return true;
+                // handle menu options which are common to all product flavours here
 
-            // add to watched
-            case R.id.menu_option_add_to_watched:
-                mViewAward.setWatched(true);
-                if (updateViewAwardFlags(context, mViewAward)) {
-                    getViewUtils().displayInfoMessage(context, R.string.added_to_watched);
-                }
-                return true;
+                // add to wishlist
+                case R.id.menu_option_add_to_wishlist:
+                    setMovieOnWishlist(context, mViewAward, true, R.string.added_to_wishlist);
+                    return true;
 
-            // remove from watched
-            case R.id.menu_option_remove_from_watched:
-                mViewAward.setWatched(false);
-                if (updateViewAwardFlags(context, mViewAward)) {
-                    getViewUtils().displayInfoMessage(context, R.string.removed_from_watched);
-                }
-                return true;
+                // remove from wishlist
+                case R.id.menu_option_remove_from_wishlist:
+                    setMovieOnWishlist(context, mViewAward, false, R.string.removed_from_wishlist);
+                    return true;
 
-            // add to favourites
-            case R.id.menu_option_add_to_favourites:
-                mViewAward.setFavourite(true);
-                if (updateViewAwardFlags(context, mViewAward)) {
-                    getViewUtils().displayInfoMessage(context, R.string.added_to_favourites);
-                }
-                return true;
+                // add to watched
+                case R.id.menu_option_add_to_watched:
+                    setMovieWatched(context, mViewAward, true, R.string.added_to_watched);
+                    return true;
 
-            // remove from favourites
-            case R.id.menu_option_remove_from_favourites:
-                mViewAward.setFavourite(false);
-                if (updateViewAwardFlags(context, mViewAward)) {
-                    getViewUtils().displayInfoMessage(context, R.string.removed_from_favourites);
-                }
-                return true;
+                // remove from watched
+                case R.id.menu_option_remove_from_watched:
+                    setMovieWatched(context, mViewAward, false, R.string.removed_from_watched);
+                    return true;
 
-            default:
-                return super.onOptionsItemSelected(item);
+                // add to favourites
+                case R.id.menu_option_add_to_favourites:
+                    setMovieFavourite(context, mViewAward, true, R.string.added_to_favourites);
+                    return true;
+
+                // remove from favourites
+                case R.id.menu_option_remove_from_favourites:
+                    setMovieFavourite(context, mViewAward, false, R.string.removed_from_favourites);
+                    return true;
+
+                default:
+                    // handle menu options which are specific to a product flavour here
+                    boolean consumed = getNavUtils().onFlavourSpecificItemSelectedMovieFragment(
+                            (AppCompatActivity) getActivity(), item);
+                    //noinspection SimplifiableIfStatement
+                    if (consumed) {
+                        return true;
+                    }
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Sets a movie's onWishlist flag.
+     * @param context the context
+     * @param viewAward a ViewAward containing the Movie
+     * @param onWishlist the value to which to set the movie's onWishlist flag
+     * @param successMessageStringRes the resource id of a message to display on setting the flag
+     */
+    private void setMovieOnWishlist(@NonNull Context context, @Nullable ViewAward viewAward,
+                            boolean onWishlist, @StringRes int successMessageStringRes) {
+        if (viewAward != null) {
+            viewAward.setOnWishlist(onWishlist);
+            if (updateViewAwardFlags(context, viewAward)) {
+                getViewUtils().displayInfoMessage(context, successMessageStringRes);
+            }
+        }
+    }
+
+    /**
+     * Sets a movie's watched flag.
+     * @param context the context
+     * @param viewAward a ViewAward containing the Movie
+     * @param watched the value to which to set the movie's watched flag
+     * @param successMessageStringRes the resource id of a message to display on setting the flag
+     */
+    private void setMovieWatched(@NonNull Context context, @Nullable ViewAward viewAward,
+                         boolean watched, @StringRes int successMessageStringRes) {
+        if (viewAward != null) {
+            viewAward.setWatched(watched);
+            if (updateViewAwardFlags(context, viewAward)) {
+                getViewUtils().displayInfoMessage(context, successMessageStringRes);
+            }
+        }
+    }
+
+    /**
+     * Sets a movie's favourite flag.
+     * @param context the context
+     * @param viewAward a ViewAward containing the Movie
+     * @param favourite the value to which to set the movie's favourite flag
+     * @param successMessageStringRes the resource id of a message to display on setting the flag
+     */
+    private void setMovieFavourite(@NonNull Context context, @Nullable ViewAward viewAward,
+                           boolean favourite, @StringRes int successMessageStringRes) {
+        if (viewAward != null) {
+            viewAward.setFavourite(favourite);
+            if (updateViewAwardFlags(context, viewAward)) {
+                getViewUtils().displayInfoMessage(context, successMessageStringRes);
+            }
         }
     }
 
@@ -286,13 +336,11 @@ public final class MovieFragment extends Fragment
      * @param viewAward the view award
      * @return true if successful, false otherwise
      */
-    private boolean updateViewAwardFlags(@Nullable Context context, @Nullable ViewAward viewAward) {
-        if (context != null && viewAward != null) {
-            int rowsUpdated = updateUserMovie(context, viewAward);
-            if (rowsUpdated > 0) {
-                loadData(getArgViewAwardUri());
-                return true;
-            }
+    private boolean updateViewAwardFlags(@NonNull Context context, @NonNull ViewAward viewAward) {
+        int rowsUpdated = updateUserMovie(context, viewAward);
+        if (rowsUpdated > 0 && mArgViewAwardUri != null) {
+            loadData(mArgViewAwardUri);
+            return true;
         }
         return false;
     }
@@ -421,8 +469,8 @@ public final class MovieFragment extends Fragment
      * cursor loader if it does not exist, or by reloading the cursor loader.
      * @param uri the URI of the data to be loaded
      */
-    private void loadData(@Nullable Uri uri) {
-        if (getActivity() != null && uri != null) {
+    private void loadData(@NonNull Uri uri) {
+        if (getActivity() != null) {
             if (mCursorLoader == null) {
                 Bundle bundle = new Bundle();
                 bundle.putParcelable(KEY_VIEW_AWARD_URI, uri);
@@ -444,12 +492,11 @@ public final class MovieFragment extends Fragment
      * @param context the context
      * @param viewAward the ViewAward to display
      */
-    private void displayViewAward(@Nullable final Context context, @Nullable final ViewAward viewAward) {
-        if (context == null || viewAward == null) {
-            return;
-        }
+    private void displayViewAward(@NonNull final Context context, @NonNull final ViewAward viewAward) {
         // Update the menu to reflect the latest values
-        setMenuItemVisibility(mMenu, mViewAward);
+        if (mMenu != null) {
+            setMenuItemVisibility(mMenu, viewAward);
+        }
 
         Picasso.with(context).load(viewAward.getPoster()).into(mImgPoster, new Callback() {
             @Override
@@ -500,11 +547,6 @@ public final class MovieFragment extends Fragment
 
     //--------------------------------------------------------------
     // Getters and Setters
-
-    @Nullable
-    private Uri getArgViewAwardUri() {
-        return mArgViewAwardUri;
-    }
 
     /**
      * Sets the value of the URI of the ViewAward argument to a passed in value.

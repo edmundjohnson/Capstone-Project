@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 
 import uk.jumpingmouse.moviecompanion.model.MasterDatabase;
 import uk.jumpingmouse.moviecompanion.model.MasterDatabaseFirebaseFree;
+import uk.jumpingmouse.moviecompanion.utils.NavUtils;
+import uk.jumpingmouse.moviecompanion.utils.NavUtilsFree;
 
 /**
  * A factory class which generates implementations of objects used in the app.
@@ -21,6 +23,15 @@ public class ObjectFactory extends ObjectFactoryBase {
     @NonNull
     public static MasterDatabase getMasterDatabase() {
         return MasterDatabaseFirebaseFree.getInstance();
+    }
+
+    /**
+     * Returns a reference to a NavUtils object.
+     * @return a reference to a NavUtils object
+     */
+    @NonNull
+    public static NavUtils getNavUtils() {
+        return NavUtilsFree.getInstance();
     }
 
 }
