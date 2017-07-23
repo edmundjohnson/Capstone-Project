@@ -1,6 +1,7 @@
 package uk.jumpingmouse.moviecompanion.utils;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -8,6 +9,9 @@ import android.view.MenuItem;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.activity.AddAwardActivity;
 import uk.jumpingmouse.moviecompanion.activity.AddMovieActivity;
+import uk.jumpingmouse.moviecompanion.activity.EditAwardActivity;
+import uk.jumpingmouse.moviecompanion.data.ViewAward;
+import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.moviecompanion.security.SecurityManager;
 
 /**
@@ -70,16 +74,17 @@ public class NavUtilsAdmin extends NavUtils {
      * product flavour.
      * @param activity the activity on which the menu was displayed
      * @param item the menu item that was selected
+     * @param viewAward the displayed ViewAward
      * @return false to allow normal menu processing to proceed,
      *         true if menu processing is consumed here.
      */
     @Override
-    public boolean onFlavourSpecificItemSelectedMovieFragment(
-            @NonNull AppCompatActivity activity, @NonNull MenuItem item) {
+    public boolean onFlavourSpecificItemSelectedMovieFragment(@NonNull AppCompatActivity activity,
+                                          @NonNull MenuItem item, @NonNull ViewAward viewAward) {
         switch (item.getItemId()) {
             // edit award
             case R.id.menu_option_edit_award:
-                displayEditAward(activity);
+                displayEditAward(activity, viewAward.getId());
                 return true;
 
             default:
@@ -104,12 +109,15 @@ public class NavUtilsAdmin extends NavUtils {
     }
 
     /**
-     * Displays the add award screen.
+     * Displays the edit award screen.
      * @param activity the activity invoking the activity to be displayed
+     * @param awardId the id of the award to be edited
      */
-    private void displayEditAward(@NonNull AppCompatActivity activity) {
-        // TODO
-        //displayActivity(activity, EditAwardActivity.class, SecurityManager.RC_EDIT_AWARD);
+    private void displayEditAward(@NonNull AppCompatActivity activity, @NonNull String awardId) {
+        // Build an intent for launching the edit award activity
+        Uri uri = DataContract.AwardEntry.buildUriForRowById(awardId);
+        Intent intent = new Intent(activity, EditAwardActivity.class).setData(uri);
+        activity.startActivity(intent);
     }
 
     /**

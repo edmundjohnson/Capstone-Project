@@ -2,7 +2,6 @@ package uk.jumpingmouse.moviecompanion.model;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
@@ -44,7 +43,7 @@ public class MasterDatabaseFirebaseAdmin extends MasterDatabaseFirebase {
      * @return the number of rows inserted or updated
      */
     @Override
-    public int addMovie(@Nullable final Context context, @NonNull final Movie movie) {
+    public int addMovie(@NonNull final Context context, @NonNull final Movie movie) {
         return setNode(context, NODE_MOVIES, movie.getId(),
                 movie, true);
     }
@@ -56,10 +55,7 @@ public class MasterDatabaseFirebaseAdmin extends MasterDatabaseFirebase {
      * @return the number of rows deleted
      */
     @Override
-    public int deleteMovie(@Nullable Context context, @Nullable String id) {
-        if (id == null) {
-            return 0;
-        }
+    public int deleteMovie(@NonNull Context context, @NonNull String id) {
         return deleteNode(context, NODE_MOVIES, id, true);
     }
 
@@ -75,7 +71,7 @@ public class MasterDatabaseFirebaseAdmin extends MasterDatabaseFirebase {
      * @return the number of rows inserted or updated
      */
     @Override
-    public int addAward(@Nullable final Context context, @NonNull final Award award) {
+    public int addAward(@NonNull final Context context, @NonNull final Award award) {
         return setNode(context, NODE_AWARDS, award.getId(), award, true);
     }
 
@@ -86,10 +82,7 @@ public class MasterDatabaseFirebaseAdmin extends MasterDatabaseFirebase {
      * @return the number of rows deleted
      */
     @Override
-    public int deleteAward(@Nullable Context context, @Nullable String id) {
-        if (id == null) {
-            return 0;
-        }
+    public int deleteAward(@NonNull Context context, @NonNull String id) {
         return deleteNode(context, NODE_AWARDS, id, true);
     }
 

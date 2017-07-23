@@ -1,8 +1,6 @@
 package uk.jumpingmouse.moviecompanion.activity;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,49 +12,50 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
-import uk.jumpingmouse.moviecompanion.model.DataContract;
+import uk.jumpingmouse.moviecompanion.model.LocalDatabase;
 import uk.jumpingmouse.moviecompanion.model.MasterDatabase;
 import uk.jumpingmouse.moviecompanion.utils.JavaUtils;
-import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 import uk.jumpingmouse.moviecompanion.utils.NavUtils;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 import uk.jumpingmouse.omdbapi.OmdbApi;
 
 /**
- * The add award activity.
- * This is an admin activity, not a public-facing one, so the UI can be fairly basic.
+ * The edit award activity.
+ * This is an admin activity, not a public-facing one, so the UI is fairly basic.
  * @author Edmund Johnson
  */
-public class AddAwardActivity extends AppCompatActivity {
+public class EditAwardActivity extends AppCompatActivity {
 
     // Bundle keys, e.g. for use when saving and restoring state
     private static final String KEY_MOVIE = "KEY_MOVIE";
     private static final String KEY_AWARD = "KEY_AWARD";
 
-    // Screen fields
-    private EditText mTxtImdbId;
-    private TextView mLabelTitle;
+    // Screen fields - movie
+    private TextView mTxtMovieId;
+    private TextView mTxtImdbId;
     private TextView mTxtTitle;
-    private TextView mLabelAwardDate;
+
+    // Screen fields - award
+    private TextView mTxtAwardId;
     private EditText mTxtAwardDate;
-    private TextView mLabelAwardCategory;
     private RadioGroup mRadioAwardCategory;
     private RadioButton mRadioAwardCategoryMovie;
     private RadioButton mRadioAwardCategoryDvd;
-    private TextView mLabelReview;
     private EditText mTxtReview;
-    private TextView mLabelAwardDisplayOrder;
     private EditText mTxtAwardDisplayOrder;
+
+    // Screen fields - buttons
     private Button mBtnCancel;
     private Button mBtnSave;
 
-    // Movie fetched from OMDb
+    // Data
     private Movie mMovie;
-    // Award
     private Award mAward;
 
     //---------------------------------------------------------------------
@@ -71,35 +70,37 @@ public class AddAwardActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_award);
+        setContentView(R.layout.activity_edit_award);
 
         // Initialise the app bar
         getViewUtils().initialiseAppBar(this, R.id.tbAppBar,
-                getString(R.string.title_add_award), true, R.color.colorPrimary);
+                getString(R.string.title_edit_award), true, R.color.colorPrimary);
 
-        mTxtImdbId = (EditText) findViewById(R.id.txtImdbId);
-        mLabelTitle = (TextView) findViewById(R.id.labelTitle);
+        // Movie
+        mTxtMovieId = (TextView) findViewById(R.id.txtMovieId);
+        mTxtImdbId = (TextView) findViewById(R.id.txtImdbId);
         mTxtTitle = (TextView) findViewById(R.id.txtTitle);
-        mLabelAwardDate = (TextView) findViewById(R.id.labelAwardDate);
+
+        // Award
+        mTxtAwardId = (TextView) findViewById(R.id.txtAwardId);
         mTxtAwardDate = (EditText) findViewById(R.id.txtAwardDate);
-        mLabelAwardCategory = (TextView) findViewById(R.id.labelCategory);
         mRadioAwardCategory = (RadioGroup) findViewById(R.id.radioCategory);
         mRadioAwardCategoryMovie = (RadioButton) findViewById(R.id.radioCategoryMovie);
         mRadioAwardCategoryDvd = (RadioButton) findViewById(R.id.radioCategoryDvd);
-        mLabelReview = (TextView) findViewById(R.id.labelReview);
         mTxtReview = (EditText) findViewById(R.id.txtReview);
-        mLabelAwardDisplayOrder = (TextView) findViewById(R.id.labelDisplayOrder);
         mTxtAwardDisplayOrder = (EditText) findViewById(R.id.txtDisplayOrder);
         mBtnCancel = (Button) findViewById(R.id.btnCancel);
         mBtnSave = (Button) findViewById(R.id.btnSave);
 
-        if (savedInstanceState != null) {
+        if (savedInstanceState == null) {
+            // Store the movie and award indicated by the URL passed in
+            loadReceivedData();
+        } else {
+            // Store the movie and award from saved state, e.g. on device rotation
             mMovie = savedInstanceState.getParcelable(KEY_MOVIE);
             mAward = savedInstanceState.getParcelable(KEY_AWARD);
-            if (mMovie != null) {
-                displayData(mMovie);
-            }
         }
+        displayData(mMovie, mAward);
     }
 
     /**
@@ -119,45 +120,6 @@ public class AddAwardActivity extends AppCompatActivity {
     // Action methods
 
     /**
-     * Handles the user clicking the "Fetch Movie Details" button.
-     * @param view the view that was clicked, required because this method is set as
-     *             an 'onClick' method in the layout xml
-     */
-    public void onFetchMovieDetails(@SuppressWarnings("UnusedParameters") @Nullable View view) {
-        String imdbId = mTxtImdbId.getText().toString();
-        if (imdbId.trim().isEmpty()) {
-            return;
-        }
-        String id = ModelUtils.imdbIdToMovieId(imdbId);
-        if (id == null) {
-            // Display an "Invalid IMDb" error message
-            getViewUtils().displayErrorMessage(this, R.string.invalid_imdb);
-            return;
-        }
-
-        Uri uri = DataContract.MovieEntry.buildUriForRowById(id);
-        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-        if (cursor == null || cursor.getCount() == 0) {
-            // Display a "Movie not found" error message
-            getViewUtils().displayErrorMessage(this, R.string.movie_not_found);
-        } else if (cursor.getCount() > 1) {
-            // Display a "Multiple movies found" error message
-            getViewUtils().displayErrorMessage(this, R.string.multiple_matching_movies);
-        } else {
-            cursor.moveToFirst();
-            Movie movie = ModelUtils.newMovie(cursor);
-            if (movie == null) {
-                // Display a "Data found did not represent a Movie" error message
-                getViewUtils().displayErrorMessage(this, R.string.movie_data_not_found);
-            } else {
-                mMovie = movie;
-                displayData(mMovie);
-            }
-            cursor.close();
-        }
-    }
-
-    /**
      * Handles the user clicking the "Cancel" button.
      * @param view the view that was clicked
      */
@@ -166,7 +128,8 @@ public class AddAwardActivity extends AppCompatActivity {
             getViewUtils().displayInfoMessage(view.getContext(),
                     getString(R.string.award_not_saved, mTxtTitle.getText()));
         }
-        resetData();
+        loadReceivedData();
+        displayData(mMovie, mAward);
     }
 
     /**
@@ -174,25 +137,23 @@ public class AddAwardActivity extends AppCompatActivity {
      * @param view the view that was clicked
      */
     public void onSave(@Nullable View view) {
-        if (view == null) {
+        if (view == null || mAward == null) {
             return;
         }
 
+        String id = mAward.getId();
+        String movieId = mAward.getMovieId();
         String awardDate = mTxtAwardDate.getText().toString();
         String category =
                 mRadioAwardCategory.getCheckedRadioButtonId() == R.id.radioCategoryMovie
                         ? Award.CATEGORY_MOVIE : Award.CATEGORY_DVD;
-        int displayOrder = JavaUtils.toInt(mTxtAwardDisplayOrder.getText().toString(), 1);
         String review = mTxtReview.getText().toString();
+        int displayOrder = JavaUtils.toInt(mTxtAwardDisplayOrder.getText().toString(), 1);
 
-        if (awardDate.isEmpty() || category.isEmpty() || displayOrder <= 0 || review.isEmpty()) {
+        if (awardDate.isEmpty() || category.isEmpty() || review.isEmpty() || displayOrder <= 0) {
             getViewUtils().displayErrorMessage(this, R.string.error_mandatory_field_missing);
             return;
         }
-
-        // Generate the unique award id, e.g. "3666024_170522_M"
-        String movieId = mMovie.getId();
-        String id = movieId + "_" + awardDate + "_" + category;
 
         mAward = Award.builder()
                 .id(id)
@@ -204,110 +165,65 @@ public class AddAwardActivity extends AppCompatActivity {
                 .build();
 
         Context context = view.getContext();
-        if (context != null) {
-            int rowsAdded = getMasterDatabase().addAward(context, mAward);
-            if (rowsAdded == 0) {
-                getViewUtils().displayErrorMessage(this,
-                        getString(R.string.award_not_saved, mMovie.getTitle()));
-            } else {
-                getViewUtils().displayInfoMessage(context,
-                        getString(R.string.saving_award, mMovie.getTitle()));
-                resetData();
-            }
+        int rowsUpdated = getMasterDatabase().addAward(context, mAward);
+        if (rowsUpdated == 0) {
+            getViewUtils().displayErrorMessage(this,
+                    getString(R.string.award_not_saved, mMovie.getTitle()));
+        } else {
+            getViewUtils().displayInfoMessage(context,
+                     getString(R.string.saving_award, mMovie.getTitle()));
         }
 
+    }
+
+    /**
+     * Sets the movie and award to the values passed into the activity.
+     */
+    private void loadReceivedData() {
+        // Display the movie and award indicated by the URL passed in
+        if (getIntent() != null && getIntent().getData() != null) {
+            String awardId = getIntent().getData().getLastPathSegment();
+            mAward = getLocalDatabase().selectAwardById(awardId);
+            if (mAward != null) {
+                mMovie = getLocalDatabase().selectMovieById(mAward.getMovieId());
+            }
+        }
     }
 
     /**
      * Displays movie data on the screen.
      * @param movie the movie to display
      */
-    private void displayData(@NonNull Movie movie) {
-        getViewUtils().dismissKeyboard(this);
-
-        // disable data entry until Save or Cancel clicked
-        mTxtImdbId.setEnabled(false);
-
-        setValueFields(movie);
-        showValueFields();
+    private void displayData(@Nullable Movie movie, @Nullable Award award) {
+        if (movie != null) {
+            displayMovie(movie);
+        }
+        if (award != null) {
+            displayAward(award);
+        }
     }
 
     /**
-     * Resets the screen, leaving it ready for input.
+     * Displays movie data on the screen.
+     * @param movie the movie to display
      */
-    private void resetData() {
-        mMovie = null;
-        mAward = null;
-
-        clearValueFields();
-        hideValueFields();
-
-        // Enable entry of a new movie
-        mTxtImdbId.setEnabled(true);
-    }
-
-    /**
-     * Sets the contents of the data value fields.
-     * @param movie the movie whose data is to be displayed
-     */
-    private void setValueFields(@NonNull Movie movie) {
+    private void displayMovie(@NonNull Movie movie) {
+        mTxtMovieId.setText(movie.getId());
+        mTxtImdbId.setText(movie.getImdbId());
         mTxtTitle.setText(movie.getTitle());
     }
 
     /**
-     * Shows the data value fields.
+     * Displays award data on the screen.
+     * @param award the award to display
      */
-    private void showValueFields() {
-        showView(mLabelTitle);
-        showView(mTxtTitle);
-        showView(mLabelAwardDate);
-        showView(mTxtAwardDate);
-        showView(mLabelAwardCategory);
-        showView(mRadioAwardCategory);
-        mRadioAwardCategoryMovie.setChecked(true);
-        mRadioAwardCategoryDvd.setChecked(false);
-        showView(mLabelReview);
-        showView(mTxtReview);
-        showView(mLabelAwardDisplayOrder);
-        showView(mTxtAwardDisplayOrder);
-        mTxtAwardDisplayOrder.setText(R.string.display_order_default);
-
-        showView(mBtnCancel);
-        showView(mBtnSave);
-    }
-
-    /**
-     * Clears the contents of the data value fields.
-     */
-    private void clearValueFields() {
-        // movie fields
-        mTxtImdbId.setText(null);
-
-        // award fields
-        mTxtTitle.setText(null);
-        mTxtAwardDate.setText(null);
-        mRadioAwardCategoryMovie.setChecked(false);
-        mRadioAwardCategoryDvd.setChecked(false);
-        mTxtReview.setText(null);
-        mTxtAwardDisplayOrder.setText(null);
-    }
-
-    /**
-     * Hides the data value fields.
-     */
-    private void hideValueFields() {
-        hideView(mLabelTitle);
-        hideView(mTxtTitle);
-        hideView(mLabelAwardDate);
-        hideView(mTxtAwardDate);
-        hideView(mLabelAwardCategory);
-        hideView(mRadioAwardCategory);
-        hideView(mLabelReview);
-        hideView(mTxtReview);
-        hideView(mLabelAwardDisplayOrder);
-        hideView(mTxtAwardDisplayOrder);
-        hideView(mBtnCancel);
-        hideView(mBtnSave);
+    private void displayAward(@NonNull Award award) {
+        mTxtAwardId.setText(award.getId());
+        mTxtAwardDate.setText(award.getAwardDate());
+        mRadioAwardCategoryMovie.setChecked(award.getCategory().equals(Award.CATEGORY_MOVIE));
+        mRadioAwardCategoryDvd.setChecked(award.getCategory().equals(Award.CATEGORY_DVD));
+        mTxtReview.setText(award.getReview());
+        mTxtAwardDisplayOrder.setText(toDisplayableText(award.getDisplayOrder()));
     }
 
     //---------------------------------------------------------------
@@ -329,6 +245,15 @@ public class AddAwardActivity extends AppCompatActivity {
         getViewUtils().showView(view);
     }
 
+    /**
+     * Returns an integer value as a String to display in a TextView.
+     * @param value the integer value
+     * @return a String corresponding to value
+     */
+    private String toDisplayableText(int value) {
+        return String.format(Locale.getDefault(), "%d", value);
+    }
+
     //---------------------------------------------------------------------
     // Getters
 
@@ -339,6 +264,14 @@ public class AddAwardActivity extends AppCompatActivity {
     @NonNull
     private static MasterDatabase getMasterDatabase() {
         return ObjectFactory.getMasterDatabase();
+    }
+
+    /**
+     * Convenience method which returns a reference to a local database.
+     * @return a reference to a local database
+     */
+    private static LocalDatabase getLocalDatabase() {
+        return ObjectFactory.getLocalDatabase();
     }
 
     /**

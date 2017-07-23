@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import uk.jumpingmouse.moviecompanion.data.ViewAward;
+
 /**
  * Superclass for classes containing utility methods related to navigation.
  * This class contains the methods which are available to all product flavours.
@@ -40,11 +42,13 @@ public abstract class NavUtils {
      * product flavour.
      * @param activity the activity on which the menu was displayed
      * @param item the menu item that was selected
+     * @param viewAward the displayed ViewAward
      * @return false to allow normal menu processing to proceed,
      *         true if menu processing is consumed here.
      */
     public abstract boolean onFlavourSpecificItemSelectedMovieFragment(
-            @NonNull AppCompatActivity activity, @NonNull MenuItem item);
+            @NonNull AppCompatActivity activity, @NonNull MenuItem item,
+            @NonNull ViewAward viewAward);
 
 
     /**

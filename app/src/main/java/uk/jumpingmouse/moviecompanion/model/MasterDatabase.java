@@ -2,7 +2,6 @@ package uk.jumpingmouse.moviecompanion.model;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
@@ -26,7 +25,7 @@ public interface MasterDatabase {
      * Performs processing required when a user has signed in.
      * @param context the context
      */
-    void onSignedIn(@Nullable Context context);
+    void onSignedIn(@NonNull Context context);
 
     /** Performs processing required when a user has signed out. */
     void onSignedOut();
@@ -44,7 +43,7 @@ public interface MasterDatabase {
      */
     int addMovie(
             // parameters are used, but lint gets confused by product flavours
-            @SuppressWarnings("UnusedParameters") @Nullable Context context,
+            @SuppressWarnings("UnusedParameters") @NonNull Context context,
             @SuppressWarnings("UnusedParameters") @NonNull Movie movie);
 
     /**
@@ -55,8 +54,8 @@ public interface MasterDatabase {
      */
     int deleteMovie(
             // parameters are used, but lint gets confused by product flavours
-            @SuppressWarnings("UnusedParameters") @Nullable Context context,
-            @SuppressWarnings("UnusedParameters") @Nullable String id);
+            @SuppressWarnings("UnusedParameters") @NonNull Context context,
+            @SuppressWarnings("UnusedParameters") @NonNull String id);
 
     //---------------------------------------------------------------------
     // Award modification methods
@@ -71,7 +70,7 @@ public interface MasterDatabase {
      */
     int addAward(
             // parameters are used, but lint gets confused by product flavours
-            @SuppressWarnings("UnusedParameters") @Nullable Context context,
+            @SuppressWarnings("UnusedParameters") @NonNull Context context,
             @SuppressWarnings("UnusedParameters") @NonNull Award award);
 
     /**
@@ -82,8 +81,8 @@ public interface MasterDatabase {
      */
     int deleteAward(
             // parameters are used, but lint gets confused by product flavours
-            @SuppressWarnings("UnusedParameters") @Nullable Context context,
-            @SuppressWarnings("UnusedParameters") @Nullable String id);
+            @SuppressWarnings("UnusedParameters") @NonNull Context context,
+            @SuppressWarnings("UnusedParameters") @NonNull String id);
 
     //---------------------------------------------------------------------
     // UserMovie modification methods.
@@ -96,7 +95,7 @@ public interface MasterDatabase {
      * @param userMovie the user movie to insert or update
      * @return the number of rows inserted or updated
      */
-    int addUserMovie(@Nullable Context context, @NonNull UserMovie userMovie);
+    int addUserMovie(@NonNull Context context, @NonNull UserMovie userMovie);
 
     /**
      * Deletes a user movie from the Firebase database.
@@ -104,6 +103,6 @@ public interface MasterDatabase {
      * @param id the id of the user movie to be deleted
      * @return the number of rows deleted
      */
-    int deleteUserMovie(@Nullable Context context, @Nullable String id);
+    int deleteUserMovie(@NonNull Context context, @NonNull String id);
 
 }

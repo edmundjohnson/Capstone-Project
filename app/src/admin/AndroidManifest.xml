@@ -46,6 +46,11 @@
             android:parentActivityName=".activity.MainActivity">
         </activity>
 
+        <!-- The edit award activity -->
+        <activity android:name=".activity.EditAwardActivity"
+            android:parentActivityName=".activity.MovieActivity">
+        </activity>
+
     </application>
 
 </manifest>

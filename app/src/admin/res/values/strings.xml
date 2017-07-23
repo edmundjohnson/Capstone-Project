@@ -6,7 +6,7 @@
          different product flavours can coexist on a single device -->
     <string name="content_authority" translatable="false">uk.jumpingmouse.moviecompanion.admin</string>
 
-    <!-- OMDb -->
+    <!-- OMDb key -->
     <string name="omdbapi_key_missing">OMDb API key not found. Consider adding it to your local.properties file.</string>
 
     <!-- App Bar and Menu -->
@@ -16,35 +16,44 @@
 
     <!-- Error messages -->
     <string name="error_mandatory_field_missing">A mandatory field is missing</string>
-    <string name="invalid_imdb">Invalid IMDb</string>
 
     <!-- Admin Screens -->
     <string name="button_label_fetch_movie_details">Fetch Movie Details</string>
     <string name="button_label_save">Save</string>
     <string name="button_label_cancel">Cancel</string>
 
-    <!-- Add Movie + Award -->
-    <string name="hint_imdb_id">IMDb id</string>
+    <!-- Movie fields -->
+    <string name="title_add_movie">Add Movie</string>
+    <string name="label_movie_id">Movie Id</string>
+    <string name="label_imdb_id">IMDb Id</string>
     <string name="label_title">Title</string>
+    <string name="label_genre">Genre</string>
+    <string name="hint_imdb_id">IMDb id</string>
+    <!-- Movie messages -->
+    <string name="saving_movie">Saving movie: %s …</string>
+    <string name="invalid_imdb">Invalid IMDb</string>
+    <string name="movie_not_saved">Movie not saved: %s</string>
     <string name="movie_not_found">Movie not found</string>
     <string name="movie_data_not_found">Data found did not represent a Movie</string>
+    <string name="multiple_matching_movies">More than one movie matches this id</string>
 
-    <!-- Add Movie -->
-    <string name="label_genre">Genre</string>
-    <string name="title_add_movie">Add Movie</string>
-    <string name="saving_movie">Saving movie: %s …</string>
-    <string name="movie_not_saved">Movie not saved: %s</string>
-
-    <!-- Add Award -->
+    <!-- Award fields -->
     <string name="title_add_award">Add Award</string>
+    <string name="title_edit_award">Edit Award</string>
+    <string name="label_award_id">Award Id</string>
     <string name="label_award_date">Award Date (YYMMDD)</string>
-    <string name="hint_award_date">YYMMDD</string>
     <string name="label_category">Category</string>
     <string name="label_review">Review</string>
     <string name="label_display_order">Award Display Order</string>
+    <string name="hint_award_date">YYMMDD</string>
     <string name="display_order_default" translatable="false">1</string>
-    <string name="multiple_matching_movies">More than one movie matches this id</string>
+    <!-- Award messages -->
     <string name="saving_award">Saving award: %s …</string>
     <string name="award_not_saved">Award not saved: %s</string>
+
+    <!-- Example data for admin screens -->
+    <string name="example_movie_id">1234567</string>
+    <string name="example_imdb_id">tt1234567</string>
+    <string name="example_award_id">1234567_170631_M</string>
 
 </resources>

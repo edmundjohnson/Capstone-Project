@@ -168,7 +168,7 @@ public final class SecurityManagerFirebase implements SecurityManager {
      * Performs processing required on user sign in.
      * @param context the context
      */
-    private void onSignedInInitialise(@Nullable Context context) {
+    private void onSignedInInitialise(@NonNull Context context) {
         Timber.d("onSignedInInitialise");
 
         getMasterDatabase().onSignedIn(context);

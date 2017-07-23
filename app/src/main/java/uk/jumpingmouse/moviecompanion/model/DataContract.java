@@ -214,7 +214,7 @@ public final class DataContract {
          * @return the URI for obtaining the specific award
          */
         @NonNull
-        static Uri buildUriForRowById(@NonNull final String awardId) {
+        public static Uri buildUriForRowById(@NonNull final String awardId) {
             return CONTENT_URI.buildUpon()
                     .appendPath(awardId)
                     .build();

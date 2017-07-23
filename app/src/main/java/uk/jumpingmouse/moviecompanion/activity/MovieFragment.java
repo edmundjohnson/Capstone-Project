@@ -205,24 +205,6 @@ public final class MovieFragment extends Fragment
     }
 
     /**
-     * Set the correct visibility for the ViewAward-related menu items.
-     * @param menu the menu
-     * @param viewAward the view award
-     */
-    private void setMenuItemVisibility(@NonNull Menu menu, @NonNull ViewAward viewAward) {
-        boolean isOnWishlist = mViewAward.isOnWishlist();
-        boolean isWatched = mViewAward.isWatched();
-        boolean isFavourite = mViewAward.isFavourite();
-
-        menu.findItem(R.id.menu_option_add_to_wishlist).setVisible(!isOnWishlist);
-        menu.findItem(R.id.menu_option_remove_from_wishlist).setVisible(isOnWishlist);
-        menu.findItem(R.id.menu_option_add_to_watched).setVisible(!isWatched);
-        menu.findItem(R.id.menu_option_remove_from_watched).setVisible(isWatched);
-        menu.findItem(R.id.menu_option_add_to_favourites).setVisible(!isFavourite);
-        menu.findItem(R.id.menu_option_remove_from_favourites).setVisible(isFavourite);
-    }
-
-    /**
      * Process selection of an item in the options menu.
      * @param item the menu item that was selected
      * @return false to allow normal menu processing to proceed,
@@ -230,8 +212,9 @@ public final class MovieFragment extends Fragment
      */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (getActivity() != null) {
+        if (getActivity() != null && mViewAward != null) {
             Context context = getActivity();
+
             switch (item.getItemId()) {
 
                 // handle menu options which are common to all product flavours here
@@ -269,7 +252,7 @@ public final class MovieFragment extends Fragment
                 default:
                     // handle menu options which are specific to a product flavour here
                     boolean consumed = getNavUtils().onFlavourSpecificItemSelectedMovieFragment(
-                            (AppCompatActivity) getActivity(), item);
+                            (AppCompatActivity) getActivity(), item, mViewAward);
                     //noinspection SimplifiableIfStatement
                     if (consumed) {
                         return true;
@@ -286,13 +269,11 @@ public final class MovieFragment extends Fragment
      * @param onWishlist the value to which to set the movie's onWishlist flag
      * @param successMessageStringRes the resource id of a message to display on setting the flag
      */
-    private void setMovieOnWishlist(@NonNull Context context, @Nullable ViewAward viewAward,
+    private void setMovieOnWishlist(@NonNull Context context, @NonNull ViewAward viewAward,
                             boolean onWishlist, @StringRes int successMessageStringRes) {
-        if (viewAward != null) {
-            viewAward.setOnWishlist(onWishlist);
-            if (updateViewAwardFlags(context, viewAward)) {
-                getViewUtils().displayInfoMessage(context, successMessageStringRes);
-            }
+        viewAward.setOnWishlist(onWishlist);
+        if (updateViewAwardFlags(context, viewAward)) {
+            getViewUtils().displayInfoMessage(context, successMessageStringRes);
         }
     }
 
@@ -303,13 +284,11 @@ public final class MovieFragment extends Fragment
      * @param watched the value to which to set the movie's watched flag
      * @param successMessageStringRes the resource id of a message to display on setting the flag
      */
-    private void setMovieWatched(@NonNull Context context, @Nullable ViewAward viewAward,
+    private void setMovieWatched(@NonNull Context context, @NonNull ViewAward viewAward,
                          boolean watched, @StringRes int successMessageStringRes) {
-        if (viewAward != null) {
-            viewAward.setWatched(watched);
-            if (updateViewAwardFlags(context, viewAward)) {
-                getViewUtils().displayInfoMessage(context, successMessageStringRes);
-            }
+        viewAward.setWatched(watched);
+        if (updateViewAwardFlags(context, viewAward)) {
+            getViewUtils().displayInfoMessage(context, successMessageStringRes);
         }
     }
 
@@ -320,13 +299,11 @@ public final class MovieFragment extends Fragment
      * @param favourite the value to which to set the movie's favourite flag
      * @param successMessageStringRes the resource id of a message to display on setting the flag
      */
-    private void setMovieFavourite(@NonNull Context context, @Nullable ViewAward viewAward,
+    private void setMovieFavourite(@NonNull Context context, @NonNull ViewAward viewAward,
                            boolean favourite, @StringRes int successMessageStringRes) {
-        if (viewAward != null) {
-            viewAward.setFavourite(favourite);
-            if (updateViewAwardFlags(context, viewAward)) {
-                getViewUtils().displayInfoMessage(context, successMessageStringRes);
-            }
+        viewAward.setFavourite(favourite);
+        if (updateViewAwardFlags(context, viewAward)) {
+            getViewUtils().displayInfoMessage(context, successMessageStringRes);
         }
     }
 
@@ -543,6 +520,24 @@ public final class MovieFragment extends Fragment
         mTxtCategory.setText(categoryText);
         mTxtAwardDate.setText(awardDateText);
         mTxtReview.setText(viewAward.getReview());
+    }
+
+    /**
+     * Set the correct visibility for the ViewAward-related menu items.
+     * @param menu the menu
+     * @param viewAward the view award
+     */
+    private void setMenuItemVisibility(@NonNull Menu menu, @NonNull ViewAward viewAward) {
+        boolean isOnWishlist = mViewAward.isOnWishlist();
+        boolean isWatched = mViewAward.isWatched();
+        boolean isFavourite = mViewAward.isFavourite();
+
+        menu.findItem(R.id.menu_option_add_to_wishlist).setVisible(!isOnWishlist);
+        menu.findItem(R.id.menu_option_remove_from_wishlist).setVisible(isOnWishlist);
+        menu.findItem(R.id.menu_option_add_to_watched).setVisible(!isWatched);
+        menu.findItem(R.id.menu_option_remove_from_watched).setVisible(isWatched);
+        menu.findItem(R.id.menu_option_add_to_favourites).setVisible(!isFavourite);
+        menu.findItem(R.id.menu_option_remove_from_favourites).setVisible(isFavourite);
     }
 
     //--------------------------------------------------------------

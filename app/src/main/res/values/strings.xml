@@ -124,6 +124,7 @@
     <string name="added_to_favourites">added to favourites</string>
     <string name="removed_from_favourites">removed from favourites</string>
 
+    <!-- Example data for design view of layouts -->
     <string name="example_movie_title">The Assassination of Jesse James by the Coward Robert Ford</string>
     <string name="example_award_date">02 Jun 17</string>
     <string name="example_movie_genre">Drama, Romance, Comedy, Biography</string>

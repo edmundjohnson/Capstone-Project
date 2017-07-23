@@ -61,7 +61,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
      * Performs processing required when a user has signed in.
      * @param context the context
      */
-    public void onSignedIn(@Nullable Context context) {
+    public void onSignedIn(@NonNull Context context) {
         attachDatabaseEventListenerMovies(context);
         attachDatabaseEventListenerAwards(context);
         attachDatabaseEventListenerUserMovies(context);
@@ -87,7 +87,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
      * @return the number of rows inserted or updated
      */
     @Override
-    public abstract int addMovie(@Nullable Context context, @NonNull Movie movie);
+    public abstract int addMovie(@NonNull Context context, @NonNull Movie movie);
 
     /**
      * Deletes a movie from the Firebase database.
@@ -96,7 +96,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
      * @return the number of rows deleted
      */
     @Override
-    public abstract int deleteMovie(@Nullable Context context, @Nullable String id);
+    public abstract int deleteMovie(@NonNull Context context, @NonNull String id);
 
     //---------------------------------------------------------------------
     // Firebase database award modification methods.
@@ -111,7 +111,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
      * @return the number of rows inserted or updated
      */
     @Override
-    public abstract int addAward(@Nullable Context context, @NonNull Award award);
+    public abstract int addAward(@NonNull Context context, @NonNull Award award);
 
     /**
      * Deletes an award from the Firebase database.
@@ -120,7 +120,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
      * @return the number of rows deleted
      */
     @Override
-    public abstract int deleteAward(@Nullable Context context, @Nullable String id);
+    public abstract int deleteAward(@NonNull Context context, @NonNull String id);
 
     //---------------------------------------------------------------------
     // Firebase database UserMovie modification methods.
@@ -135,10 +135,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
      * @return the number of rows inserted or updated
      */
     @Override
-    public int addUserMovie(@Nullable final Context context,  @NonNull final UserMovie userMovie) {
-        if (context == null) {
-            return 0;
-        }
+    public int addUserMovie(@NonNull final Context context,  @NonNull final UserMovie userMovie) {
         String userMoviesNode = getUserMoviesNode(getSecurityManager().getUid());
         if (userMoviesNode == null) {
             return 0;
@@ -154,10 +151,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
      * @return the number of rows deleted
      */
     @Override
-    public int deleteUserMovie(@Nullable Context context, @Nullable String id) {
-        if (context == null || id == null) {
-            return 0;
-        }
+    public int deleteUserMovie(@NonNull Context context, @NonNull String id) {
         String userMoviesNode = getUserMoviesNode(getSecurityManager().getUid());
         if (userMoviesNode == null) {
             return 0;
@@ -194,12 +188,9 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
      * @param isAdminFunction whether this operation is part of an admin function
      * @return the number of rows inserted or updated
      */
-    int setNode(@Nullable final Context context, @NonNull final String targetNode,
+    int setNode(@NonNull final Context context, @NonNull final String targetNode,
                 @NonNull String nodeKey, @NonNull final Object nodeValue,
                 boolean isAdminFunction) {
-        if (context == null) {
-            return 0;
-        }
         // Create the node to add to the database.
         Map<String, Object> mapValue = new HashMap<>(1);
         mapValue.put(nodeKey, nodeValue);
@@ -225,12 +216,9 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
      * @param isAdminFunction whether this operation is part of an admin function
      * @return the key of the created node, or null if no node was created
      */
-    @Nullable
-    private String pushNode(@Nullable final Context context, @NonNull final String targetNode,
-                @NonNull final Object nodeValue, boolean isAdminFunction) {
-        if (context == null) {
-            return null;
-        }
+    @NonNull
+    private String pushNode(@NonNull final Context context, @NonNull final String targetNode,
+                            @NonNull final Object nodeValue, boolean isAdminFunction) {
         // Push the new node to the database target node.
         DatabaseReference newNode = getDatabaseReference(targetNode).push();
         String newNodeKey = newNode.getKey();
@@ -248,11 +236,8 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
      * @param isAdminFunction whether this operation is part of an admin function
      * @return the number of rows deleted
      */
-    int deleteNode(@Nullable Context context, @NonNull final String targetNode,
-                           @NonNull String nodeKey, boolean isAdminFunction) {
-        if (context == null) {
-            return 0;
-        }
+    int deleteNode(@NonNull Context context, @NonNull final String targetNode,
+                   @NonNull String nodeKey, boolean isAdminFunction) {
         // Delete the node from the target node.
         getDatabaseReference(targetNode).child(nodeKey).removeValue(
                 getDatabaseOperationCompletionListener(context, R.string.databaseOperationDeleteNode,

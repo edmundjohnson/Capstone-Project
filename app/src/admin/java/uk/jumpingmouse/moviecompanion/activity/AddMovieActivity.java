@@ -14,7 +14,6 @@ import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.model.MasterDatabase;
-import uk.jumpingmouse.moviecompanion.security.SecurityManager;
 import uk.jumpingmouse.moviecompanion.utils.NavUtils;
 import uk.jumpingmouse.moviecompanion.utils.OmdbAdminUtils;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
@@ -59,8 +58,8 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
         setContentView(R.layout.activity_add_movie);
 
         // Initialise the app bar
-        getViewUtils().initialiseAppBar(this, R.id.tbAppBar, getString(R.string.app_name),
-                true, R.color.colorPrimary);
+        getViewUtils().initialiseAppBar(this, R.id.tbAppBar,
+                getString(R.string.title_add_movie), true, R.color.colorPrimary);
 
         mTxtImdbId = (EditText) findViewById(R.id.txtImdbId);
         mLabelTitle = (TextView) findViewById(R.id.labelTitle);
@@ -76,28 +75,6 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
                 displayData(mMovie);
             }
         }
-
-        getSecurityManager().onCreateActivity(this);
-    }
-
-    /**
-     * Perform processing required when the activity becomes able to interact with the user.
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        getSecurityManager().onResumeActivity();
-    }
-
-    /**
-     * Perform processing required when the activity becomes unable to interact with the user.
-     */
-    @Override
-    protected void onPause() {
-        getSecurityManager().onPauseActivity();
-
-        super.onPause();
     }
 
     /**
@@ -173,15 +150,17 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
         }
 
         Context context = view.getContext();
-        int rowsAdded = getMasterDatabase().addMovie(context, mMovie);
+        if (context != null) {
+            int rowsAdded = getMasterDatabase().addMovie(context, mMovie);
 
-        if (rowsAdded == 0) {
-            getViewUtils().displayErrorMessage(this,
-                    getString(R.string.movie_not_saved, mMovie.getImdbId()));
-        } else {
-            getViewUtils().displayInfoMessage(context,
-                     getString(R.string.saving_movie, mMovie.getTitle()));
-            resetData();
+            if (rowsAdded == 0) {
+                getViewUtils().displayErrorMessage(this,
+                        getString(R.string.movie_not_saved, mMovie.getImdbId()));
+            } else {
+                getViewUtils().displayInfoMessage(context,
+                        getString(R.string.saving_movie, mMovie.getTitle()));
+                resetData();
+            }
         }
 
     }
@@ -285,15 +264,6 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
     @NonNull
     private static MasterDatabase getMasterDatabase() {
         return ObjectFactory.getMasterDatabase();
-    }
-
-    /**
-     * Convenience method which returns a SecurityManager.
-     * @return a SecurityManager
-     */
-    @NonNull
-    private static SecurityManager getSecurityManager() {
-        return ObjectFactory.getSecurityManager();
     }
 
     /**

@@ -2,7 +2,6 @@ package uk.jumpingmouse.moviecompanion.model;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
@@ -45,7 +44,7 @@ public class MasterDatabaseFirebaseFree extends MasterDatabaseFirebase {
      * @return the number of rows inserted or updated
      */
     @Override
-    public int addMovie(@Nullable final Context context, @NonNull final Movie movie) {
+    public int addMovie(@NonNull final Context context, @NonNull final Movie movie) {
         throw new UnsupportedOperationException("Insufficient privileges for add movie");
     }
 
@@ -56,7 +55,7 @@ public class MasterDatabaseFirebaseFree extends MasterDatabaseFirebase {
      * @return the number of rows deleted
      */
     @Override
-    public int deleteMovie(@Nullable Context context, @NonNull String id) {
+    public int deleteMovie(@NonNull Context context, @NonNull String id) {
         throw new UnsupportedOperationException("Insufficient privileges for delete movie");
     }
 
@@ -69,7 +68,7 @@ public class MasterDatabaseFirebaseFree extends MasterDatabaseFirebase {
      * @return the number of rows inserted or updated
      */
     @Override
-    public int addAward(@Nullable final Context context, @NonNull final Award award) {
+    public int addAward(@NonNull final Context context, @NonNull final Award award) {
         throw new UnsupportedOperationException("Insufficient privileges for add award");
     }
 
@@ -80,7 +79,7 @@ public class MasterDatabaseFirebaseFree extends MasterDatabaseFirebase {
      * @return the number of rows deleted
      */
     @Override
-    public int deleteAward(@Nullable Context context, @Nullable String id) {
+    public int deleteAward(@NonNull Context context, @NonNull String id) {
         throw new UnsupportedOperationException("Insufficient privileges for delete award");
     }
 

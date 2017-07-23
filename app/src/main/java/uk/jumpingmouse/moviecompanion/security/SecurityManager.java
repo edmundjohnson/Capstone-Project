@@ -16,7 +16,6 @@ public interface SecurityManager {
     int RC_SIGN_IN = 1;
     int RC_ADD_MOVIE = 2;
     int RC_ADD_AWARD = 3;
-    int RC_EDIT_AWARD = 4;
 
     /**
      * Perform security processing required when creating activity.
