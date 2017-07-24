@@ -376,36 +376,37 @@ public final class DataContract {
         // Award List Filters
         // Strings are used for the filter values so they can be used in URIs.
 
-        public static final String FILTER_GENRE_ALL = "filter_genre_all";
+        public static final String FILTER_GENRE_ALL = "genre_all";
         public static final String FILTER_GENRE_DEFAULT = FILTER_GENRE_ALL;
 
-        // This map contains a mapping between genre filters and genres as stored in the database.
+        // This map contains a mapping between genre ids and genres as stored in the IMDb.
         // The map keys must match the values in arrays.xml "filter_genre_pref_key".
-        // The map values must match the values stored in the database and hence
+        // The map values must match the values stored in the IMDb database and hence
         // MUST NOT be translated!
         private static final Map<String, String> GENRES_STORED;
         static {
             Map<String, String> genresStoredModifiable = new HashMap<>();
-            genresStoredModifiable.put("filter_genre_action", "Action");
-            genresStoredModifiable.put("filter_genre_adventure", "Adventure");
-            genresStoredModifiable.put("filter_genre_animation", "Animation");
-            genresStoredModifiable.put("filter_genre_biography", "Biography");
-            genresStoredModifiable.put("filter_genre_comedy", "Comedy");
-            genresStoredModifiable.put("filter_genre_crime", "Crime");
-            genresStoredModifiable.put("filter_genre_documentary", "Documentary");
-            genresStoredModifiable.put("filter_genre_drama", "Drama");
-            genresStoredModifiable.put("filter_genre_fantasy", "Fantasy");
-            genresStoredModifiable.put("filter_genre_horror", "Horror");
-            genresStoredModifiable.put("filter_genre_music", "Music");
-            genresStoredModifiable.put("filter_genre_mystery", "Mystery");
-            genresStoredModifiable.put("filter_genre_romance", "Romance");
-            genresStoredModifiable.put("filter_genre_thriller", "Thriller");
+            genresStoredModifiable.put("genre_action", "Action");
+            genresStoredModifiable.put("genre_adventure", "Adventure");
+            genresStoredModifiable.put("genre_animation", "Animation");
+            genresStoredModifiable.put("genre_biography", "Biography");
+            genresStoredModifiable.put("genre_comedy", "Comedy");
+            genresStoredModifiable.put("genre_crime", "Crime");
+            genresStoredModifiable.put("genre_documentary", "Documentary");
+            genresStoredModifiable.put("genre_drama", "Drama");
+            genresStoredModifiable.put("genre_fantasy", "Fantasy");
+            genresStoredModifiable.put("genre_horror", "Horror");
+            genresStoredModifiable.put("genre_music", "Music");
+            genresStoredModifiable.put("genre_mystery", "Mystery");
+            genresStoredModifiable.put("genre_romance", "Romance");
+            genresStoredModifiable.put("genre_sci_fi", "Sci-Fi");
+            genresStoredModifiable.put("genre_thriller", "Thriller");
             GENRES_STORED = Collections.unmodifiableMap(genresStoredModifiable);
         }
 
         /**
          * Returns a genre as stored in the database for a supplied genre key.
-         * @param genreKey a genre key, e.g."filter_genre_comedy"
+         * @param genreKey a genre key, e.g."genre_comedy"
          * @return the genre as stored in the database, e.g."Comedy", or null if there is
          *         no stored genre corresponding to the genreKey
          */

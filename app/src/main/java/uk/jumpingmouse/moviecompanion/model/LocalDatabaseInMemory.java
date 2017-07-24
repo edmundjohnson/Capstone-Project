@@ -591,13 +591,14 @@ public final class LocalDatabaseInMemory implements LocalDatabase {
     /**
      * Returns whether a ViewAward is allowed through when filtered by genre.
      * @param viewAward the ViewAward
-     * @param keyGenre the genre key being used as a filter, e.g. "filter_genre_comedy"
+     * @param keyGenre the genre key being used as a filter, e.g. "genre_comedy"
      * @return true if the ViewAward is allowed through the filter, false otherwise
      */
     private boolean isIncludedByFilterGenre(@NonNull ViewAward viewAward, @NonNull String keyGenre) {
         if (keyGenre.equals(DataContract.ViewAwardEntry.FILTER_GENRE_ALL)) {
             return true;
         }
+        // TODO use genres from database
         String filterGenreStored = DataContract.ViewAwardEntry.getGenreStoredForGenreKey(keyGenre);
         //noinspection SimplifiableIfStatement
         if (filterGenreStored == null) {

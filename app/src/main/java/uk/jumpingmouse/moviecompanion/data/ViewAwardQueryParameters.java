@@ -82,7 +82,7 @@ public final class ViewAwardQueryParameters {
      * {@code
      *   ViewAwardQueryParameters movie = ViewAwardQueryParameters.builder()
      *         .sortOrder("awardDate DESC")
-     *         .filterGenre("filter_genre_comedy")
+     *         .filterGenre("genre_comedy")
      *         .filterWishlist("filter_wishlist_any")
      *         // etc
      *        .build();

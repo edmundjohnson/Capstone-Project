@@ -3,42 +3,44 @@
 
     <!-- Genre filter -->
     <!-- The order of filter_genre_pref_key must match the order of filter_genre_pref_display. -->
+    <!-- For each language, filter_genre_pref_display must be translated and ordered alphabetically,
+         with filter_genre_pref_key then being reordered to match filter_genre_pref_display. -->
 
     <!-- The genre filter option keys, as stored in the shared preferences. -->
     <string-array name="filter_genre_pref_key">
-        <item>filter_genre_all</item>
-        <item>filter_genre_action</item>
-        <item>filter_genre_adventure</item>
-        <item>filter_genre_animation</item>
-        <item>filter_genre_biography</item>
-        <item>filter_genre_comedy</item>
-        <item>filter_genre_crime</item>
-        <item>filter_genre_documentary</item>
-        <item>filter_genre_drama</item>
-        <item>filter_genre_fantasy</item>
-        <item>filter_genre_horror</item>
-        <item>filter_genre_music</item>
-        <item>filter_genre_mystery</item>
-        <item>filter_genre_romance</item>
-        <item>filter_genre_thriller</item>
+        <item>genre_action</item>
+        <item>genre_adventure</item>
+        <item>genre_animation</item>
+        <item>genre_biography</item>
+        <item>genre_comedy</item>
+        <item>genre_crime</item>
+        <item>genre_documentary</item>
+        <item>genre_drama</item>
+        <item>genre_fantasy</item>
+        <item>genre_horror</item>
+        <item>genre_music</item>
+        <item>genre_mystery</item>
+        <item>genre_romance</item>
+        <item>genre_sci_fi</item>
+        <item>genre_thriller</item>
     </string-array>
     <!-- The genre filter options, as displayed in the drop-down -->
     <string-array name="filter_genre_pref_display">
-        <item>@string/filter_genre_all</item>
-        <item>@string/filter_genre_action</item>
-        <item>@string/filter_genre_adventure</item>
-        <item>@string/filter_genre_animation</item>
-        <item>@string/filter_genre_biography</item>
-        <item>@string/filter_genre_comedy</item>
-        <item>@string/filter_genre_crime</item>
-        <item>@string/filter_genre_documentary</item>
-        <item>@string/filter_genre_drama</item>
-        <item>@string/filter_genre_fantasy</item>
-        <item>@string/filter_genre_horror</item>
-        <item>@string/filter_genre_music</item>
-        <item>@string/filter_genre_mystery</item>
-        <item>@string/filter_genre_romance</item>
-        <item>@string/filter_genre_thriller</item>
+        <item>@string/genre_action</item>
+        <item>@string/genre_adventure</item>
+        <item>@string/genre_animation</item>
+        <item>@string/genre_biography</item>
+        <item>@string/genre_comedy</item>
+        <item>@string/genre_crime</item>
+        <item>@string/genre_documentary</item>
+        <item>@string/genre_drama</item>
+        <item>@string/genre_fantasy</item>
+        <item>@string/genre_horror</item>
+        <item>@string/genre_music</item>
+        <item>@string/genre_mystery</item>
+        <item>@string/genre_romance</item>
+        <item>@string/genre_sci_fi</item>
+        <item>@string/genre_thriller</item>
     </string-array>
 
     <!-- Wishlist filter -->

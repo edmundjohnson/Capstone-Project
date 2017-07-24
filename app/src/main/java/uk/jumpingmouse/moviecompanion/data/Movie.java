@@ -107,6 +107,7 @@ public final class Movie implements Parcelable {
      * Returns the movie's unique id, e.g. "4016934".
      * @return the movie's unique id
      */
+    @NonNull
     public String getId() {
         return id;
     }

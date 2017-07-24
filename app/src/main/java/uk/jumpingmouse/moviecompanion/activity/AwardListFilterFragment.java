@@ -18,7 +18,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import uk.jumpingmouse.moviecompanion.R;
+import uk.jumpingmouse.moviecompanion.data.Genre;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.moviecompanion.utils.JavaUtils;
 import uk.jumpingmouse.moviecompanion.utils.PrefUtils;
@@ -41,42 +45,84 @@ public final class AwardListFilterFragment extends DialogFragment {
 
         if (view != null && context != null && context.getResources() != null) {
 
+            // TODO get genres from database
+            List<Genre> genres = new ArrayList<>();
+            genres.add(Genre.builder()
+                    .id("genre_action")
+                    .storedValue("Action")
+                    .displayInFilter(true)
+                    .build());
+            genres.add(Genre.builder()
+                    .id("genre_animation").storedValue("Animation").displayInFilter(false).build());
+            genres.add(Genre.builder()
+                    .id("genre_comedy").storedValue("Comedy").displayInFilter(true).build());
+            genres.add(Genre.builder()
+                    .id("genre_fantasy").storedValue("Fantasy").displayInFilter(true).build());
+            genres.add(Genre.builder()
+                    .id("genre_music").storedValue("Music").displayInFilter(true).build());
+
             // Genre list filter
-            String[] filterValuesGenre =
+            String[] filterPrefValuesGenreAll =
                     context.getResources().getStringArray(R.array.filter_genre_pref_key);
+            String[] filterDisplayValuesGenreAll =
+                    context.getResources().getStringArray(R.array.filter_genre_pref_display);
+
+            // Initialise the arrays of active pref values and display values.
+            List<String> listFilterPrefValuesGenreActive = new ArrayList<>();
+            List<String> listFilterDisplayValuesGenreActive = new ArrayList<>();
+            listFilterPrefValuesGenreActive.add(DataContract.ViewAwardEntry.FILTER_GENRE_DEFAULT);
+            listFilterDisplayValuesGenreActive.add(getString(R.string.filter_genre_default));
+
+            // Load the active filters into the arrays of active pref values and display values.
+            for (int filterIndex = 0; filterIndex < filterPrefValuesGenreAll.length; filterIndex++) {
+                for (Genre genre : genres) {
+                    if (genre.getId().equals(filterPrefValuesGenreAll[filterIndex])
+                            && genre.isDisplayInFilter()) {
+                        listFilterPrefValuesGenreActive.add(filterPrefValuesGenreAll[filterIndex]);
+                        listFilterDisplayValuesGenreActive.add(filterDisplayValuesGenreAll[filterIndex]);
+                        break;
+                    }
+                }
+            }
+            int activeGenreCount = listFilterPrefValuesGenreActive.size();
+            String[] filterPrefValuesGenreActive =
+                    listFilterPrefValuesGenreActive.toArray(new String[activeGenreCount]);
+            String[] filterDisplayValuesGenreActive =
+                    listFilterDisplayValuesGenreActive.toArray(new String[activeGenreCount]);
+
             ListFilter listFilterGenre = new ListFilter(
-                    R.string.pref_award_list_filter_genre_key, filterValuesGenre,
+                    R.string.pref_award_list_filter_genre_key, filterPrefValuesGenreActive,
                     DataContract.ViewAwardEntry.FILTER_GENRE_DEFAULT);
             // Genre spinner
             final ListFilterSpinner spinnerGenre = new ListFilterSpinner(
-                    context, view, listFilterGenre,
-                    R.id.spnFilterGenre, R.id.frameFilterGenre, R.array.filter_genre_pref_display);
+                    context, view, listFilterGenre, R.id.spnFilterGenre,
+                    R.id.frameFilterGenre, filterDisplayValuesGenreActive);
 
             // Wishlist filter
-            String[] filterValuesWishlist =
+            String[] filterPrefValuesWishlist =
                     context.getResources().getStringArray(R.array.filter_wishlist_pref_key);
             ListFilter listFilterWishlist = new ListFilter(
-                    R.string.pref_award_list_filter_wishlist_key, filterValuesWishlist,
+                    R.string.pref_award_list_filter_wishlist_key, filterPrefValuesWishlist,
                     DataContract.ViewAwardEntry.FILTER_WISHLIST_DEFAULT);
             final ListFilterSpinner spinnerWishlist = new ListFilterSpinner(
-                    context, view, listFilterWishlist,
-                    R.id.spnFilterWishlist, R.id.frameFilterWishlist, R.array.filter_wishlist_pref_display);
+                    context, view, listFilterWishlist, R.id.spnFilterWishlist,
+                    R.id.frameFilterWishlist, R.array.filter_wishlist_pref_display);
 
             // Watched filter
-            String[] filterValuesWatched =
+            String[] filterPrefValuesWatched =
                     context.getResources().getStringArray(R.array.filter_watched_pref_key);
             ListFilter listFilterWatched = new ListFilter(
-                    R.string.pref_award_list_filter_watched_key, filterValuesWatched,
+                    R.string.pref_award_list_filter_watched_key, filterPrefValuesWatched,
                     DataContract.ViewAwardEntry.FILTER_WATCHED_DEFAULT);
             final ListFilterSpinner spinnerWatched = new ListFilterSpinner(
                     context, view, listFilterWatched,
                     R.id.spnFilterWatched, R.id.frameFilterWatched, R.array.filter_watched_pref_display);
 
             // Favourite filter
-            String[] filterValuesFavourite =
+            String[] filterPrefValuesFavourite =
                     context.getResources().getStringArray(R.array.filter_favourite_pref_key);
             ListFilter listFilterFavourite = new ListFilter(
-                    R.string.pref_award_list_filter_favourite_key, filterValuesFavourite,
+                    R.string.pref_award_list_filter_favourite_key, filterPrefValuesFavourite,
                     DataContract.ViewAwardEntry.FILTER_FAVOURITE_DEFAULT);
             final ListFilterSpinner spinnerFavourite = new ListFilterSpinner(
                     context, view, listFilterFavourite,
@@ -84,10 +130,10 @@ public final class AwardListFilterFragment extends DialogFragment {
                     R.array.filter_favourite_pref_display);
 
             // Category filter
-            String[] filterValuesCategory =
+            String[] filterPrefValuesCategory =
                     context.getResources().getStringArray(R.array.filter_category_pref_key);
             ListFilter listFilterCategory = new ListFilter(
-                    R.string.pref_award_list_filter_category_key, filterValuesCategory,
+                    R.string.pref_award_list_filter_category_key, filterPrefValuesCategory,
                     DataContract.ViewAwardEntry.FILTER_CATEGORY_DEFAULT);
             final ListFilterSpinner spinnerCategory = new ListFilterSpinner(
                     context, view, listFilterCategory,
@@ -133,15 +179,15 @@ public final class AwardListFilterFragment extends DialogFragment {
         /**
          * Construct the list filter.
          * @param filterPrefKeyResId the id of the shared preference which stores the filter value
-         * @param filterValues an array of Strings containing the valid values of the filter
+         * @param filterPrefValues an array of Strings containing the valid values of the filter
          * @param filterValueDefault the default value of the filter
          */
-        ListFilter(@StringRes final int filterPrefKeyResId, @Nullable String[] filterValues,
+        ListFilter(@StringRes final int filterPrefKeyResId, @Nullable String[] filterPrefValues,
                    @NonNull final String filterValueDefault) {
 
             mFilterPrefKeyResId = filterPrefKeyResId;
-            mFilterValues = filterValues == null
-                    ? new String[]{ filterValueDefault } : filterValues;
+            mFilterValues = filterPrefValues == null
+                    ? new String[]{ filterValueDefault } : filterPrefValues;
             mFilterValueDefault = filterValueDefault;
         }
 
@@ -230,27 +276,47 @@ public final class AwardListFilterFragment extends DialogFragment {
          * @param context the context
          * @param view a view containing the spinner and its container
          * @param listFilter the list filter on which the spinner is based
-         * @param spinnerViewId the view id of the spinner
-         * @param containerViewId the view id of the frame containing the spinner
-         * @param spinnerDisplayValuesArrayId the array id of an array of Strings containing the
+         * @param spinnerViewIdRes the view id of the spinner
+         * @param containerViewIdRes the view id of the frame containing the spinner
+         * @param displayValuesArrayRes the array id of an array of Strings containing the
          *        displayed values of the spinner options, ordered in their display order. The order
          *        of the array must correspond to the order of the filter values in listFilter.
          */
         ListFilterSpinner(@NonNull Context context, @NonNull View view,
                           @NonNull final ListFilter listFilter,
-                          @IdRes int spinnerViewId, @IdRes int containerViewId,
-                          @ArrayRes int spinnerDisplayValuesArrayId
+                          @IdRes int spinnerViewIdRes, @IdRes int containerViewIdRes,
+                          @ArrayRes int displayValuesArrayRes) {
+            // Use the constructor which takes an array for the display values
+            this(context, view, listFilter, spinnerViewIdRes, containerViewIdRes,
+                    context.getResources().getStringArray(displayValuesArrayRes));
+        }
+
+        /**
+         * Construct a spinner which allows the list to be filtered.
+         * @param context the context
+         * @param view a view containing the spinner and its container
+         * @param listFilter the list filter on which the spinner is based
+         * @param spinnerViewIdRes the view id of the spinner
+         * @param containerViewIdRes the view id of the frame containing the spinner
+         * @param filterDisplayValuesArray an array of Strings containing the displayed values
+         *        of the spinner options, ordered in their display order. The order of the array
+         *        must correspond to the order of the filter values in listFilter.
+         */
+        ListFilterSpinner(@NonNull Context context, @NonNull View view,
+                          @NonNull final ListFilter listFilter,
+                          @IdRes int spinnerViewIdRes, @IdRes int containerViewIdRes,
+                          String[] filterDisplayValuesArray
         ) {
 
             mListFilter = listFilter;
-            mSpinner = (Spinner) view.findViewById(spinnerViewId);
-            View spinnerContainer = view.findViewById(containerViewId);
+            mSpinner = (Spinner) view.findViewById(spinnerViewIdRes);
+            View spinnerContainer = view.findViewById(containerViewIdRes);
 
             // Set a listener on the spinner to change its background colour on focus
             setOnFocusChangeListener(context, mSpinner, spinnerContainer);
 
             // Set an adapter for the spinner
-            spinnerSetAdapter(context, mSpinner, spinnerDisplayValuesArrayId);
+            spinnerSetAdapter(context, mSpinner, filterDisplayValuesArray);
 
             // Set the spinner to the position of the current filter value
             final int filterIndex = listFilter.getFilterIndex(context);
@@ -292,31 +358,31 @@ public final class AwardListFilterFragment extends DialogFragment {
         /**
          * Set the OnFocusChangeListener for a filter spinner.
          * This is for D-Pad operation; the background colour of the spinner which has
-         * focus is changed so the user knows which spinner has focus.
+         * focus is changed, so the user knows which spinner has focus.
          * @param context the context
          * @param spinner the spinner
          * @param spinnerContainer the view that contains the spinner
          */
         private void setOnFocusChangeListener(@NonNull final Context context,
-                                      @NonNull final Spinner spinner, final View spinnerContainer) {
+                                  @NonNull final Spinner spinner, final View spinnerContainer) {
 
             // For D-Pad operation, change the background colour of the spinner container when the
             // spinner has focus.
             spinner.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View view, boolean hasFocus) {
-                    @ColorRes int backgroundResId;
+                    @ColorRes int backgroundColorRes;
                     if (hasFocus) {
-                        backgroundResId = R.color.green_100;
+                        backgroundColorRes = R.color.green_100;
                     } else {
-                        backgroundResId = R.color.green_50;
+                        backgroundColorRes = R.color.green_50;
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         spinnerContainer.setBackgroundColor(context.getResources()
-                                .getColor(backgroundResId, view.getContext().getTheme()));
+                                .getColor(backgroundColorRes, view.getContext().getTheme()));
                     } else {
                         spinnerContainer.setBackgroundColor(context.getResources()
-                                .getColor(backgroundResId));
+                                .getColor(backgroundColorRes));
                     }
                 }
             });
@@ -326,13 +392,27 @@ public final class AwardListFilterFragment extends DialogFragment {
          * Creates an array adapter and applies it to a spinner.
          * @param context the context
          * @param spinner the spinner to which the adapter is to be applied
-         * @param textArrayResId an array of text strings to be displayed by the spinner
+         * @param displayValuesArrayRes an array of strings to be displayed by the spinner
          */
         private void spinnerSetAdapter(@NonNull Context context, @NonNull Spinner spinner,
-                                       @ArrayRes int textArrayResId) {
-            // Create an ArrayAdapter using an array of strings to display and the default spinner layout
-            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context,
-                    textArrayResId, android.R.layout.simple_spinner_item);
+                                       @ArrayRes int displayValuesArrayRes) {
+            String[] textArray = context.getResources().getStringArray(displayValuesArrayRes);
+            spinnerSetAdapter(context, spinner, textArray);
+        }
+
+        /**
+         * Creates an array adapter and applies it to a spinner.
+         * @param context the context
+         * @param spinner the spinner to which the adapter is to be applied
+         * @param displayValuesArray an array of strings to be displayed by the spinner
+         */
+        private void spinnerSetAdapter(@NonNull Context context, @NonNull Spinner spinner,
+                                       String[] displayValuesArray) {
+            // Create an ArrayAdapter using the default spinner layout and
+            // an array of strings to display
+            @SuppressWarnings("unchecked")
+            ArrayAdapter<String> adapter = new ArrayAdapter(
+                    context, android.R.layout.simple_spinner_item, displayValuesArray);
 
             // Specify the layout to use when the list of choices appears
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
