@@ -543,24 +543,7 @@ public final class Movie implements Parcelable {
         if (o instanceof Movie) {
             Movie that = (Movie) o;
             return (this.id.equals(that.id))
-                    && (this.imdbId.equals(that.imdbId))
-                    && (this.title.equals(that.title))
-                    && ((this.year == null) ? (that.year == null) : this.year.equals(that.year))
-                    && ((this.rated == null) ? (that.rated == null) : this.rated.equals(that.rated))
-                    && (this.released == that.released)
-                    && (this.runtime == that.runtime)
-                    && ((this.genre == null) ? (that.genre == null) : this.genre.equals(that.genre))
-                    && ((this.director == null) ? (that.director == null)
-                            : this.director.equals(that.director))
-                    && ((this.writer == null) ? (that.writer == null) : this.writer.equals(that.writer))
-                    && ((this.actors == null) ? (that.actors == null) : this.actors.equals(that.actors))
-                    && ((this.plot == null) ? (that.plot == null) : this.plot.equals(that.plot))
-                    && ((this.language == null) ? (that.language == null)
-                            : this.language.equals(that.language))
-                    && ((this.country == null) ? (that.country == null)
-                            : this.country.equals(that.country))
-                    && ((this.poster == null) ? (that.poster == null)
-                            : this.poster.equals(that.poster));
+                    || (this.imdbId.equals(that.imdbId));
         }
         return false;
     }
@@ -572,32 +555,6 @@ public final class Movie implements Parcelable {
         h ^= this.id.hashCode();
         h *= 1000003;
         h ^= this.imdbId.hashCode();
-        h *= 1000003;
-        h ^= this.title.hashCode();
-        h *= 1000003;
-        h ^= (year == null) ? 0 : this.year.hashCode();
-        h *= 1000003;
-        h ^= (rated == null) ? 0 : this.rated.hashCode();
-        h *= 1000003;
-        h ^= (this.released >>> 32) ^ this.released;
-        h *= 1000003;
-        h ^= this.runtime;
-        h *= 1000003;
-        h ^= (genre == null) ? 0 : this.genre.hashCode();
-        h *= 1000003;
-        h ^= (director == null) ? 0 : this.director.hashCode();
-        h *= 1000003;
-        h ^= (writer == null) ? 0 : this.writer.hashCode();
-        h *= 1000003;
-        h ^= (actors == null) ? 0 : this.actors.hashCode();
-        h *= 1000003;
-        h ^= (plot == null) ? 0 : this.plot.hashCode();
-        h *= 1000003;
-        h ^= (language == null) ? 0 : this.language.hashCode();
-        h *= 1000003;
-        h ^= (country == null) ? 0 : this.country.hashCode();
-        h *= 1000003;
-        h ^= (poster == null) ? 0 : this.poster.hashCode();
         return h;
     }
 

@@ -255,10 +255,7 @@ public final class UserMovie implements Parcelable {
         }
         if (o instanceof UserMovie) {
             UserMovie that = (UserMovie) o;
-            return (this.id.equals(that.id))
-                    && (this.onWishlist == that.onWishlist)
-                    && (this.watched == that.watched)
-                    && (this.favourite == that.favourite);
+            return (this.id.equals(that.id));
         }
         return false;
     }
@@ -268,12 +265,6 @@ public final class UserMovie implements Parcelable {
         int h = 1;
         h *= 1000003;
         h ^= this.id.hashCode();
-        h *= 1000003;
-        h ^= this.onWishlist ? 1 : 0;
-        h *= 1000003;
-        h ^= this.watched ? 1 : 0;
-        h *= 1000003;
-        h ^= this.favourite ? 1 : 0;
         return h;
     }
 

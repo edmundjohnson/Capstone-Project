@@ -494,19 +494,7 @@ public final class ViewAward implements Parcelable {
         if (o instanceof ViewAward) {
             ViewAward that = (ViewAward) o;
             return (this.id.equals(that.id))
-                    && (this.movieId.equals(that.movieId))
-                    && (this.imdbId.equals(that.imdbId))
-                    && (this.awardDate.equals(that.awardDate))
-                    && (this.category.equals(that.category))
-                    && (this.review.equals(that.review))
-                    && (this.displayOrder == that.displayOrder)
-                    && (this.title.equals(that.title))
-                    && (this.runtime == that.runtime)
-                    && ((this.genre == null) ? (that.genre == null) : this.genre.equals(that.genre))
-                    && ((this.poster == null) ? (that.poster == null) : this.poster.equals(that.poster))
-                    && (this.onWishlist == that.onWishlist)
-                    && (this.watched == that.watched)
-                    && (this.favourite == that.favourite);
+                    && (this.movieId.equals(that.movieId));
         }
         return false;
     }
@@ -518,30 +506,6 @@ public final class ViewAward implements Parcelable {
         h ^= this.id.hashCode();
         h *= 1000003;
         h ^= this.movieId.hashCode();
-        h *= 1000003;
-        h ^= this.imdbId.hashCode();
-        h *= 1000003;
-        h ^= this.awardDate.hashCode();
-        h *= 1000003;
-        h ^= this.category.hashCode();
-        h *= 1000003;
-        h ^= this.review.hashCode();
-        h *= 1000003;
-        h ^= this.displayOrder;
-        h *= 1000003;
-        h ^= this.title.hashCode();
-        h *= 1000003;
-        h ^= this.runtime;
-        h *= 1000003;
-        h ^= (genre == null) ? 0 : this.genre.hashCode();
-        h *= 1000003;
-        h ^= (poster == null) ? 0 : this.poster.hashCode();
-        h *= 1000003;
-        h ^= this.onWishlist ? 1 : 0;
-        h *= 1000003;
-        h ^= this.watched ? 1 : 0;
-        h *= 1000003;
-        h ^= this.favourite ? 1 : 0;
         return h;
     }
 
