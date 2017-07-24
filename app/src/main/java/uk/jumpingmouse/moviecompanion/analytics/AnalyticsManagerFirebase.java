@@ -12,9 +12,14 @@ import com.google.firebase.analytics.FirebaseAnalytics;
  * A Firebase implementation of AnalyticsManager.
  * @author Edmund Johnson
  */
-public class AnalyticsManagerFirebase implements AnalyticsManager {
+public final class AnalyticsManagerFirebase implements AnalyticsManager {
 
-    // A link to a movie on the IMDb website
+    // Content types
+    // User signing into app
+    private static final String CONTENT_TYPE_USER_SIGN_IN = "CONTENT_TYPE_USER_SIGN_IN";
+    // View a movie within the app
+    private static final String CONTENT_TYPE_VIEW_MOVIE = "CONTENT_TYPE_VIEW_MOVIE";
+    // Click on the IMDb link for a movie
     private static final String CONTENT_TYPE_IMDB_LINK_MOVIE = "CONTENT_TYPE_IMDB_LINK_MOVIE";
 
     // The singleton instance of this class.
@@ -55,34 +60,33 @@ public class AnalyticsManagerFirebase implements AnalyticsManager {
     }
 
     /**
+     * Logs a user signing into the app.
+     * @param uid the user uid
+     * @param providerId the provider id
+     */
+    @Override
+    public void logUserSignIn(@NonNull String uid, @NonNull String providerId) {
+        logSelectContentEvent(CONTENT_TYPE_USER_SIGN_IN, uid, providerId);
+    }
+
+    /**
+     * Logs a user clicking on a list item to go to the movie page.
+     * @param movieId the movie id
+     * @param movieTitle the movie title
+     */
+    @Override
+    public void logViewMovie(@NonNull String movieId, @NonNull String movieTitle) {
+        logSelectContentEvent(CONTENT_TYPE_VIEW_MOVIE, movieId, movieTitle);
+    }
+
+    /**
      * Logs a user clicking on the IMDb link to a movie.
      * @param imdbId the movie imdbId
      * @param movieTitle the movie title
      */
     @Override
     public void logImdbLink(@NonNull String imdbId, @NonNull String movieTitle) {
-        logSelectContentEvent(imdbId, movieTitle, CONTENT_TYPE_IMDB_LINK_MOVIE);
-    }
-
-    /**
-     * Logs a Firebase SELECT_CONTENT event.
-     * @param context the context
-     * @param itemId the event id
-     * @param itemName the event name
-     * @param contentType the event content type
-     */
-    private void logEventSelectContent(@Nullable Context context, @NonNull String itemId,
-                                       @NonNull String itemName, @NonNull String contentType) {
-        FirebaseAnalytics firebaseAnalytics = getFirebaseAnalytics(context);
-
-        if (firebaseAnalytics != null) {
-            Bundle bundle = new Bundle();
-            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, itemId);
-            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, itemName);
-            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, contentType);
-
-            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-        }
+        logSelectContentEvent(CONTENT_TYPE_IMDB_LINK_MOVIE, imdbId, movieTitle);
     }
 
     /**
@@ -91,12 +95,13 @@ public class AnalyticsManagerFirebase implements AnalyticsManager {
      * @param name the event name
      * @param contentType the event content type
      */
-    private void logSelectContentEvent(@NonNull String id, @NonNull String name,
-                                       @SuppressWarnings("SameParameterValue") @NonNull String contentType) {
+    private void logSelectContentEvent(
+            @SuppressWarnings("SameParameterValue") @NonNull String contentType,
+            @NonNull String id, @NonNull String name) {
         Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, contentType);
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, id);
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, name);
-        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, contentType);
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 

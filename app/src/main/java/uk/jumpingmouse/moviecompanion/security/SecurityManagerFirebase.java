@@ -19,6 +19,7 @@ import java.util.Arrays;
 import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
+import uk.jumpingmouse.moviecompanion.analytics.AnalyticsManager;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.moviecompanion.model.MasterDatabase;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
@@ -152,15 +153,6 @@ public final class SecurityManagerFirebase implements SecurityManager {
                             R.string.unknown_error_on_sign_in, true);
                 }
             }
-        // Are we are returning from an admin screen (perhaps via back arrow on sign-in screen)?
-        // (No longer possible)
-        } else if (requestCode == SecurityManager.RC_ADD_MOVIE
-                || requestCode == SecurityManager.RC_ADD_AWARD) {
-            // if the user has clicked back arrow after signing out on a different activity,
-            // we end up here
-            if (!isUserSignedIn()) {
-                activity.finish();
-            }
         }
     }
 
@@ -170,6 +162,12 @@ public final class SecurityManagerFirebase implements SecurityManager {
      */
     private void onSignedInInitialise(@NonNull Context context) {
         Timber.d("onSignedInInitialise");
+
+        // log the event in analytics
+        if (mFirebaseAuth != null && mFirebaseAuth.getCurrentUser() != null) {
+            FirebaseUser user = mFirebaseAuth.getCurrentUser();
+            getAnalyticsManager().logUserSignIn(user.getUid(), user.getProviderId());
+        }
 
         getMasterDatabase().onSignedIn(context);
     }
@@ -233,21 +231,30 @@ public final class SecurityManagerFirebase implements SecurityManager {
     }
 
     /**
-     * Convenience method which returns a reference to a ViewUtils object.
-     * @return a reference to a ViewUtils object
-     */
-    @NonNull
-    private static ViewUtils getViewUtils() {
-        return ObjectFactory.getViewUtils();
-    }
-
-    /**
      * Convenience method for returning a reference to the master database.
      * @return a reference to the master database
      */
     @NonNull
     private static MasterDatabase getMasterDatabase() {
         return ObjectFactory.getMasterDatabase();
+    }
+
+    /**
+     * Convenience method which returns an AnalyticsManager.
+     * @return an AnalyticsManager
+     */
+    @NonNull
+    private static AnalyticsManager getAnalyticsManager() {
+        return ObjectFactory.getAnalyticsManager();
+    }
+
+    /**
+     * Convenience method which returns a reference to a ViewUtils object.
+     * @return a reference to a ViewUtils object
+     */
+    @NonNull
+    private static ViewUtils getViewUtils() {
+        return ObjectFactory.getViewUtils();
     }
 
 }

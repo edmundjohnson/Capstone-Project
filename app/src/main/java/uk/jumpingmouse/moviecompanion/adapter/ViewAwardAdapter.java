@@ -23,6 +23,7 @@ import com.squareup.picasso.Picasso;
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.activity.MovieActivity;
+import uk.jumpingmouse.moviecompanion.analytics.AnalyticsManager;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
@@ -261,6 +262,11 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
             int position = getAdapterPosition();
             if (mCursor.moveToPosition(position)) {
                 final String viewAwardId = mCursor.getString(DataContract.ViewAwardEntry.COL_ID);
+                String movieId = mCursor.getString(DataContract.ViewAwardEntry.COL_MOVIE_ID);
+                String movieTitle = mCursor.getString(DataContract.ViewAwardEntry.COL_TITLE);
+
+                // log the event in analytics
+                getAnalyticsManager().logViewMovie(movieId, movieTitle);
 
                 // Build an intent for launching the movie activity
                 Uri uri = DataContract.ViewAwardEntry.buildUriForRowById(viewAwardId);
@@ -316,6 +322,15 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
         final TextView getTxtAwardDate() {
             return txtAwardDate;
         }
+    }
+
+    /**
+     * Convenience method which returns an AnalyticsManager.
+     * @return an AnalyticsManager
+     */
+    @NonNull
+    private static AnalyticsManager getAnalyticsManager() {
+        return ObjectFactory.getAnalyticsManager();
     }
 
 }

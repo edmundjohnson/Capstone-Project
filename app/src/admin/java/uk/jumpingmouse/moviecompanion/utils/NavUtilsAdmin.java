@@ -12,7 +12,6 @@ import uk.jumpingmouse.moviecompanion.activity.AddMovieActivity;
 import uk.jumpingmouse.moviecompanion.activity.EditAwardActivity;
 import uk.jumpingmouse.moviecompanion.data.ViewAward;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
-import uk.jumpingmouse.moviecompanion.security.SecurityManager;
 
 /**
  * Class containing utility methods related to navigation.
@@ -97,7 +96,7 @@ public class NavUtilsAdmin extends NavUtils {
      * @param activity the activity invoking the activity to be displayed
      */
     private void displayAddMovie(@NonNull AppCompatActivity activity) {
-        displayActivity(activity, AddMovieActivity.class, SecurityManager.RC_ADD_MOVIE);
+        displayActivity(activity, AddMovieActivity.class);
     }
 
     /**
@@ -105,7 +104,7 @@ public class NavUtilsAdmin extends NavUtils {
      * @param activity the activity invoking the activity to be displayed
      */
     private void displayAddAward(@NonNull AppCompatActivity activity) {
-        displayActivity(activity, AddAwardActivity.class, SecurityManager.RC_ADD_AWARD);
+        displayActivity(activity, AddAwardActivity.class);
     }
 
     /**
@@ -124,15 +123,10 @@ public class NavUtilsAdmin extends NavUtils {
      * Displays an activity.
      * @param activity the activity invoking the activity to be displayed
      * @param activityClass the class of the activity to be displayed, e.g. AddMovieActivity.class
-     * @param requestCode the request code to pass to the activity to be displayed
      */
-    private void displayActivity(@NonNull AppCompatActivity activity, @NonNull Class activityClass,
-                                 int requestCode) {
+    private void displayActivity(@NonNull AppCompatActivity activity, @NonNull Class activityClass) {
         Intent intent = new Intent(activity, activityClass);
-        // We always do a startActivityForResult(...) because we could sign out
-        // on any activity, and then all activities on the stack must be able
-        // to detect this and finish (in onActivityResult(...)).
-        activity.startActivityForResult(intent, requestCode);
+        activity.startActivity(intent);
     }
 
 }

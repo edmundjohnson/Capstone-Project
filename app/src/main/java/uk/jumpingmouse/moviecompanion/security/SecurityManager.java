@@ -14,8 +14,6 @@ public interface SecurityManager {
     // Request codes
     // Use this RC_SIGN_IN rather than the Firebase automatically-generated static import
     int RC_SIGN_IN = 1;
-    int RC_ADD_MOVIE = 2;
-    int RC_ADD_AWARD = 3;
 
     /**
      * Perform security processing required when creating activity.
