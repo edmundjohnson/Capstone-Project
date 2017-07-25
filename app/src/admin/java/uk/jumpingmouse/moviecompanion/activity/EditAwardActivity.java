@@ -43,7 +43,7 @@ public class EditAwardActivity extends AppCompatActivity {
 
     // Screen fields - award
     private TextView mTxtAwardId;
-    private EditText mTxtAwardDate;
+    private TextView mTxtAwardDate;
     private RadioGroup mRadioAwardCategory;
     private RadioButton mRadioAwardCategoryMovie;
     private RadioButton mRadioAwardCategoryDvd;

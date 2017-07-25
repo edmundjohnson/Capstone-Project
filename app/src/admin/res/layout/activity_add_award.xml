@@ -39,7 +39,8 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:text="@string/button_label_fetch_movie_details"
-                android:onClick="onFetchMovieDetails" />
+                android:onClick="onFetchMovieDetails"
+                tools:ignore="TextFields" />
 
             <!-- The remaining fields are hidden until the movie has been fetched. -->
 
@@ -85,7 +86,7 @@
                     android:inputType="text|number"
                     android:hint="@string/hint_award_date"
                     style="@style/FieldEditStyle"
-                    tools:text="@string/example_award_date"
+                    tools:text="@string/example_award_date_input"
                     tools:visibility="visible"
                     tools:ignore="TextFields" />
 

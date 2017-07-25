@@ -92,15 +92,13 @@
                     android:layout_height="wrap_content"
                     android:text="@string/label_award_date"
                     style="@style/LabelStyle" />
-                <EditText
+                <TextView
                     android:id="@id/txtAwardDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:inputType="text|number"
                     android:hint="@string/hint_award_date"
-                    style="@style/FieldEditStyle"
-                    tools:text="@string/example_award_date"
-                    tools:ignore="TextFields" />
+                    style="@style/FieldValueStyle"
+                    tools:text="@string/example_award_date_input" />
 
                 <!-- Category -->
                 <TextView
@@ -119,11 +117,13 @@
                         android:id="@+id/radioCategoryMovie"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:enabled="false"
                         android:text="@string/category_text_movie" />
                     <RadioButton
                         android:id="@+id/radioCategoryDvd"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:enabled="false"
                         android:text="@string/category_text_dvd" />
                 </RadioGroup>
 
