@@ -45,16 +45,16 @@ public interface SecurityManager {
                           int resultCode, @Nullable Intent data);
 
     /**
-     * Returns whether the user is signed in.
-     * @return true if the user is signed in, false otherwise
-     */
-    boolean isUserSignedIn();
-
-    /**
      * Sign the user out.
      * @param activity the current activity
      */
     void signOut(@Nullable AppCompatActivity activity);
+
+    /**
+     * Returns whether the user is signed in.
+     * @return true if the user is signed in, false otherwise
+     */
+    boolean isUserSignedIn();
 
     /**
      * Returns the unique user id of the user who is signed in.

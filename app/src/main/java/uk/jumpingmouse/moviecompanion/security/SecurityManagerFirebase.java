@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
+import java.util.List;
 
 import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
@@ -56,10 +57,10 @@ public final class SecurityManagerFirebase implements SecurityManager {
     }
 
     //---------------------------------------------------------------------
-    // Lifecycle methods
+    // Implementation of interface
 
     /**
-     * Perform security processing required when creating activity.
+     * Perform security processing required when creating an activity.
      * @param activity the activity being created
      */
     @Override
@@ -76,25 +77,14 @@ public final class SecurityManagerFirebase implements SecurityManager {
                 } else {
                     // user has just signed out
 
-                    // delete all of the signed-in user's data from the local database
-                    Uri uri = DataContract.UserMovieEntry.buildUriForAllRows();
-                    activity.getContentResolver().delete(uri, null, null);
-
-                    onSignedOutCleanup();
-
-                    AuthUI.IdpConfig idpConfigGoogle
-                            = new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build();
-                    AuthUI.IdpConfig idpConfigEmail
-                            = new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build();
+                    postSignedOutCleanup();
 
                     // display login screen
                     activity.startActivityForResult(
                             AuthUI.getInstance()
                                     .createSignInIntentBuilder()
-                                    //.setTheme(R.style.AppThemeWithActionBar)
                                     .setIsSmartLockEnabled(false)
-                                    .setAvailableProviders(
-                                            Arrays.asList(idpConfigGoogle, idpConfigEmail))
+                                    .setAvailableProviders(getIdProviders())
                                     .build(),
                             RC_SIGN_IN);
                 }
@@ -121,8 +111,10 @@ public final class SecurityManagerFirebase implements SecurityManager {
     }
 
     /**
-     * Check whether the user has clicked the back button from the sign-in screen.
-     * If so, exit the activity rather than displaying the sign-in screen again.
+     * Perform processing required when an activity is being returned to via the back button being
+     * pressed.
+     * If the user has signed out, then clicked the back button from the sign-in screen,
+     * exit the activity rather than displaying the activity they signed out from again.
      * Note that this method is called before onResume(), which displays the sign-in screen
      * if the user is not signed in.
      * @param requestCode the request code
@@ -135,8 +127,6 @@ public final class SecurityManagerFirebase implements SecurityManager {
 
         // Are we returning from the sign-in screen?
         if (requestCode == RC_SIGN_IN) {
-//            getViewUtils().displayInfoMessage(activity, R.string.sign_in_ok);
-
             if (resultCode != Activity.RESULT_OK) {
                 IdpResponse idpResponse = IdpResponse.fromResultIntent(data);
                 if (idpResponse == null) {
@@ -157,35 +147,22 @@ public final class SecurityManagerFirebase implements SecurityManager {
     }
 
     /**
-     * Performs processing required on user sign in.
-     * @param context the context
+     * Signs out the currently signed-in user.
+     * @param activity the current activity
      */
-    private void onSignedInInitialise(@NonNull Context context) {
-        Timber.d("onSignedInInitialise");
+    @Override
+    public void signOut(@Nullable AppCompatActivity activity) {
+        if (activity != null) {
+            // detach the listeners from the master database
+            getMasterDatabase().onSignedOut();
 
-        // log the event in analytics
-        if (mFirebaseAuth != null && mFirebaseAuth.getCurrentUser() != null) {
-            FirebaseUser user = mFirebaseAuth.getCurrentUser();
-            getAnalyticsManager().logUserSignIn(user.getUid(), user.getProviderId());
+            // delete all of the signed-in user's data from the local database
+            Uri uri = DataContract.UserMovieEntry.buildUriForAllRows();
+            activity.getContentResolver().delete(uri, null, null);
+
+            AuthUI.getInstance().signOut(activity);
         }
-
-        getMasterDatabase().onSignedIn(context);
     }
-
-    /**
-     * Performs processing required on user sign out.
-     */
-    private void onSignedOutCleanup() {
-        Timber.d("onSignedOutCleanup");
-
-        getMasterDatabase().onSignedOut();
-
-//        mViewAwardAdapter.clear();
-    }
-
-
-    //---------------------------------------------------------------------
-    // Security methods
 
     /**
      * Returns whether the user is signed in.
@@ -195,17 +172,6 @@ public final class SecurityManagerFirebase implements SecurityManager {
     public boolean isUserSignedIn() {
         FirebaseUser user = getFirebaseAuth().getCurrentUser();
         return (user != null);
-    }
-
-    /**
-     * Signs out the currently signed-in user.
-     * @param activity the current activity
-     */
-    @Override
-    public void signOut(@Nullable AppCompatActivity activity) {
-        if (activity != null) {
-            AuthUI.getInstance().signOut(activity);
-        }
     }
 
     /**
@@ -220,7 +186,7 @@ public final class SecurityManagerFirebase implements SecurityManager {
     }
 
     //---------------------------------------------------------------------
-    // Getters
+    // Local methods
 
     @NonNull
     private FirebaseAuth getFirebaseAuth() {
@@ -229,6 +195,48 @@ public final class SecurityManagerFirebase implements SecurityManager {
         }
         return mFirebaseAuth;
     }
+
+    /**
+     * Creates and returns the list of allowed id providers (IDPs).
+     * @return the list of allowed {@link AuthUI.IdpConfig}s, where each {@link AuthUI.IdpConfig}
+     *         contains the configuration parameters for an IDP
+     */
+    private List<AuthUI.IdpConfig> getIdProviders() {
+        return Arrays.asList(
+                new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
+                new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()
+                //, new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build()
+        );
+    }
+
+    /**
+     * Performs processing required on user sign in.
+     * @param context the context
+     */
+    private void onSignedInInitialise(@NonNull Context context) {
+        Timber.d("onSignedInInitialise");
+
+        // attach the listeners to the master database
+        getMasterDatabase().onSignedIn(context);
+
+        // log the event in analytics
+        if (mFirebaseAuth != null && mFirebaseAuth.getCurrentUser() != null) {
+            FirebaseUser user = mFirebaseAuth.getCurrentUser();
+            getAnalyticsManager().logUserSignIn(user.getUid(), user.getProviderId());
+        }
+    }
+
+    /**
+     * Performs processing required after user sign out.
+     */
+    private void postSignedOutCleanup() {
+        Timber.d("postSignedOutCleanup");
+
+        //getMasterDatabase().preSignOut();
+    }
+
+    //---------------------------------------------------------------------
+    // Getters
 
     /**
      * Convenience method for returning a reference to the master database.

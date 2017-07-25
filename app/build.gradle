@@ -38,6 +38,10 @@ android {
 
         vectorDrawables.useSupportLibrary = true
 
+        // By default, Firebase AuthUI includes translations for all string resources.
+        // The next line restricts this to the string resources which are used.
+        resConfigs "auto"
+
         // See:
         //   https://developer.android.com/studio/preview/features/new-android-plugin-migration.html
         javaCompileOptions {
@@ -103,16 +107,27 @@ android {
         free {
             dimension "mode"
             applicationIdSuffix ".free"
+
+            // Add the required properties from the properties object (which was loaded from
+            // local.properties) to the app resources.
+            // Facebook Application Id
+            resValue "string", "facebook_application_id", properties.getProperty("facebook_application_id", "")
+            // Facebook Application Id prefixed by 'fb', enables Chrome Custom tabs.
+            resValue "string", "facebook_login_protocol_scheme", properties.getProperty("facebook_login_protocol_scheme", "")
         }
         admin {
             dimension "mode"
             applicationIdSuffix ".admin"
             versionNameSuffix "-admin"
 
-            // Add the required properties from the properties object (which was loaded from
+            // Add the required admin properties from the properties object (which was loaded from
             // local.properties) to the app resources.
             // OMDb API key
-            resValue "string", "omdbapi_key", properties.getProperty("omdbapi.key", "")
+            resValue "string", "omdbapi_key", properties.getProperty("omdbapi_key", "")
+            // Facebook Application Id
+            resValue "string", "facebook_application_id", properties.getProperty("facebook_application_id", "")
+            // Facebook Application Id prefixed by 'fb', enables Chrome Custom tabs.
+            resValue "string", "facebook_login_protocol_scheme", properties.getProperty("facebook_login_protocol_scheme", "")
         }
     }
 }
@@ -155,6 +170,7 @@ dependencies {
 
     // Firebase UI Auth
     implementation "com.firebaseui:firebase-ui-auth:$FIREBASE_UI_VERSION"
+    implementation('com.facebook.android:facebook-android-sdk:4.22.1')
 
     // Picasso
     implementation 'com.squareup.picasso:picasso:2.5.2'

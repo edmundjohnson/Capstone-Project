@@ -44,8 +44,6 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
     private static DatabaseReference sDatabaseReferenceMovies;
     // A database reference to the "/awards" node.
     private static DatabaseReference sDatabaseReferenceAwards;
-    // A database reference to the "/users/[uid]/userMovies" node.
-    private static DatabaseReference sDatabaseReferenceUserMovies;
 
     // A listener which listens for database events at the "/movies" node.
     private ChildEventListener mChildEventListenerMovies;
@@ -61,6 +59,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
      * Performs processing required when a user has signed in.
      * @param context the context
      */
+    @Override
     public void onSignedIn(@NonNull Context context) {
         attachDatabaseEventListenerMovies(context);
         attachDatabaseEventListenerAwards(context);
@@ -68,6 +67,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
     }
 
     /** Performs processing required when a user has signed out. */
+    @Override
     public void onSignedOut() {
         detachDatabaseEventListenerMovies();
         detachDatabaseEventListenerAwards();
@@ -569,11 +569,10 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
      */
     @NonNull
     private DatabaseReference getDatabaseReferenceUserMovies(@NonNull String uid) {
-        if (sDatabaseReferenceUserMovies == null) {
-            String userMoviesNode = getUserMoviesNode(uid);
-            sDatabaseReferenceUserMovies = getDatabaseReference(userMoviesNode);
-        }
-        return sDatabaseReferenceUserMovies;
+        // If a different user logs in, they must not inherit the database reference of the
+        // previously logged-in user, so always generate this afresh
+        String userMoviesNode = getUserMoviesNode(uid);
+        return getDatabaseReference(userMoviesNode);
     }
 
     /**
