@@ -71,7 +71,8 @@ public final class JavaUtils {
      * @param defaultValue the value to return if the String cannot be parsed as an int
      * @return the String as an int, or defaultValue if the String could not be parsed as an int
      */
-    public static int toInt(@Nullable String str, int defaultValue) {
+    public static int toInt(@Nullable String str,
+                            @SuppressWarnings("SameParameterValue") int defaultValue) {
         if (str != null && !str.trim().isEmpty()) {
             try {
                 return Integer.parseInt(str);

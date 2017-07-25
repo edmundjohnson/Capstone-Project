@@ -25,7 +25,7 @@ import static org.junit.Assert.assertNull;
 @RunWith(AndroidJUnit4.class)
 public class ModelUtilsTest {
 
-    private static final int MOVIE_ID = 9999991;
+    private static final String MOVIE_ID = "9999991";
     private static final String MOVIE_IMDB_ID = "tt9999991";
     private static final String MOVIE_TITLE = "Test Movie";
     private static final String MOVIE_YEAR = "2011";
@@ -223,7 +223,7 @@ public class ModelUtilsTest {
         // newMovie(ContentValues) works correctly when non-mandatory fields are not set
         movie = ModelUtils.newMovie(VALUES_FIELDS_NULL);
         assertNotNull(movie);
-        assertEquals(movie.getId(), 9999992);
+        assertEquals(movie.getId(), "9999992");
         assertEquals(movie.getImdbId(), "tt9999992");
         assertEquals(movie.getTitle(), "Movie Title With Nulls");
         assertNull(movie.getYear());
@@ -288,7 +288,7 @@ public class ModelUtilsTest {
         CURSOR_FIELDS_NULL.moveToFirst();
         movie = ModelUtils.newMovie(CURSOR_FIELDS_NULL);
         assertNotNull(movie);
-        assertEquals(movie.getId(), 9999992);
+        assertEquals(movie.getId(), "9999992");
         assertEquals(movie.getImdbId(), "tt9999992");
         assertEquals(movie.getTitle(), "Movie Title With Nulls");
         assertNull(movie.getYear());
@@ -386,12 +386,12 @@ public class ModelUtilsTest {
         assertEquals(2, movieList.size());
         movie = movieList.get(0);
         assertNotNull(movie);
-        assertEquals(111, movie.getId());
+        assertEquals("111", movie.getId());
         assertEquals("imdbId1", movie.getImdbId());
         assertEquals("Title 1", movie.getTitle());
         movie = movieList.get(1);
         assertNotNull(movie);
-        assertEquals(222, movie.getId());
+        assertEquals("222", movie.getId());
         assertEquals("imdbId2", movie.getImdbId());
         assertEquals("Title 2", movie.getTitle());
         getAndroidTestUtils().closeCursor(cursor);

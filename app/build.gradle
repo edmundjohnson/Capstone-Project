@@ -19,8 +19,8 @@ repositories {
 }
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
 
     // Load the properties in local.properties (e.g. 'omdbapi.key') into a properties object.
     // Properties from the properties object are added to the app resources below.
@@ -31,7 +31,7 @@ android {
     defaultConfig {
         applicationId "uk.jumpingmouse.moviecompanion"
         minSdkVersion 17
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -120,8 +120,8 @@ android {
 ext {
     // The compatible versions of firebase, firebase-ui and the support library are listed here:
     // https://github.com/firebase/FirebaseUI-Android/blob/master/constants.gradle
-    SUPPORT_LIB_VERSION = '25.4.0'
-    //SUPPORT_LIB_VERSION = '26.0.0-beta'
+    //SUPPORT_LIB_VERSION = '25.4.0'
+    SUPPORT_LIB_VERSION = '26.0.0'
     FIREBASE_VERSION = '11.0.2'
     FIREBASE_UI_VERSION = '2.0.1'
 

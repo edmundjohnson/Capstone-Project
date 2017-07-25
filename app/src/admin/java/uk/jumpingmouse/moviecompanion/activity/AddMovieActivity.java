@@ -61,13 +61,13 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
         getViewUtils().initialiseAppBar(this, R.id.tbAppBar,
                 getString(R.string.title_add_movie), true, R.color.colorPrimary);
 
-        mTxtImdbId = (EditText) findViewById(R.id.txtImdbId);
-        mLabelTitle = (TextView) findViewById(R.id.labelTitle);
-        mTxtTitle = (TextView) findViewById(R.id.txtTitle);
-        mLabelGenre = (TextView) findViewById(R.id.labelGenre);
-        mTxtGenre = (TextView) findViewById(R.id.txtGenre);
-        mBtnCancel = (Button) findViewById(R.id.btnCancel);
-        mBtnSave = (Button) findViewById(R.id.btnSave);
+        mTxtImdbId = findViewById(R.id.txtImdbId);
+        mLabelTitle = findViewById(R.id.labelTitle);
+        mTxtTitle = findViewById(R.id.txtTitle);
+        mLabelGenre = findViewById(R.id.labelGenre);
+        mTxtGenre = findViewById(R.id.txtGenre);
+        mBtnCancel = findViewById(R.id.btnCancel);
+        mBtnSave = findViewById(R.id.btnSave);
 
         if (savedInstanceState != null) {
             mMovie = savedInstanceState.getParcelable(KEY_MOVIE);

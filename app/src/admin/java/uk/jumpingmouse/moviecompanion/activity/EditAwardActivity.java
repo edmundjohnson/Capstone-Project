@@ -50,10 +50,6 @@ public class EditAwardActivity extends AppCompatActivity {
     private EditText mTxtReview;
     private EditText mTxtAwardDisplayOrder;
 
-    // Screen fields - buttons
-    private Button mBtnCancel;
-    private Button mBtnSave;
-
     // Data
     private Movie mMovie;
     private Award mAward;
@@ -77,20 +73,20 @@ public class EditAwardActivity extends AppCompatActivity {
                 getString(R.string.title_edit_award), true, R.color.colorPrimary);
 
         // Movie
-        mTxtMovieId = (TextView) findViewById(R.id.txtMovieId);
-        mTxtImdbId = (TextView) findViewById(R.id.txtImdbId);
-        mTxtTitle = (TextView) findViewById(R.id.txtTitle);
+        mTxtMovieId = findViewById(R.id.txtMovieId);
+        mTxtImdbId = findViewById(R.id.txtImdbId);
+        mTxtTitle = findViewById(R.id.txtTitle);
 
         // Award
-        mTxtAwardId = (TextView) findViewById(R.id.txtAwardId);
-        mTxtAwardDate = (EditText) findViewById(R.id.txtAwardDate);
-        mRadioAwardCategory = (RadioGroup) findViewById(R.id.radioCategory);
-        mRadioAwardCategoryMovie = (RadioButton) findViewById(R.id.radioCategoryMovie);
-        mRadioAwardCategoryDvd = (RadioButton) findViewById(R.id.radioCategoryDvd);
-        mTxtReview = (EditText) findViewById(R.id.txtReview);
-        mTxtAwardDisplayOrder = (EditText) findViewById(R.id.txtDisplayOrder);
-        mBtnCancel = (Button) findViewById(R.id.btnCancel);
-        mBtnSave = (Button) findViewById(R.id.btnSave);
+        mTxtAwardId = findViewById(R.id.txtAwardId);
+        mTxtAwardDate = findViewById(R.id.txtAwardDate);
+        mRadioAwardCategory = findViewById(R.id.radioCategory);
+        mRadioAwardCategoryMovie = findViewById(R.id.radioCategoryMovie);
+        mRadioAwardCategoryDvd = findViewById(R.id.radioCategoryDvd);
+        mTxtReview = findViewById(R.id.txtReview);
+        mTxtAwardDisplayOrder = findViewById(R.id.txtDisplayOrder);
+        Button btnCancel = findViewById(R.id.btnCancel);
+        Button btnSave = findViewById(R.id.btnSave);
 
         if (savedInstanceState == null) {
             // Store the movie and award indicated by the URL passed in
@@ -191,8 +187,9 @@ public class EditAwardActivity extends AppCompatActivity {
     }
 
     /**
-     * Displays movie data on the screen.
+     * Displays movie and award data on the screen.
      * @param movie the movie to display
+     * @param award the award to display
      */
     private void displayData(@Nullable Movie movie, @Nullable Award award) {
         if (movie != null) {

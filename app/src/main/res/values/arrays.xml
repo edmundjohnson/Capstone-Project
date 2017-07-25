@@ -6,8 +6,9 @@
     <!-- For each language, filter_genre_pref_display must be translated and ordered alphabetically,
          with filter_genre_pref_key then being reordered to match filter_genre_pref_display. -->
 
-    <!-- The genre filter option keys, as stored in the shared preferences. -->
+    <!-- The genre ids, as stored in the genre filter shared preference. -->
     <string-array name="filter_genre_pref_key">
+        <item>genre_all</item>
         <item>genre_action</item>
         <item>genre_adventure</item>
         <item>genre_animation</item>
@@ -16,16 +17,24 @@
         <item>genre_crime</item>
         <item>genre_documentary</item>
         <item>genre_drama</item>
+        <item>genre_family</item>
         <item>genre_fantasy</item>
+        <item>genre_film_noir</item>
+        <item>genre_history</item>
         <item>genre_horror</item>
         <item>genre_music</item>
+        <item>genre_musical</item>
         <item>genre_mystery</item>
         <item>genre_romance</item>
         <item>genre_sci_fi</item>
+        <item>genre_sport</item>
         <item>genre_thriller</item>
+        <item>genre_war</item>
+        <item>genre_western</item>
     </string-array>
-    <!-- The genre filter options, as displayed in the drop-down -->
+    <!-- The genre display values, as displayed in the filter drop-down -->
     <string-array name="filter_genre_pref_display">
+        <item>@string/genre_all</item>
         <item>@string/genre_action</item>
         <item>@string/genre_adventure</item>
         <item>@string/genre_animation</item>
@@ -34,13 +43,20 @@
         <item>@string/genre_crime</item>
         <item>@string/genre_documentary</item>
         <item>@string/genre_drama</item>
+        <item>@string/genre_family</item>
         <item>@string/genre_fantasy</item>
+        <item>@string/genre_film_noir</item>
+        <item>@string/genre_history</item>
         <item>@string/genre_horror</item>
         <item>@string/genre_music</item>
+        <item>@string/genre_musical</item>
         <item>@string/genre_mystery</item>
         <item>@string/genre_romance</item>
         <item>@string/genre_sci_fi</item>
+        <item>@string/genre_sport</item>
         <item>@string/genre_thriller</item>
+        <item>@string/genre_war</item>
+        <item>@string/genre_western</item>
     </string-array>
 
     <!-- Wishlist filter -->

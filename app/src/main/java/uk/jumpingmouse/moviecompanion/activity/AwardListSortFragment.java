@@ -20,7 +20,7 @@ import uk.jumpingmouse.moviecompanion.utils.PrefUtils;
  * @author Edmund Johnson.
  */
 
-public class AwardListSortFragment extends DialogFragment {
+public final class AwardListSortFragment extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,7 +33,7 @@ public class AwardListSortFragment extends DialogFragment {
 
         if (context != null && view != null) {
             // Check the radio button which corresponds to the existing sort order
-            RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.radioGroupSortOrder);
+            RadioGroup radioGroup = view.findViewById(R.id.radioGroupSortOrder);
             String previousSortOrder = PrefUtils.getAwardListSortOrder(context);
             checkSortOrderRadioButton(radioGroup, previousSortOrder);
 

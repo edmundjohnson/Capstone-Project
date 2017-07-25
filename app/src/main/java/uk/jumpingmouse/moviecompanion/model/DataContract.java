@@ -394,13 +394,20 @@ public final class DataContract {
             genresStoredModifiable.put("genre_crime", "Crime");
             genresStoredModifiable.put("genre_documentary", "Documentary");
             genresStoredModifiable.put("genre_drama", "Drama");
+            genresStoredModifiable.put("genre_family", "Family");
             genresStoredModifiable.put("genre_fantasy", "Fantasy");
+            genresStoredModifiable.put("genre_film_noir", "Film-Noir");
+            genresStoredModifiable.put("genre_history", "History");
             genresStoredModifiable.put("genre_horror", "Horror");
             genresStoredModifiable.put("genre_music", "Music");
+            genresStoredModifiable.put("genre_musical", "Musical");
             genresStoredModifiable.put("genre_mystery", "Mystery");
             genresStoredModifiable.put("genre_romance", "Romance");
             genresStoredModifiable.put("genre_sci_fi", "Sci-Fi");
+            genresStoredModifiable.put("genre_sport", "Sport");
             genresStoredModifiable.put("genre_thriller", "Thriller");
+            genresStoredModifiable.put("genre_war", "War");
+            genresStoredModifiable.put("genre_western", "Western");
             GENRES_STORED = Collections.unmodifiableMap(genresStoredModifiable);
         }
 

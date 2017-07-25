@@ -102,7 +102,7 @@ public final class ViewUtils {
     private Toolbar initialiseToolbar(@NonNull final Activity activity, @IdRes final int toolbarIdRes,
                                       @Nullable final String titleText, @ColorRes int backgroundColorRes) {
         // Find the toolbar
-        Toolbar toolbar = (Toolbar) activity.findViewById(toolbarIdRes);
+        Toolbar toolbar = activity.findViewById(toolbarIdRes);
         if (toolbar != null) {
             // Set the title text
             toolbar.setTitle(titleText);

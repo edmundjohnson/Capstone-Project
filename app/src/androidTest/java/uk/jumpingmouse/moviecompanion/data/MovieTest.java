@@ -39,7 +39,7 @@ public class MovieTest {
     @Before
     public void setUp() {
         mMovie = Movie.builder()
-                .id(4016934)
+                .id("4016934")
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
                 .year("2017")
@@ -50,7 +50,7 @@ public class MovieTest {
                 .build();
 
         mMovieWithNulls = Movie.builder()
-                .id(4016934)
+                .id("4016934")
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
                 .year(null)
@@ -73,7 +73,7 @@ public class MovieTest {
     public void builder() {
 
         // test that the fields return the expected values
-        assertEquals(4016934, mMovie.getId());
+        assertEquals("4016934", mMovie.getId());
         assertEquals("tt4016934", mMovie.getImdbId());
         assertEquals("The Handmaiden", mMovie.getTitle());
         assertEquals("2017", mMovie.getYear());
@@ -84,7 +84,7 @@ public class MovieTest {
 
         // test that the nullable fields are nullable, i.e. no exception thrown
         Movie movieWithNulls = Movie.builder()
-                .id(4016934)
+                .id("4016934")
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
                 .year(null)
@@ -107,7 +107,7 @@ public class MovieTest {
 
         @SuppressWarnings({"unused", "UnusedAssignment", "ConstantConditions"})
         Movie movie = Movie.builder()
-                .id(0)
+                .id("0")
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
                 .year("2017")
@@ -129,7 +129,7 @@ public class MovieTest {
 
         @SuppressWarnings({"unused", "UnusedAssignment", "ConstantConditions"})
         Movie movie = Movie.builder()
-                .id(4016934)
+                .id("4016934")
                 .imdbId(null)
                 .title("The Handmaiden")
                 .year("2017")
@@ -151,7 +151,7 @@ public class MovieTest {
 
         @SuppressWarnings({"unused", "UnusedAssignment", "ConstantConditions"})
         Movie movie = Movie.builder()
-                .id(4016934)
+                .id("4016934")
                 .imdbId("tt4016934")
                 .title(null)
                 .year("2017")
@@ -174,7 +174,7 @@ public class MovieTest {
 
         // test that building with the same parameter values results in equals(...) returning true
         assertTrue(Movie.builder()
-                .id(4016934)
+                .id("4016934")
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
                 .year("2017")
@@ -187,7 +187,7 @@ public class MovieTest {
 
         // test that building with the same null parameter values results in equals(...) returning true
         assertTrue(Movie.builder()
-                .id(4016934)
+                .id("4016934")
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
                 .genre(null)
@@ -200,7 +200,7 @@ public class MovieTest {
 
         // test that building with a different imdbId results in equals(...) returning false
         assertFalse(Movie.builder()
-                .id(4016934)
+                .id("4016934")
                 .imdbId("tt4016935")
                 .title("The Handmaiden")
                 .year("2017")

@@ -109,15 +109,15 @@ public final class MovieFragment extends Fragment
         mRootView = inflater.inflate(R.layout.movie_fragment, container, false);
 
         // Initialise the display element references
-        mImgPoster = (ImageView) mRootView.findViewById(R.id.imgPoster);
-        mTxtTitle = (TextView) mRootView.findViewById(R.id.txtTitle);
-        mTxtRuntime = (TextView) mRootView.findViewById(R.id.txtRuntime);
-        mTxtGenre = (TextView) mRootView.findViewById(R.id.txtGenre);
-        mLayoutImdbLink = (LinearLayout) mRootView.findViewById(R.id.layoutImdbLink);
-        mImgCategory = (ImageView) mRootView.findViewById(R.id.imgCategory);
-        mTxtCategory = (TextView) mRootView.findViewById(R.id.txtCategory);
-        mTxtAwardDate = (TextView) mRootView.findViewById(R.id.txtAwardDate);
-        mTxtReview = (TextView) mRootView.findViewById(R.id.txtReview);
+        mImgPoster = mRootView.findViewById(R.id.imgPoster);
+        mTxtTitle = mRootView.findViewById(R.id.txtTitle);
+        mTxtRuntime = mRootView.findViewById(R.id.txtRuntime);
+        mTxtGenre = mRootView.findViewById(R.id.txtGenre);
+        mLayoutImdbLink = mRootView.findViewById(R.id.layoutImdbLink);
+        mImgCategory = mRootView.findViewById(R.id.imgCategory);
+        mTxtCategory = mRootView.findViewById(R.id.txtCategory);
+        mTxtAwardDate = mRootView.findViewById(R.id.txtAwardDate);
+        mTxtReview = mRootView.findViewById(R.id.txtReview);
 
         // Set the transition name for the poster
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

@@ -104,7 +104,7 @@ public final class AwardListFragment extends Fragment
         }
 
         // Get a reference to the RecyclerView, and attach the adapter to it.
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.viewAwardList);
+        mRecyclerView = rootView.findViewById(R.id.viewAwardList);
         mRecyclerView.setAdapter(mViewAwardAdapter);
 
         // This setting improves performance as long as changes in content do not change
@@ -470,7 +470,7 @@ public final class AwardListFragment extends Fragment
                 @StringRes int message = getNoDataMessage(context);
 
                 // Write the message to the empty list view
-                TextView emptyListView = (TextView) activity.findViewById(R.id.viewAwardListEmpty);
+                TextView emptyListView = activity.findViewById(R.id.viewAwardListEmpty);
                 emptyListView.setText(message);
             }
         }

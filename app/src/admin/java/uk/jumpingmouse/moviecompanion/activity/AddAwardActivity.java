@@ -77,21 +77,21 @@ public class AddAwardActivity extends AppCompatActivity {
         getViewUtils().initialiseAppBar(this, R.id.tbAppBar,
                 getString(R.string.title_add_award), true, R.color.colorPrimary);
 
-        mTxtImdbId = (EditText) findViewById(R.id.txtImdbId);
-        mLabelTitle = (TextView) findViewById(R.id.labelTitle);
-        mTxtTitle = (TextView) findViewById(R.id.txtTitle);
-        mLabelAwardDate = (TextView) findViewById(R.id.labelAwardDate);
-        mTxtAwardDate = (EditText) findViewById(R.id.txtAwardDate);
-        mLabelAwardCategory = (TextView) findViewById(R.id.labelCategory);
-        mRadioAwardCategory = (RadioGroup) findViewById(R.id.radioCategory);
-        mRadioAwardCategoryMovie = (RadioButton) findViewById(R.id.radioCategoryMovie);
-        mRadioAwardCategoryDvd = (RadioButton) findViewById(R.id.radioCategoryDvd);
-        mLabelReview = (TextView) findViewById(R.id.labelReview);
-        mTxtReview = (EditText) findViewById(R.id.txtReview);
-        mLabelAwardDisplayOrder = (TextView) findViewById(R.id.labelDisplayOrder);
-        mTxtAwardDisplayOrder = (EditText) findViewById(R.id.txtDisplayOrder);
-        mBtnCancel = (Button) findViewById(R.id.btnCancel);
-        mBtnSave = (Button) findViewById(R.id.btnSave);
+        mTxtImdbId = findViewById(R.id.txtImdbId);
+        mLabelTitle = findViewById(R.id.labelTitle);
+        mTxtTitle = findViewById(R.id.txtTitle);
+        mLabelAwardDate = findViewById(R.id.labelAwardDate);
+        mTxtAwardDate = findViewById(R.id.txtAwardDate);
+        mLabelAwardCategory = findViewById(R.id.labelCategory);
+        mRadioAwardCategory = findViewById(R.id.radioCategory);
+        mRadioAwardCategoryMovie = findViewById(R.id.radioCategoryMovie);
+        mRadioAwardCategoryDvd = findViewById(R.id.radioCategoryDvd);
+        mLabelReview = findViewById(R.id.labelReview);
+        mTxtReview = findViewById(R.id.txtReview);
+        mLabelAwardDisplayOrder = findViewById(R.id.labelDisplayOrder);
+        mTxtAwardDisplayOrder = findViewById(R.id.txtDisplayOrder);
+        mBtnCancel = findViewById(R.id.btnCancel);
+        mBtnSave = findViewById(R.id.btnSave);
 
         if (savedInstanceState != null) {
             mMovie = savedInstanceState.getParcelable(KEY_MOVIE);

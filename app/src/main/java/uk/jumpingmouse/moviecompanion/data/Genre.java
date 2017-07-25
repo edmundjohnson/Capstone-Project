@@ -8,7 +8,9 @@ import android.support.annotation.Nullable;
 /**
  * The Genre model class.
  * @author Edmund Johnson
+ * @deprecated See arrays.xml and DataContract class
  */
+@Deprecated
 public final class Genre implements Parcelable {
 
     // The unique identifier of the genre, e.g. "genre_comedy".
