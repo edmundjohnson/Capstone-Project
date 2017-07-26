@@ -796,17 +796,7 @@ public final class LocalDatabaseInMemory implements LocalDatabase {
         if (sortOrder != null) {
             String[] split = sortOrder.split(" ");
             // split.length is always at least 1
-            // code coverage: split[0] cannot be null
-            switch (split[0]) {
-                case DataContract.ViewAwardEntry.COLUMN_AWARD_DATE:
-                    return DataContract.ViewAwardEntry.COLUMN_AWARD_DATE;
-                case DataContract.MovieEntry.COLUMN_TITLE:
-                    return DataContract.MovieEntry.COLUMN_TITLE;
-                case DataContract.ViewAwardEntry.COLUMN_RUNTIME:
-                    return DataContract.ViewAwardEntry.COLUMN_RUNTIME;
-                default:
-                    return sortColumnDefault;
-            }
+            return split[0];
         }
         return sortColumnDefault;
     }

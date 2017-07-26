@@ -543,8 +543,7 @@ public final class Movie implements Parcelable {
         }
         if (o instanceof Movie) {
             Movie that = (Movie) o;
-            return (this.id.equals(that.id))
-                    || (this.imdbId.equals(that.imdbId));
+            return (this.id.equals(that.id));
         }
         return false;
     }
@@ -554,8 +553,6 @@ public final class Movie implements Parcelable {
         int h = 1;
         h *= 1000003;
         h ^= this.id.hashCode();
-        h *= 1000003;
-        h ^= this.imdbId.hashCode();
         return h;
     }
 

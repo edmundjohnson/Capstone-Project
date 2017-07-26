@@ -21,6 +21,9 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("uk.jumpingmouse.moviecompanion", appContext.getPackageName());
+        String packageNameBase = "uk.jumpingmouse.moviecompanion";
+        // The actual package name may be "uk.jumpingmouse.moviecompanion.dev.admin", etc.
+        assertEquals(packageNameBase,
+                appContext.getPackageName().substring(0, packageNameBase.length()));
     }
 }

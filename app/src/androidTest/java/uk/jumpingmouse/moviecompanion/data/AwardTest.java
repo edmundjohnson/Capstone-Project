@@ -8,6 +8,7 @@ import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -95,22 +96,23 @@ public class AwardTest {
         //noinspection EqualsBetweenInconvertibleTypes
         assertFalse(mAward.equals(mAward.toString()));
 
-        // test that building with the same parameter values results in equals(...) returning true
+        // test that building with the same ID but different field values
+        // results in equals(...) returning true
         assertTrue(Award.builder()
                 .id(ID)
-                .movieId(MOVIE_ID)
-                .awardDate(AWARD_DATE_1)
-                .category(Award.CATEGORY_MOVIE)
-                .review(REVIEW)
-                .displayOrder(DISPLAY_ORDER)
+                .movieId("movie id")
+                .awardDate(AWARD_DATE_2)
+                .category(Award.CATEGORY_DVD)
+                .review(REVIEW + " extra")
+                .displayOrder(DISPLAY_ORDER + 1)
                 .build()
                 .equals(mAward));
 
-        // test that building with a different awardDate results in equals(...) returning false
+        // test that building with a different id results in equals(...) returning false
         assertFalse(Award.builder()
-                .id(ID)
+                .id("123")
                 .movieId(MOVIE_ID)
-                .awardDate(AWARD_DATE_2)
+                .awardDate(AWARD_DATE_1)
                 .category(Award.CATEGORY_MOVIE)
                 .review(REVIEW)
                 .displayOrder(DISPLAY_ORDER)
@@ -121,8 +123,11 @@ public class AwardTest {
     @Test
     public void testHashcode() {
         //assertTrue(mAward.hashCode() > 1); // no, hashCode can be negative
-        // test that the hashcode is different when the award is built with a different awardDate
-        assertTrue(mAward.hashCode() != Award.builder()
+
+        // test that the hashcode is the same when the award is built with
+        // the same id but a different awardDate
+        assertEquals(mAward.hashCode(),
+                Award.builder()
                 .id(ID)
                 .movieId(MOVIE_ID)
                 .awardDate(AWARD_DATE_2)
@@ -131,6 +136,19 @@ public class AwardTest {
                 .displayOrder(DISPLAY_ORDER)
                 .build()
                 .hashCode());
+
+        // test that the hashcode is different when the award is built with
+        // a different id and all other fields the same
+        assertNotEquals(mAward.hashCode(),
+                Award.builder()
+                        .id("123")
+                        .movieId(MOVIE_ID)
+                        .awardDate(AWARD_DATE_1)
+                        .category(Award.CATEGORY_MOVIE)
+                        .review(REVIEW)
+                        .displayOrder(DISPLAY_ORDER)
+                        .build()
+                        .hashCode());
     }
 
     @Test

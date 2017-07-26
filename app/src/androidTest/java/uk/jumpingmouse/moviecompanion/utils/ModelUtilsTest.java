@@ -36,6 +36,12 @@ public class ModelUtilsTest {
     //private static final String MOVIE_RUNTIME_OMDB = "114 min";
     private static final int MOVIE_RUNTIME = 114;
     private static final String MOVIE_GENRE = "Drama, Mystery, Romance";
+    private static final String MOVIE_DIRECTOR = "Christopher Nolan";
+    private static final String MOVIE_WRITER = "Joss Whedon";
+    private static final String MOVIE_ACTORS = "Harrison Ford, Mark Hamill";
+    private static final String MOVIE_PLOT = "Forrest Gump on a tractor.";
+    private static final String MOVIE_LANGUAGE = "en";
+    private static final String MOVIE_COUNTRY = "UK";
     @SuppressWarnings("SpellCheckingInspection")
     private static final String MOVIE_POSTER =
             "https://images-na.ssl-images-amazon.com/images/M/MV5BYTBjYjllZTctMTdkMy00MmE5LTllYjctYzg3OTc1MTFjZGYzXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg";
@@ -131,9 +137,16 @@ public class ModelUtilsTest {
                 MOVIE_IMDB_ID,
                 MOVIE_TITLE,
                 MOVIE_YEAR,
+                MOVIE_RATED,
                 MOVIE_RELEASED,
                 MOVIE_RUNTIME,
                 MOVIE_GENRE,
+                MOVIE_DIRECTOR,
+                MOVIE_WRITER,
+                MOVIE_ACTORS,
+                MOVIE_PLOT,
+                MOVIE_COUNTRY,
+                MOVIE_LANGUAGE,
                 MOVIE_POSTER
         });
 
@@ -144,8 +157,15 @@ public class ModelUtilsTest {
                 "tt9999992",
                 "Movie Title With Nulls",
                 null,
+                null,
                 Movie.RELEASED_UNKNOWN,
                 Movie.RUNTIME_UNKNOWN,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
                 null,
                 null
         });
@@ -157,9 +177,16 @@ public class ModelUtilsTest {
                 MOVIE_IMDB_ID,
                 MOVIE_TITLE,
                 MOVIE_YEAR,
+                MOVIE_RATED,
                 -2,
                 -2,
                 MOVIE_GENRE,
+                MOVIE_DIRECTOR,
+                MOVIE_WRITER,
+                MOVIE_ACTORS,
+                MOVIE_PLOT,
+                MOVIE_COUNTRY,
+                MOVIE_LANGUAGE,
                 MOVIE_POSTER
         });
 
@@ -170,9 +197,16 @@ public class ModelUtilsTest {
                 MOVIE_IMDB_ID,
                 MOVIE_TITLE,
                 MOVIE_YEAR,
+                MOVIE_RATED,
                 MOVIE_RELEASED,
                 MOVIE_RUNTIME,
                 MOVIE_GENRE,
+                MOVIE_DIRECTOR,
+                MOVIE_WRITER,
+                MOVIE_ACTORS,
+                MOVIE_PLOT,
+                MOVIE_COUNTRY,
+                MOVIE_LANGUAGE,
                 MOVIE_POSTER
         });
 
@@ -183,9 +217,16 @@ public class ModelUtilsTest {
                 null,
                 MOVIE_TITLE,
                 MOVIE_YEAR,
+                MOVIE_RATED,
                 MOVIE_RELEASED,
                 MOVIE_RUNTIME,
                 MOVIE_GENRE,
+                MOVIE_DIRECTOR,
+                MOVIE_WRITER,
+                MOVIE_ACTORS,
+                MOVIE_PLOT,
+                MOVIE_COUNTRY,
+                MOVIE_LANGUAGE,
                 MOVIE_POSTER
         });
 
@@ -196,9 +237,16 @@ public class ModelUtilsTest {
                 MOVIE_IMDB_ID,
                 null,
                 MOVIE_YEAR,
+                MOVIE_RATED,
                 MOVIE_RELEASED,
                 MOVIE_RUNTIME,
                 MOVIE_GENRE,
+                MOVIE_DIRECTOR,
+                MOVIE_WRITER,
+                MOVIE_ACTORS,
+                MOVIE_PLOT,
+                MOVIE_COUNTRY,
+                MOVIE_LANGUAGE,
                 MOVIE_POSTER
         });
 
@@ -345,9 +393,16 @@ public class ModelUtilsTest {
                 null,
                 MOVIE_TITLE,
                 MOVIE_YEAR,
+                MOVIE_RATED,
                 MOVIE_RELEASED,
                 MOVIE_RUNTIME,
                 MOVIE_GENRE,
+                MOVIE_DIRECTOR,
+                MOVIE_WRITER,
+                MOVIE_ACTORS,
+                MOVIE_PLOT,
+                MOVIE_COUNTRY,
+                MOVIE_LANGUAGE,
                 MOVIE_POSTER
         });
         movieList = ModelUtils.toMovieList(cursor);
@@ -364,9 +419,16 @@ public class ModelUtilsTest {
                 "imdbId1",
                 "Title 1",
                 "2011",
+                MOVIE_RATED,
                 MOVIE_RELEASED,
                 MOVIE_RUNTIME,
                 "Genre1",
+                MOVIE_DIRECTOR,
+                MOVIE_WRITER,
+                MOVIE_ACTORS,
+                MOVIE_PLOT,
+                MOVIE_COUNTRY,
+                MOVIE_LANGUAGE,
                 "poster1.jpg"
         });
         cursor.addRow(new Object[] {
@@ -376,9 +438,16 @@ public class ModelUtilsTest {
                 "imdbId2",
                 "Title 2",
                 "2011",
+                MOVIE_RATED,
                 MOVIE_RELEASED,
                 MOVIE_RUNTIME,
                 "Genre2",
+                MOVIE_DIRECTOR,
+                MOVIE_WRITER,
+                MOVIE_ACTORS,
+                MOVIE_PLOT,
+                MOVIE_COUNTRY,
+                MOVIE_LANGUAGE,
                 "poster2.jpg"
         });
         movieList = ModelUtils.toMovieList(cursor);

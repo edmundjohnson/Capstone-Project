@@ -54,7 +54,7 @@ public class DataProviderTest {
     static {
         // DO NOT USE REAL MOVIES, as these tests are destructive!
         TEST_MOVIE_1 = Movie.builder()
-                .id(9999991)
+                .id("9999991")
                 .imdbId("tt9999991")
                 .title("Test Movie 1")
                 .year("2011")
@@ -64,7 +64,7 @@ public class DataProviderTest {
                 .poster(TEST_POSTER)
                 .build();
         TEST_MOVIE_1_MODIFIED = Movie.builder()
-                .id(9999991)
+                .id("9999991")
                 .imdbId("tt9999991")
                 .title("Test Movie 1 modified")
                 .year("2012")
@@ -74,7 +74,7 @@ public class DataProviderTest {
                 .poster(TEST_POSTER + ".modified")
                 .build();
         TEST_MOVIE_2 = Movie.builder()
-                .id(9999992)
+                .id("9999992")
                 .imdbId("tt9999992")
                 .title("Test Movie 2")
                 .year("2012")
@@ -84,7 +84,7 @@ public class DataProviderTest {
                 .poster(TEST_POSTER)
                 .build();
         TEST_MOVIE_3 = Movie.builder()
-                .id(9999993)
+                .id("9999993")
                 .imdbId("tt9999993")
                 // Do not change the 0 to a 3! 0 is required for query order test.
                 .title("Test Movie 0")
@@ -148,7 +148,7 @@ public class DataProviderTest {
                 DataContract.MovieEntry.CONTENT_DIR_TYPE, type);
 
         // URI: content://uk.jumpingmouse.moviecompanion/movie/*
-        type = mContentResolver.getType(DataContract.MovieEntry.buildUriForRowById(1234567));
+        type = mContentResolver.getType(DataContract.MovieEntry.buildUriForRowById("1234567"));
         // Expected getType(URI): vnd.android.cursor.item/uk.jumpingmouse.moviecompanion/movie
         assertEquals("Error: ContentProvider.getType() for specific movie URI should be" +
                         " DataContract.MovieEntry.CONTENT_ITEM_TYPE",
@@ -627,7 +627,7 @@ public class DataProviderTest {
         thrown.expect(UnsupportedOperationException.class);
         thrown.expectMessage("Id mismatch between URL and body of update movie request");
 
-        Uri uriUpdate = DataContract.MovieEntry.buildUriForRowById(123);
+        Uri uriUpdate = DataContract.MovieEntry.buildUriForRowById("123");
         int rowsUpdated = mContentResolver.update(uriUpdate, TEST_MOVIE_1.toContentValues(), null, null);
         assertEquals(0, rowsUpdated);
     }
@@ -664,9 +664,10 @@ public class DataProviderTest {
     @Test
     public void insertUnsupportedUri() {
         thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("Unsupported URI for insert: " + DataContract.MovieEntry.buildUriForAllRows().toString());
+        thrown.expectMessage("Unsupported URI for insert: "
+                + DataContract.ViewAwardEntry.buildUriForAllRows().toString());
 
-        Uri uriInsert = DataContract.MovieEntry.buildUriForAllRows();
+        Uri uriInsert = DataContract.ViewAwardEntry.buildUriForAllRows();
         Uri uriInserted = mContentResolver.insert(uriInsert, TEST_MOVIE_1.toContentValues());
         assertNull(uriInserted);
     }
@@ -677,9 +678,10 @@ public class DataProviderTest {
     @Test
     public void updateUnsupportedUri() {
         thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("Unsupported URI for update: " + DataContract.MovieEntry.buildUriForAllRows().toString());
+        thrown.expectMessage("Unsupported URI for update: "
+                + DataContract.ViewAwardEntry.buildUriForAllRows().toString());
 
-        Uri uriUpdate = DataContract.MovieEntry.buildUriForAllRows();
+        Uri uriUpdate = DataContract.ViewAwardEntry.buildUriForAllRows();
         int rowsUpdated = mContentResolver.update(uriUpdate, TEST_MOVIE_1.toContentValues(), null, null);
         assertEquals(0, rowsUpdated);
     }

@@ -337,10 +337,7 @@ public final class Award implements Parcelable {
         }
         if (o instanceof Award) {
             Award that = (Award) o;
-            return (this.id.equals(that.id))
-                    || ((this.movieId.equals(that.movieId))
-                    && (this.awardDate.equals(that.awardDate))
-                    && (this.category.equals(that.category)));
+            return (this.id.equals(that.id));
         }
         return false;
     }
@@ -350,12 +347,6 @@ public final class Award implements Parcelable {
         int h = 1;
         h *= 1000003;
         h ^= this.id.hashCode();
-        h *= 1000003;
-        h ^= this.movieId.hashCode();
-        h *= 1000003;
-        h ^= this.awardDate.hashCode();
-        h *= 1000003;
-        h ^= this.category.hashCode();
         return h;
     }
 

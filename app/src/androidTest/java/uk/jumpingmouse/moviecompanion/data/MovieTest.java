@@ -13,6 +13,7 @@ import uk.jumpingmouse.moviecompanion.AndroidTestUtils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -43,9 +44,16 @@ public class MovieTest {
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
                 .year("2017")
+                .rated("R")
                 .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2017"))
                 .runtime(144)
                 .genre("Drama, Mystery, Romance")
+                .director("Christopher Nolan")
+                .writer("Joss Whedon")
+                .actors("Harrison Ford, Mark Hamill")
+                .plot("Forrest Gump on a tractor.")
+                .language("en")
+                .country("UK")
                 .poster(POSTER)
                 .build();
 
@@ -54,9 +62,16 @@ public class MovieTest {
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
                 .year(null)
+                .rated(null)
                 .released(Movie.RELEASED_UNKNOWN)
                 .runtime(Movie.RUNTIME_UNKNOWN)
                 .genre(null)
+                .director(null)
+                .writer(null)
+                .actors(null)
+                .plot(null)
+                .language(null)
+                .country(null)
                 .poster(null)
                 .build();
     }
@@ -107,13 +122,20 @@ public class MovieTest {
 
         @SuppressWarnings({"unused", "UnusedAssignment", "ConstantConditions"})
         Movie movie = Movie.builder()
-                .id("0")
+                .id(null)
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
                 .year("2017")
+                .rated("R")
                 .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2017"))
                 .runtime(144)
                 .genre("Drama, Mystery, Romance")
+                .director("Christopher Nolan")
+                .writer("Joss Whedon")
+                .actors("Harrison Ford, Mark Hamill")
+                .plot("Forrest Gump on a tractor.")
+                .language("en")
+                .country("UK")
                 .poster(POSTER)
                 .build();
     }
@@ -172,16 +194,17 @@ public class MovieTest {
         //noinspection EqualsBetweenInconvertibleTypes
         assertFalse(mMovie.equals(mMovie.toString()));
 
-        // test that building with the same parameter values results in equals(...) returning true
+        // test that building with the same id but different values for other fields
+        // results in equals(...) returning true
         assertTrue(Movie.builder()
                 .id("4016934")
-                .imdbId("tt4016934")
-                .title("The Handmaiden")
-                .year("2017")
-                .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2017"))
-                .runtime(144)
-                .genre("Drama, Mystery, Romance")
-                .poster(POSTER)
+                .imdbId("tt4016938")
+                .title("The Handmaiden Returns")
+                .year("2019")
+                .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2019"))
+                .runtime(90)
+                .genre("Comedy")
+                .poster(POSTER + ".extended")
                 .build()
                 .equals(mMovie));
 
@@ -198,10 +221,11 @@ public class MovieTest {
                 .build()
                 .equals(mMovieWithNulls));
 
-        // test that building with a different imdbId results in equals(...) returning false
+        // test that building with a different id but all other values the same
+        // results in equals(...) returning false
         assertFalse(Movie.builder()
-                .id("4016934")
-                .imdbId("tt4016935")
+                .id("4016938")
+                .imdbId("tt4016934")
                 .title("The Handmaiden")
                 .year("2017")
                 .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2017"))
@@ -215,7 +239,27 @@ public class MovieTest {
     @Test
     public void testHashcode() {
         //assertTrue(mMovie.hashCode() > 1); // could be negative
-        assertTrue(mMovie.hashCode() != mMovieWithNulls.hashCode());
+        assertEquals(mMovie.hashCode(), mMovieWithNulls.hashCode());
+
+        assertNotEquals(mMovie.hashCode(),
+                Movie.builder()
+                        // id is the only different field
+                        .id("4016938")
+                        .imdbId("tt4016934")
+                        .title("The Handmaiden")
+                        .year("2017")
+                        .rated("R")
+                        .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2017"))
+                        .runtime(144)
+                        .genre("Drama, Mystery, Romance")
+                        .director("Christopher Nolan")
+                        .writer("Joss Whedon")
+                        .actors("Harrison Ford, Mark Hamill")
+                        .plot("Forrest Gump on a tractor.")
+                        .language("en")
+                        .country("UK")
+                        .poster(POSTER)
+                        .build());
     }
 
     @Test
@@ -223,8 +267,12 @@ public class MovieTest {
         assertEquals(
                 "Movie{id=4016934, imdbId=tt4016934, title=The Handmaiden" +
                         ", year=2017, rated=R, released="
-                        + AndroidTestUtils.toLongOmdbReleased("01 Jun 2017") +
-                        ", runtime=144, genre=Drama, Mystery, Romance, poster=" + POSTER +
+                        + AndroidTestUtils.toLongOmdbReleased("01 Jun 2017")
+                        + ", runtime=144, genre=Drama, Mystery, Romance"
+                        + ", director=Christopher Nolan, writer=Joss Whedon"
+                        + ", actors=Harrison Ford, Mark Hamill, plot=Forrest Gump on a tractor."
+                        + ", language=en, country=UK"
+                        + ", poster=" + POSTER +
                         "}",
                 mMovie.toString());
     }
