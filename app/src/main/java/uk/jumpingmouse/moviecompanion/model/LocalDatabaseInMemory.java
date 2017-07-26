@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import timber.log.Timber;
+
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.data.UserMovie;
@@ -451,10 +452,9 @@ public final class LocalDatabaseInMemory implements LocalDatabase {
         }
 
         // Generate an unsorted, unfiltered ViewAward list from the list of awards.
-//        // We use awardList rather than mAwards.values() in the call to generateViewAwardList(...)
-//        // because using mAwards.values() can lead to a ConcurrentModificationException.
-//        List<Award> awardList = new ArrayList<>(mAwards.values());
-//        List<ViewAward> viewAwardList = generateViewAwardList(awardList);
+        // We use viewAwardList rather than mAwards.values() in the call to generateViewAwardList(...)
+        // because using mAwards.values() can lead to a ConcurrentModificationException.
+        //List<ViewAward> viewAwardList = generateViewAwardList(awardList);
         List<ViewAward> viewAwardList = generateViewAwardList(mAwards.values());
 
         // Filter the ViewAward list
@@ -591,21 +591,27 @@ public final class LocalDatabaseInMemory implements LocalDatabase {
     /**
      * Returns whether a ViewAward is allowed through when filtered by genre.
      * @param viewAward the ViewAward
-     * @param keyGenre the genre key being used as a filter, e.g. "genre_comedy"
+     * @param filterGenreKey the genre key being used as a filter, e.g. "genre_comedy"
      * @return true if the ViewAward is allowed through the filter, false otherwise
      */
-    private boolean isIncludedByFilterGenre(@NonNull ViewAward viewAward, @NonNull String keyGenre) {
-        if (keyGenre.equals(DataContract.ViewAwardEntry.FILTER_GENRE_ALL)) {
+    private boolean isIncludedByFilterGenre(@NonNull ViewAward viewAward,
+                                            @NonNull String filterGenreKey) {
+        if (filterGenreKey.equals(DataContract.ViewAwardEntry.FILTER_GENRE_ALL)) {
             return true;
         }
-        // TODO use genres from database
-        String filterGenreStored = DataContract.ViewAwardEntry.getGenreStoredForGenreKey(keyGenre);
-        //noinspection SimplifiableIfStatement
+        String filterGenreStored = DataContract.ViewAwardEntry.getGenreStoredForGenreKey(filterGenreKey);
         if (filterGenreStored == null) {
             return true;
         }
-        return viewAward.getGenre() != null
-                && viewAward.getGenre().contains(filterGenreStored);
+        if (viewAward.getGenre() != null) {
+            String[] viewAwardGenres = viewAward.getGenre().split(",");
+            for (String viewAwardGenre : viewAwardGenres) {
+                if (filterGenreStored.equals(viewAwardGenre.trim())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**

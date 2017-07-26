@@ -154,13 +154,13 @@ public class AwardTest {
     @Test
     public void testToString() {
         assertEquals(
-                "Award{id=" + ID +
-                        ", movieId=" + MOVIE_ID +
-                        ", awardDate=" + AWARD_DATE_1 +
-                        ", category=" + Award.CATEGORY_MOVIE +
-                        ", review=" + REVIEW +
-                        ", displayOrder=" + DISPLAY_ORDER +
-                        "}",
+                "Award{id=" + ID
+                        + ", movieId=" + MOVIE_ID
+                        + ", awardDate=" + AWARD_DATE_1
+                        + ", category=" + Award.CATEGORY_MOVIE
+                        + ", review=" + REVIEW
+                        + ", displayOrder=" + DISPLAY_ORDER
+                        + "}",
                 mAward.toString());
     }
 
