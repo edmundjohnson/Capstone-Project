@@ -22,15 +22,15 @@ import uk.jumpingmouse.moviecompanion.model.LocalDatabase;
 import uk.jumpingmouse.moviecompanion.model.MasterDatabase;
 import uk.jumpingmouse.moviecompanion.utils.JavaUtils;
 import uk.jumpingmouse.moviecompanion.utils.NavUtils;
+import uk.jumpingmouse.moviecompanion.utils.NetUtils;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
-import uk.jumpingmouse.omdbapi.OmdbApi;
 
 /**
  * The edit award activity.
  * This is an admin activity, not a public-facing one, so the UI is fairly basic.
  * @author Edmund Johnson
  */
-public class EditAwardActivity extends AppCompatActivity {
+public final class EditAwardActivity extends AppCompatActivity {
 
     // Bundle keys, e.g. for use when saving and restoring state
     private static final String KEY_MOVIE = "KEY_MOVIE";
@@ -99,13 +99,23 @@ public class EditAwardActivity extends AppCompatActivity {
         displayData(mMovie, mAward);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Warn the user if there is no internet connection
+        if (!getNetUtils().isNetworkAvailable(this)) {
+            getViewUtils().displayInfoMessage(this, R.string.network_unavailable);
+        }
+    }
+
     /**
      * Called to retrieve per-instance state from an activity before being killed so that the
      * state can be restored in onCreate(Bundle) or onRestoreInstanceState(Bundle).
      * @param outState the Bundle populated by this method
      */
     @Override
-    public final void onSaveInstanceState(final Bundle outState) {
+    public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
 
         outState.putParcelable(KEY_MOVIE, mMovie);
@@ -290,12 +300,12 @@ public class EditAwardActivity extends AppCompatActivity {
     }
 
     /**
-     * Convenience method which returns a reference to an OmdbApi object.
-     * @return a reference to an OmdbApi object
+     * Convenience method which returns a reference to a NetUtils object.
+     * @return a reference to a NetUtils object
      */
     @NonNull
-    private static OmdbApi getOmdbApi() {
-        return OmdbApi.getInstance();
+    private static NetUtils getNetUtils() {
+        return ObjectFactory.getNetUtils();
     }
 
 }

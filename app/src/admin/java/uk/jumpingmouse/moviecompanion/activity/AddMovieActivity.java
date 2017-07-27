@@ -14,19 +14,18 @@ import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.model.MasterDatabase;
+import uk.jumpingmouse.moviecompanion.moviedb.MovieDbHandler;
+import uk.jumpingmouse.moviecompanion.moviedb.MovieDbReceiver;
 import uk.jumpingmouse.moviecompanion.utils.NavUtils;
-import uk.jumpingmouse.moviecompanion.utils.OmdbAdminUtils;
+import uk.jumpingmouse.moviecompanion.utils.NetUtils;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
-import uk.jumpingmouse.omdbapi.OmdbApi;
-import uk.jumpingmouse.omdbapi.OmdbHandler;
-import uk.jumpingmouse.omdbapi.OmdbMovie;
 
 /**
  * The add movie activity.
  * This is an admin activity, not a public-facing one, so the UI can be fairly basic.
  * @author Edmund Johnson
  */
-public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
+public final class AddMovieActivity extends AppCompatActivity implements MovieDbReceiver {
 
     // Bundle keys, e.g. for use when saving and restoring state
     private static final String KEY_MOVIE = "KEY_MOVIE";
@@ -40,8 +39,11 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
     private Button mBtnCancel;
     private Button mBtnSave;
 
-    // Movie fetched from OMDb
+    // The movie being added, as fetched from the remote database
     private Movie mMovie;
+
+    // A movie database handler for this instance of this activity
+    private MovieDbHandler mMovieDbHandler;
 
     //---------------------------------------------------------------------
     // Lifecycle methods
@@ -75,6 +77,18 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
                 displayData(mMovie);
             }
         }
+
+        mMovieDbHandler = newMovieDbHandler(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Warn the user if there is no internet connection
+        if (!getNetUtils().isNetworkAvailable(this)) {
+            getViewUtils().displayInfoMessage(this, R.string.network_unavailable);
+        }
     }
 
     /**
@@ -83,7 +97,7 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
      * @param outState the Bundle populated by this method
      */
     @Override
-    public final void onSaveInstanceState(final Bundle outState) {
+    public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
 
         outState.putParcelable(KEY_MOVIE, mMovie);
@@ -91,42 +105,6 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
 
     //---------------------------------------------------------------------
     // Action methods
-
-    /**
-     * Handles the user clicking the "Fetch Movie Details" button.
-     * @param view the view that was clicked, required because this method is set as
-     *             an 'onClick' method in the layout xml
-     */
-    public void onFetchMovieDetails(@SuppressWarnings("UnusedParameters") @Nullable View view) {
-        String imdbId = mTxtImdbId.getText().toString();
-        if (imdbId.trim().isEmpty()) {
-            return;
-        }
-        // Get the OMDb API key from the local.properties file
-        String omdbApiKey = getString(R.string.omdbapi_key);
-        if (omdbApiKey.trim().isEmpty()) {
-            getViewUtils().displayErrorMessage(this, R.string.omdbapi_key_missing);
-            return;
-        }
-        getOmdbApi().fetchMovie(omdbApiKey, imdbId, this);
-    }
-
-    /**
-     * Handles the completion of a movie being fetched from the server.
-     * @param omdbMovie the movie that was fetched
-     */
-    @Override
-    public void onFetchMovieCompleted(@Nullable OmdbMovie omdbMovie) {
-        Movie movie = OmdbAdminUtils.newMovie(omdbMovie);
-        if (movie == null) {
-            // Display a "Data found did not represent a Movie" error message
-            getViewUtils().displayErrorMessage(this, R.string.movie_data_not_found);
-        } else {
-            // Save and display the fetched movie
-            mMovie = movie;
-            displayData(mMovie);
-        }
-    }
 
     /**
      * Handles the user clicking the "Cancel" button.
@@ -235,6 +213,55 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
         hideView(mBtnSave);
     }
 
+    //---------------------------------------------------------------------
+    // Implementation of the MovieDbReceiver interface
+
+    /**
+     * Handles the user clicking the "Fetch Movie Details" button.
+     * @param view the view that was clicked, required because this method is set as
+     *             an 'onClick' method in the layout xml
+     */
+    public void onFetchMovieDetails(@SuppressWarnings("UnusedParameters") @Nullable View view) {
+        String imdbId = mTxtImdbId.getText().toString();
+        if (imdbId.trim().isEmpty()) {
+            return;
+        }
+        if (mMovieDbHandler != null) {
+            int status = mMovieDbHandler.fetchMovieByImdbId(imdbId);
+            if (status != MovieDbHandler.STATUS_SUCCESS) {
+                getViewUtils().displayErrorMessage(
+                        this, mMovieDbHandler.getErrorMessageForStatus(status));
+            }
+            // if status indicates success, onFetchMovieCompleted(...) will be called
+        }
+    }
+
+    /**
+     * Handles the completion of a movie being fetched from the movie database.
+     * @param movie the movie that was fetched
+     */
+    @Override
+    public void onFetchMovieCompleted(@Nullable Movie movie) {
+        if (movie == null) {
+            // Display a "Data found did not represent a Movie" error message
+            getViewUtils().displayErrorMessage(this, R.string.movie_data_not_found);
+        } else {
+            // Save and display the fetched movie
+            mMovie = movie;
+            displayData(mMovie);
+        }
+    }
+
+    /**
+     * Return the receiver's context.
+     * @return the receiver's context
+     */
+    @Override
+    @NonNull
+    public Context getReceiverContext() {
+        return this;
+    }
+
     //---------------------------------------------------------------
     // Utility methods
 
@@ -285,12 +312,23 @@ public class AddMovieActivity extends AppCompatActivity implements OmdbHandler {
     }
 
     /**
-     * Convenience method which returns a reference to an OmdbApi object.
-     * @return a reference to an OmdbApi object
+     * Convenience method which returns a reference to a NetUtils object.
+     * @return a reference to a NetUtils object
      */
     @NonNull
-    private static OmdbApi getOmdbApi() {
-        return OmdbApi.getInstance();
+    private static NetUtils getNetUtils() {
+        return ObjectFactory.getNetUtils();
+    }
+
+    /**
+     * Convenience method which returns a reference to a new MovieDbHandler object.
+     * @param movieDbReceiver the MovieDbReceiver to which the MovieDbHandler will pass any
+     *                        data read from the remote database
+     * @return a reference to a MovieDbHandler object
+     */
+    @NonNull
+    private static MovieDbHandler newMovieDbHandler(@NonNull MovieDbReceiver movieDbReceiver) {
+        return ObjectFactory.newMovieDbHandler(movieDbReceiver);
     }
 
 }

@@ -180,7 +180,10 @@ dependencies {
     // Timber
     implementation 'com.jakewharton.timber:timber:4.5.1'
 
-    // OmdbApi
+//    // TMDb API
+//    adminImplementation 'info.movito:themoviedbapi:1.6'
+
+    // OMDb API
     adminImplementation project(':omdbapi')
     // Retrofit - dependency of OmdbApi
     adminImplementation "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"

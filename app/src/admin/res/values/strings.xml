@@ -6,13 +6,17 @@
          different product flavours can coexist on a single device -->
     <string name="content_authority" translatable="false">uk.jumpingmouse.moviecompanion.admin</string>
 
-    <!-- OMDb key -->
-    <string name="omdbapi_key_missing">OMDb API key not found. Consider adding it to your local.properties file.</string>
-
     <!-- App Bar and Menu -->
     <string name="menu_option_add_movie">Add Movie</string>
     <string name="menu_option_add_award">Add Award</string>
     <string name="menu_option_edit_award">Edit Award</string>
+
+    <!-- OMDb / TMDb remote database -->
+    <string name="db_handler_success">Success</string>
+    <string name="omdbapi_key_missing">OMDb API key not found. Consider adding it to your local.properties file.</string>
+    <string name="receiver_context_is_null">The receiver context is null</string>
+    <string name="network_unavailable">There is no internet connection</string>
+    <string name="unrecognised_error_status">Unrecognised error status</string>
 
     <!-- Error messages -->
     <string name="error_mandatory_field_missing">A mandatory field is missing</string>

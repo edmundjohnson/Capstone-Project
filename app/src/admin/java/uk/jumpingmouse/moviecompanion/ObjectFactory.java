@@ -4,6 +4,9 @@ import android.support.annotation.NonNull;
 
 import uk.jumpingmouse.moviecompanion.model.MasterDatabase;
 import uk.jumpingmouse.moviecompanion.model.MasterDatabaseFirebaseAdmin;
+import uk.jumpingmouse.moviecompanion.moviedb.MovieDbHandler;
+import uk.jumpingmouse.moviecompanion.moviedb.MovieDbHandlerOmdb;
+import uk.jumpingmouse.moviecompanion.moviedb.MovieDbReceiver;
 import uk.jumpingmouse.moviecompanion.utils.NavUtils;
 import uk.jumpingmouse.moviecompanion.utils.NavUtilsAdmin;
 
@@ -24,6 +27,19 @@ public class ObjectFactory extends ObjectFactoryBase {
     public static MasterDatabase getMasterDatabase() {
         return MasterDatabaseFirebaseAdmin.getInstance();
     }
+
+    /**
+     * Convenience method which returns a reference to a new MovieDbHandler object.
+     * A new MovieDbHandler object must be created for each instance of each client class.
+     * @param movieDbReceiver the MovieDbReceiver to which the MovieDbHandler will pass any
+     *                        data read from the remote database
+     * @return a reference to a MovieDbHandler object
+     */
+    @NonNull
+    public static MovieDbHandler newMovieDbHandler(@NonNull MovieDbReceiver movieDbReceiver) {
+        return MovieDbHandlerOmdb.newInstance(movieDbReceiver);
+    }
+
 
     /**
      * Returns a reference to a NavUtils object.
