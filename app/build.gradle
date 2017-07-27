@@ -137,8 +137,10 @@ ext {
     // https://github.com/firebase/FirebaseUI-Android/blob/master/constants.gradle
     //SUPPORT_LIB_VERSION = '25.4.0'
     SUPPORT_LIB_VERSION = '26.0.0'
-    FIREBASE_VERSION = '11.0.2'
+    FIREBASE_VERSION = '11.0.4'
     FIREBASE_UI_VERSION = '2.0.1'
+
+    RETROFIT_VERSION = '2.2.0'
 
 //    SUPPORT_LIB_VERSION = '25.1.1'
 //    FIREBASE_VERSION = '10.2.0'
@@ -180,6 +182,9 @@ dependencies {
 
     // OmdbApi
     adminImplementation project(':omdbapi')
+    // Retrofit - dependency of OmdbApi
+    adminImplementation "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
+    adminImplementation "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
 
     // test
     testImplementation 'junit:junit:4.12'
