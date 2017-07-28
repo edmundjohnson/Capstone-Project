@@ -514,7 +514,7 @@ public final class MovieFragment extends Fragment
 
         mTxtTitle.setText(viewAward.getTitle().trim());
         mTxtRuntime.setText(runtimeText);
-        mTxtGenre.setText(viewAward.getGenre());
+        mTxtGenre.setText(ModelUtils.toGenreNameCsv(context, viewAward.getGenre()));
         mImgCategory.setImageResource(categoryRes);
         mImgCategory.setContentDescription(categoryText);
         mTxtCategory.setText(categoryText);

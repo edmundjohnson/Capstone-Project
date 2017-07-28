@@ -120,55 +120,6 @@ public final class AwardListFilterFragment extends DialogFragment {
         return view;
     }
 
-//    // This code would go before the 'Genre filter' code in onCreateView
-//    private void codeToGetActiveGenresFromDatabase() {
-//            List<Genre> genres = new ArrayList<>();
-//            genres.add(Genre.builder()
-//                    .id("genre_action")
-//                    .storedValue("Action")
-//                    .displayInFilter(true)
-//                    .build());
-//            genres.add(Genre.builder()
-//                    .id("genre_animation").storedValue("Animation").displayInFilter(false).build());
-//            genres.add(Genre.builder()
-//                    .id("genre_comedy").storedValue("Comedy").displayInFilter(true).build());
-//            genres.add(Genre.builder()
-//                    .id("genre_fantasy").storedValue("Fantasy").displayInFilter(true).build());
-//            genres.add(Genre.builder()
-//                    .id("genre_music").storedValue("Music").displayInFilter(true).build());
-//
-//            // Genre list filter
-//            String[] filterPrefValuesGenreAll =
-//                    context.getResources().getStringArray(R.array.filter_genre_pref_key);
-//            String[] filterDisplayValuesGenreAll =
-//                    context.getResources().getStringArray(R.array.filter_genre_pref_display);
-//
-//            // Initialise the arrays of active pref values and display values.
-//            List<String> listFilterPrefValuesGenreActive = new ArrayList<>();
-//            List<String> listFilterDisplayValuesGenreActive = new ArrayList<>();
-//            listFilterPrefValuesGenreActive.add(DataContract.ViewAwardEntry.FILTER_GENRE_DEFAULT);
-//            listFilterDisplayValuesGenreActive.add(getString(R.string.filter_genre_default));
-//
-//            // Load the active filters into the arrays of active pref values and display values.
-//            for (int filterIndex = 0; filterIndex < filterPrefValuesGenreAll.length; filterIndex++) {
-//                for (Genre genre : genres) {
-//                    if (genre.getId().equals(filterPrefValuesGenreAll[filterIndex])
-//                            && genre.isDisplayInFilter()) {
-//                        listFilterPrefValuesGenreActive.add(filterPrefValuesGenreAll[filterIndex]);
-//                        listFilterDisplayValuesGenreActive.add(filterDisplayValuesGenreAll[filterIndex]);
-//                        break;
-//                    }
-//                }
-//            }
-//            int activeGenreCount = listFilterPrefValuesGenreActive.size();
-//            String[] filterPrefValuesGenreActive =
-//                    listFilterPrefValuesGenreActive.toArray(new String[activeGenreCount]);
-//            String[] filterDisplayValuesGenreActive =
-//                    listFilterDisplayValuesGenreActive.toArray(new String[activeGenreCount]);
-//
-//    }
-
-
     /**
      * A class representing a filter for the list.
      */

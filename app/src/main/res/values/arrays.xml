@@ -3,60 +3,67 @@
 
     <!-- Genre filter -->
     <!-- The order of filter_genre_pref_key must match the order of filter_genre_pref_display. -->
-    <!-- For each language, filter_genre_pref_display must be translated and ordered alphabetically,
-         with filter_genre_pref_key then being reordered to match filter_genre_pref_display. -->
+    <!-- For each language, filter_genre_pref_display must be translated and ordered
+         alphabetically in that language, then filter_genre_pref_key must be reordered
+         to match filter_genre_pref_display. -->
 
-    <!-- The genre ids, as stored in the genre filter shared preference. -->
+    <!-- The genre ids, as stored in Movie.genre and the genre filter shared preference. -->
     <string-array name="filter_genre_pref_key">
-        <item>genre_all</item>
-        <item>genre_action</item>
-        <item>genre_adventure</item>
-        <item>genre_animation</item>
-        <item>genre_biography</item>
-        <item>genre_comedy</item>
-        <item>genre_crime</item>
-        <item>genre_documentary</item>
-        <item>genre_drama</item>
-        <item>genre_family</item>
-        <item>genre_fantasy</item>
-        <item>genre_film_noir</item>
-        <item>genre_history</item>
-        <item>genre_horror</item>
-        <item>genre_music</item>
-        <item>genre_musical</item>
-        <item>genre_mystery</item>
-        <item>genre_romance</item>
-        <item>genre_sci_fi</item>
-        <item>genre_sport</item>
-        <item>genre_thriller</item>
-        <item>genre_war</item>
-        <item>genre_western</item>
+        <item>@string/genre_id_all</item>
+        <item>@string/genre_id_action</item>
+        <item>@string/genre_id_adventure</item>
+        <item>@string/genre_id_animation</item>
+        <item>@string/genre_id_comedy</item>
+        <item>@string/genre_id_crime</item>
+        <item>@string/genre_id_documentary</item>
+        <item>@string/genre_id_drama</item>
+        <item>@string/genre_id_family</item>
+        <item>@string/genre_id_fantasy</item>
+        <item>@string/genre_id_history</item>
+        <item>@string/genre_id_horror</item>
+        <item>@string/genre_id_music</item>
+        <item>@string/genre_id_mystery</item>
+        <item>@string/genre_id_romance</item>
+        <item>@string/genre_id_sci_fi</item>
+        <item>@string/genre_id_thriller</item>
+        <item>@string/genre_id_war</item>
+        <item>@string/genre_id_western</item>
+        <!-- The following genres are used by OMDb but not TMDb: -->
+        <!-- <item>@string/genre_id_biography</item> -->
+        <!-- <item>@string/genre_id_film_noir</item> -->
+        <!-- <item>@string/genre_id_musical</item> -->
+        <!-- <item>@string/genre_id_sport</item> -->
+        <!-- The following genres are used by TMDb but not used by the Companion: -->
+        <!-- <item>@string/genre_id_tv_movie</item> -->
     </string-array>
-    <!-- The genre display values, as displayed in the filter drop-down -->
+    <!-- The genre names, as displayed in the filter drop-down -->
     <string-array name="filter_genre_pref_display">
-        <item>@string/genre_all</item>
-        <item>@string/genre_action</item>
-        <item>@string/genre_adventure</item>
-        <item>@string/genre_animation</item>
-        <item>@string/genre_biography</item>
-        <item>@string/genre_comedy</item>
-        <item>@string/genre_crime</item>
-        <item>@string/genre_documentary</item>
-        <item>@string/genre_drama</item>
-        <item>@string/genre_family</item>
-        <item>@string/genre_fantasy</item>
-        <item>@string/genre_film_noir</item>
-        <item>@string/genre_history</item>
-        <item>@string/genre_horror</item>
-        <item>@string/genre_music</item>
-        <item>@string/genre_musical</item>
-        <item>@string/genre_mystery</item>
-        <item>@string/genre_romance</item>
-        <item>@string/genre_sci_fi</item>
-        <item>@string/genre_sport</item>
-        <item>@string/genre_thriller</item>
-        <item>@string/genre_war</item>
-        <item>@string/genre_western</item>
+        <item>@string/genre_name_all</item>
+        <item>@string/genre_name_action</item>
+        <item>@string/genre_name_adventure</item>
+        <item>@string/genre_name_animation</item>
+        <item>@string/genre_name_comedy</item>
+        <item>@string/genre_name_crime</item>
+        <item>@string/genre_name_documentary</item>
+        <item>@string/genre_name_drama</item>
+        <item>@string/genre_name_family</item>
+        <item>@string/genre_name_fantasy</item>
+        <item>@string/genre_name_history</item>
+        <item>@string/genre_name_horror</item>
+        <item>@string/genre_name_music</item>
+        <item>@string/genre_name_mystery</item>
+        <item>@string/genre_name_romance</item>
+        <item>@string/genre_name_sci_fi</item>
+        <item>@string/genre_name_thriller</item>
+        <item>@string/genre_name_war</item>
+        <item>@string/genre_name_western</item>
+        <!-- The following genres are used by OMDb but not TMDb: -->
+        <!-- <item>@string/genre_name_biography</item> -->
+        <!-- <item>@string/genre_name_film_noir</item> -->
+        <!-- <item>@string/genre_name_musical</item> -->
+        <!-- <item>@string/genre_name_sport</item> -->
+        <!-- The following genres are used by TMDb but not used by the Companion: -->
+        <!-- <item>@string/genre_name_tv_movie</item> -->
     </string-array>
 
     <!-- Wishlist filter -->

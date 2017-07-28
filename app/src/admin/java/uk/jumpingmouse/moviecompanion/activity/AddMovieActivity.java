@@ -16,6 +16,7 @@ import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.model.MasterDatabase;
 import uk.jumpingmouse.moviecompanion.moviedb.MovieDbHandler;
 import uk.jumpingmouse.moviecompanion.moviedb.MovieDbReceiver;
+import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 import uk.jumpingmouse.moviecompanion.utils.NavUtils;
 import uk.jumpingmouse.moviecompanion.utils.NetUtils;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
@@ -74,7 +75,7 @@ public final class AddMovieActivity extends AppCompatActivity implements MovieDb
         if (savedInstanceState != null) {
             mMovie = savedInstanceState.getParcelable(KEY_MOVIE);
             if (mMovie != null) {
-                displayData(mMovie);
+                displayData(this, mMovie);
             }
         }
 
@@ -145,15 +146,16 @@ public final class AddMovieActivity extends AppCompatActivity implements MovieDb
 
     /**
      * Displays movie data on the screen.
+     * @param context the context
      * @param movie the movie to display
      */
-    private void displayData(@NonNull Movie movie) {
+    private void displayData(@NonNull Context context, @NonNull Movie movie) {
         getViewUtils().dismissKeyboard(this);
 
         // disable data entry until Save or Cancel clicked
         mTxtImdbId.setEnabled(false);
 
-        setValueFields(movie);
+        setValueFields(context, movie);
         showValueFields();
     }
 
@@ -172,11 +174,12 @@ public final class AddMovieActivity extends AppCompatActivity implements MovieDb
 
     /**
      * Sets the contents of the data value fields.
+     * @param context the context
      * @param movie the movie whose data is to be displayed
      */
-    private void setValueFields(@NonNull Movie movie) {
+    private void setValueFields(@NonNull Context context, @NonNull Movie movie) {
         mTxtTitle.setText(movie.getTitle());
-        mTxtGenre.setText(movie.getGenre());
+        mTxtGenre.setText(ModelUtils.toGenreNameCsv(context, movie.getGenre()));
     }
 
     /**
@@ -248,7 +251,7 @@ public final class AddMovieActivity extends AppCompatActivity implements MovieDb
         } else {
             // Save and display the fetched movie
             mMovie = movie;
-            displayData(mMovie);
+            displayData(this, mMovie);
         }
     }
 

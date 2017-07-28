@@ -25,6 +25,7 @@ import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.activity.MovieActivity;
 import uk.jumpingmouse.moviecompanion.analytics.AnalyticsManager;
 import uk.jumpingmouse.moviecompanion.model.DataContract;
+import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 import uk.jumpingmouse.moviecompanion.utils.ViewUtils;
 
 /**
@@ -135,22 +136,23 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
         // the values of onWishlist etc. affect the menu only and are handled in the fragment
 
         // replace the contents of the item view with the data for the award
-        Picasso.with(mActivity).load(poster).into(viewHolder.getImgPoster());
-        viewHolder.getTxtMovieTitle().setText(movieTitle);
-        viewHolder.getTxtRuntime().setText(runtimeText);
-        viewHolder.getTxtGenre().setText(genre);
-        viewHolder.getImgCategory().setImageResource(categoryRes);
-        viewHolder.getImgCategory().setContentDescription(categoryText);
-        viewHolder.getTxtAwardDate().setText(awardDate);
+        if (mActivity != null) {
+            Picasso.with(mActivity).load(poster).into(viewHolder.getImgPoster());
+            viewHolder.getTxtMovieTitle().setText(movieTitle);
+            viewHolder.getTxtRuntime().setText(runtimeText);
+            viewHolder.getTxtGenre().setText(ModelUtils.toGenreNameCsv(mActivity, genre));
+            viewHolder.getImgCategory().setImageResource(categoryRes);
+            viewHolder.getImgCategory().setContentDescription(categoryText);
+            viewHolder.getTxtAwardDate().setText(awardDate);
 
-        // Assign the shared element name to the list item's poster
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            String transitionName = mActivity.getString(R.string.transition_movie, viewAwardId);
-            viewHolder.getImgPoster().setTransitionName(transitionName);
-            // Set the tag so the view can be found when the list activity is returned to.
-            viewHolder.getImgPoster().setTag(transitionName);
+            // Assign the shared element name to the list item's poster
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                String transitionName = mActivity.getString(R.string.transition_movie, viewAwardId);
+                viewHolder.getImgPoster().setTransitionName(transitionName);
+                // Set the tag so the view can be found when the list activity is returned to.
+                viewHolder.getImgPoster().setTag(transitionName);
+            }
         }
-
     }
 
     /**

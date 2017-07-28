@@ -1,15 +1,19 @@
 package uk.jumpingmouse.moviecompanion.utils;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import timber.log.Timber;
-
+import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.data.Award;
 import uk.jumpingmouse.moviecompanion.data.Movie;
 import uk.jumpingmouse.moviecompanion.data.UserMovie;
@@ -21,6 +25,40 @@ import uk.jumpingmouse.moviecompanion.model.DataContract;
  * @author Edmund Johnson
  */
 public final class ModelUtils {
+
+    // This map contains a mapping between genre ids and their corresponding genre names.
+    // The map keys are the genre ids stored in the database and match "@string/genre_id...".
+    // The map values are the string resource ids of the displayable genre names.
+    private static final Map<String, Integer> GENRES;
+    static {
+        Map<String, Integer> genresStoredModifiable = new HashMap<>();
+        genresStoredModifiable.put(Movie.GENRE_ID_ACTION, R.string.genre_name_action);
+        genresStoredModifiable.put(Movie.GENRE_ID_ADVENTURE, R.string.genre_name_adventure);
+        genresStoredModifiable.put(Movie.GENRE_ID_ANIMATION, R.string.genre_name_animation);
+        genresStoredModifiable.put(Movie.GENRE_ID_COMEDY, R.string.genre_name_comedy);
+        genresStoredModifiable.put(Movie.GENRE_ID_CRIME, R.string.genre_name_crime);
+        genresStoredModifiable.put(Movie.GENRE_ID_DOCUMENTARY, R.string.genre_name_documentary);
+        genresStoredModifiable.put(Movie.GENRE_ID_DRAMA, R.string.genre_name_drama);
+        genresStoredModifiable.put(Movie.GENRE_ID_FAMILY, R.string.genre_name_family);
+        genresStoredModifiable.put(Movie.GENRE_ID_FANTASY, R.string.genre_name_fantasy);
+        genresStoredModifiable.put(Movie.GENRE_ID_HISTORY, R.string.genre_name_history);
+        genresStoredModifiable.put(Movie.GENRE_ID_HORROR, R.string.genre_name_horror);
+        genresStoredModifiable.put(Movie.GENRE_ID_MUSIC, R.string.genre_name_music);
+        genresStoredModifiable.put(Movie.GENRE_ID_MYSTERY, R.string.genre_name_mystery);
+        genresStoredModifiable.put(Movie.GENRE_ID_ROMANCE, R.string.genre_name_romance);
+        genresStoredModifiable.put(Movie.GENRE_ID_SCI_FI, R.string.genre_name_sci_fi);
+        genresStoredModifiable.put(Movie.GENRE_ID_THRILLER, R.string.genre_name_thriller);
+        genresStoredModifiable.put(Movie.GENRE_ID_WAR, R.string.genre_name_war);
+        genresStoredModifiable.put(Movie.GENRE_ID_WESTERN, R.string.genre_name_western);
+        // Not on TMDb:
+        //genresStoredModifiable.put(Movie.GENRE_ID_BIOGRAPHY, R.string.genre_name_biography);
+        //genresStoredModifiable.put(Movie.GENRE_ID_FILM_NOIR, R.string.genre_name_film_noir);
+        //genresStoredModifiable.put(Movie.GENRE_ID_MUSICAL, R.string.genre_name_musical);
+        //genresStoredModifiable.put(Movie.GENRE_ID_SPORT, R.string.genre_name_sport);
+        // On TMDb but not used:
+        //genresStoredModifiable.put(Movie.GENRE_ID_TV_MOVIE, R.string.genre_name_tv_movie);
+        GENRES = Collections.unmodifiableMap(genresStoredModifiable);
+    }
 
     /**
      * Private default constructor to prevent instantiation.
@@ -453,6 +491,41 @@ public final class ModelUtils {
                 .watched(watched)
                 .favourite(favourite)
                 .build();
+    }
+
+
+    @Nullable
+    public static String toGenreNameCsv(@Nullable Context context, @Nullable String genreIdCsv) {
+        if (context == null || genreIdCsv == null) {
+            return null;
+        }
+        StringBuilder genreNameCsv = new StringBuilder();
+        String[] genreIdArray = genreIdCsv.split(",");
+        for (String genreId : genreIdArray) {
+            String genreName = toGenreName(context, genreId);
+            if (genreName != null) {
+                if (genreNameCsv.length() > 0) {
+                    genreNameCsv.append(", ");
+                }
+                genreNameCsv.append(genreName);
+            }
+        }
+        return genreNameCsv.toString();
+    }
+
+    /**
+     * Returns the genre name corresponding to a genre id.
+     * @param context the context
+     * @param genreId the genre id, e.g. "35"
+     * @return the genre name, e.g. "Comedy"
+     */
+    @Nullable
+    private static String toGenreName(@NonNull Context context, @NonNull String genreId) {
+        Integer genreNameStringRes = GENRES.get(genreId);
+        if (genreNameStringRes != null) {
+            return context.getString(genreNameStringRes);
+        }
+        return null;
     }
 
 }

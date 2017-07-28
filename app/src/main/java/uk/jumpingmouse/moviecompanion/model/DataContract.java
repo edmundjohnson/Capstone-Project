@@ -4,11 +4,6 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import uk.jumpingmouse.moviecompanion.BuildConfig;
 import uk.jumpingmouse.moviecompanion.data.ViewAwardQueryParameters;
@@ -376,51 +371,57 @@ public final class DataContract {
         // Award List Filters
         // Strings are used for the filter values so they can be used in URIs.
 
+        // FILTER_GENRE_ALL must match @string/filter_id_all
         public static final String FILTER_GENRE_ALL = "genre_all";
         public static final String FILTER_GENRE_DEFAULT = FILTER_GENRE_ALL;
 
-        // This map contains a mapping between genre ids and genres as stored in the IMDb.
-        // The map keys must match the values in arrays.xml "filter_genre_pref_key".
-        // The map values must match the values stored in the IMDb database and hence
-        // MUST NOT be translated!
-        private static final Map<String, String> GENRES_STORED;
-        static {
-            Map<String, String> genresStoredModifiable = new HashMap<>();
-            genresStoredModifiable.put("genre_action", "Action");
-            genresStoredModifiable.put("genre_adventure", "Adventure");
-            genresStoredModifiable.put("genre_animation", "Animation");
-            genresStoredModifiable.put("genre_biography", "Biography");
-            genresStoredModifiable.put("genre_comedy", "Comedy");
-            genresStoredModifiable.put("genre_crime", "Crime");
-            genresStoredModifiable.put("genre_documentary", "Documentary");
-            genresStoredModifiable.put("genre_drama", "Drama");
-            genresStoredModifiable.put("genre_family", "Family");
-            genresStoredModifiable.put("genre_fantasy", "Fantasy");
-            genresStoredModifiable.put("genre_film_noir", "Film-Noir");
-            genresStoredModifiable.put("genre_history", "History");
-            genresStoredModifiable.put("genre_horror", "Horror");
-            genresStoredModifiable.put("genre_music", "Music");
-            genresStoredModifiable.put("genre_musical", "Musical");
-            genresStoredModifiable.put("genre_mystery", "Mystery");
-            genresStoredModifiable.put("genre_romance", "Romance");
-            genresStoredModifiable.put("genre_sci_fi", "Sci-Fi");
-            genresStoredModifiable.put("genre_sport", "Sport");
-            genresStoredModifiable.put("genre_thriller", "Thriller");
-            genresStoredModifiable.put("genre_war", "War");
-            genresStoredModifiable.put("genre_western", "Western");
-            GENRES_STORED = Collections.unmodifiableMap(genresStoredModifiable);
-        }
+//        // This map contains a mapping between genre ids and genre names.
+//        // The map keys must match the values in arrays.xml "filter_genre_pref_key".
+//        // The map values must match the values stored in the remote database and hence
+//        // MUST NOT be translated!
+//        private static final Map<String, String> GENRES_STORED;
+//        static {
+//            Map<String, String> genresStoredModifiable = new HashMap<>();
+//            genresStoredModifiable.put("genre_action", "Action");
+//            genresStoredModifiable.put("genre_adventure", "Adventure");
+//            genresStoredModifiable.put("genre_animation", "Animation");
+//            // Not on TMDb
+//            genresStoredModifiable.put("genre_biography", "Biography");
+//            genresStoredModifiable.put("genre_comedy", "Comedy");
+//            genresStoredModifiable.put("genre_crime", "Crime");
+//            genresStoredModifiable.put("genre_documentary", "Documentary");
+//            genresStoredModifiable.put("genre_drama", "Drama");
+//            genresStoredModifiable.put("genre_family", "Family");
+//            genresStoredModifiable.put("genre_fantasy", "Fantasy");
+//            // Not on TMDb
+//            genresStoredModifiable.put("genre_film_noir", "Film-Noir");
+//            genresStoredModifiable.put("genre_history", "History");
+//            genresStoredModifiable.put("genre_horror", "Horror");
+//            genresStoredModifiable.put("genre_music", "Music");
+//            // Not on TMDb
+//            genresStoredModifiable.put("genre_musical", "Musical");
+//            genresStoredModifiable.put("genre_mystery", "Mystery");
+//            genresStoredModifiable.put("genre_romance", "Romance");
+//            genresStoredModifiable.put("genre_sci_fi", "Sci-Fi");
+//            // Not on TMDb
+//            genresStoredModifiable.put("genre_sport", "Sport");
+//            genresStoredModifiable.put("genre_thriller", "Thriller");
+//            // On TMDb but not OMDb: "TV Movie"
+//            genresStoredModifiable.put("genre_war", "War");
+//            genresStoredModifiable.put("genre_western", "Western");
+//            GENRES_STORED = Collections.unmodifiableMap(genresStoredModifiable);
+//        }
 
-        /**
-         * Returns a genre as stored in the database for a supplied genre key.
-         * @param genreKey a genre key, e.g."genre_comedy"
-         * @return the genre as stored in the database, e.g."Comedy", or null if there is
-         *         no stored genre corresponding to the genreKey
-         */
-        @Nullable
-        static String getGenreStoredForGenreKey(@NonNull String genreKey) {
-            return GENRES_STORED.get(genreKey);
-        }
+//        /**
+//         * Returns a genre as stored in the database for a supplied genre key.
+//         * @param genreKey a genre key, e.g."genre_comedy"
+//         * @return the genre as stored in the database, e.g."Comedy", or null if there is
+//         *         no stored genre corresponding to the genreKey
+//         */
+//        @Nullable
+//        static String getGenreStoredForGenreKey(@NonNull String genreKey) {
+//            return GENRES_STORED.get(genreKey);
+//        }
 
         // These values must match the values in arrays.xml "filter_wishlist_pref_key"
         public static final String FILTER_WISHLIST_ANY = "filter_wishlist_any";

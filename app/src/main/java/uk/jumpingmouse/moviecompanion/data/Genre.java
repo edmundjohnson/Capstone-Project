@@ -8,16 +8,15 @@ import android.support.annotation.Nullable;
 /**
  * The Genre model class.
  * @author Edmund Johnson
- * @deprecated See arrays.xml and DataContract class
  */
-@Deprecated
 public final class Genre implements Parcelable {
 
-    // The unique identifier of the genre, e.g. "genre_comedy".
+    // The unique identifier of the genre, e.g. "14".
+    // This value is based on the TMDb genre id.
     private String id;
-    // The value stored for this genre in the movie 'genre' field, e.g. "Comedy".
-    // The storedValue is always in English.
-    private String storedValue;
+    // The English name of the genre, e.g. "Comedy".
+    // This value is based on the TMDb genre name.
+    private String name;
     // Whether to display the genre in the genre filter. This should be false
     // for any genre which does not yet apply to any movie.
     private boolean displayInFilter;
@@ -27,16 +26,16 @@ public final class Genre implements Parcelable {
 
     private Genre(
             @Nullable String id,
-            @Nullable String storedValue,
+            @Nullable String name,
             boolean displayInFilter) {
         if (id == null) {
             throw new NullPointerException("Null id");
         }
-        if (storedValue == null) {
-            throw new NullPointerException("Null storedValue");
+        if (name == null) {
+            throw new NullPointerException("Null name");
         }
         this.id = id;
-        this.storedValue = storedValue;
+        this.name = name;
         this.displayInFilter = displayInFilter;
     }
 
@@ -59,8 +58,8 @@ public final class Genre implements Parcelable {
      * @return the genre's stored value, e.g. "Comedy"
      */
     @NonNull
-    public String getStoredValue() {
-        return storedValue;
+    public String getName() {
+        return name;
     }
 
     /**
@@ -80,7 +79,7 @@ public final class Genre implements Parcelable {
      */
     private Genre(@NonNull final Parcel in) {
         id = in.readString();
-        storedValue = in.readString();
+        name = in.readString();
         displayInFilter = in.readInt() == 1;
     }
 
@@ -93,7 +92,7 @@ public final class Genre implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
-        dest.writeString(storedValue);
+        dest.writeString(name);
         dest.writeInt(displayInFilter ? 1 : 0);
     }
 
@@ -138,7 +137,7 @@ public final class Genre implements Parcelable {
      * {@code
      *   Genre genre = Genre.builder()
      *         .id("genre_comedy")
-     *         .storedValue("Comedy")
+     *         .name("Comedy")
      *         .displayInFilter(true)
      *        .build();
      * }
@@ -152,7 +151,7 @@ public final class Genre implements Parcelable {
     @SuppressWarnings("WeakerAccess")
     public static final class Builder {
         private String id;
-        private String storedValue;
+        private String name;
         private boolean displayInFilter;
 
         Builder() {
@@ -160,7 +159,7 @@ public final class Genre implements Parcelable {
 
         Builder(@NonNull Genre source) {
             this.id = source.id;
-            this.storedValue = source.storedValue;
+            this.name = source.name;
             this.displayInFilter = source.displayInFilter;
         }
 
@@ -168,8 +167,8 @@ public final class Genre implements Parcelable {
             this.id = id;
             return this;
         }
-        public Genre.Builder storedValue(@NonNull String storedValue) {
-            this.storedValue = storedValue;
+        public Genre.Builder name(@NonNull String name) {
+            this.name = name;
             return this;
         }
         public Genre.Builder displayInFilter(boolean displayInFilter) {
@@ -185,15 +184,15 @@ public final class Genre implements Parcelable {
             if (id == null) {
                 missing += " id";
             }
-            if (storedValue == null) {
-                missing += " storedValue";
+            if (name == null) {
+                missing += " name";
             }
             if (!missing.isEmpty()) {
                 throw new IllegalStateException("Missing required properties:" + missing);
             }
             return new Genre(
                     this.id,
-                    this.storedValue,
+                    this.name,
                     this.displayInFilter);
         }
     }
@@ -228,18 +227,18 @@ public final class Genre implements Parcelable {
 //        return values;
 //    }
 
-    /**
-     * Returns the genre as an object array, one element per field value.
-     * @return the genre as an Object array
-     */
-    public Object[] toObjectArray() {
-        return new Object[] {
-                // This must match the order of columns in DataContract.GenreEntry.getAllColumns().
-                id,
-                storedValue,
-                displayInFilter
-        };
-    }
+//    /**
+//     * Returns the genre as an object array, one element per field value.
+//     * @return the genre as an Object array
+//     */
+//    public Object[] toObjectArray() {
+//        return new Object[] {
+//                // This must match the order of columns in DataContract.GenreEntry.getAllColumns().
+//                id,
+//                name,
+//                displayInFilter
+//        };
+//    }
 
     //---------------------------------------------------------------
     // Override object methods
@@ -248,7 +247,7 @@ public final class Genre implements Parcelable {
     public String toString() {
         return "Genre{"
                 + "id=" + id
-                + ", storedValue=" + storedValue
+                + ", name=" + name
                 + ", displayInFilter=" + displayInFilter
                 + "}";
     }

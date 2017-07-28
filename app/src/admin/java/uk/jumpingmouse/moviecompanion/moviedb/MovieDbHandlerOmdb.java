@@ -5,7 +5,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import timber.log.Timber;
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
@@ -23,6 +26,41 @@ import uk.jumpingmouse.omdbapi.OmdbMovie;
  */
 
 public class MovieDbHandlerOmdb implements MovieDbHandler, OmdbHandler {
+
+    // This map contains a mapping between genres as stored in OMDb and their
+    // corresponding genre ids.
+    // The map keys must match the values stored in the remote database and hence
+    // MUST NOT be translated!
+    // The map values must match the values in arrays.xml "filter_genre_pref_key".
+    private static final Map<String, Integer> OMDB_GENRE_TO_GENRE_ID;
+    static {
+        Map<String, Integer> genresStoredModifiable = new HashMap<>();
+        genresStoredModifiable.put("Action", R.string.genre_id_action);
+        genresStoredModifiable.put("Adventure", R.string.genre_id_adventure);
+        genresStoredModifiable.put("Animation", R.string.genre_id_animation);
+        genresStoredModifiable.put("Comedy", R.string.genre_id_comedy);
+        genresStoredModifiable.put("Crime", R.string.genre_id_crime);
+        genresStoredModifiable.put("Documentary", R.string.genre_id_documentary);
+        genresStoredModifiable.put("Drama", R.string.genre_id_drama);
+        genresStoredModifiable.put("Family", R.string.genre_id_family);
+        genresStoredModifiable.put("Fantasy", R.string.genre_id_fantasy);
+        genresStoredModifiable.put("History", R.string.genre_id_history);
+        genresStoredModifiable.put("Horror", R.string.genre_id_horror);
+        genresStoredModifiable.put("Music", R.string.genre_id_music);
+        genresStoredModifiable.put("Mystery", R.string.genre_id_mystery);
+        genresStoredModifiable.put("Romance", R.string.genre_id_romance);
+        genresStoredModifiable.put("Sci-Fi", R.string.genre_id_sci_fi);
+        genresStoredModifiable.put("Thriller", R.string.genre_id_thriller);
+        genresStoredModifiable.put("War", R.string.genre_id_war);
+        genresStoredModifiable.put("Western", R.string.genre_id_western);
+        // Not on TMDb
+        //genresStoredModifiable.put("Biography", R.string.genre_id_biography);
+        //genresStoredModifiable.put("Film-Noir", R.string.genre_id_film_noir);
+        //genresStoredModifiable.put("Musical", R.string.genre_id_musical);
+        //genresStoredModifiable.put("Sport", R.string.genre_id_sport);
+        // On TMDb but not OMDb: "TV Movie"
+        OMDB_GENRE_TO_GENRE_ID = Collections.unmodifiableMap(genresStoredModifiable);
+    }
 
     private MovieDbReceiver mMovieDbReceiver;
 
@@ -42,6 +80,7 @@ public class MovieDbHandlerOmdb implements MovieDbHandler, OmdbHandler {
      * Returns a new instance of this class.
      * A new instance of the class must be created for OMDb client class, otherwise
      * the results of successive calls could be passed to the wrong MovieDbReceiver.
+     * @param movieDbReceiver the receiver which is to be passed the fetched data
      * @return a new instance of this class
      */
     @NonNull
@@ -127,6 +166,7 @@ public class MovieDbHandlerOmdb implements MovieDbHandler, OmdbHandler {
 
     /**
      * Returns the API key for the OMDb interface.
+     * @param context the context
      * @return the API key for the OMDb interface
      */
     @Nullable
@@ -154,7 +194,7 @@ public class MovieDbHandlerOmdb implements MovieDbHandler, OmdbHandler {
      * @return a Movie corresponding to omdbMovie
      */
     @Nullable
-    private static Movie newMovie(OmdbMovie omdbMovie) {
+    private Movie newMovie(OmdbMovie omdbMovie) {
         if (omdbMovie == null) {
             Timber.w("newMovie: omdbMovie is null");
             return null;
@@ -176,6 +216,8 @@ public class MovieDbHandlerOmdb implements MovieDbHandler, OmdbHandler {
         int runtime = toIntOmdbRuntime(omdbMovie.getRuntime());
         long released = toLongOmdbReleased(omdbMovie.getReleased());
 
+        String genre = getMovieGenreCsvFromOmdbMovieGenre(omdbMovie.getGenre());
+
         return Movie.builder()
                 .id(id)
                 .imdbId(omdbMovie.getImdbID())
@@ -184,7 +226,7 @@ public class MovieDbHandlerOmdb implements MovieDbHandler, OmdbHandler {
                 .rated(omdbMovie.getRated())
                 .released(released)
                 .runtime(runtime)
-                .genre(omdbMovie.getGenre())
+                .genre(genre)
                 .director(omdbMovie.getDirector())
                 .writer(omdbMovie.getWriter())
                 .actors(omdbMovie.getActors())
@@ -229,6 +271,47 @@ public class MovieDbHandlerOmdb implements MovieDbHandler, OmdbHandler {
             }
         }
         return Movie.RUNTIME_UNKNOWN;
+    }
+
+    /**
+     * Returns a Movie genre CSV string corresponding to an OMDb genre CSV string.
+     * @param omdbGenreCsv an OMDb genre CSV string, e.g. "Comedy, Drama, Fantasy"
+     * @return the Movie genre CSV string corresponding to the OMDb genre CSV string, e.g. "35,18,14"
+     */
+    @Nullable
+    private String getMovieGenreCsvFromOmdbMovieGenre(@Nullable String omdbGenreCsv) {
+        if (omdbGenreCsv == null) {
+            return null;
+        }
+        StringBuilder movieGenreCsv = new StringBuilder();
+        String[] omdbGenreArray = omdbGenreCsv.split(",");
+        for (String omdbGenre : omdbGenreArray) {
+            String movieGenreId = getMovieGenreIdFromOmdbGenre(omdbGenre.trim());
+            if (movieGenreId != null) {
+                if (movieGenreCsv.length() > 0) {
+                    movieGenreCsv.append(",");
+                }
+                movieGenreCsv.append(movieGenreId);
+            }
+        }
+        return movieGenreCsv.toString();
+    }
+
+    /**
+     * Returns the Movie genre corresponding to an OMDb genre.
+     * @param omdbGenre the OMDb genre, e.g. "Comedy"
+     * @return the Movie genre corresponding to the OMDb genre, e.g. "35"
+     */
+    @Nullable
+    private String getMovieGenreIdFromOmdbGenre(@NonNull String omdbGenre) {
+        if (getContext() == null) {
+            return null;
+        }
+        Integer genreStringRes = OMDB_GENRE_TO_GENRE_ID.get(omdbGenre);
+        if (genreStringRes != null) {
+            return getContext().getString(genreStringRes);
+        }
+        return null;
     }
 
     //---------------------------------------------------------------------

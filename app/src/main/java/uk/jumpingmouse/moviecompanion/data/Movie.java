@@ -21,6 +21,26 @@ public final class Movie implements Parcelable {
     public static final int RUNTIME_UNKNOWN = -1;
     public static final int RELEASED_UNKNOWN = -1;
 
+    // Genre Ids
+    public static final String GENRE_ID_ACTION = "28";
+    public static final String GENRE_ID_ADVENTURE = "12";
+    public static final String GENRE_ID_ANIMATION = "16";
+    public static final String GENRE_ID_COMEDY = "35";
+    public static final String GENRE_ID_CRIME = "80";
+    public static final String GENRE_ID_DOCUMENTARY = "99";
+    public static final String GENRE_ID_DRAMA = "18";
+    public static final String GENRE_ID_FAMILY = "10751";
+    public static final String GENRE_ID_FANTASY = "14";
+    public static final String GENRE_ID_HISTORY = "36";
+    public static final String GENRE_ID_HORROR = "27";
+    public static final String GENRE_ID_MUSIC = "10402";
+    public static final String GENRE_ID_MYSTERY = "9648";
+    public static final String GENRE_ID_ROMANCE = "10749";
+    public static final String GENRE_ID_SCI_FI = "878";
+    public static final String GENRE_ID_THRILLER = "53";
+    public static final String GENRE_ID_WAR = "10752";
+    public static final String GENRE_ID_WESTERN = "37";
+
     // The unique identifier of the movie, e.g. "4016934".
     private String id;
     // The IMDb id, e.g. "tt4016934"
@@ -35,7 +55,7 @@ public final class Movie implements Parcelable {
     private long released;
     // The length in minutes
     private int runtime;
-    // A comma-separated list of genres, e.g. "Drama, Mystery, Romance"
+    // A comma-separated list of genre ids, e.g. "28,35,18"
     private String genre;
     // The director, e.g. "Chan-wook Park"
     private String director;
@@ -165,8 +185,8 @@ public final class Movie implements Parcelable {
     }
 
     /**
-     * Returns a comma-separated list of genres, e.g. "Drama, Mystery, Romance".
-     * @return a comma-separated list of genres
+     * Returns a comma-separated list of genre ids, e.g. "28,35,18".
+     * @return a comma-separated list of genre ids
      */
     @Nullable
     public String getGenre() {
