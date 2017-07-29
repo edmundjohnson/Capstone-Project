@@ -22,7 +22,7 @@ android {
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
 
-    // Load the properties in local.properties (e.g. 'omdbapi.key') into a properties object.
+    // Load the properties in local.properties (e.g. 'tmdbapi.key') into a properties object.
     // Properties from the properties object are added to the app resources below.
     Properties properties = new Properties()
     properties.load(project.rootProject.file("local.properties").newDataInputStream())
@@ -58,6 +58,12 @@ android {
             storeFile file('../capstone.jks')
             storePassword 'udacity'
         }
+    }
+
+    packagingOptions {
+        // Without this, an error occurs:
+        // > More than one file was found with OS independent path 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE'
     }
 
     buildTypes {
@@ -120,14 +126,20 @@ android {
             applicationIdSuffix ".admin"
             versionNameSuffix "-admin"
 
+            // Enable multidex support
+            multiDexEnabled true
+
             // Add the required admin properties from the properties object (which was loaded from
             // local.properties) to the app resources.
-            // OMDb API key
-            resValue "string", "omdbapi_key", properties.getProperty("omdbapi_key", "")
+            // Auth UI
             // Facebook Application Id
             resValue "string", "facebook_application_id", properties.getProperty("facebook_application_id", "")
             // Facebook Application Id prefixed by 'fb', enables Chrome Custom tabs.
             resValue "string", "facebook_login_protocol_scheme", properties.getProperty("facebook_login_protocol_scheme", "")
+            // TMDb API key
+            resValue "string", "tmdbapi_key", properties.getProperty("tmdbapi_key", "")
+            // OMDb API key
+            //resValue "string", "omdbapi_key", properties.getProperty("omdbapi_key", "")
         }
     }
 }
@@ -180,14 +192,15 @@ dependencies {
     // Timber
     implementation 'com.jakewharton.timber:timber:4.5.1'
 
-//    // TMDb API
-//    adminImplementation 'info.movito:themoviedbapi:1.6'
+    // TMDb API
+    adminImplementation 'info.movito:themoviedbapi:1.6'
+    adminImplementation 'com.android.support:multidex:1.0.2'
 
-    // OMDb API
-    adminImplementation project(':omdbapi')
-    // Retrofit - dependency of OmdbApi
-    adminImplementation "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
-    adminImplementation "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
+//    // OMDb API
+//    adminImplementation project(':omdbapi')
+//    // Retrofit - dependency of OmdbApi
+//    adminImplementation "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
+//    adminImplementation "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
 
     // test
     testImplementation 'junit:junit:4.12'

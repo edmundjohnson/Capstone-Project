@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import uk.jumpingmouse.moviecompanion.model.MasterDatabase;
 import uk.jumpingmouse.moviecompanion.model.MasterDatabaseFirebaseAdmin;
 import uk.jumpingmouse.moviecompanion.moviedb.MovieDbHandler;
-import uk.jumpingmouse.moviecompanion.moviedb.MovieDbHandlerOmdb;
+import uk.jumpingmouse.moviecompanion.moviedb.MovieDbHandlerTmdb;
 import uk.jumpingmouse.moviecompanion.moviedb.MovieDbReceiver;
 import uk.jumpingmouse.moviecompanion.utils.NavUtils;
 import uk.jumpingmouse.moviecompanion.utils.NavUtilsAdmin;
@@ -37,7 +37,10 @@ public class ObjectFactory extends ObjectFactoryBase {
      */
     @NonNull
     public static MovieDbHandler newMovieDbHandler(@NonNull MovieDbReceiver movieDbReceiver) {
-        return MovieDbHandlerOmdb.newInstance(movieDbReceiver);
+        // OMDb
+        //return MovieDbHandlerOmdb.newInstance(movieDbReceiver);
+        // TMDb
+        return MovieDbHandlerTmdb.newInstance(movieDbReceiver);
     }
 
 

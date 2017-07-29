@@ -15,8 +15,10 @@ public interface MovieDbHandler {
     int STATUS_RECEIVER_CONTEXT_IS_NULL = 100;
     /** Status indicating that there is no internet connection. */
     int STATUS_NETWORK_UNAVAILABLE = 101;
-    /** Return value from fetch methods, indicating that the API key was not found. */
-    int STATUS_OMDB_API_KEY_KEY_NOT_FOUND = 102;
+    /** Status indicating that the TMDb API key was not found. */
+    int STATUS_TMDB_API_KEY_KEY_NOT_FOUND = 103;
+    /** Status indicating that the OMDb API key was not found. */
+    int STATUS_OMDB_API_KEY_KEY_NOT_FOUND = 104;
 
     /**
      * Fetches a movie from the remote database.
