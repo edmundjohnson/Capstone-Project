@@ -14,13 +14,16 @@ import info.movito.themoviedbapi.TmdbFind;
 import info.movito.themoviedbapi.TmdbMovies;
 import info.movito.themoviedbapi.model.FindResults;
 import info.movito.themoviedbapi.model.MovieDb;
+
 import timber.log.Timber;
 
 /**
  * A task which fetches a movie from the TMDb and returns it to a supplied handler.
  * @author Edmund Johnson
  */
-final class TmdbFetchMovieTask extends AsyncTask<String, Integer, MovieDb> {
+final class TmdbTaskFetchMovie extends AsyncTask<String, Integer, MovieDb> {
+
+    private static final String LANGUAGE_DEFAULT = "en";
 
     private final WeakReference<TmdbHandler> mTmdbHandler;
 
@@ -29,9 +32,9 @@ final class TmdbFetchMovieTask extends AsyncTask<String, Integer, MovieDb> {
 
     /**
      * Constructor.
-     * @param tmdbHandler the activity which initiated this task
+     * @param tmdbHandler the handler object which initiated this task
      */
-    TmdbFetchMovieTask(@NonNull TmdbHandler tmdbHandler) {
+    TmdbTaskFetchMovie(@NonNull TmdbHandler tmdbHandler) {
         super();
         mTmdbHandler = new WeakReference<>(tmdbHandler);
     }
@@ -47,12 +50,25 @@ final class TmdbFetchMovieTask extends AsyncTask<String, Integer, MovieDb> {
     @Nullable
     protected MovieDb doInBackground(@Nullable final String... args) {
         if (args == null || args.length < 2) {
+            Timber.e("TmdbTaskFetchMovie was not passed the required arguments");
             return null;
         }
-        String imdbId = args[0];
-        String tmdbApiKey = args[1];
+
+        String tmdbApiKey = args[0];
+        if (tmdbApiKey == null || tmdbApiKey.isEmpty()) {
+            Timber.e("tmdbApiKey is null or empty");
+            return null;
+        }
+        TmdbApi tmdbApi = new TmdbApi(tmdbApiKey);
+
+        String imdbId = args[1];
+        if (imdbId == null || imdbId.isEmpty()) {
+            Timber.e("imdbId is null or empty");
+            return null;
+        }
+
         // fetch and return the Movie
-        return fetchMovie(tmdbApiKey, imdbId);
+        return fetchMovie(tmdbApi, imdbId);
     }
 
     /**
@@ -68,38 +84,29 @@ final class TmdbFetchMovieTask extends AsyncTask<String, Integer, MovieDb> {
     }
 
     //---------------------------------------------------------------------
-    // fetchMovie
+    // Fetch data from TMDb
 
     /**
      * Fetches and returns a movie from the TMDb.
      * Logs very specifically any problems, to help users of the library see what's going on.
-     * @param tmdbApiKey the TMDb API key
+     * @param tmdbApi the TMDb API object
      * @param imdbId the movie's IMDb id
      * @return the TMDb movie with the specified TMDb id, or null if the movie was not found.
      */
     @Nullable
     @WorkerThread
-    private MovieDb fetchMovie(@Nullable String tmdbApiKey, @Nullable String imdbId) {
-        if (tmdbApiKey == null || tmdbApiKey.isEmpty()) {
-            Timber.e("tmdbApiKey is null or empty");
-            return null;
-        }
-        if (imdbId == null || imdbId.isEmpty()) {
-            Timber.e("imdbId is null or empty");
-            return null;
-        }
+    private MovieDb fetchMovie(@NonNull TmdbApi tmdbApi, @NonNull String imdbId) {
 
-        TmdbFind tmdbFind = new TmdbApi(tmdbApiKey).getFind();
-        FindResults findResults = tmdbFind.find(imdbId, TmdbFind.ExternalSource.imdb_id, "en");
-
+        TmdbFind tmdbFind = tmdbApi.getFind();
+        FindResults findResults = tmdbFind.find(
+                imdbId, TmdbFind.ExternalSource.imdb_id, LANGUAGE_DEFAULT);
         List<MovieDb> movieList = findResults.getMovieResults();
 
         if (movieList == null || movieList.size() == 0) {
-            Timber.e("Movie not found with imdbId: " + imdbId );
+            Timber.e("Movie not found with imdbId: " + imdbId);
             return null;
-        }
-        if (movieList.size() > 1) {
-            Timber.e("More than one movie found with imdbId: " + imdbId );
+        } else if (movieList.size() > 1) {
+            Timber.e("More than one movie found with imdbId: " + imdbId);
             return null;
         }
 
@@ -107,9 +114,10 @@ final class TmdbFetchMovieTask extends AsyncTask<String, Integer, MovieDb> {
 
         // We now have the right MovieDb, but without many of the fields we need.
         // For that, a further query is required.
-        TmdbMovies tmdbMovies = new TmdbApi(tmdbApiKey).getMovies();
-        return tmdbMovies.getMovie(movieDbLite.getId(), "en",
-                TmdbMovies.MovieMethod.images);
+        TmdbMovies tmdbMovies = tmdbApi.getMovies();
+        return tmdbMovies.getMovie(movieDbLite.getId(), LANGUAGE_DEFAULT,
+                TmdbMovies.MovieMethod.credits, TmdbMovies.MovieMethod.images,
+                TmdbMovies.MovieMethod.releases);
     }
 
 }

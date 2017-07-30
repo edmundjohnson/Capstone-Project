@@ -196,14 +196,13 @@ class MovieDbHandlerOmdb {
 //                .id(id)
 //                .imdbId(omdbMovie.getImdbID())
 //                .title(omdbMovie.getTitle())
-//                .year(omdbMovie.getYear())
-//                .rated(omdbMovie.getRated())
+//                .certificate(omdbMovie.getRated())
 //                .released(released)
 //                .runtime(runtime)
 //                .genre(genre)
 //                .director(omdbMovie.getDirector())
-//                .writer(omdbMovie.getWriter())
-//                .actors(omdbMovie.getActors())
+//                .screenplay(omdbMovie.getWriter())
+//                .cast(omdbMovie.getCast())
 //                .plot(omdbMovie.getPlot())
 //                .language(omdbMovie.getLanguage())
 //                .country(omdbMovie.getCountry())
@@ -215,7 +214,7 @@ class MovieDbHandlerOmdb {
 //     * Returns a long representing an OMDb-formatted released date as a number of milliseconds.
 //     * @param omdbReleased an OMDb released date, formatted as "dd MMM yyyy"
 //     * @return a long object representing omdbReleased as a number of milliseconds,
-//     *         or OmdbMovie.RELEASED_UNKNOWN if omdbReleased could not be converted to a long
+//     *         or Movie.RELEASED_UNKNOWN if omdbReleased could not be converted to a long
 //     */
 //    private static long toLongOmdbReleased(@Nullable final String omdbReleased) {
 //        Date dateReleased = OmdbApi.toDateOmdbReleased(omdbReleased);

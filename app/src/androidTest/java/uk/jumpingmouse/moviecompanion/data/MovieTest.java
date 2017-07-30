@@ -43,14 +43,13 @@ public class MovieTest {
                 .id("4016934")
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
-                .year("2017")
-                .rated("R")
+                .certificate("R")
                 .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2017"))
                 .runtime(144)
                 .genre("Drama, Mystery, Romance")
                 .director("Christopher Nolan")
-                .writer("Joss Whedon")
-                .actors("Harrison Ford, Mark Hamill")
+                .screenplay("Joss Whedon")
+                .cast("Harrison Ford, Mark Hamill")
                 .plot("Forrest Gump on a tractor.")
                 .language("en")
                 .country("UK")
@@ -61,14 +60,13 @@ public class MovieTest {
                 .id("4016934")
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
-                .year(null)
-                .rated(null)
+                .certificate(null)
                 .released(Movie.RELEASED_UNKNOWN)
                 .runtime(Movie.RUNTIME_UNKNOWN)
                 .genre(null)
                 .director(null)
-                .writer(null)
-                .actors(null)
+                .screenplay(null)
+                .cast(null)
                 .plot(null)
                 .language(null)
                 .country(null)
@@ -91,7 +89,6 @@ public class MovieTest {
         assertEquals("4016934", mMovie.getId());
         assertEquals("tt4016934", mMovie.getImdbId());
         assertEquals("The Handmaiden", mMovie.getTitle());
-        assertEquals("2017", mMovie.getYear());
         assertEquals(AndroidTestUtils.toLongOmdbReleased("01 Jun 2017"), mMovie.getReleased());
         assertEquals(144, mMovie.getRuntime());
         assertEquals("Drama, Mystery, Romance", mMovie.getGenre());
@@ -102,10 +99,16 @@ public class MovieTest {
                 .id("4016934")
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
-                .year(null)
+                .certificate(null)
                 .released(Movie.RELEASED_UNKNOWN)
                 .runtime(Movie.RUNTIME_UNKNOWN)
                 .genre(null)
+                .director(null)
+                .screenplay(null)
+                .cast(null)
+                .plot(null)
+                .language(null)
+                .country(null)
                 .poster(null)
                 .build();
         assertNotNull(movieWithNulls);
@@ -125,14 +128,13 @@ public class MovieTest {
                 .id(null)
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
-                .year("2017")
-                .rated("R")
+                .certificate("R")
                 .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2017"))
                 .runtime(144)
                 .genre("Drama, Mystery, Romance")
                 .director("Christopher Nolan")
-                .writer("Joss Whedon")
-                .actors("Harrison Ford, Mark Hamill")
+                .screenplay("Joss Whedon")
+                .cast("Harrison Ford, Mark Hamill")
                 .plot("Forrest Gump on a tractor.")
                 .language("en")
                 .country("UK")
@@ -154,10 +156,16 @@ public class MovieTest {
                 .id("4016934")
                 .imdbId(null)
                 .title("The Handmaiden")
-                .year("2017")
+                .certificate("R")
                 .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2017"))
                 .runtime(144)
                 .genre("Drama, Mystery, Romance")
+                .director("Christopher Nolan")
+                .screenplay("Joss Whedon")
+                .cast("Harrison Ford, Mark Hamill")
+                .plot("Forrest Gump on a tractor.")
+                .language("en")
+                .country("UK")
                 .poster(POSTER)
                 .build();
     }
@@ -176,10 +184,16 @@ public class MovieTest {
                 .id("4016934")
                 .imdbId("tt4016934")
                 .title(null)
-                .year("2017")
+                .certificate("R")
                 .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2017"))
                 .runtime(144)
                 .genre("Drama, Mystery, Romance")
+                .director("Christopher Nolan")
+                .screenplay("Joss Whedon")
+                .cast("Harrison Ford, Mark Hamill")
+                .plot("Forrest Gump on a tractor.")
+                .language("en")
+                .country("UK")
                 .poster(POSTER)
                 .build();
     }
@@ -200,10 +214,16 @@ public class MovieTest {
                 .id("4016934")
                 .imdbId("tt4016938")
                 .title("The Handmaiden Returns")
-                .year("2019")
-                .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2019"))
+                .certificate("PG")
+                .released(AndroidTestUtils.toLongOmdbReleased("15 Jul 2012"))
                 .runtime(90)
-                .genre("Comedy")
+                .genre("18")
+                .director("Martin Scorsese")
+                .screenplay("Joss Whedon")
+                .cast("Emilia Clarke, Kit Harington")
+                .plot("Brilliantly devastating.")
+                .language("de")
+                .country("DE")
                 .poster(POSTER + ".extended")
                 .build()
                 .equals(mMovie));
@@ -213,11 +233,16 @@ public class MovieTest {
                 .id("4016934")
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
+                .released(Movie.RELEASED_UNKNOWN)
                 .genre(null)
                 .runtime(Movie.RUNTIME_UNKNOWN)
+                .director(null)
+                .screenplay(null)
+                .cast(null)
+                .plot(null)
+                .language(null)
+                .country(null)
                 .poster(null)
-                .year(null)
-                .released(Movie.RELEASED_UNKNOWN)
                 .build()
                 .equals(mMovieWithNulls));
 
@@ -227,10 +252,16 @@ public class MovieTest {
                 .id("4016938")
                 .imdbId("tt4016934")
                 .title("The Handmaiden")
-                .year("2017")
+                .certificate("R")
                 .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2017"))
                 .runtime(144)
                 .genre("Drama, Mystery, Romance")
+                .director("Christopher Nolan")
+                .screenplay("Joss Whedon")
+                .cast("Harrison Ford, Mark Hamill")
+                .plot("Forrest Gump on a tractor.")
+                .language("en")
+                .country("UK")
                 .poster(POSTER)
                 .build()
                 .equals(mMovie));
@@ -247,14 +278,13 @@ public class MovieTest {
                         .id("4016938")
                         .imdbId("tt4016934")
                         .title("The Handmaiden")
-                        .year("2017")
-                        .rated("R")
+                        .certificate("R")
                         .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2017"))
                         .runtime(144)
                         .genre("Drama, Mystery, Romance")
                         .director("Christopher Nolan")
-                        .writer("Joss Whedon")
-                        .actors("Harrison Ford, Mark Hamill")
+                        .screenplay("Joss Whedon")
+                        .cast("Harrison Ford, Mark Hamill")
                         .plot("Forrest Gump on a tractor.")
                         .language("en")
                         .country("UK")
@@ -266,11 +296,11 @@ public class MovieTest {
     public void testToString() {
         assertEquals(
                 "Movie{id=4016934, imdbId=tt4016934, title=The Handmaiden" +
-                        ", year=2017, rated=R, released="
+                        ", certificate=R, released="
                         + AndroidTestUtils.toLongOmdbReleased("01 Jun 2017")
                         + ", runtime=144, genre=Drama, Mystery, Romance"
-                        + ", director=Christopher Nolan, writer=Joss Whedon"
-                        + ", actors=Harrison Ford, Mark Hamill, plot=Forrest Gump on a tractor."
+                        + ", director=Christopher Nolan, screenplay=Joss Whedon"
+                        + ", cast=Harrison Ford, Mark Hamill, plot=Forrest Gump on a tractor."
                         + ", language=en, country=UK"
                         + ", poster=" + POSTER +
                         "}",

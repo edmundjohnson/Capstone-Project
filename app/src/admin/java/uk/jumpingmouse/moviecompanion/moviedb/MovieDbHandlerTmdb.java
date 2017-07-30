@@ -4,14 +4,29 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
+import info.movito.themoviedbapi.model.Credits;
 import info.movito.themoviedbapi.model.Genre;
+import info.movito.themoviedbapi.model.Language;
 import info.movito.themoviedbapi.model.MovieDb;
+import info.movito.themoviedbapi.model.ProductionCountry;
+import info.movito.themoviedbapi.model.ReleaseInfo;
+import info.movito.themoviedbapi.model.config.TmdbConfiguration;
+import info.movito.themoviedbapi.model.people.PersonCast;
+import info.movito.themoviedbapi.model.people.PersonCrew;
+
 import timber.log.Timber;
+
 import uk.jumpingmouse.moviecompanion.ObjectFactory;
 import uk.jumpingmouse.moviecompanion.R;
 import uk.jumpingmouse.moviecompanion.data.Movie;
+import uk.jumpingmouse.moviecompanion.utils.JavaUtils;
 import uk.jumpingmouse.moviecompanion.utils.ModelUtils;
 import uk.jumpingmouse.moviecompanion.utils.NetUtils;
 
@@ -19,10 +34,24 @@ import uk.jumpingmouse.moviecompanion.utils.NetUtils;
  * Class which handles fetching movie information using the OMDb API.
  * @author Edmund Johnson
  */
-
 public class MovieDbHandlerTmdb implements MovieDbHandler, TmdbHandler {
 
+    private static final SimpleDateFormat DATE_FORMAT_TMDB;
+
+    // Crew jobs
+    private static final String JOB_DIRECTOR = "Director";
+    private static final String JOB_SCREENPLAY = "Screenplay";
+
+    // The receiver which initiated this handler, and which will be passed the fetched data
     private MovieDbReceiver mMovieDbReceiver;
+
+    private String mApiKey;
+    private TmdbConfiguration mTmdbConfiguration;
+    private String mImdbId;
+
+    static {
+        DATE_FORMAT_TMDB = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+    }
 
     //---------------------------------------------------------------------
     // Instance handling methods
@@ -73,11 +102,12 @@ public class MovieDbHandlerTmdb implements MovieDbHandler, TmdbHandler {
         if (apiKey == null) {
             return STATUS_TMDB_API_KEY_KEY_NOT_FOUND;
         }
-//        // An API key was obtained, fetch the movie from the remote database
-//        getOmdbApi().fetchMovie(apiKey, imdbId, this);
 
-        // TODO: fetch the movie from TMDb
-        new TmdbFetchMovieTask(this).execute(imdbId, apiKey);
+        mApiKey = apiKey;
+        mImdbId = imdbId;
+
+        // fetch the TMDb configuration
+        new TmdbTaskFetchConfiguration(this).execute(apiKey);
 
         return STATUS_SUCCESS;
     }
@@ -96,13 +126,32 @@ public class MovieDbHandlerTmdb implements MovieDbHandler, TmdbHandler {
     // Implementation of the TmdbHandler interface
 
     /**
-     * Handles the completion of a movie being fetched from TMDb.
+     * Handles the completion of the TMDb configuration being fetched.
+     * @param tmdbConfiguration the TMDb configuration that was fetched
+     */
+    @Override
+    public void onFetchTmdbConfigurationCompleted(@Nullable TmdbConfiguration tmdbConfiguration) {
+        Timber.d("tmdbConfiguration = " + tmdbConfiguration);
+        if (tmdbConfiguration == null) {
+            Timber.e("Unable to determine TMDb configuration");
+            return;
+        }
+        mTmdbConfiguration = tmdbConfiguration;
+
+        // fetch the movie
+        new TmdbTaskFetchMovie(this).execute(mApiKey, mImdbId);
+    }
+
+    /**
+     * Handles the completion of the movie being fetched from TMDb.
      * @param tmdbMovie the movie that was fetched
      */
     @Override
     public void onFetchMovieCompleted(@Nullable MovieDb tmdbMovie) {
-        Timber.i("tmdbMovie = " + tmdbMovie);
-        Movie movie = newMovie(tmdbMovie);
+        Timber.d("tmdbMovie = " + tmdbMovie);
+        // create a Movie from the TMDb MovieDb
+        Movie movie = newMovie(mTmdbConfiguration, tmdbMovie);
+        // return the Movie to the receiver which initiated this handler
         mMovieDbReceiver.onFetchMovieCompleted(movie);
     }
 
@@ -135,11 +184,12 @@ public class MovieDbHandlerTmdb implements MovieDbHandler, TmdbHandler {
 
     /**
      * Creates a Movie from an TMDb movie and returns it.
+     * @param tmdbConfiguration the TMDb configuration
      * @param tmdbMovie the TMDb movie
      * @return a Movie corresponding to tmdbMovie
      */
     @Nullable
-    private Movie newMovie(@Nullable MovieDb tmdbMovie) {
+    private Movie newMovie(@NonNull TmdbConfiguration tmdbConfiguration, @Nullable MovieDb tmdbMovie) {
         if (tmdbMovie == null) {
             Timber.w("newMovie: tmdbMovie is null");
             return null;
@@ -151,67 +201,268 @@ public class MovieDbHandlerTmdb implements MovieDbHandler, TmdbHandler {
             return null;
         }
 
-        // Build and return the movie
+        // id - create a movie id from the imdbId
         String id = ModelUtils.imdbIdToMovieId(tmdbMovie.getImdbID());
         if (id == null) {
             Timber.w("newMovie: could not obtain valid id from imdbID: " + tmdbMovie.getImdbID());
             return null;
         }
+        // certificate
+        String certificate = getCertificateCsv(tmdbMovie.getReleases());
+        // released
+        long released = getReleasedLong(tmdbMovie.getReleaseDate());
+        // genre
+        String genre = getGenreCsv(tmdbMovie.getGenres());
+        // directors
+        String director = getDirectorCsv(tmdbMovie.getCredits());
+        // screenplay writers
+        String screenplay = getScreenplayCsv(tmdbMovie.getCredits());
+        // cast
+        String cast = getCastCsv(tmdbMovie.getCredits());
+        // country
+        String country = getCountryCsv(tmdbMovie.getProductionCountries());
+        // country
+        String language = getLanguageCsv(tmdbMovie.getSpokenLanguages());
+        // poster
+        String poster = getPosterUrl(tmdbConfiguration, tmdbMovie.getPosterPath());
 
-        // TODO - required field
-        //long released = toLongTmdbReleased(tmdbMovie.getReleased());
-        long released = 0;
-
-        String genre = getMovieGenreCsvFromTmdbMovieGenre(tmdbMovie.getGenres());
-
+        // TODO: add tmdbId, thumbnail
         return Movie.builder()
                 .id(id)
                 .imdbId(tmdbMovie.getImdbID())
                 .title(tmdbMovie.getTitle())
-                //.year(tmdbMovie.getYear())
-                //.rated(tmdbMovie.getRated())
+                .certificate(certificate)
                 .released(released)
                 .runtime(tmdbMovie.getRuntime())
                 .genre(genre)
-                //.director(tmdbMovie.getDirector())
-                //.writer(tmdbMovie.getWriter())
-                //.actors(tmdbMovie.getActors())
+                .director(director)
+                .screenplay(screenplay)
+                .cast(cast)
                 .plot(tmdbMovie.getOverview())
-                //.language(tmdbMovie.getLanguage())
-                //.country(tmdbMovie.getCountry())
-                //.poster(tmdbMovie.getPoster())
+                .language(language)
+                .country(country)
+                .poster(poster)
                 .build();
     }
 
-    @Nullable
-    private String getMovieGenreCsvFromTmdbMovieGenre(@Nullable List<Genre> tmdbGenres) {
-        StringBuilder genre = new StringBuilder();
-        if (tmdbGenres == null) {
-            return null;
-        }
-        for (Genre tmdbGenre : tmdbGenres) {
-            if (genre.length() > 0) {
-                genre.append(",");
+    /**
+     * Returns a comma-separated string of certificates corresponding to a list of TMDb releases.
+     * @param releaseInfos a list of TMDb releases
+     * @return a comma-separated string of certificates corresponding to a list of TMDb releases,
+     *         e.g. "US:R,GB:12A,PT:M/12"
+     */
+    @NonNull
+    private static String getCertificateCsv(@Nullable List<ReleaseInfo> releaseInfos) {
+        StringBuilder certificateCsv = new StringBuilder();
+        if (releaseInfos != null) {
+            Set<String> existingCertificates = new HashSet<>();
+
+            for (ReleaseInfo releaseInfo : releaseInfos) {
+                if (releaseInfo.getCertification() != null
+                        && !releaseInfo.getCertification().isEmpty()
+                        && releaseInfo.getCountry() != null
+                        && !releaseInfo.getCountry().isEmpty()) {
+                    // An example of a certificate here is "GB:12A"
+                    String certificate = releaseInfo.getCountry() + ":"
+                            + releaseInfo.getCertification();
+                    if (!existingCertificates.contains(certificate)) {
+                        if (certificateCsv.length() > 0) {
+                            certificateCsv.append(",");
+                        }
+                        certificateCsv.append(certificate);
+                        existingCertificates.add(certificate);
+                    }
+                }
             }
-            genre.append(tmdbGenre.getId());
+        }
+        return certificateCsv.toString();
+    }
+
+    /**
+     * Returns a long representing a TMDb-formatted released date as a number of milliseconds.
+     * @param tmdbReleased a TMDb released date, formatted as "dd MMM yyyy" ????
+     * @return a long object representing tmdbReleased as a number of milliseconds,
+     *         or Movie.RELEASED_UNKNOWN if tmdbReleased could not be converted to a long
+     */
+    private static long getReleasedLong(@Nullable final String tmdbReleased) {
+        Date dateReleased = JavaUtils.toDate(DATE_FORMAT_TMDB, tmdbReleased);
+        if (dateReleased == null) {
+            return Movie.RELEASED_UNKNOWN;
+        } else {
+            return dateReleased.getTime();
+        }
+    }
+
+    /**
+     * Returns a comma-separated string of TMDb genre ids corresponding to a list of TMDb Genres.
+     * @param tmdbGenres a list of TMDb Genres
+     * @return a comma-separated string of TMDb genre ids corresponding to the list of TMDb Genres,
+     *         e.g. "18,44,28"
+     */
+    @NonNull
+    private static String getGenreCsv(@Nullable List<Genre> tmdbGenres) {
+        StringBuilder genre = new StringBuilder();
+        if (tmdbGenres != null) {
+            for (Genre tmdbGenre : tmdbGenres) {
+                if (genre.length() > 0) {
+                    genre.append(",");
+                }
+                genre.append(tmdbGenre.getId());
+            }
         }
         return genre.toString();
     }
 
-//    /**
-//     * Returns a long representing an OMDb-formatted released date as a number of milliseconds.
-//     * @param omdbReleased an OMDb released date, formatted as "dd MMM yyyy"
-//     * @return a long object representing omdbReleased as a number of milliseconds,
-//     *         or OmdbMovie.RELEASED_UNKNOWN if omdbReleased could not be converted to a long
-//     */
-//    private static long toLongOmdbReleased(@Nullable final String omdbReleased) {
-//        Date dateReleased = OmdbApi.toDateOmdbReleased(omdbReleased);
-//        if (dateReleased == null) {
-//            return Movie.RELEASED_UNKNOWN;
-//        } else {
-//            return dateReleased.getTime();
-//        }
-//    }
+    /**
+     * Returns the comma-separated string of directors from the TMDb credits.
+     * @param credits the TMDb credits
+     * @return the comma-separated string of directors from the TMDb credits
+     */
+    @NonNull
+    private static String getDirectorCsv(@Nullable Credits credits) {
+        return getCrewWithJob(credits, JOB_DIRECTOR);
+    }
+
+    /**
+     * Returns the comma-separated string of directors from the TMDb credits.
+     * @param credits the TMDb credits
+     * @return the comma-separated string of directors from the TMDb credits
+     */
+    @NonNull
+    private static String getScreenplayCsv(@Nullable Credits credits) {
+        return getCrewWithJob(credits, JOB_SCREENPLAY);
+    }
+
+    /**
+     * Returns a comma-separated string of crew with a specified job from the TMDb credits.
+     * @param credits the TMDb credits
+     * @param job the job, e.g. "Director"
+     * @return a comma-separated string of crew with the specified job from the TMDb credits
+     */
+    @NonNull
+    private static String getCrewWithJob(@Nullable Credits credits, @NonNull String job) {
+        StringBuilder crew = new StringBuilder();
+        if (credits != null && credits.getCrew() != null) {
+            for (PersonCrew personCrew : credits.getCrew()) {
+                if (personCrew.getJob() != null && personCrew.getJob().equalsIgnoreCase(job)) {
+                    if (crew.length() > 0) {
+                        crew.append(", ");
+                    }
+                    crew.append(personCrew.getName());
+                }
+            }
+        }
+        return crew.toString();
+    }
+
+    /**
+     * Returns a comma-separated string of cast members from the TMDb credits.
+     * @param credits the TMDb credits
+     * @return a comma-separated string of cast members from the TMDb credits
+     */
+    @NonNull
+    private static String getCastCsv(@Nullable Credits credits) {
+        StringBuilder cast = new StringBuilder();
+        if (credits != null && credits.getCast() != null) {
+            for (PersonCast personCast : credits.getCast()) {
+                if (cast.length() > 0) {
+                    cast.append(", ");
+                }
+                cast.append(personCast.getName());
+            }
+        }
+        return cast.toString();
+    }
+
+    /**
+     * Returns a comma-separated string of ISO language codes corresponding to a list of TMDb
+     * production countries.
+     * @param tmdbLanguages a list of TMDb production countries
+     * @return a comma-separated string of ISO language codes corresponding to the list of TMDb
+     *         production countries, e.g. "DA,EN"
+     */
+    @NonNull
+    private static String getLanguageCsv(@Nullable List<Language> tmdbLanguages) {
+        StringBuilder language = new StringBuilder();
+        if (tmdbLanguages != null) {
+            for (Language tmdbLanguage : tmdbLanguages) {
+                if (language.length() > 0) {
+                    language.append(",");
+                }
+                language.append(tmdbLanguage.getIsoCode());
+            }
+        }
+        return language.toString();
+    }
+
+    /**
+     * Returns a comma-separated string of ISO country codes corresponding to a list of TMDb
+     * production countries.
+     * @param tmdbCountries a list of TMDb production countries
+     * @return a comma-separated string of ISO country codes corresponding to the list of TMDb
+     *         production countries, e.g. "DK,FR,IT,SE,DE"
+     */
+    @NonNull
+    private static String getCountryCsv(@Nullable List<ProductionCountry> tmdbCountries) {
+        StringBuilder country = new StringBuilder();
+        if (tmdbCountries != null) {
+            for (ProductionCountry tmdbCountry : tmdbCountries) {
+                if (country.length() > 0) {
+                    country.append(",");
+                }
+                country.append(tmdbCountry.getIsoCode());
+            }
+        }
+        return country.toString();
+    }
+
+    /**
+     * Returns the URL for the largest available poster for a poster path.
+     * @param tmdbConfiguration the TMDb configuration
+     * @param posterPath the poster path, e.g. "/s1g3ffh.jpg"
+     * @return the URL for the largest available poster for the poster path,
+     *         e.g. "http://image.tmdb.org/t/p/w780/s1g3ffh.jpg"
+     */
+    @Nullable
+    private static String getPosterUrl(@NonNull TmdbConfiguration tmdbConfiguration,
+                                       @Nullable String posterPath) {
+        if (posterPath == null) {
+            return null;
+        }
+        String baseUrl = tmdbConfiguration.getBaseUrl();
+        List<String> posterSizes = tmdbConfiguration.getPosterSizes();
+        String posterSize = getImageLargestSize(posterSizes);
+        return baseUrl + posterSize + posterPath;
+    }
+
+    /**
+     * Returns the largest available size from a list of available sizes.
+     * @param availableSizes The available sizes, each formatted as "wnnn", where "nnn" is the size
+     * @return the largest available size, e.g. "w780"
+     */
+    @Nullable
+    private static String getImageLargestSize(@Nullable List<String> availableSizes) {
+        String largestSizeWithPrefix = null;
+        if (availableSizes != null) {
+            int largestSize = 0;
+            for (String sizeWithPrefix : availableSizes) {
+                if (sizeWithPrefix.length() > 1 && sizeWithPrefix.charAt(0) == 'w') {
+                    int size;
+                    try {
+                        size = Integer.parseInt(sizeWithPrefix.substring(1));
+                    } catch (Exception e) {
+                        Timber.w("size was not numeric: " + sizeWithPrefix);
+                        break;
+                    }
+                    if (size > largestSize) {
+                        largestSize = size;
+                        largestSizeWithPrefix = sizeWithPrefix;
+                    }
+                }
+            }
+        }
+        return largestSizeWithPrefix;
+    }
 
     //---------------------------------------------------------------------
     // Getters

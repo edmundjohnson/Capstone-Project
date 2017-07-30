@@ -197,7 +197,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
 
         // Add or update the new node at the database target node.
         getDatabaseReference(targetNode).updateChildren(mapValue,
-                getDatabaseOperationCompletionListener(context, R.string.databaseOperationAddNode,
+                getDatabaseOperationCompletionListener(context, R.string.databaseOperationSetNode,
                         targetNode, nodeKey, isAdminFunction));
 
         // We don't know whether the add will succeed - assume it will
@@ -223,7 +223,7 @@ abstract class MasterDatabaseFirebase implements MasterDatabase {
         DatabaseReference newNode = getDatabaseReference(targetNode).push();
         String newNodeKey = newNode.getKey();
         newNode.setValue(nodeValue,
-                getDatabaseOperationCompletionListener(context, R.string.databaseOperationAddNode,
+                getDatabaseOperationCompletionListener(context, R.string.databaseOperationSetNode,
                         targetNode, newNodeKey, isAdminFunction));
         return newNodeKey;
     }

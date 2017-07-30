@@ -28,8 +28,7 @@ public class ModelUtilsTest {
     private static final String MOVIE_ID = "9999991";
     private static final String MOVIE_IMDB_ID = "tt9999991";
     private static final String MOVIE_TITLE = "Test Movie";
-    private static final String MOVIE_YEAR = "2011";
-    private static final String MOVIE_RATED = "R";
+    private static final String MOVIE_CERTIFICATE = "US:R,GB:12A,PT:M/12";
     private static final String MOVIE_RELEASED_OMDB = "01 Jun 2011";
     private static final long MOVIE_RELEASED = AndroidTestUtils.toLongOmdbReleased(MOVIE_RELEASED_OMDB);
     private static final String MOVIE_RELEASED_INVALID = "this is not a date";
@@ -37,8 +36,8 @@ public class ModelUtilsTest {
     private static final int MOVIE_RUNTIME = 114;
     private static final String MOVIE_GENRE = "Drama, Mystery, Romance";
     private static final String MOVIE_DIRECTOR = "Christopher Nolan";
-    private static final String MOVIE_WRITER = "Joss Whedon";
-    private static final String MOVIE_ACTORS = "Harrison Ford, Mark Hamill";
+    private static final String MOVIE_SCREENPLAY = "Joss Whedon";
+    private static final String MOVIE_CAST = "Harrison Ford, Mark Hamill";
     private static final String MOVIE_PLOT = "Forrest Gump on a tractor.";
     private static final String MOVIE_LANGUAGE = "en";
     private static final String MOVIE_COUNTRY = "UK";
@@ -66,7 +65,6 @@ public class ModelUtilsTest {
         VALUES_FIELDS_VALID.put(DataContract.MovieEntry.COLUMN_ID, MOVIE_ID);
         VALUES_FIELDS_VALID.put(DataContract.MovieEntry.COLUMN_IMDB_ID, MOVIE_IMDB_ID);
         VALUES_FIELDS_VALID.put(DataContract.MovieEntry.COLUMN_TITLE, MOVIE_TITLE);
-        VALUES_FIELDS_VALID.put(DataContract.MovieEntry.COLUMN_YEAR, MOVIE_YEAR);
         VALUES_FIELDS_VALID.put(DataContract.MovieEntry.COLUMN_RELEASED, MOVIE_RELEASED);
         VALUES_FIELDS_VALID.put(DataContract.MovieEntry.COLUMN_RUNTIME, MOVIE_RUNTIME);
         VALUES_FIELDS_VALID.put(DataContract.MovieEntry.COLUMN_GENRE, MOVIE_GENRE);
@@ -84,7 +82,6 @@ public class ModelUtilsTest {
         VALUES_FIELDS_INVALID_1.put(DataContract.MovieEntry.COLUMN_ID, MOVIE_ID);
         VALUES_FIELDS_INVALID_1.put(DataContract.MovieEntry.COLUMN_IMDB_ID, MOVIE_IMDB_ID);
         VALUES_FIELDS_INVALID_1.put(DataContract.MovieEntry.COLUMN_TITLE, MOVIE_TITLE);
-        VALUES_FIELDS_INVALID_1.put(DataContract.MovieEntry.COLUMN_YEAR, MOVIE_YEAR);
         VALUES_FIELDS_INVALID_1.put(DataContract.MovieEntry.COLUMN_RELEASED, -23L);
         VALUES_FIELDS_INVALID_1.put(DataContract.MovieEntry.COLUMN_RUNTIME, -14);
         VALUES_FIELDS_INVALID_1.put(DataContract.MovieEntry.COLUMN_GENRE, MOVIE_GENRE);
@@ -94,7 +91,6 @@ public class ModelUtilsTest {
         VALUES_FIELDS_INVALID_2.put(DataContract.MovieEntry.COLUMN_ID, MOVIE_ID);
         VALUES_FIELDS_INVALID_2.put(DataContract.MovieEntry.COLUMN_IMDB_ID, MOVIE_IMDB_ID);
         VALUES_FIELDS_INVALID_2.put(DataContract.MovieEntry.COLUMN_TITLE, MOVIE_TITLE);
-        VALUES_FIELDS_INVALID_2.put(DataContract.MovieEntry.COLUMN_YEAR, MOVIE_YEAR);
         VALUES_FIELDS_INVALID_2.put(DataContract.MovieEntry.COLUMN_RELEASED, 0);
         VALUES_FIELDS_INVALID_2.put(DataContract.MovieEntry.COLUMN_RUNTIME, 0);
         VALUES_FIELDS_INVALID_2.put(DataContract.MovieEntry.COLUMN_GENRE, MOVIE_GENRE);
@@ -104,7 +100,6 @@ public class ModelUtilsTest {
         // id is not set
         VALUES_ID_NULL.put(DataContract.MovieEntry.COLUMN_IMDB_ID, MOVIE_IMDB_ID);
         VALUES_ID_NULL.put(DataContract.MovieEntry.COLUMN_TITLE, MOVIE_TITLE);
-        VALUES_ID_NULL.put(DataContract.MovieEntry.COLUMN_YEAR, MOVIE_YEAR);
         VALUES_ID_NULL.put(DataContract.MovieEntry.COLUMN_RELEASED, MOVIE_RELEASED);
         VALUES_ID_NULL.put(DataContract.MovieEntry.COLUMN_RUNTIME, MOVIE_RUNTIME);
         VALUES_ID_NULL.put(DataContract.MovieEntry.COLUMN_GENRE, MOVIE_GENRE);
@@ -114,7 +109,6 @@ public class ModelUtilsTest {
         VALUES_IMDB_ID_NULL.put(DataContract.MovieEntry.COLUMN_ID, MOVIE_ID);
         // imdbId is not set
         VALUES_IMDB_ID_NULL.put(DataContract.MovieEntry.COLUMN_TITLE, MOVIE_TITLE);
-        VALUES_IMDB_ID_NULL.put(DataContract.MovieEntry.COLUMN_YEAR, MOVIE_YEAR);
         VALUES_IMDB_ID_NULL.put(DataContract.MovieEntry.COLUMN_RELEASED, MOVIE_RELEASED);
         VALUES_IMDB_ID_NULL.put(DataContract.MovieEntry.COLUMN_RUNTIME, MOVIE_RUNTIME);
         VALUES_IMDB_ID_NULL.put(DataContract.MovieEntry.COLUMN_GENRE, MOVIE_GENRE);
@@ -124,7 +118,6 @@ public class ModelUtilsTest {
         VALUES_TITLE_NULL.put(DataContract.MovieEntry.COLUMN_ID, MOVIE_ID);
         VALUES_TITLE_NULL.put(DataContract.MovieEntry.COLUMN_IMDB_ID, MOVIE_IMDB_ID);
         // title is not set
-        VALUES_TITLE_NULL.put(DataContract.MovieEntry.COLUMN_YEAR, MOVIE_YEAR);
         VALUES_TITLE_NULL.put(DataContract.MovieEntry.COLUMN_RELEASED, MOVIE_RELEASED);
         VALUES_TITLE_NULL.put(DataContract.MovieEntry.COLUMN_RUNTIME, MOVIE_RUNTIME);
         VALUES_TITLE_NULL.put(DataContract.MovieEntry.COLUMN_GENRE, MOVIE_GENRE);
@@ -136,14 +129,13 @@ public class ModelUtilsTest {
                 MOVIE_ID,
                 MOVIE_IMDB_ID,
                 MOVIE_TITLE,
-                MOVIE_YEAR,
-                MOVIE_RATED,
+                MOVIE_CERTIFICATE,
                 MOVIE_RELEASED,
                 MOVIE_RUNTIME,
                 MOVIE_GENRE,
                 MOVIE_DIRECTOR,
-                MOVIE_WRITER,
-                MOVIE_ACTORS,
+                MOVIE_SCREENPLAY,
+                MOVIE_CAST,
                 MOVIE_PLOT,
                 MOVIE_COUNTRY,
                 MOVIE_LANGUAGE,
@@ -156,7 +148,6 @@ public class ModelUtilsTest {
                 9999992,
                 "tt9999992",
                 "Movie Title With Nulls",
-                null,
                 null,
                 Movie.RELEASED_UNKNOWN,
                 Movie.RUNTIME_UNKNOWN,
@@ -176,14 +167,13 @@ public class ModelUtilsTest {
                 MOVIE_ID,
                 MOVIE_IMDB_ID,
                 MOVIE_TITLE,
-                MOVIE_YEAR,
-                MOVIE_RATED,
+                MOVIE_CERTIFICATE,
                 -2,
                 -2,
                 MOVIE_GENRE,
                 MOVIE_DIRECTOR,
-                MOVIE_WRITER,
-                MOVIE_ACTORS,
+                MOVIE_SCREENPLAY,
+                MOVIE_CAST,
                 MOVIE_PLOT,
                 MOVIE_COUNTRY,
                 MOVIE_LANGUAGE,
@@ -196,14 +186,13 @@ public class ModelUtilsTest {
                 null,
                 MOVIE_IMDB_ID,
                 MOVIE_TITLE,
-                MOVIE_YEAR,
-                MOVIE_RATED,
+                MOVIE_CERTIFICATE,
                 MOVIE_RELEASED,
                 MOVIE_RUNTIME,
                 MOVIE_GENRE,
                 MOVIE_DIRECTOR,
-                MOVIE_WRITER,
-                MOVIE_ACTORS,
+                MOVIE_SCREENPLAY,
+                MOVIE_CAST,
                 MOVIE_PLOT,
                 MOVIE_COUNTRY,
                 MOVIE_LANGUAGE,
@@ -216,14 +205,13 @@ public class ModelUtilsTest {
                 MOVIE_ID,
                 null,
                 MOVIE_TITLE,
-                MOVIE_YEAR,
-                MOVIE_RATED,
+                MOVIE_CERTIFICATE,
                 MOVIE_RELEASED,
                 MOVIE_RUNTIME,
                 MOVIE_GENRE,
                 MOVIE_DIRECTOR,
-                MOVIE_WRITER,
-                MOVIE_ACTORS,
+                MOVIE_SCREENPLAY,
+                MOVIE_CAST,
                 MOVIE_PLOT,
                 MOVIE_COUNTRY,
                 MOVIE_LANGUAGE,
@@ -236,14 +224,13 @@ public class ModelUtilsTest {
                 MOVIE_ID,
                 MOVIE_IMDB_ID,
                 null,
-                MOVIE_YEAR,
-                MOVIE_RATED,
+                MOVIE_CERTIFICATE,
                 MOVIE_RELEASED,
                 MOVIE_RUNTIME,
                 MOVIE_GENRE,
                 MOVIE_DIRECTOR,
-                MOVIE_WRITER,
-                MOVIE_ACTORS,
+                MOVIE_SCREENPLAY,
+                MOVIE_CAST,
                 MOVIE_PLOT,
                 MOVIE_COUNTRY,
                 MOVIE_LANGUAGE,
@@ -262,7 +249,6 @@ public class ModelUtilsTest {
         assertEquals(movie.getId(), MOVIE_ID);
         assertEquals(movie.getImdbId(), MOVIE_IMDB_ID);
         assertEquals(movie.getTitle(), MOVIE_TITLE);
-        assertEquals(movie.getYear(), MOVIE_YEAR);
         assertEquals(movie.getReleased(), MOVIE_RELEASED);
         assertEquals(movie.getRuntime(), MOVIE_RUNTIME);
         assertEquals(movie.getGenre(), MOVIE_GENRE);
@@ -274,7 +260,6 @@ public class ModelUtilsTest {
         assertEquals(movie.getId(), "9999992");
         assertEquals(movie.getImdbId(), "tt9999992");
         assertEquals(movie.getTitle(), "Movie Title With Nulls");
-        assertNull(movie.getYear());
         assertEquals(movie.getReleased(), Movie.RELEASED_UNKNOWN);
         assertEquals(movie.getRuntime(), Movie.RUNTIME_UNKNOWN);
         assertNull(movie.getGenre());
@@ -286,7 +271,6 @@ public class ModelUtilsTest {
         assertEquals(movie.getId(), MOVIE_ID);
         assertEquals(movie.getImdbId(), MOVIE_IMDB_ID);
         assertEquals(movie.getTitle(), MOVIE_TITLE);
-        assertEquals(movie.getYear(), MOVIE_YEAR);
         assertEquals(movie.getReleased(), -23L);
         assertEquals(movie.getRuntime(), -14);
         assertEquals(movie.getGenre(), MOVIE_GENRE);
@@ -298,7 +282,6 @@ public class ModelUtilsTest {
         assertEquals(movie.getId(), MOVIE_ID);
         assertEquals(movie.getImdbId(), MOVIE_IMDB_ID);
         assertEquals(movie.getTitle(), MOVIE_TITLE);
-        assertEquals(movie.getYear(), MOVIE_YEAR);
         assertEquals(movie.getReleased(), 0);
         assertEquals(movie.getRuntime(), 0);
         assertEquals(movie.getGenre(), MOVIE_GENRE);
@@ -325,8 +308,7 @@ public class ModelUtilsTest {
         assertEquals(movie.getId(), MOVIE_ID);
         assertEquals(movie.getImdbId(), MOVIE_IMDB_ID);
         assertEquals(movie.getTitle(), MOVIE_TITLE);
-        assertEquals(movie.getYear(), MOVIE_YEAR);
-        assertEquals(movie.getRated(), MOVIE_RATED);
+        assertEquals(movie.getCertificate(), MOVIE_CERTIFICATE);
         assertEquals(movie.getReleased(), MOVIE_RELEASED);
         assertEquals(movie.getRuntime(), MOVIE_RUNTIME);
         assertEquals(movie.getGenre(), MOVIE_GENRE);
@@ -339,7 +321,6 @@ public class ModelUtilsTest {
         assertEquals(movie.getId(), "9999992");
         assertEquals(movie.getImdbId(), "tt9999992");
         assertEquals(movie.getTitle(), "Movie Title With Nulls");
-        assertNull(movie.getYear());
         assertEquals(movie.getReleased(), Movie.RELEASED_UNKNOWN);
         assertEquals(movie.getRuntime(), Movie.RUNTIME_UNKNOWN);
         assertNull(movie.getGenre());
@@ -352,7 +333,6 @@ public class ModelUtilsTest {
         assertEquals(movie.getId(), MOVIE_ID);
         assertEquals(movie.getImdbId(), MOVIE_IMDB_ID);
         assertEquals(movie.getTitle(), MOVIE_TITLE);
-        assertEquals(movie.getYear(), MOVIE_YEAR);
         assertEquals(movie.getReleased(), Movie.RELEASED_UNKNOWN);
         assertEquals(movie.getRuntime(), Movie.RUNTIME_UNKNOWN);
         assertEquals(movie.getGenre(), MOVIE_GENRE);
@@ -392,14 +372,13 @@ public class ModelUtilsTest {
                 null,
                 null,
                 MOVIE_TITLE,
-                MOVIE_YEAR,
-                MOVIE_RATED,
+                MOVIE_CERTIFICATE,
                 MOVIE_RELEASED,
                 MOVIE_RUNTIME,
                 MOVIE_GENRE,
                 MOVIE_DIRECTOR,
-                MOVIE_WRITER,
-                MOVIE_ACTORS,
+                MOVIE_SCREENPLAY,
+                MOVIE_CAST,
                 MOVIE_PLOT,
                 MOVIE_COUNTRY,
                 MOVIE_LANGUAGE,
@@ -418,14 +397,13 @@ public class ModelUtilsTest {
                 111,
                 "imdbId1",
                 "Title 1",
-                "2011",
-                MOVIE_RATED,
+                MOVIE_CERTIFICATE,
                 MOVIE_RELEASED,
                 MOVIE_RUNTIME,
                 "Genre1",
                 MOVIE_DIRECTOR,
-                MOVIE_WRITER,
-                MOVIE_ACTORS,
+                MOVIE_SCREENPLAY,
+                MOVIE_CAST,
                 MOVIE_PLOT,
                 MOVIE_COUNTRY,
                 MOVIE_LANGUAGE,
@@ -437,14 +415,13 @@ public class ModelUtilsTest {
                 222,
                 "imdbId2",
                 "Title 2",
-                "2011",
-                MOVIE_RATED,
+                MOVIE_CERTIFICATE,
                 MOVIE_RELEASED,
                 MOVIE_RUNTIME,
                 "Genre2",
                 MOVIE_DIRECTOR,
-                MOVIE_WRITER,
-                MOVIE_ACTORS,
+                MOVIE_SCREENPLAY,
+                MOVIE_CAST,
                 MOVIE_PLOT,
                 MOVIE_COUNTRY,
                 MOVIE_LANGUAGE,

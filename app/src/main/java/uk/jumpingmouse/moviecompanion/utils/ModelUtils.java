@@ -134,14 +134,13 @@ public final class ModelUtils {
                 .id(id)
                 .imdbId(imdbId)
                 .title(title)
-                .year(values.getAsString(DataContract.MovieEntry.COLUMN_YEAR))
-                .rated(values.getAsString(DataContract.MovieEntry.COLUMN_RATED))
+                .certificate(values.getAsString(DataContract.MovieEntry.COLUMN_CERTIFICATE))
                 .released(values.getAsLong(DataContract.MovieEntry.COLUMN_RELEASED))
                 .runtime(values.getAsInteger(DataContract.MovieEntry.COLUMN_RUNTIME))
                 .genre(values.getAsString(DataContract.MovieEntry.COLUMN_GENRE))
                 .director(values.getAsString(DataContract.MovieEntry.COLUMN_DIRECTOR))
-                .writer(values.getAsString(DataContract.MovieEntry.COLUMN_WRITER))
-                .actors(values.getAsString(DataContract.MovieEntry.COLUMN_ACTORS))
+                .screenplay(values.getAsString(DataContract.MovieEntry.COLUMN_SCREENPLAY))
+                .cast(values.getAsString(DataContract.MovieEntry.COLUMN_CAST))
                 .plot(values.getAsString(DataContract.MovieEntry.COLUMN_PLOT))
                 .language(values.getAsString(DataContract.MovieEntry.COLUMN_LANGUAGE))
                 .country(values.getAsString(DataContract.MovieEntry.COLUMN_COUNTRY))
@@ -160,12 +159,11 @@ public final class ModelUtils {
         final String id = cursor.getString(DataContract.MovieEntry.COL_ID);
         final String imdbId = cursor.getString(DataContract.MovieEntry.COL_IMDB_ID);
         final String title = cursor.getString(DataContract.MovieEntry.COL_TITLE);
-        final String year = cursor.getString(DataContract.MovieEntry.COL_YEAR);
-        final String rated = cursor.getString(DataContract.MovieEntry.COL_RATED);
+        final String certificate = cursor.getString(DataContract.MovieEntry.COL_CERTIFICATE);
         final String genre = cursor.getString(DataContract.MovieEntry.COL_GENRE);
         final String director = cursor.getString(DataContract.MovieEntry.COL_DIRECTOR);
-        final String writer = cursor.getString(DataContract.MovieEntry.COL_WRITER);
-        final String actors = cursor.getString(DataContract.MovieEntry.COL_ACTORS);
+        final String screenplay = cursor.getString(DataContract.MovieEntry.COL_SCREENPLAY);
+        final String cast = cursor.getString(DataContract.MovieEntry.COL_CAST);
         final String plot = cursor.getString(DataContract.MovieEntry.COL_PLOT);
         final String language = cursor.getString(DataContract.MovieEntry.COL_LANGUAGE);
         final String country = cursor.getString(DataContract.MovieEntry.COL_COUNTRY);
@@ -203,14 +201,13 @@ public final class ModelUtils {
                 .id(id)
                 .imdbId(imdbId)
                 .title(title)
-                .year(year)
-                .rated(rated)
+                .certificate(certificate)
                 .released(released)
                 .runtime(runtime)
                 .genre(genre)
                 .director(director)
-                .writer(writer)
-                .actors(actors)
+                .screenplay(screenplay)
+                .cast(cast)
                 .plot(plot)
                 .language(language)
                 .country(country)
@@ -253,14 +250,13 @@ public final class ModelUtils {
         values.put(DataContract.MovieEntry.COLUMN_ID, movie.getId());
         values.put(DataContract.MovieEntry.COLUMN_IMDB_ID, movie.getImdbId());
         values.put(DataContract.MovieEntry.COLUMN_TITLE, movie.getTitle());
-        values.put(DataContract.MovieEntry.COLUMN_YEAR, movie.getYear());
-        values.put(DataContract.MovieEntry.COLUMN_RATED, movie.getRated());
+        values.put(DataContract.MovieEntry.COLUMN_CERTIFICATE, movie.getCertificate());
         values.put(DataContract.MovieEntry.COLUMN_RELEASED, movie.getReleased());
         values.put(DataContract.MovieEntry.COLUMN_RUNTIME, movie.getRuntime());
         values.put(DataContract.MovieEntry.COLUMN_GENRE, movie.getGenre());
         values.put(DataContract.MovieEntry.COLUMN_DIRECTOR, movie.getDirector());
-        values.put(DataContract.MovieEntry.COLUMN_WRITER, movie.getWriter());
-        values.put(DataContract.MovieEntry.COLUMN_ACTORS, movie.getActors());
+        values.put(DataContract.MovieEntry.COLUMN_SCREENPLAY, movie.getScreenplay());
+        values.put(DataContract.MovieEntry.COLUMN_CAST, movie.getCast());
         values.put(DataContract.MovieEntry.COLUMN_PLOT, movie.getPlot());
         values.put(DataContract.MovieEntry.COLUMN_LANGUAGE, movie.getLanguage());
         values.put(DataContract.MovieEntry.COLUMN_COUNTRY, movie.getCountry());

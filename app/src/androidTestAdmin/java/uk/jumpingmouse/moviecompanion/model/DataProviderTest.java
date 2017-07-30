@@ -57,7 +57,6 @@ public class DataProviderTest {
                 .id("9999991")
                 .imdbId("tt9999991")
                 .title("Test Movie 1")
-                .year("2011")
                 .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2011"))
                 .runtime(111)
                 .genre("Drama, Mystery, Romance")
@@ -67,7 +66,6 @@ public class DataProviderTest {
                 .id("9999991")
                 .imdbId("tt9999991")
                 .title("Test Movie 1 modified")
-                .year("2012")
                 .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2012"))
                 .runtime(121)
                 .genre("Comedy")
@@ -77,7 +75,6 @@ public class DataProviderTest {
                 .id("9999992")
                 .imdbId("tt9999992")
                 .title("Test Movie 2")
-                .year("2012")
                 .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2012"))
                 .runtime(122)
                 .genre("Drama, Mystery, Romance")
@@ -88,7 +85,6 @@ public class DataProviderTest {
                 .imdbId("tt9999993")
                 // Do not change the 0 to a 3! 0 is required for query order test.
                 .title("Test Movie 0")
-                .year("2013")
                 .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2013"))
                 .runtime(133)
                 .genre("Drama, Mystery, Romance")
@@ -535,8 +531,7 @@ public class DataProviderTest {
         assertEquals("id should be unchanged", TEST_MOVIE_1.getId(), movieUpdated.getId());
         assertEquals("imdbId should be unchanged", TEST_MOVIE_1.getImdbId(), movieUpdated.getImdbId());
         assertEquals("title should be updated", TEST_MOVIE_1_MODIFIED.getTitle(), movieUpdated.getTitle());
-        assertEquals("year should be updated", TEST_MOVIE_1_MODIFIED.getYear(), movieUpdated.getYear());
-        assertEquals("rated should be updated", TEST_MOVIE_1_MODIFIED.getRated(), movieUpdated.getRated());
+        assertEquals("certificate should be updated", TEST_MOVIE_1_MODIFIED.getCertificate(), movieUpdated.getCertificate());
         assertEquals("released should be updated", TEST_MOVIE_1_MODIFIED.getReleased(), movieUpdated.getReleased());
         assertEquals("runtime should be updated", TEST_MOVIE_1_MODIFIED.getRuntime(), movieUpdated.getRuntime());
         assertEquals("genre should be updated", TEST_MOVIE_1_MODIFIED.getGenre(), movieUpdated.getGenre());

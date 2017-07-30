@@ -34,10 +34,10 @@
     <string name="menu_option_remove_from_favourites">Remove from favourites</string>
 
     <!-- Firebase database operations -->
-    <string name="databaseOperationAddNode">Add node</string>
+    <string name="databaseOperationSetNode">Set node</string>
     <string name="databaseOperationDeleteNode">Delete node</string>
-    <string name="databaseOperationSuccess">Success:\n%1$s \"%2$s\" at node /%3$s</string>
-    <string name="databaseOperationFailure">FAILURE:\n%1$s \"%2$s\" at node /%3$s\nError code: %4$d, details: %5$s, message: %6$s</string>
+    <string name="databaseOperationSuccess">Success: %1$s \"%2$s\" at node /%3$s</string>
+    <string name="databaseOperationFailure">FAILURE: %1$s \"%2$s\" at node /%3$s\nError code: %4$d, details: %5$s, message: %6$s</string>
 
     <!-- Shared element transitions -->
     <string name="transition_movie" translatable="false">transition_movie_%s</string>

@@ -77,14 +77,13 @@ public final class DataContract {
         public static final String COLUMN_ID = MovieEntry._ID;
         public static final String COLUMN_IMDB_ID = "imdbId";
         public static final String COLUMN_TITLE = "title";
-        public static final String COLUMN_YEAR = "year";
-        public static final String COLUMN_RATED = "rated";
+        public static final String COLUMN_CERTIFICATE = "certificate";
         public static final String COLUMN_RELEASED = "released";
         public static final String COLUMN_RUNTIME = "runtime";
         public static final String COLUMN_GENRE = "genre";
         public static final String COLUMN_DIRECTOR = "director";
-        public static final String COLUMN_WRITER = "writer";
-        public static final String COLUMN_ACTORS = "actors";
+        public static final String COLUMN_SCREENPLAY = "screenplay";
+        public static final String COLUMN_CAST = "cast";
         public static final String COLUMN_PLOT = "plot";
         public static final String COLUMN_LANGUAGE = "language";
         public static final String COLUMN_COUNTRY = "country";
@@ -96,14 +95,13 @@ public final class DataContract {
                 COLUMN_ID,
                 COLUMN_IMDB_ID,
                 COLUMN_TITLE,
-                COLUMN_YEAR,
-                COLUMN_RATED,
+                COLUMN_CERTIFICATE,
                 COLUMN_RELEASED,
                 COLUMN_RUNTIME,
                 COLUMN_GENRE,
                 COLUMN_DIRECTOR,
-                COLUMN_WRITER,
-                COLUMN_ACTORS,
+                COLUMN_SCREENPLAY,
+                COLUMN_CAST,
                 COLUMN_PLOT,
                 COLUMN_LANGUAGE,
                 COLUMN_COUNTRY,
@@ -116,15 +114,14 @@ public final class DataContract {
         public static final int COL_ID = 0;
         public static final int COL_IMDB_ID = COL_ID + 1;
         public static final int COL_TITLE = COL_IMDB_ID + 1;
-        public static final int COL_YEAR = COL_TITLE + 1;
-        public static final int COL_RATED = COL_YEAR + 1;
-        public static final int COL_RELEASED = COL_RATED + 1;
+        public static final int COL_CERTIFICATE = COL_TITLE + 1;
+        public static final int COL_RELEASED = COL_CERTIFICATE + 1;
         public static final int COL_RUNTIME = COL_RELEASED + 1;
         public static final int COL_GENRE = COL_RUNTIME + 1;
         public static final int COL_DIRECTOR = COL_GENRE + 1;
-        public static final int COL_WRITER = COL_DIRECTOR + 1;
-        public static final int COL_ACTORS = COL_WRITER + 1;
-        public static final int COL_PLOT = COL_ACTORS + 1;
+        public static final int COL_SCREENPLAY = COL_DIRECTOR + 1;
+        public static final int COL_CAST = COL_SCREENPLAY + 1;
+        public static final int COL_PLOT = COL_CAST + 1;
         public static final int COL_LANGUAGE = COL_PLOT + 1;
         public static final int COL_COUNTRY = COL_LANGUAGE + 1;
         public static final int COL_POSTER = COL_COUNTRY + 1;

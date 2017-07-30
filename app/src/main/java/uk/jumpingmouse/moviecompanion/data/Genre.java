@@ -8,7 +8,9 @@ import android.support.annotation.Nullable;
 /**
  * The Genre model class.
  * @author Edmund Johnson
+ * @deprecated Use the remote database genre classes (if any) and convert to Movie.genre string
  */
+@Deprecated
 public final class Genre implements Parcelable {
 
     // The unique identifier of the genre, e.g. "14".
@@ -211,14 +213,13 @@ public final class Genre implements Parcelable {
 //        values.put(DataContract.MovieEntry.COLUMN_ID, getId());
 //        values.put(DataContract.MovieEntry.COLUMN_IMDB_ID, getImdbId());
 //        values.put(DataContract.MovieEntry.COLUMN_TITLE, getTitle());
-//        values.put(DataContract.MovieEntry.COLUMN_YEAR, getYear());
-//        values.put(DataContract.MovieEntry.COLUMN_RATED, getRated());
+//        values.put(DataContract.MovieEntry.COLUMN_CERTIFICATE, getCertificate());
 //        values.put(DataContract.MovieEntry.COLUMN_RELEASED, getReleased());
 //        values.put(DataContract.MovieEntry.COLUMN_RUNTIME, getRuntime());
 //        values.put(DataContract.MovieEntry.COLUMN_GENRE, getGenre());
 //        values.put(DataContract.MovieEntry.COLUMN_DIRECTOR, getDirector());
-//        values.put(DataContract.MovieEntry.COLUMN_WRITER, getWriter());
-//        values.put(DataContract.MovieEntry.COLUMN_ACTORS, getActors());
+//        values.put(DataContract.MovieEntry.COLUMN_SCREENPLAY, getScreenplay());
+//        values.put(DataContract.MovieEntry.COLUMN_CAST, getCast());
 //        values.put(DataContract.MovieEntry.COLUMN_PLOT, getPlot());
 //        values.put(DataContract.MovieEntry.COLUMN_LANGUAGE, getLanguage());
 //        values.put(DataContract.MovieEntry.COLUMN_COUNTRY, getCountry());

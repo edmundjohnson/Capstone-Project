@@ -252,6 +252,10 @@ public final class AddMovieActivity extends AppCompatActivity implements MovieDb
             // Save and display the fetched movie
             mMovie = movie;
             displayData(this, mMovie);
+            // Check that the movie 'released' value can be displayed later
+            //Timber.d("mMovie.released = " + JavaUtils.toString(
+            //        new SimpleDateFormat("yyyy-MM-dd", Locale.US),
+            //        new Date(mMovie.getReleased())));
         }
     }
 

@@ -41,34 +41,32 @@ public final class Movie implements Parcelable {
     public static final String GENRE_ID_WAR = "10752";
     public static final String GENRE_ID_WESTERN = "37";
 
-    // The unique identifier of the movie, e.g. "4016934".
+    // This app's unique identifier for the movie, e.g. "4016934".
     private String id;
     // The IMDb id, e.g. "tt4016934"
     private String imdbId;
     // The title, e.g. "The Handmaiden"
     private String title;
-    // The year of the movie's release (not the year of this award), e.g. "2017"
-    private String year;
-    // The US rating, e.g. "R"
-    private String rated;
+    // A comma-separated list of certificates, e.g. "US:R,GB:12A,PT:M/12"
+    private String certificate;
     // The release date, as a millisecond value
     private long released;
     // The length in minutes
     private int runtime;
     // A comma-separated list of genre ids, e.g. "28,35,18"
     private String genre;
-    // The director, e.g. "Chan-wook Park"
+    // A comma-separated list of directors, e.g. "Chan-wook Park"
     private String director;
-    // The writer, e.g. "Sarah Waters"
-    private String writer;
-    // A comma-separated list of actors, e.g. "Min-hee Kim, Tae-ri Kim, Jung-woo Ha, Jin-woong Jo"
-    private String actors;
+    // A comma-separated list of screenplay writers, e.g. "Mark Bomback, Matt Reeves"
+    private String screenplay;
+    // A comma-separated list of cast members, e.g. "Min-hee Kim, Tae-ri Kim, Jung-woo Ha"
+    private String cast;
     // The short-form plot, e.g. "A woman is hired as a handmaiden to a Japanese heiress, but
     // secretly she is involved in a plot to defraud her."
     private String plot;
-    // A comma-separated list of languages, e.g. "Korean, Japanese"
+    // A comma-separated list of spoken languages, e.g. "da,it,en"
     private String language;
-    // The country, e.g. "South Korea"
+    // A comma-separated list of production countries, e.g. "DK,FR,IT,SE,DE"
     private String country;
     // The URL of the movie poster image
     private String poster;
@@ -80,14 +78,13 @@ public final class Movie implements Parcelable {
             @Nullable String id,
             @Nullable String imdbId,
             @Nullable String title,
-            @Nullable String year,
-            @Nullable String rated,
+            @Nullable String certificate,
             long released,
             int runtime,
             @Nullable String genre,
             @Nullable String director,
-            @Nullable String writer,
-            @Nullable String actors,
+            @Nullable String screenplay,
+            @Nullable String cast,
             @Nullable String plot,
             @Nullable String language,
             @Nullable String country,
@@ -104,14 +101,13 @@ public final class Movie implements Parcelable {
         this.id = id;
         this.imdbId = imdbId;
         this.title = title;
-        this.year = year;
-        this.rated = rated;
+        this.certificate = certificate;
         this.released = released;
         this.runtime = runtime;
         this.genre = genre;
         this.director = director;
-        this.writer = writer;
-        this.actors = actors;
+        this.screenplay = screenplay;
+        this.cast = cast;
         this.plot = plot;
         this.language = language;
         this.country = country;
@@ -151,21 +147,12 @@ public final class Movie implements Parcelable {
     }
 
     /**
-     * Returns the year of the movie's release (not the year of this award), e.g. "2017".
-     * @return the year of the movie's release
-     */
-    @Nullable
-    public String getYear() {
-        return year;
-    }
-
-    /**
      * Returns the US rating, e.g. "R".
      * @return the US rating
      */
     @Nullable
-    public String getRated() {
-        return rated;
+    public String getCertificate() {
+        return certificate;
     }
 
     /**
@@ -199,13 +186,13 @@ public final class Movie implements Parcelable {
     }
 
     @Nullable
-    public String getWriter() {
-        return writer;
+    public String getScreenplay() {
+        return screenplay;
     }
 
     @Nullable
-    public String getActors() {
-        return actors;
+    public String getCast() {
+        return cast;
     }
 
     @Nullable
@@ -243,14 +230,13 @@ public final class Movie implements Parcelable {
         id = in.readString();
         imdbId = in.readString();
         title = in.readString();
-        year = in.readString();
-        rated = in.readString();
+        certificate = in.readString();
         released = in.readLong();
         runtime = in.readInt();
         genre = in.readString();
         director = in.readString();
-        writer = in.readString();
-        actors = in.readString();
+        screenplay = in.readString();
+        cast = in.readString();
         plot = in.readString();
         language = in.readString();
         country = in.readString();
@@ -268,14 +254,13 @@ public final class Movie implements Parcelable {
         dest.writeString(id);
         dest.writeString(imdbId);
         dest.writeString(title);
-        dest.writeString(year);
-        dest.writeString(rated);
+        dest.writeString(certificate);
         dest.writeLong(released);
         dest.writeInt(runtime);
         dest.writeString(genre);
         dest.writeString(director);
-        dest.writeString(writer);
-        dest.writeString(actors);
+        dest.writeString(screenplay);
+        dest.writeString(cast);
         dest.writeString(plot);
         dest.writeString(language);
         dest.writeString(country);
@@ -340,14 +325,13 @@ public final class Movie implements Parcelable {
         private String id;
         private String imdbId;
         private String title;
-        private String year;
-        private String rated;
+        private String certificate;
         private Long released;
         private Integer runtime;
         private String genre;
         private String director;
-        private String writer;
-        private String actors;
+        private String screenplay;
+        private String cast;
         private String plot;
         private String language;
         private String country;
@@ -360,14 +344,13 @@ public final class Movie implements Parcelable {
             this.id = source.id;
             this.imdbId = source.imdbId;
             this.title = source.title;
-            this.year = source.year;
-            this.rated = source.rated;
+            this.certificate = source.certificate;
             this.released = source.released;
             this.runtime = source.runtime;
             this.genre = source.genre;
             this.director = source.director;
-            this.writer = source.writer;
-            this.actors = source.actors;
+            this.screenplay = source.screenplay;
+            this.cast = source.cast;
             this.plot = source.plot;
             this.language = source.language;
             this.country = source.country;
@@ -386,12 +369,8 @@ public final class Movie implements Parcelable {
             this.title = title;
             return this;
         }
-        public Movie.Builder year(@Nullable String year) {
-            this.year = year;
-            return this;
-        }
-        public Movie.Builder rated(@Nullable String rated) {
-            this.rated = rated;
+        public Movie.Builder certificate(@Nullable String certificate) {
+            this.certificate = certificate;
             return this;
         }
         public Movie.Builder released(long released) {
@@ -410,12 +389,12 @@ public final class Movie implements Parcelable {
             this.director = director;
             return this;
         }
-        public Movie.Builder writer(@Nullable String writer) {
-            this.writer = writer;
+        public Movie.Builder screenplay(@Nullable String screenplay) {
+            this.screenplay = screenplay;
             return this;
         }
-        public Movie.Builder actors(@Nullable String actors) {
-            this.actors = actors;
+        public Movie.Builder cast(@Nullable String cast) {
+            this.cast = cast;
             return this;
         }
         public Movie.Builder plot(@Nullable String plot) {
@@ -462,14 +441,13 @@ public final class Movie implements Parcelable {
                     this.id,
                     this.imdbId,
                     this.title,
-                    this.year,
-                    this.rated,
+                    this.certificate,
                     this.released,
                     this.runtime,
                     this.genre,
                     this.director,
-                    this.writer,
-                    this.actors,
+                    this.screenplay,
+                    this.cast,
                     this.plot,
                     this.language,
                     this.country,
@@ -491,14 +469,13 @@ public final class Movie implements Parcelable {
         values.put(DataContract.MovieEntry.COLUMN_ID, getId());
         values.put(DataContract.MovieEntry.COLUMN_IMDB_ID, getImdbId());
         values.put(DataContract.MovieEntry.COLUMN_TITLE, getTitle());
-        values.put(DataContract.MovieEntry.COLUMN_YEAR, getYear());
-        values.put(DataContract.MovieEntry.COLUMN_RATED, getRated());
+        values.put(DataContract.MovieEntry.COLUMN_CERTIFICATE, getCertificate());
         values.put(DataContract.MovieEntry.COLUMN_RELEASED, getReleased());
         values.put(DataContract.MovieEntry.COLUMN_RUNTIME, getRuntime());
         values.put(DataContract.MovieEntry.COLUMN_GENRE, getGenre());
         values.put(DataContract.MovieEntry.COLUMN_DIRECTOR, getDirector());
-        values.put(DataContract.MovieEntry.COLUMN_WRITER, getWriter());
-        values.put(DataContract.MovieEntry.COLUMN_ACTORS, getActors());
+        values.put(DataContract.MovieEntry.COLUMN_SCREENPLAY, getScreenplay());
+        values.put(DataContract.MovieEntry.COLUMN_CAST, getCast());
         values.put(DataContract.MovieEntry.COLUMN_PLOT, getPlot());
         values.put(DataContract.MovieEntry.COLUMN_LANGUAGE, getLanguage());
         values.put(DataContract.MovieEntry.COLUMN_COUNTRY, getCountry());
@@ -517,14 +494,13 @@ public final class Movie implements Parcelable {
                 id,
                 imdbId,
                 title,
-                year,
-                rated,
+                certificate,
                 released,
                 runtime,
                 genre,
                 director,
-                writer,
-                actors,
+                screenplay,
+                cast,
                 plot,
                 language,
                 country,
@@ -541,14 +517,13 @@ public final class Movie implements Parcelable {
                 + "id=" + id
                 + ", imdbId=" + imdbId
                 + ", title=" + title
-                + ", year=" + year
-                + ", rated=" + rated
+                + ", certificate=" + certificate
                 + ", released=" + released
                 + ", runtime=" + runtime
                 + ", genre=" + genre
                 + ", director=" + director
-                + ", writer=" + writer
-                + ", actors=" + actors
+                + ", screenplay=" + screenplay
+                + ", cast=" + cast
                 + ", plot=" + plot
                 + ", language=" + language
                 + ", country=" + country
