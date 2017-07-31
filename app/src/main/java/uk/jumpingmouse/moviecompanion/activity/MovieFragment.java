@@ -475,7 +475,8 @@ public final class MovieFragment extends Fragment
             setMenuItemVisibility(mMenu, viewAward);
         }
 
-        Picasso.with(context).load(viewAward.getPoster()).into(mImgPoster, new Callback() {
+        String posterUrl = ModelUtils.getPosterUrl(viewAward.getPoster());
+        Picasso.with(context).load(posterUrl).into(mImgPoster, new Callback() {
             @Override
             public void onSuccess() {
                 if (mRootView == null || mImgPoster.getDrawable() == null) {

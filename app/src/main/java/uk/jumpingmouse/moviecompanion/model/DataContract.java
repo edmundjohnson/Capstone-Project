@@ -76,6 +76,7 @@ public final class DataContract {
 
         public static final String COLUMN_ID = MovieEntry._ID;
         public static final String COLUMN_IMDB_ID = "imdbId";
+        public static final String COLUMN_TMDB_ID = "tmdbId";
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_CERTIFICATE = "certificate";
         public static final String COLUMN_RELEASED = "released";
@@ -94,6 +95,7 @@ public final class DataContract {
         private static final String[] ALL_COLUMNS = {
                 COLUMN_ID,
                 COLUMN_IMDB_ID,
+                COLUMN_TMDB_ID,
                 COLUMN_TITLE,
                 COLUMN_CERTIFICATE,
                 COLUMN_RELEASED,
@@ -114,7 +116,8 @@ public final class DataContract {
 
         public static final int COL_ID = 0;
         public static final int COL_IMDB_ID = COL_ID + 1;
-        public static final int COL_TITLE = COL_IMDB_ID + 1;
+        public static final int COL_TMDB_ID = COL_IMDB_ID + 1;
+        public static final int COL_TITLE = COL_TMDB_ID + 1;
         public static final int COL_CERTIFICATE = COL_TITLE + 1;
         public static final int COL_RELEASED = COL_CERTIFICATE + 1;
         public static final int COL_RUNTIME = COL_RELEASED + 1;
@@ -301,6 +304,7 @@ public final class DataContract {
         static final String COLUMN_ID = ViewAwardEntry._ID;
         static final String COLUMN_MOVIE_ID = "movieId";
         static final String COLUMN_IMDB_ID = "imdbId";
+        static final String COLUMN_TMDB_ID = "tmdbId";
         static final String COLUMN_AWARD_DATE = "awardDate";
         static final String COLUMN_CATEGORY = "category";
         static final String COLUMN_REVIEW = "review";
@@ -319,6 +323,7 @@ public final class DataContract {
                 COLUMN_ID,
                 COLUMN_MOVIE_ID,
                 COLUMN_IMDB_ID,
+                COLUMN_TMDB_ID,
                 COLUMN_AWARD_DATE,
                 COLUMN_CATEGORY,
                 COLUMN_REVIEW,
@@ -339,7 +344,8 @@ public final class DataContract {
         public static final int COL_ID = 0;
         public static final int COL_MOVIE_ID = COL_ID + 1;
         public static final int COL_IMDB_ID = COL_MOVIE_ID + 1;
-        public static final int COL_AWARD_DATE = COL_IMDB_ID + 1;
+        public static final int COL_TMDB_ID = COL_IMDB_ID + 1;
+        public static final int COL_AWARD_DATE = COL_TMDB_ID + 1;
         public static final int COL_CATEGORY = COL_AWARD_DATE + 1;
         public static final int COL_REVIEW = COL_CATEGORY + 1;
         public static final int COL_DISPLAY_ORDER = COL_REVIEW + 1;

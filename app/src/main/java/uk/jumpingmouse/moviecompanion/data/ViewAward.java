@@ -21,6 +21,8 @@ public final class ViewAward implements Parcelable {
     private String movieId;
     // The IMDb identifier for the movie, e.g. "tt4016934"
     private String imdbId;
+    // The TMDb identifier for the movie, e.g. 550
+    private int tmdbId;
     // awardDate is formatted as "YYMMDD"
     private String awardDate;
     // categoryId is one of CATEGORY_MOVIE, CATEGORY_DVD
@@ -51,6 +53,7 @@ public final class ViewAward implements Parcelable {
             @NonNull String id,
             @NonNull String movieId,
             @NonNull String imdbId,
+            int tmdbId,
             @NonNull String awardDate,
             @NonNull String category,
             @NonNull String review,
@@ -65,6 +68,7 @@ public final class ViewAward implements Parcelable {
         this.id = id;
         this.movieId = movieId;
         this.imdbId = imdbId;
+        this.tmdbId = tmdbId;
         this.awardDate = awardDate;
         this.category = category;
         this.review = review;
@@ -88,6 +92,7 @@ public final class ViewAward implements Parcelable {
         this.id = award.getId();
         this.movieId = movie.getId();
         this.imdbId = movie.getImdbId();
+        this.tmdbId = movie.getTmdbId();
         this.awardDate = award.getAwardDate();
         this.category = award.getCategory();
         this.review = award.getReview();
@@ -121,6 +126,10 @@ public final class ViewAward implements Parcelable {
     @NonNull
     public String getImdbId() {
         return imdbId;
+    }
+
+    public int getTmdbId() {
+        return tmdbId;
     }
 
     @NonNull
@@ -199,6 +208,7 @@ public final class ViewAward implements Parcelable {
         id = in.readString();
         movieId = in.readString();
         imdbId = in.readString();
+        tmdbId = in.readInt();
         awardDate = in.readString();
         category = in.readString();
         review = in.readString();
@@ -224,6 +234,7 @@ public final class ViewAward implements Parcelable {
         dest.writeString(id);
         dest.writeString(movieId);
         dest.writeString(imdbId);
+        dest.writeInt(tmdbId);
         dest.writeString(awardDate);
         dest.writeString(category);
         dest.writeString(review);
@@ -279,6 +290,7 @@ public final class ViewAward implements Parcelable {
      *         .id(id)
      *         .movieId(4016934)
      *         .imdbId("tt4016934")
+     *         .tmdbId(550)
      *         .awardDate("170512")
      *         [etc]
      *        .build();
@@ -295,6 +307,7 @@ public final class ViewAward implements Parcelable {
         private String id;
         private String movieId;
         private String imdbId;
+        private int tmdbId;
         private String awardDate;
         private String category;
         private String review;
@@ -314,6 +327,7 @@ public final class ViewAward implements Parcelable {
             this.id = source.id;
             this.movieId = source.movieId;
             this.imdbId = source.imdbId;
+            this.tmdbId = source.tmdbId;
             this.awardDate = source.awardDate;
             this.category = source.category;
             this.review = source.review;
@@ -339,6 +353,11 @@ public final class ViewAward implements Parcelable {
 
         public ViewAward.Builder imdbId(@NonNull String imdbId) {
             this.imdbId = imdbId;
+            return this;
+        }
+
+        public ViewAward.Builder tmdbId(int tmdbId) {
+            this.tmdbId = tmdbId;
             return this;
         }
 
@@ -412,6 +431,9 @@ public final class ViewAward implements Parcelable {
             if (imdbId == null) {
                 missing += " imdbId";
             }
+            if (tmdbId <= 0) {
+                missing += " tmdbId";
+            }
             if (awardDate == null) {
                 missing += " awardDate";
             }
@@ -434,6 +456,7 @@ public final class ViewAward implements Parcelable {
                     this.id,
                     this.movieId,
                     this.imdbId,
+                    this.tmdbId,
                     this.awardDate,
                     this.category,
                     this.review,
@@ -461,6 +484,7 @@ public final class ViewAward implements Parcelable {
                 id,
                 movieId,
                 imdbId,
+                tmdbId,
                 awardDate,
                 category,
                 review,
@@ -484,6 +508,7 @@ public final class ViewAward implements Parcelable {
                 + "id=" + id
                 + ", movieId=" + movieId
                 + ", imdbId=" + imdbId
+                + ", tmdbId=" + tmdbId
                 + ", awardDate=" + awardDate
                 + ", category=" + category
                 + ", review=" + review

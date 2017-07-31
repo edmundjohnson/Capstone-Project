@@ -27,6 +27,7 @@ public class ModelUtilsTest {
 
     private static final String MOVIE_ID = "9999991";
     private static final String MOVIE_IMDB_ID = "tt9999991";
+    private static final int MOVIE_TMDB_ID = 123;
     private static final String MOVIE_TITLE = "Test Movie";
     private static final String MOVIE_CERTIFICATE = "US:R,GB:12A,PT:M/12";
     private static final String MOVIE_RELEASED_OMDB = "01 Jun 2011";
@@ -51,6 +52,7 @@ public class ModelUtilsTest {
     private static final ContentValues VALUES_FIELDS_INVALID_2;
     private static final ContentValues VALUES_ID_NULL;
     private static final ContentValues VALUES_IMDB_ID_NULL;
+    private static final ContentValues VALUES_TMDB_ID_ZERO;
     private static final ContentValues VALUES_TITLE_NULL;
 
     private static final MatrixCursor CURSOR_FIELDS_VALID;
@@ -58,12 +60,14 @@ public class ModelUtilsTest {
     private static final MatrixCursor CURSOR_FIELDS_INVALID;
     private static final MatrixCursor CURSOR_ID_NULL;
     private static final MatrixCursor CURSOR_IMDB_ID_NULL;
+    private static final MatrixCursor CURSOR_TMDB_ID_ZERO;
     private static final MatrixCursor CURSOR_TITLE_NULL;
 
     static {
         VALUES_FIELDS_VALID = new ContentValues();
         VALUES_FIELDS_VALID.put(DataContract.MovieEntry.COLUMN_ID, MOVIE_ID);
         VALUES_FIELDS_VALID.put(DataContract.MovieEntry.COLUMN_IMDB_ID, MOVIE_IMDB_ID);
+        VALUES_FIELDS_VALID.put(DataContract.MovieEntry.COLUMN_TMDB_ID, MOVIE_TMDB_ID);
         VALUES_FIELDS_VALID.put(DataContract.MovieEntry.COLUMN_TITLE, MOVIE_TITLE);
         VALUES_FIELDS_VALID.put(DataContract.MovieEntry.COLUMN_RELEASED, MOVIE_RELEASED);
         VALUES_FIELDS_VALID.put(DataContract.MovieEntry.COLUMN_RUNTIME, MOVIE_RUNTIME);
@@ -73,6 +77,7 @@ public class ModelUtilsTest {
         VALUES_FIELDS_NULL = new ContentValues();
         VALUES_FIELDS_NULL.put(DataContract.MovieEntry.COLUMN_ID, 9999992);
         VALUES_FIELDS_NULL.put(DataContract.MovieEntry.COLUMN_IMDB_ID, "tt9999992");
+        VALUES_FIELDS_NULL.put(DataContract.MovieEntry.COLUMN_TMDB_ID, 124);
         VALUES_FIELDS_NULL.put(DataContract.MovieEntry.COLUMN_TITLE, "Movie Title With Nulls");
         VALUES_FIELDS_NULL.put(DataContract.MovieEntry.COLUMN_RELEASED, Movie.RELEASED_UNKNOWN);
         VALUES_FIELDS_NULL.put(DataContract.MovieEntry.COLUMN_RUNTIME, Movie.RUNTIME_UNKNOWN);
@@ -81,6 +86,7 @@ public class ModelUtilsTest {
         VALUES_FIELDS_INVALID_1 = new ContentValues();
         VALUES_FIELDS_INVALID_1.put(DataContract.MovieEntry.COLUMN_ID, MOVIE_ID);
         VALUES_FIELDS_INVALID_1.put(DataContract.MovieEntry.COLUMN_IMDB_ID, MOVIE_IMDB_ID);
+        VALUES_FIELDS_INVALID_1.put(DataContract.MovieEntry.COLUMN_TMDB_ID, MOVIE_TMDB_ID);
         VALUES_FIELDS_INVALID_1.put(DataContract.MovieEntry.COLUMN_TITLE, MOVIE_TITLE);
         VALUES_FIELDS_INVALID_1.put(DataContract.MovieEntry.COLUMN_RELEASED, -23L);
         VALUES_FIELDS_INVALID_1.put(DataContract.MovieEntry.COLUMN_RUNTIME, -14);
@@ -90,6 +96,7 @@ public class ModelUtilsTest {
         VALUES_FIELDS_INVALID_2 = new ContentValues();
         VALUES_FIELDS_INVALID_2.put(DataContract.MovieEntry.COLUMN_ID, MOVIE_ID);
         VALUES_FIELDS_INVALID_2.put(DataContract.MovieEntry.COLUMN_IMDB_ID, MOVIE_IMDB_ID);
+        VALUES_FIELDS_INVALID_2.put(DataContract.MovieEntry.COLUMN_TMDB_ID, MOVIE_TMDB_ID);
         VALUES_FIELDS_INVALID_2.put(DataContract.MovieEntry.COLUMN_TITLE, MOVIE_TITLE);
         VALUES_FIELDS_INVALID_2.put(DataContract.MovieEntry.COLUMN_RELEASED, 0);
         VALUES_FIELDS_INVALID_2.put(DataContract.MovieEntry.COLUMN_RUNTIME, 0);
@@ -99,6 +106,7 @@ public class ModelUtilsTest {
         VALUES_ID_NULL = new ContentValues();
         // id is not set
         VALUES_ID_NULL.put(DataContract.MovieEntry.COLUMN_IMDB_ID, MOVIE_IMDB_ID);
+        VALUES_ID_NULL.put(DataContract.MovieEntry.COLUMN_TMDB_ID, MOVIE_TMDB_ID);
         VALUES_ID_NULL.put(DataContract.MovieEntry.COLUMN_TITLE, MOVIE_TITLE);
         VALUES_ID_NULL.put(DataContract.MovieEntry.COLUMN_RELEASED, MOVIE_RELEASED);
         VALUES_ID_NULL.put(DataContract.MovieEntry.COLUMN_RUNTIME, MOVIE_RUNTIME);
@@ -108,15 +116,27 @@ public class ModelUtilsTest {
         VALUES_IMDB_ID_NULL = new ContentValues();
         VALUES_IMDB_ID_NULL.put(DataContract.MovieEntry.COLUMN_ID, MOVIE_ID);
         // imdbId is not set
+        VALUES_IMDB_ID_NULL.put(DataContract.MovieEntry.COLUMN_TMDB_ID, MOVIE_TMDB_ID);
         VALUES_IMDB_ID_NULL.put(DataContract.MovieEntry.COLUMN_TITLE, MOVIE_TITLE);
         VALUES_IMDB_ID_NULL.put(DataContract.MovieEntry.COLUMN_RELEASED, MOVIE_RELEASED);
         VALUES_IMDB_ID_NULL.put(DataContract.MovieEntry.COLUMN_RUNTIME, MOVIE_RUNTIME);
         VALUES_IMDB_ID_NULL.put(DataContract.MovieEntry.COLUMN_GENRE, MOVIE_GENRE);
         VALUES_IMDB_ID_NULL.put(DataContract.MovieEntry.COLUMN_POSTER, MOVIE_POSTER);
 
+        VALUES_TMDB_ID_ZERO = new ContentValues();
+        VALUES_TMDB_ID_ZERO.put(DataContract.MovieEntry.COLUMN_ID, MOVIE_ID);
+        VALUES_TMDB_ID_ZERO.put(DataContract.MovieEntry.COLUMN_IMDB_ID, MOVIE_IMDB_ID);
+        // tmdbId is not set
+        VALUES_TMDB_ID_ZERO.put(DataContract.MovieEntry.COLUMN_TITLE, MOVIE_TITLE);
+        VALUES_TMDB_ID_ZERO.put(DataContract.MovieEntry.COLUMN_RELEASED, MOVIE_RELEASED);
+        VALUES_TMDB_ID_ZERO.put(DataContract.MovieEntry.COLUMN_RUNTIME, MOVIE_RUNTIME);
+        VALUES_TMDB_ID_ZERO.put(DataContract.MovieEntry.COLUMN_GENRE, MOVIE_GENRE);
+        VALUES_TMDB_ID_ZERO.put(DataContract.MovieEntry.COLUMN_POSTER, MOVIE_POSTER);
+
         VALUES_TITLE_NULL = new ContentValues();
         VALUES_TITLE_NULL.put(DataContract.MovieEntry.COLUMN_ID, MOVIE_ID);
         VALUES_TITLE_NULL.put(DataContract.MovieEntry.COLUMN_IMDB_ID, MOVIE_IMDB_ID);
+        VALUES_TITLE_NULL.put(DataContract.MovieEntry.COLUMN_TMDB_ID, MOVIE_TMDB_ID);
         // title is not set
         VALUES_TITLE_NULL.put(DataContract.MovieEntry.COLUMN_RELEASED, MOVIE_RELEASED);
         VALUES_TITLE_NULL.put(DataContract.MovieEntry.COLUMN_RUNTIME, MOVIE_RUNTIME);
@@ -128,6 +148,7 @@ public class ModelUtilsTest {
                 // This must match the order of columns in DataContract.MovieEntry.getAllColumns().
                 MOVIE_ID,
                 MOVIE_IMDB_ID,
+                MOVIE_TMDB_ID,
                 MOVIE_TITLE,
                 MOVIE_CERTIFICATE,
                 MOVIE_RELEASED,
@@ -147,6 +168,7 @@ public class ModelUtilsTest {
                 // This must match the order of columns in DataContract.MovieEntry.getAllColumns().
                 9999992,
                 "tt9999992",
+                550,
                 "Movie Title With Nulls",
                 null,
                 Movie.RELEASED_UNKNOWN,
@@ -166,6 +188,7 @@ public class ModelUtilsTest {
                 // This must match the order of columns in DataContract.MovieEntry.getAllColumns().
                 MOVIE_ID,
                 MOVIE_IMDB_ID,
+                MOVIE_TMDB_ID,
                 MOVIE_TITLE,
                 MOVIE_CERTIFICATE,
                 -2,
@@ -185,6 +208,7 @@ public class ModelUtilsTest {
                 // This must match the order of columns in DataContract.MovieEntry.getAllColumns().
                 null,
                 MOVIE_IMDB_ID,
+                MOVIE_TMDB_ID,
                 MOVIE_TITLE,
                 MOVIE_CERTIFICATE,
                 MOVIE_RELEASED,
@@ -204,6 +228,27 @@ public class ModelUtilsTest {
                 // This must match the order of columns in DataContract.MovieEntry.getAllColumns().
                 MOVIE_ID,
                 null,
+                MOVIE_TMDB_ID,
+                MOVIE_TITLE,
+                MOVIE_CERTIFICATE,
+                MOVIE_RELEASED,
+                MOVIE_RUNTIME,
+                MOVIE_GENRE,
+                MOVIE_DIRECTOR,
+                MOVIE_SCREENPLAY,
+                MOVIE_CAST,
+                MOVIE_PLOT,
+                MOVIE_COUNTRY,
+                MOVIE_LANGUAGE,
+                MOVIE_POSTER
+        });
+
+        CURSOR_TMDB_ID_ZERO = new MatrixCursor(DataContract.MovieEntry.getAllColumns());
+        CURSOR_TMDB_ID_ZERO.addRow(new Object[]{
+                // This must match the order of columns in DataContract.MovieEntry.getAllColumns().
+                MOVIE_ID,
+                MOVIE_IMDB_ID,
+                0,
                 MOVIE_TITLE,
                 MOVIE_CERTIFICATE,
                 MOVIE_RELEASED,
@@ -223,6 +268,7 @@ public class ModelUtilsTest {
                 // This must match the order of columns in DataContract.MovieEntry.getAllColumns().
                 MOVIE_ID,
                 MOVIE_IMDB_ID,
+                MOVIE_TMDB_ID,
                 null,
                 MOVIE_CERTIFICATE,
                 MOVIE_RELEASED,
@@ -248,6 +294,7 @@ public class ModelUtilsTest {
         assertNotNull(movie);
         assertEquals(movie.getId(), MOVIE_ID);
         assertEquals(movie.getImdbId(), MOVIE_IMDB_ID);
+        assertEquals(movie.getTmdbId(), MOVIE_TMDB_ID);
         assertEquals(movie.getTitle(), MOVIE_TITLE);
         assertEquals(movie.getReleased(), MOVIE_RELEASED);
         assertEquals(movie.getRuntime(), MOVIE_RUNTIME);
@@ -257,11 +304,12 @@ public class ModelUtilsTest {
         // newMovie(ContentValues) works correctly when non-mandatory fields are not set
         movie = ModelUtils.newMovie(VALUES_FIELDS_NULL);
         assertNotNull(movie);
-        assertEquals(movie.getId(), "9999992");
-        assertEquals(movie.getImdbId(), "tt9999992");
-        assertEquals(movie.getTitle(), "Movie Title With Nulls");
-        assertEquals(movie.getReleased(), Movie.RELEASED_UNKNOWN);
-        assertEquals(movie.getRuntime(), Movie.RUNTIME_UNKNOWN);
+        assertEquals("9999992", movie.getId() );
+        assertEquals("tt9999992", movie.getImdbId());
+        assertEquals(124, movie.getTmdbId());
+        assertEquals("Movie Title With Nulls", movie.getTitle());
+        assertEquals(Movie.RELEASED_UNKNOWN, movie.getReleased());
+        assertEquals(Movie.RUNTIME_UNKNOWN, movie.getRuntime());
         assertNull(movie.getGenre());
         assertNull(movie.getPoster());
 
@@ -270,6 +318,7 @@ public class ModelUtilsTest {
         assertNotNull(movie);
         assertEquals(movie.getId(), MOVIE_ID);
         assertEquals(movie.getImdbId(), MOVIE_IMDB_ID);
+        assertEquals(movie.getTmdbId(), MOVIE_TMDB_ID);
         assertEquals(movie.getTitle(), MOVIE_TITLE);
         assertEquals(movie.getReleased(), -23L);
         assertEquals(movie.getRuntime(), -14);
@@ -281,6 +330,7 @@ public class ModelUtilsTest {
         assertNotNull(movie);
         assertEquals(movie.getId(), MOVIE_ID);
         assertEquals(movie.getImdbId(), MOVIE_IMDB_ID);
+        assertEquals(movie.getTmdbId(), MOVIE_TMDB_ID);
         assertEquals(movie.getTitle(), MOVIE_TITLE);
         assertEquals(movie.getReleased(), 0);
         assertEquals(movie.getRuntime(), 0);
@@ -292,6 +342,9 @@ public class ModelUtilsTest {
 
         // newMovie(ContentValues) returns null when mandatory field imdbId is not set in values
         assertNull(ModelUtils.newMovie(VALUES_IMDB_ID_NULL));
+
+        // newMovie(ContentValues) returns null when mandatory field tmdbId is not set in values
+        assertNull(ModelUtils.newMovie(VALUES_TMDB_ID_ZERO));
 
         // newMovie(ContentValues) returns null when mandatory field title is not set in values
         assertNull(ModelUtils.newMovie(VALUES_TITLE_NULL));
@@ -307,6 +360,7 @@ public class ModelUtilsTest {
         assertNotNull(movie);
         assertEquals(movie.getId(), MOVIE_ID);
         assertEquals(movie.getImdbId(), MOVIE_IMDB_ID);
+        assertEquals(movie.getTmdbId(), MOVIE_TMDB_ID);
         assertEquals(movie.getTitle(), MOVIE_TITLE);
         assertEquals(movie.getCertificate(), MOVIE_CERTIFICATE);
         assertEquals(movie.getReleased(), MOVIE_RELEASED);
@@ -320,6 +374,7 @@ public class ModelUtilsTest {
         assertNotNull(movie);
         assertEquals(movie.getId(), "9999992");
         assertEquals(movie.getImdbId(), "tt9999992");
+        assertEquals(movie.getTmdbId(), 550);
         assertEquals(movie.getTitle(), "Movie Title With Nulls");
         assertEquals(movie.getReleased(), Movie.RELEASED_UNKNOWN);
         assertEquals(movie.getRuntime(), Movie.RUNTIME_UNKNOWN);
@@ -332,6 +387,7 @@ public class ModelUtilsTest {
         assertNotNull(movie);
         assertEquals(movie.getId(), MOVIE_ID);
         assertEquals(movie.getImdbId(), MOVIE_IMDB_ID);
+        assertEquals(movie.getTmdbId(), MOVIE_TMDB_ID);
         assertEquals(movie.getTitle(), MOVIE_TITLE);
         assertEquals(movie.getReleased(), Movie.RELEASED_UNKNOWN);
         assertEquals(movie.getRuntime(), Movie.RUNTIME_UNKNOWN);
@@ -345,6 +401,10 @@ public class ModelUtilsTest {
         // newMovie(Cursor) returns null when mandatory field imdbId is not set in cursor row
         CURSOR_IMDB_ID_NULL.moveToFirst();
         assertNull(ModelUtils.newMovie(CURSOR_IMDB_ID_NULL));
+
+        // newMovie(Cursor) returns null when mandatory field tmdbId is not set in cursor row
+        CURSOR_TMDB_ID_ZERO.moveToFirst();
+        assertNull(ModelUtils.newMovie(CURSOR_TMDB_ID_ZERO));
 
         // newMovie(Cursor) returns null when mandatory field title is not set in cursor row
         CURSOR_TITLE_NULL.moveToFirst();
@@ -371,6 +431,7 @@ public class ModelUtilsTest {
                 // We are using imdbId as the _id, so it is repeated.
                 null,
                 null,
+                0,
                 MOVIE_TITLE,
                 MOVIE_CERTIFICATE,
                 MOVIE_RELEASED,
@@ -396,6 +457,7 @@ public class ModelUtilsTest {
                 // We are using imdbId as the _id, so it is repeated.
                 111,
                 "imdbId1",
+                1001,
                 "Title 1",
                 MOVIE_CERTIFICATE,
                 MOVIE_RELEASED,
@@ -414,6 +476,7 @@ public class ModelUtilsTest {
                 // We are using imdbId as the _id, so it is repeated.
                 222,
                 "imdbId2",
+                2002,
                 "Title 2",
                 MOVIE_CERTIFICATE,
                 MOVIE_RELEASED,
@@ -434,11 +497,13 @@ public class ModelUtilsTest {
         assertNotNull(movie);
         assertEquals("111", movie.getId());
         assertEquals("imdbId1", movie.getImdbId());
+        assertEquals(1001, movie.getTmdbId());
         assertEquals("Title 1", movie.getTitle());
         movie = movieList.get(1);
         assertNotNull(movie);
         assertEquals("222", movie.getId());
         assertEquals("imdbId2", movie.getImdbId());
+        assertEquals(2002, movie.getTmdbId());
         assertEquals("Title 2", movie.getTitle());
         getAndroidTestUtils().closeCursor(cursor);
     }

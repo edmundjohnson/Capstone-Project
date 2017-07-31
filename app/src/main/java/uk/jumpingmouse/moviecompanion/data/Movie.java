@@ -45,6 +45,8 @@ public final class Movie implements Parcelable {
     private String id;
     // The IMDb id, e.g. "tt4016934"
     private String imdbId;
+    // The TMDb id, e.g. 550
+    private int tmdbId;
     // The title, e.g. "The Handmaiden"
     private String title;
     // A comma-separated list of certificates, e.g. "US:R,GB:12A,PT:M/12"
@@ -77,6 +79,7 @@ public final class Movie implements Parcelable {
     private Movie(
             @Nullable String id,
             @Nullable String imdbId,
+            int tmdbId,
             @Nullable String title,
             @Nullable String certificate,
             long released,
@@ -95,11 +98,15 @@ public final class Movie implements Parcelable {
         if (imdbId == null) {
             throw new NullPointerException("Null imdbId");
         }
+        if (tmdbId <= 0) {
+            throw new NullPointerException("tmdbId not set");
+        }
         if (title == null) {
             throw new NullPointerException("Null title");
         }
         this.id = id;
         this.imdbId = imdbId;
+        this.tmdbId = tmdbId;
         this.title = title;
         this.certificate = certificate;
         this.released = released;
@@ -135,6 +142,14 @@ public final class Movie implements Parcelable {
     @NonNull
     public String getImdbId() {
         return imdbId;
+    }
+
+    /**
+     * Returns the movie's TMDb id, e.g. 550.
+     * @return the movie's TMDb id
+     */
+    public int getTmdbId() {
+        return tmdbId;
     }
 
     /**
@@ -229,6 +244,7 @@ public final class Movie implements Parcelable {
     private Movie(@NonNull final Parcel in) {
         id = in.readString();
         imdbId = in.readString();
+        tmdbId = in.readInt();
         title = in.readString();
         certificate = in.readString();
         released = in.readLong();
@@ -253,6 +269,7 @@ public final class Movie implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeString(imdbId);
+        dest.writeInt(tmdbId);
         dest.writeString(title);
         dest.writeString(certificate);
         dest.writeLong(released);
@@ -308,6 +325,7 @@ public final class Movie implements Parcelable {
      *   Movie movie = Movie.builder()
      *         .id("4016934")
      *         .imdbId("tt4016934")
+     *         .tmdbId(550)
      *         .title("The Handmaiden")
      *         // etc
      *        .build();
@@ -323,6 +341,7 @@ public final class Movie implements Parcelable {
     public static final class Builder {
         private String id;
         private String imdbId;
+        private int tmdbId;
         private String title;
         private String certificate;
         private Long released;
@@ -342,6 +361,7 @@ public final class Movie implements Parcelable {
         Builder(@NonNull Movie source) {
             this.id = source.id;
             this.imdbId = source.imdbId;
+            this.tmdbId = source.tmdbId;
             this.title = source.title;
             this.certificate = source.certificate;
             this.released = source.released;
@@ -363,6 +383,11 @@ public final class Movie implements Parcelable {
 
         public Movie.Builder imdbId(@NonNull String imdbId) {
             this.imdbId = imdbId;
+            return this;
+        }
+
+        public Movie.Builder tmdbId(int tmdbId) {
+            this.tmdbId = tmdbId;
             return this;
         }
 
@@ -438,6 +463,9 @@ public final class Movie implements Parcelable {
             if (imdbId == null) {
                 missing += " imdbId";
             }
+            if (tmdbId <= 0) {
+                missing += " tmdbId";
+            }
             if (title == null) {
                 missing += " title";
             }
@@ -453,6 +481,7 @@ public final class Movie implements Parcelable {
             return new Movie(
                     this.id,
                     this.imdbId,
+                    this.tmdbId,
                     this.title,
                     this.certificate,
                     this.released,
@@ -481,6 +510,7 @@ public final class Movie implements Parcelable {
 
         values.put(DataContract.MovieEntry.COLUMN_ID, getId());
         values.put(DataContract.MovieEntry.COLUMN_IMDB_ID, getImdbId());
+        values.put(DataContract.MovieEntry.COLUMN_TMDB_ID, getTmdbId());
         values.put(DataContract.MovieEntry.COLUMN_TITLE, getTitle());
         values.put(DataContract.MovieEntry.COLUMN_CERTIFICATE, getCertificate());
         values.put(DataContract.MovieEntry.COLUMN_RELEASED, getReleased());
@@ -506,6 +536,7 @@ public final class Movie implements Parcelable {
                 // This must match the order of columns in DataContract.MovieEntry.getAllColumns().
                 id,
                 imdbId,
+                tmdbId,
                 title,
                 certificate,
                 released,
@@ -529,6 +560,7 @@ public final class Movie implements Parcelable {
         return "Movie{"
                 + "id=" + id
                 + ", imdbId=" + imdbId
+                + ", tmdbId=" + tmdbId
                 + ", title=" + title
                 + ", certificate=" + certificate
                 + ", released=" + released

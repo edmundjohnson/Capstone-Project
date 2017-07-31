@@ -26,6 +26,10 @@ import uk.jumpingmouse.moviecompanion.model.DataContract;
  */
 public final class ModelUtils {
 
+    private static final String TMDB_BASE_URL = "http://image.tmdb.org/t/p/";
+    private static final String TMDB_POSTER_SIZE = "w780";
+    private static final String TMDB_THUMBNAIL_SIZE = "w154";
+
     // This map contains a mapping between genre ids and their corresponding genre names.
     // The map keys are the genre ids stored in the database and match "@string/genre_id...".
     // The map values are the string resource ids of the displayable genre names.
@@ -118,6 +122,19 @@ public final class ModelUtils {
             return null;
         }
 
+        // tmdbId
+        int tmdbId;
+        try {
+            tmdbId = values.getAsInteger(DataContract.MovieEntry.COLUMN_TMDB_ID);
+            if (tmdbId <= 0) {
+                Timber.e("newMovie: missing tmdbId");
+                return null;
+            }
+        } catch (NullPointerException e) {
+            Timber.e("newMovie: tmdbId <= 0 ContentValues", e);
+            return null;
+        }
+
         // title
         String title;
         try {
@@ -134,6 +151,7 @@ public final class ModelUtils {
         return Movie.builder()
                 .id(id)
                 .imdbId(imdbId)
+                .tmdbId(tmdbId)
                 .title(title)
                 .certificate(values.getAsString(DataContract.MovieEntry.COLUMN_CERTIFICATE))
                 .released(values.getAsLong(DataContract.MovieEntry.COLUMN_RELEASED))
@@ -159,6 +177,7 @@ public final class ModelUtils {
     public static Movie newMovie(@NonNull Cursor cursor) {
         final String id = cursor.getString(DataContract.MovieEntry.COL_ID);
         final String imdbId = cursor.getString(DataContract.MovieEntry.COL_IMDB_ID);
+        final int tmdbId = cursor.getInt(DataContract.MovieEntry.COL_TMDB_ID);
         final String title = cursor.getString(DataContract.MovieEntry.COL_TITLE);
         final String certificate = cursor.getString(DataContract.MovieEntry.COL_CERTIFICATE);
         final String genre = cursor.getString(DataContract.MovieEntry.COL_GENRE);
@@ -178,6 +197,11 @@ public final class ModelUtils {
         // if the imdbId mandatory attribute is missing, return null
         if (imdbId == null) {
             Timber.e("newMovie(Cursor): missing imdbId");
+            return null;
+        }
+        // if the tmdbId mandatory attribute is missing, return null
+        if (tmdbId <= 0) {
+            Timber.e("newMovie(Cursor): missing tmdbId");
             return null;
         }
         // if the title mandatory attribute is missing, return null
@@ -201,6 +225,7 @@ public final class ModelUtils {
         return Movie.builder()
                 .id(id)
                 .imdbId(imdbId)
+                .tmdbId(tmdbId)
                 .title(title)
                 .certificate(certificate)
                 .released(released)
@@ -250,6 +275,7 @@ public final class ModelUtils {
 
         values.put(DataContract.MovieEntry.COLUMN_ID, movie.getId());
         values.put(DataContract.MovieEntry.COLUMN_IMDB_ID, movie.getImdbId());
+        values.put(DataContract.MovieEntry.COLUMN_TMDB_ID, movie.getTmdbId());
         values.put(DataContract.MovieEntry.COLUMN_TITLE, movie.getTitle());
         values.put(DataContract.MovieEntry.COLUMN_CERTIFICATE, movie.getCertificate());
         values.put(DataContract.MovieEntry.COLUMN_RELEASED, movie.getReleased());
@@ -264,6 +290,26 @@ public final class ModelUtils {
         values.put(DataContract.MovieEntry.COLUMN_POSTER, movie.getPoster());
 
         return values;
+    }
+
+    /**
+     * Returns the URL for a TMDb poster image for a supplied TMDb poster path
+     * @param poster the TMDb poster path, e.g. "/d2f3g4sd12fg.jpg"
+     * @return the poster URL, e.g. "http://image.tmdb.org/t/p/w780/d2f3g4sd12fg.jpg"
+     */
+    public static String getPosterUrl(@Nullable String poster) {
+        return TMDB_BASE_URL + TMDB_POSTER_SIZE + poster;
+
+    }
+
+    /**
+     * Returns the URL for a TMDb thumbnail image for a supplied TMDb poster path
+     * @param poster the TMDb poster path, e.g. "/d2f3g4sd12fg.jpg"
+     * @return the thumbnail URL, e.g. "http://image.tmdb.org/t/p/w154/d2f3g4sd12fg.jpg"
+     */
+    public static String getThumbnailUrl(@Nullable String poster) {
+        return TMDB_BASE_URL + TMDB_THUMBNAIL_SIZE + poster;
+
     }
 
     //---------------------------------------------------------------------
@@ -434,6 +480,7 @@ public final class ModelUtils {
         final String id = cursor.getString(DataContract.ViewAwardEntry.COL_ID);
         final String movieId = cursor.getString(DataContract.ViewAwardEntry.COL_MOVIE_ID);
         final String imdbId = cursor.getString(DataContract.ViewAwardEntry.COL_IMDB_ID);
+        final int tmdbId = cursor.getInt(DataContract.ViewAwardEntry.COL_TMDB_ID);
         final String awardDate = cursor.getString(DataContract.ViewAwardEntry.COL_AWARD_DATE);
         final String category = cursor.getString(DataContract.ViewAwardEntry.COL_CATEGORY);
         final String review = cursor.getString(DataContract.ViewAwardEntry.COL_REVIEW);
@@ -466,6 +513,11 @@ public final class ModelUtils {
             Timber.e("newViewAward(Cursor): missing imdbId");
             return null;
         }
+        // if the tmdbId mandatory attribute is missing, return null
+        if (tmdbId <= 0) {
+            Timber.e("newViewAward(Cursor): missing tmdbId");
+            return null;
+        }
         // if the title mandatory attribute is missing, return null
         if (title == null) {
             Timber.e("newViewAward(Cursor): missing title");
@@ -476,6 +528,7 @@ public final class ModelUtils {
                 .id(id)
                 .movieId(movieId)
                 .imdbId(imdbId)
+                .tmdbId(tmdbId)
                 .awardDate(awardDate)
                 .category(category)
                 .review(review)

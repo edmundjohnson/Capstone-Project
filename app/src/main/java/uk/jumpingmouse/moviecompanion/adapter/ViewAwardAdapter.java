@@ -133,11 +133,12 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
         String runtimeText = getViewUtils().getRuntimeText(mActivity, runtime);
         String genre = mCursor.getString(DataContract.ViewAwardEntry.COL_GENRE);
         String poster = mCursor.getString(DataContract.ViewAwardEntry.COL_POSTER);
+        String thumbnailUrl = ModelUtils.getThumbnailUrl(poster);
         // the values of onWishlist etc. affect the menu only and are handled in the fragment
 
         // replace the contents of the item view with the data for the award
         if (mActivity != null) {
-            Picasso.with(mActivity).load(poster).into(viewHolder.getImgPoster());
+            Picasso.with(mActivity).load(thumbnailUrl).into(viewHolder.getImgPoster());
             viewHolder.getTxtMovieTitle().setText(movieTitle);
             viewHolder.getTxtRuntime().setText(runtimeText);
             viewHolder.getTxtGenre().setText(ModelUtils.toGenreNameCsv(mActivity, genre));

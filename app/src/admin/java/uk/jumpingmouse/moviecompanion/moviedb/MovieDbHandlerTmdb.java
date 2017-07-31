@@ -196,6 +196,9 @@ public class MovieDbHandlerTmdb implements MovieDbHandler, TmdbHandler {
         } else if (tmdbMovie.getImdbID() == null) {
             Timber.w("newMovie: tmdbMovie.imdbId is null");
             return null;
+        } else if (tmdbMovie.getId() <= 0) {
+            Timber.w("newMovie: tmdbMovie.id has invalid value: " + tmdbMovie.getId());
+            return null;
         } else if (tmdbMovie.getTitle() == null) {
             Timber.w("newMovie: tmdbMovie.title is null");
             return null;
@@ -223,13 +226,11 @@ public class MovieDbHandlerTmdb implements MovieDbHandler, TmdbHandler {
         String country = getCountryCsv(tmdbMovie.getProductionCountries());
         // country
         String language = getLanguageCsv(tmdbMovie.getSpokenLanguages());
-        // poster
-        String poster = getPosterUrl(tmdbConfiguration, tmdbMovie.getPosterPath());
 
-        // TODO: add tmdbId, thumbnail
         return Movie.builder()
                 .id(id)
                 .imdbId(tmdbMovie.getImdbID())
+                .tmdbId(tmdbMovie.getId())
                 .title(tmdbMovie.getTitle())
                 .certificate(certificate)
                 .released(released)
@@ -241,7 +242,7 @@ public class MovieDbHandlerTmdb implements MovieDbHandler, TmdbHandler {
                 .plot(tmdbMovie.getOverview())
                 .language(language)
                 .country(country)
-                .poster(poster)
+                .poster(tmdbMovie.getPosterPath())
                 .build();
     }
 
@@ -416,53 +417,53 @@ public class MovieDbHandlerTmdb implements MovieDbHandler, TmdbHandler {
         return country.toString();
     }
 
-    /**
-     * Returns the URL for the largest available poster for a poster path.
-     * @param tmdbConfiguration the TMDb configuration
-     * @param posterPath the poster path, e.g. "/s1g3ffh.jpg"
-     * @return the URL for the largest available poster for the poster path,
-     *         e.g. "http://image.tmdb.org/t/p/w780/s1g3ffh.jpg"
-     */
-    @Nullable
-    private static String getPosterUrl(@NonNull TmdbConfiguration tmdbConfiguration,
-                                       @Nullable String posterPath) {
-        if (posterPath == null) {
-            return null;
-        }
-        String baseUrl = tmdbConfiguration.getBaseUrl();
-        List<String> posterSizes = tmdbConfiguration.getPosterSizes();
-        String posterSize = getImageLargestSize(posterSizes);
-        return baseUrl + posterSize + posterPath;
-    }
+    ///**
+    // * Returns the URL for the largest available poster for a poster path.
+    // * @param tmdbConfiguration the TMDb configuration
+    // * @param posterPath the poster path, e.g. "/s1g3ffh.jpg"
+    // * @return the URL for the largest available poster for the poster path,
+    // *         e.g. "http://image.tmdb.org/t/p/w780/s1g3ffh.jpg"
+    // */
+    //@Nullable
+    //private static String getPosterUrl(@NonNull TmdbConfiguration tmdbConfiguration,
+    //                                  @Nullable String posterPath) {
+    //    if (posterPath == null) {
+    //        return null;
+    //    }
+    //    String baseUrl = tmdbConfiguration.getBaseUrl();
+    //    List<String> posterSizes = tmdbConfiguration.getPosterSizes();
+    //    String posterSize = getImageLargestSize(posterSizes);
+    //    return baseUrl + posterSize + posterPath;
+    //}
 
-    /**
-     * Returns the largest available size from a list of available sizes.
-     * @param availableSizes The available sizes, each formatted as "wnnn", where "nnn" is the size
-     * @return the largest available size, e.g. "w780"
-     */
-    @Nullable
-    private static String getImageLargestSize(@Nullable List<String> availableSizes) {
-        String largestSizeWithPrefix = null;
-        if (availableSizes != null) {
-            int largestSize = 0;
-            for (String sizeWithPrefix : availableSizes) {
-                if (sizeWithPrefix.length() > 1 && sizeWithPrefix.charAt(0) == 'w') {
-                    int size;
-                    try {
-                        size = Integer.parseInt(sizeWithPrefix.substring(1));
-                    } catch (Exception e) {
-                        Timber.w("size was not numeric: " + sizeWithPrefix);
-                        break;
-                    }
-                    if (size > largestSize) {
-                        largestSize = size;
-                        largestSizeWithPrefix = sizeWithPrefix;
-                    }
-                }
-            }
-        }
-        return largestSizeWithPrefix;
-    }
+    ///**
+    // * Returns the largest available size from a list of available sizes.
+    // * @param availableSizes The available sizes, each formatted as "wnnn", where "nnn" is the size
+    // * @return the largest available size, e.g. "w780"
+    // */
+    //@Nullable
+    //private static String getImageLargestSize(@Nullable List<String> availableSizes) {
+    //    String largestSizeWithPrefix = null;
+    //    if (availableSizes != null) {
+    //        int largestSize = 0;
+    //        for (String sizeWithPrefix : availableSizes) {
+    //            if (sizeWithPrefix.length() > 1 && sizeWithPrefix.charAt(0) == 'w') {
+    //                int size;
+    //                try {
+    //                    size = Integer.parseInt(sizeWithPrefix.substring(1));
+    //                } catch (Exception e) {
+    //                    Timber.w("size was not numeric: " + sizeWithPrefix);
+    //                    break;
+    //                }
+    //                if (size > largestSize) {
+    //                    largestSize = size;
+    //                    largestSizeWithPrefix = sizeWithPrefix;
+    //                }
+    //            }
+    //        }
+    //    }
+    //    return largestSizeWithPrefix;
+    //}
 
     //---------------------------------------------------------------------
     // Getters

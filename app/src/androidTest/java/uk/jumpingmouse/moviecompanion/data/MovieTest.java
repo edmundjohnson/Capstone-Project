@@ -42,6 +42,7 @@ public class MovieTest {
         mMovie = Movie.builder()
                 .id("4016934")
                 .imdbId("tt4016934")
+                .tmdbId(550)
                 .title("The Handmaiden")
                 .certificate("R")
                 .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2017"))
@@ -59,6 +60,7 @@ public class MovieTest {
         mMovieWithNulls = Movie.builder()
                 .id("4016934")
                 .imdbId("tt4016934")
+                .tmdbId(550)
                 .title("The Handmaiden")
                 .certificate(null)
                 .released(Movie.RELEASED_UNKNOWN)
@@ -88,6 +90,7 @@ public class MovieTest {
         // test that the fields return the expected values
         assertEquals("4016934", mMovie.getId());
         assertEquals("tt4016934", mMovie.getImdbId());
+        assertEquals(550, mMovie.getTmdbId());
         assertEquals("The Handmaiden", mMovie.getTitle());
         assertEquals(AndroidTestUtils.toLongOmdbReleased("01 Jun 2017"), mMovie.getReleased());
         assertEquals(144, mMovie.getRuntime());
@@ -98,6 +101,7 @@ public class MovieTest {
         Movie movieWithNulls = Movie.builder()
                 .id("4016934")
                 .imdbId("tt4016934")
+                .tmdbId(550)
                 .title("The Handmaiden")
                 .certificate(null)
                 .released(Movie.RELEASED_UNKNOWN)
@@ -127,6 +131,7 @@ public class MovieTest {
         Movie movie = Movie.builder()
                 .id(null)
                 .imdbId("tt4016934")
+                .tmdbId(550)
                 .title("The Handmaiden")
                 .certificate("R")
                 .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2017"))
@@ -155,6 +160,36 @@ public class MovieTest {
         Movie movie = Movie.builder()
                 .id("4016934")
                 .imdbId(null)
+                .tmdbId(550)
+                .title("The Handmaiden")
+                .certificate("R")
+                .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2017"))
+                .runtime(144)
+                .genre("Drama, Mystery, Romance")
+                .director("Christopher Nolan")
+                .screenplay("Joss Whedon")
+                .cast("Harrison Ford, Mark Hamill")
+                .plot("Forrest Gump on a tractor.")
+                .language("en")
+                .country("UK")
+                .poster(POSTER)
+                .build();
+    }
+
+    /**
+     * Test that the tmdbId field is mandatory, i.e. if it is zero, an exception is thrown.
+     */
+    @Test
+    public void builderTmdbIdIsMandatory() {
+        // We expect an exception to be thrown
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage("Missing required properties: tmdbId");
+
+        @SuppressWarnings({"unused", "UnusedAssignment", "ConstantConditions"})
+        Movie movie = Movie.builder()
+                .id("4016934")
+                .imdbId("tt4016934")
+                .tmdbId(0)
                 .title("The Handmaiden")
                 .certificate("R")
                 .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2017"))
@@ -183,6 +218,7 @@ public class MovieTest {
         Movie movie = Movie.builder()
                 .id("4016934")
                 .imdbId("tt4016934")
+                .tmdbId(550)
                 .title(null)
                 .certificate("R")
                 .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2017"))
@@ -213,6 +249,7 @@ public class MovieTest {
         assertTrue(Movie.builder()
                 .id("4016934")
                 .imdbId("tt4016938")
+                .tmdbId(4060)
                 .title("The Handmaiden Returns")
                 .certificate("PG")
                 .released(AndroidTestUtils.toLongOmdbReleased("15 Jul 2012"))
@@ -232,6 +269,7 @@ public class MovieTest {
         assertTrue(Movie.builder()
                 .id("4016934")
                 .imdbId("tt4016934")
+                .tmdbId(550)
                 .title("The Handmaiden")
                 .released(Movie.RELEASED_UNKNOWN)
                 .genre(null)
@@ -251,6 +289,7 @@ public class MovieTest {
         assertFalse(Movie.builder()
                 .id("4016938")
                 .imdbId("tt4016934")
+                .tmdbId(550)
                 .title("The Handmaiden")
                 .certificate("R")
                 .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2017"))
@@ -277,6 +316,7 @@ public class MovieTest {
                         // id is the only different field
                         .id("4016938")
                         .imdbId("tt4016934")
+                        .tmdbId(550)
                         .title("The Handmaiden")
                         .certificate("R")
                         .released(AndroidTestUtils.toLongOmdbReleased("01 Jun 2017"))
@@ -295,7 +335,7 @@ public class MovieTest {
     @Test
     public void testToString() {
         assertEquals(
-                "Movie{id=4016934, imdbId=tt4016934, title=The Handmaiden" +
+                "Movie{id=4016934, imdbId=tt4016934, tmdbId=550, title=The Handmaiden" +
                         ", certificate=R, released="
                         + AndroidTestUtils.toLongOmdbReleased("01 Jun 2017")
                         + ", runtime=144, genre=Drama, Mystery, Romance"
