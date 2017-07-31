@@ -240,18 +240,17 @@ public final class ViewAward implements Parcelable {
     /**
      * Parcel creator object.
      */
-    public static final Parcelable.Creator<ViewAward> CREATOR =
-            new Parcelable.Creator<ViewAward>() {
-                @NonNull
-                public ViewAward createFromParcel(@NonNull final Parcel in) {
-                    return new ViewAward(in);
-                }
+    public static final Parcelable.Creator<ViewAward> CREATOR = new Parcelable.Creator<ViewAward>() {
+        @NonNull
+        public ViewAward createFromParcel(@NonNull final Parcel in) {
+            return new ViewAward(in);
+        }
 
-                @NonNull
-                public ViewAward[] newArray(final int size) {
-                    return new ViewAward[size];
-                }
-            };
+        @NonNull
+        public ViewAward[] newArray(final int size) {
+            return new ViewAward[size];
+        }
+    };
 
     /**
      * Describe the kinds of special objects contained in this Parcelable
@@ -332,54 +331,67 @@ public final class ViewAward implements Parcelable {
             this.id = id;
             return this;
         }
+
         public ViewAward.Builder movieId(String movieId) {
             this.movieId = movieId;
             return this;
         }
+
         public ViewAward.Builder imdbId(@NonNull String imdbId) {
             this.imdbId = imdbId;
             return this;
         }
+
         public ViewAward.Builder awardDate(@NonNull String awardDate) {
             this.awardDate = awardDate;
             return this;
         }
+
         public ViewAward.Builder category(@NonNull String category) {
             this.category = category;
             return this;
         }
+
         public ViewAward.Builder review(@NonNull String review) {
             this.review = review;
             return this;
         }
+
         public ViewAward.Builder displayOrder(int displayOrder) {
             this.displayOrder = displayOrder;
             return this;
         }
+
         public ViewAward.Builder title(@NonNull String title) {
             this.title = title;
             return this;
         }
+
         public ViewAward.Builder runtime(int runtime) {
             this.runtime = runtime;
             return this;
         }
+
         public ViewAward.Builder genre(@NonNull String genre) {
             this.genre = genre;
             return this;
         }
+
         public ViewAward.Builder poster(@NonNull String poster) {
             this.poster = poster;
             return this;
         }
+
         public ViewAward.Builder onWishlist(boolean onWishlist) {
             this.onWishlist = onWishlist;
             return this;
         }
+
         public ViewAward.Builder watched(boolean watched) {
             this.watched = watched;
             return this;
         }
+
         public ViewAward.Builder favourite(boolean favourite) {
             this.favourite = favourite;
             return this;

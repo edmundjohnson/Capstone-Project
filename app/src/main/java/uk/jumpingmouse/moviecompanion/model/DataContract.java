@@ -107,6 +107,7 @@ public final class DataContract {
                 COLUMN_COUNTRY,
                 COLUMN_POSTER
         };
+
         public static String[] getAllColumns() {
             return ALL_COLUMNS.clone();
         }
@@ -183,6 +184,7 @@ public final class DataContract {
                 COLUMN_REVIEW,
                 COLUMN_DISPLAY_ORDER
         };
+
         static String[] getAllColumns() {
             return ALL_COLUMNS.clone();
         }
@@ -250,6 +252,7 @@ public final class DataContract {
                 COLUMN_WATCHED,
                 COLUMN_FAVOURITE
         };
+
         static String[] getAllColumns() {
             return ALL_COLUMNS.clone();
         }
@@ -372,54 +375,6 @@ public final class DataContract {
         public static final String FILTER_GENRE_ALL = "genre_all";
         public static final String FILTER_GENRE_DEFAULT = FILTER_GENRE_ALL;
 
-//        // This map contains a mapping between genre ids and genre names.
-//        // The map keys must match the values in arrays.xml "filter_genre_pref_key".
-//        // The map values must match the values stored in the remote database and hence
-//        // MUST NOT be translated!
-//        private static final Map<String, String> GENRES_STORED;
-//        static {
-//            Map<String, String> genresStoredModifiable = new HashMap<>();
-//            genresStoredModifiable.put("genre_action", "Action");
-//            genresStoredModifiable.put("genre_adventure", "Adventure");
-//            genresStoredModifiable.put("genre_animation", "Animation");
-//            // Not on TMDb
-//            genresStoredModifiable.put("genre_biography", "Biography");
-//            genresStoredModifiable.put("genre_comedy", "Comedy");
-//            genresStoredModifiable.put("genre_crime", "Crime");
-//            genresStoredModifiable.put("genre_documentary", "Documentary");
-//            genresStoredModifiable.put("genre_drama", "Drama");
-//            genresStoredModifiable.put("genre_family", "Family");
-//            genresStoredModifiable.put("genre_fantasy", "Fantasy");
-//            // Not on TMDb
-//            genresStoredModifiable.put("genre_film_noir", "Film-Noir");
-//            genresStoredModifiable.put("genre_history", "History");
-//            genresStoredModifiable.put("genre_horror", "Horror");
-//            genresStoredModifiable.put("genre_music", "Music");
-//            // Not on TMDb
-//            genresStoredModifiable.put("genre_musical", "Musical");
-//            genresStoredModifiable.put("genre_mystery", "Mystery");
-//            genresStoredModifiable.put("genre_romance", "Romance");
-//            genresStoredModifiable.put("genre_sci_fi", "Sci-Fi");
-//            // Not on TMDb
-//            genresStoredModifiable.put("genre_sport", "Sport");
-//            genresStoredModifiable.put("genre_thriller", "Thriller");
-//            // On TMDb but not OMDb: "TV Movie"
-//            genresStoredModifiable.put("genre_war", "War");
-//            genresStoredModifiable.put("genre_western", "Western");
-//            GENRES_STORED = Collections.unmodifiableMap(genresStoredModifiable);
-//        }
-
-//        /**
-//         * Returns a genre as stored in the database for a supplied genre key.
-//         * @param genreKey a genre key, e.g."genre_comedy"
-//         * @return the genre as stored in the database, e.g."Comedy", or null if there is
-//         *         no stored genre corresponding to the genreKey
-//         */
-//        @Nullable
-//        static String getGenreStoredForGenreKey(@NonNull String genreKey) {
-//            return GENRES_STORED.get(genreKey);
-//        }
-
         // These values must match the values in arrays.xml "filter_wishlist_pref_key"
         public static final String FILTER_WISHLIST_ANY = "filter_wishlist_any";
         static final String FILTER_WISHLIST_SHOW = "filter_wishlist_show";
@@ -474,7 +429,8 @@ public final class DataContract {
 
         /**
          * Create and return a URI for querying all the view awards.
-         * e.g. "content://uk.jumpingmouse.moviecompanion/viewAward?sortOrder=awardDate DESC&filterWishlist=wishlistAll".
+         * e.g. "content://uk.jumpingmouse.moviecompanion/viewAward?
+         *                     sortOrder=awardDate DESC&filterWishlist=wishlistAll".
          * @param parameters the parameters affecting the display of the view award list
          * @return the URI for querying all awards for the movie
          */

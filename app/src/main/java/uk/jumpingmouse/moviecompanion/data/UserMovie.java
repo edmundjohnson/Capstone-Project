@@ -132,18 +132,17 @@ public final class UserMovie implements Parcelable {
     /**
      * Parcel creator object.
      */
-    public static final Creator<UserMovie> CREATOR =
-            new Creator<UserMovie>() {
-                @NonNull
-                public UserMovie createFromParcel(@NonNull final Parcel in) {
-                    return new UserMovie(in);
-                }
+    public static final Creator<UserMovie> CREATOR = new Creator<UserMovie>() {
+        @NonNull
+        public UserMovie createFromParcel(@NonNull final Parcel in) {
+            return new UserMovie(in);
+        }
 
-                @NonNull
-                public UserMovie[] newArray(final int size) {
-                    return new UserMovie[size];
-                }
-            };
+        @NonNull
+        public UserMovie[] newArray(final int size) {
+            return new UserMovie[size];
+        }
+    };
 
     /**
      * Describe the kinds of special objects contained in this Parcelable
@@ -203,18 +202,22 @@ public final class UserMovie implements Parcelable {
             this.id = id;
             return this;
         }
+
         public UserMovie.Builder onWishlist(boolean onWishlist) {
             this.onWishlist = onWishlist;
             return this;
         }
+
         public UserMovie.Builder watched(boolean watched) {
             this.watched = watched;
             return this;
         }
+
         public UserMovie.Builder favourite(boolean favourite) {
             this.favourite = favourite;
             return this;
         }
+
         /**
          * Builds and returns a UserMovie object.
          * @return a UserMovie object

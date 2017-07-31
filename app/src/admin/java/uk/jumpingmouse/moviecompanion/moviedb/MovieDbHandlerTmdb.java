@@ -4,13 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
 import info.movito.themoviedbapi.model.Credits;
 import info.movito.themoviedbapi.model.Genre;
 import info.movito.themoviedbapi.model.Language;
@@ -20,6 +13,13 @@ import info.movito.themoviedbapi.model.ReleaseInfo;
 import info.movito.themoviedbapi.model.config.TmdbConfiguration;
 import info.movito.themoviedbapi.model.people.PersonCast;
 import info.movito.themoviedbapi.model.people.PersonCrew;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 import timber.log.Timber;
 

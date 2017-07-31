@@ -270,18 +270,17 @@ public final class Movie implements Parcelable {
     /**
      * Parcel creator object.
      */
-    public static final Parcelable.Creator<Movie> CREATOR =
-            new Parcelable.Creator<Movie>() {
-                @NonNull
-                public Movie createFromParcel(@NonNull final Parcel in) {
-                    return new Movie(in);
-                }
+    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+        @NonNull
+        public Movie createFromParcel(@NonNull final Parcel in) {
+            return new Movie(in);
+        }
 
-                @NonNull
-                public Movie[] newArray(final int size) {
-                    return new Movie[size];
-                }
-            };
+        @NonNull
+        public Movie[] newArray(final int size) {
+            return new Movie[size];
+        }
+    };
 
     /**
      * Describe the kinds of special objects contained in this Parcelable
@@ -361,58 +360,72 @@ public final class Movie implements Parcelable {
             this.id = id;
             return this;
         }
+
         public Movie.Builder imdbId(@NonNull String imdbId) {
             this.imdbId = imdbId;
             return this;
         }
+
         public Movie.Builder title(@NonNull String title) {
             this.title = title;
             return this;
         }
+
         public Movie.Builder certificate(@Nullable String certificate) {
             this.certificate = certificate;
             return this;
         }
+
         public Movie.Builder released(long released) {
             this.released = released;
             return this;
         }
+
         public Movie.Builder runtime(int runtime) {
             this.runtime = runtime;
             return this;
         }
+
         public Movie.Builder genre(@Nullable String genre) {
             this.genre = genre;
             return this;
         }
+
         public Movie.Builder director(@Nullable String director) {
             this.director = director;
             return this;
         }
+
         public Movie.Builder screenplay(@Nullable String screenplay) {
             this.screenplay = screenplay;
             return this;
         }
+
         public Movie.Builder cast(@Nullable String cast) {
             this.cast = cast;
             return this;
         }
+
         public Movie.Builder plot(@Nullable String plot) {
             this.plot = plot;
             return this;
         }
+
         public Movie.Builder language(@Nullable String language) {
             this.language = language;
             return this;
         }
+
         public Movie.Builder country(@Nullable String country) {
             this.country = country;
             return this;
         }
+
         public Movie.Builder poster(@Nullable String poster) {
             this.poster = poster;
             return this;
         }
+
         /**
          * Builds and returns a Movie object.
          * @return a Movie object

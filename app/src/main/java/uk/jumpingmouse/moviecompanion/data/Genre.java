@@ -101,18 +101,17 @@ public final class Genre implements Parcelable {
     /**
      * Parcel creator object.
      */
-    public static final Creator<Genre> CREATOR =
-            new Creator<Genre>() {
-                @NonNull
-                public Genre createFromParcel(@NonNull final Parcel in) {
-                    return new Genre(in);
-                }
+    public static final Creator<Genre> CREATOR = new Creator<Genre>() {
+        @NonNull
+        public Genre createFromParcel(@NonNull final Parcel in) {
+            return new Genre(in);
+        }
 
-                @NonNull
-                public Genre[] newArray(final int size) {
-                    return new Genre[size];
-                }
-            };
+        @NonNull
+        public Genre[] newArray(final int size) {
+            return new Genre[size];
+        }
+    };
 
     /**
      * Describe the kinds of special objects contained in this Parcelable
@@ -169,14 +168,17 @@ public final class Genre implements Parcelable {
             this.id = id;
             return this;
         }
+
         public Genre.Builder name(@NonNull String name) {
             this.name = name;
             return this;
         }
+
         public Genre.Builder displayInFilter(boolean displayInFilter) {
             this.displayInFilter = displayInFilter;
             return this;
         }
+
         /**
          * Builds and returns a Genre object.
          * @return a Genre object
@@ -198,48 +200,6 @@ public final class Genre implements Parcelable {
                     this.displayInFilter);
         }
     }
-
-    //---------------------------------------------------------------
-    // Utilities
-
-//    /**
-//     * Returns a set of ContentValues corresponding to the genre.
-//     * @return the set of ContentValues corresponding to the genre
-//     */
-//    @NonNull
-//    public ContentValues toContentValues() {
-//        ContentValues values = new ContentValues();
-//
-//        values.put(DataContract.MovieEntry.COLUMN_ID, getId());
-//        values.put(DataContract.MovieEntry.COLUMN_IMDB_ID, getImdbId());
-//        values.put(DataContract.MovieEntry.COLUMN_TITLE, getTitle());
-//        values.put(DataContract.MovieEntry.COLUMN_CERTIFICATE, getCertificate());
-//        values.put(DataContract.MovieEntry.COLUMN_RELEASED, getReleased());
-//        values.put(DataContract.MovieEntry.COLUMN_RUNTIME, getRuntime());
-//        values.put(DataContract.MovieEntry.COLUMN_GENRE, getGenre());
-//        values.put(DataContract.MovieEntry.COLUMN_DIRECTOR, getDirector());
-//        values.put(DataContract.MovieEntry.COLUMN_SCREENPLAY, getScreenplay());
-//        values.put(DataContract.MovieEntry.COLUMN_CAST, getCast());
-//        values.put(DataContract.MovieEntry.COLUMN_PLOT, getPlot());
-//        values.put(DataContract.MovieEntry.COLUMN_LANGUAGE, getLanguage());
-//        values.put(DataContract.MovieEntry.COLUMN_COUNTRY, getCountry());
-//        values.put(DataContract.MovieEntry.COLUMN_POSTER, getPoster());
-//
-//        return values;
-//    }
-
-//    /**
-//     * Returns the genre as an object array, one element per field value.
-//     * @return the genre as an Object array
-//     */
-//    public Object[] toObjectArray() {
-//        return new Object[] {
-//                // This must match the order of columns in DataContract.GenreEntry.getAllColumns().
-//                id,
-//                name,
-//                displayInFilter
-//        };
-//    }
 
     //---------------------------------------------------------------
     // Override object methods

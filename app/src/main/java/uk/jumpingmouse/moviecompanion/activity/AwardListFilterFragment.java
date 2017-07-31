@@ -290,6 +290,7 @@ public final class AwardListFilterFragment extends DialogFragment {
                         }
                     }
                 }
+
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
                     // do nothing

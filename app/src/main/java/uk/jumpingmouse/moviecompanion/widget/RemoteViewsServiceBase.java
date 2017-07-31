@@ -136,9 +136,9 @@ public abstract class RemoteViewsServiceBase extends RemoteViewsService {
 
             @Override
             public long getItemId(int position) {
-//                if (mCursor.moveToPosition(position)) {
-//                    return mCursor.getString(DataContract.ViewAwardEntry.COL_ID);
-//                }
+                //if (mCursor.moveToPosition(position)) {
+                //    return mCursor.getString(DataContract.ViewAwardEntry.COL_ID);
+                //}
                 return position;
             }
 

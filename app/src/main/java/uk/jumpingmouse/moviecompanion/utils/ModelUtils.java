@@ -30,6 +30,7 @@ public final class ModelUtils {
     // The map keys are the genre ids stored in the database and match "@string/genre_id...".
     // The map values are the string resource ids of the displayable genre names.
     private static final Map<String, Integer> GENRES;
+
     static {
         Map<String, Integer> genresStoredModifiable = new HashMap<>();
         genresStoredModifiable.put(Movie.GENRE_ID_ACTION, R.string.genre_name_action);
@@ -489,7 +490,13 @@ public final class ModelUtils {
                 .build();
     }
 
-
+    /**
+     * Returns a CSV string of genre names corresponding to a CSV string of genre ids.
+     * @param context the context
+     * @param genreIdCsv a CSV string of genre ids, e.g. "18,44,28"
+     * @return a CSV string of genre names corresponding to the CSV string of genre ids,
+     *         e.g. "Comedy, Drama, Action"
+     */
     @Nullable
     public static String toGenreNameCsv(@Nullable Context context, @Nullable String genreIdCsv) {
         if (context == null || genreIdCsv == null) {

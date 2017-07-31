@@ -451,9 +451,9 @@ public final class AwardListFragment extends Fragment
             loader.forceLoad();
         }
     }
-//    public void onDataChanged(Bundle bundle) {
-//        getLoaderManager().restartLoader(AWARD_LIST_LOADER_ID, bundle, this);
-//    }
+    //public void onDataChanged(Bundle bundle) {
+    //    getLoaderManager().restartLoader(AWARD_LIST_LOADER_ID, bundle, this);
+    //}
 
     //--------------------------------------------------------------
     // Empty list methods

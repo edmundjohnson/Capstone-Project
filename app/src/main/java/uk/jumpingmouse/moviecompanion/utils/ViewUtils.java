@@ -326,14 +326,14 @@ public final class ViewUtils {
         }
     }
 
-//    /**
-//     * Display a message as a short toast.
-//     * @param applicationContext the application context
-//     * @param message the message to be displayed
-//     */
-//    private void displayToast(@NonNull Context applicationContext, @NonNull String message) {
-//        displayToast(applicationContext, message, false);
-//    }
+    ///**
+    // * Display a message as a short toast.
+    // * @param applicationContext the application context
+    // * @param message the message to be displayed
+    // */
+    //private void displayToast(@NonNull Context applicationContext, @NonNull String message) {
+    //    displayToast(applicationContext, message, false);
+    //}
 
     /**
      * Display a message as a toast.
@@ -342,7 +342,8 @@ public final class ViewUtils {
      * @param longDuration if true, a long duration toast is displayed,
      *                    otherwise a short duration one
      */
-    private void displayToast(@NonNull Context applicationContext, @NonNull String message, boolean longDuration) {
+    private void displayToast(@NonNull Context applicationContext, @NonNull String message,
+                              boolean longDuration) {
         int length = longDuration ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(applicationContext, message, length);
         toast.setGravity(Gravity.CENTER, 0, 0);

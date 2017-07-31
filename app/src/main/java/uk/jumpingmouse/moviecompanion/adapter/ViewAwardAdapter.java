@@ -190,18 +190,23 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
     public @LayoutRes int getListLayout() {
         return mListLayout;
     }
+
     public void setListLayout(final @LayoutRes int listLayout) {
         mListLayout = listLayout;
     }
+
     public boolean isListLayoutList() {
         return R.layout.award_list_item_list == getListLayout();
     }
+
     public boolean isListLayoutGrid() {
         return R.layout.award_list_item_grid == getListLayout();
     }
+
     public void setListLayoutList() {
         setListLayout(R.layout.award_list_item_list);
     }
+
     public void setListLayoutGrid() {
         setListLayout(R.layout.award_list_item_grid);
     }
@@ -209,6 +214,7 @@ public final class ViewAwardAdapter extends RecyclerView.Adapter<ViewAwardAdapte
     private int getSelectedPosition() {
         return mSelectedPosition;
     }
+
     private void setSelectedPosition(final int selectedPosition) {
         mSelectedPosition = selectedPosition;
     }

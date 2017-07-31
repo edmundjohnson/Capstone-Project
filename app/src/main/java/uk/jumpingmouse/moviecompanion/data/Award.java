@@ -175,18 +175,17 @@ public final class Award implements Parcelable {
     /**
      * Parcel creator object.
      */
-    public static final Parcelable.Creator<Award> CREATOR =
-            new Parcelable.Creator<Award>() {
-                @NonNull
-                public Award createFromParcel(@NonNull final Parcel in) {
-                    return new Award(in);
-                }
+    public static final Parcelable.Creator<Award> CREATOR = new Parcelable.Creator<Award>() {
+        @NonNull
+        public Award createFromParcel(@NonNull final Parcel in) {
+            return new Award(in);
+        }
 
-                @NonNull
-                public Award[] newArray(final int size) {
-                    return new Award[size];
-                }
-            };
+        @NonNull
+        public Award[] newArray(final int size) {
+            return new Award[size];
+        }
+    };
 
     /**
      * Describe the kinds of special objects contained in this Parcelable
@@ -357,7 +356,7 @@ public final class Award implements Parcelable {
     public static final Comparator<Award> AWARD_COMPARATOR_MOVIE_ID
             = new Comparator<Award>() {
                 public int compare(Award award1, Award award2) {
-            // ascending order
+                    // ascending order
                     if (award1.movieId.equals(award2.movieId)) {
                         // movieId, then awardDate, then reverse category ("M" > "D")
                         if (award1.awardDate.equals(award2.awardDate)) {

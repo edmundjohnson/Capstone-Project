@@ -205,7 +205,7 @@ public final class SecurityManagerFirebase implements SecurityManager {
         return Arrays.asList(
                 new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
                 new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()
-                //, new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build()
+        //        , new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build()
         );
     }
 

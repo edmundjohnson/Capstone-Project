@@ -6,14 +6,14 @@ import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.annotation.WorkerThread;
 
-import java.lang.ref.WeakReference;
-import java.util.List;
-
 import info.movito.themoviedbapi.TmdbApi;
 import info.movito.themoviedbapi.TmdbFind;
 import info.movito.themoviedbapi.TmdbMovies;
 import info.movito.themoviedbapi.model.FindResults;
 import info.movito.themoviedbapi.model.MovieDb;
+
+import java.lang.ref.WeakReference;
+import java.util.List;
 
 import timber.log.Timber;
 

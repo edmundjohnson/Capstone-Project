@@ -113,31 +113,37 @@ public final class ViewAwardQueryParameters {
             this.mSortOrder = sortOrder;
             return this;
         }
+
         @NonNull
         public ViewAwardQueryParameters.Builder filterGenre(@Nullable String filterGenre) {
             this.mFilterGenre = filterGenre;
             return this;
         }
+
         @NonNull
         public ViewAwardQueryParameters.Builder filterWishlist(@Nullable String filterWishlist) {
             this.mFilterWishlist = filterWishlist;
             return this;
         }
+
         @NonNull
         public ViewAwardQueryParameters.Builder filterWatched(@Nullable String filterWatched) {
             this.mFilterWatched = filterWatched;
             return this;
         }
+
         @NonNull
         public ViewAwardQueryParameters.Builder filterFavourite(@Nullable String filterFavourite) {
             this.mFilterFavourite = filterFavourite;
             return this;
         }
+
         @NonNull
         public ViewAwardQueryParameters.Builder filterCategory(@Nullable String filterCategory) {
             this.mFilterCategory = filterCategory;
             return this;
         }
+
         @NonNull
         public ViewAwardQueryParameters.Builder limit(int limit) {
             this.mLimit = limit;
