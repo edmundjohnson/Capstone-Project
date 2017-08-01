@@ -15,8 +15,8 @@
     <ImageView
         android:id="@+id/imgPoster"
         android:layout_width="@dimen/grid_image_width"
-        android:layout_height="wrap_content"
-        android:scaleType="centerInside"
+        android:layout_height="@dimen/grid_image_height"
+        android:scaleType="centerCrop"
         android:contentDescription="@string/poster_description"
         tools:src="@mipmap/ic_launcher"/>
 

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- List -->
+    <dimen name="list_item_width">410dp</dimen>
+    <!-- grid view -->
+    <integer name="list_grid_column_count">3</integer>
+    <dimen name="grid_image_width">126dp</dimen>
+    <dimen name="grid_image_height">193dp</dimen>
+</resources>

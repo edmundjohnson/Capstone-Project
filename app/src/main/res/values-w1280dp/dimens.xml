@@ -3,7 +3,6 @@
     <!-- List -->
     <!-- grid view -->
     <integer name="list_grid_column_count">6</integer>
-    <dimen name="grid_image_width">160dp</dimen>
-    <dimen name="grid_image_height">240dp</dimen>
-
+    <dimen name="grid_image_width">204dp</dimen>
+    <dimen name="grid_image_height">306dp</dimen>
 </resources>

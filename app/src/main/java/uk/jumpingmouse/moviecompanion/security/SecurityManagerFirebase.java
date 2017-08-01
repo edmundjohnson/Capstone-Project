@@ -70,6 +70,12 @@ public final class SecurityManagerFirebase implements SecurityManager {
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                // For testing without login (e.g. for running on an emulator):
+                // - uncomment the following line
+                // - comment off the rest of this method
+                // - on Firebase console, set each database read rule to 'true'
+                //onSignedInInitialise(activity);
+
                 if (isUserSignedIn()) {
                     // user has just signed in
                     onSignedInInitialise(activity);
@@ -203,9 +209,11 @@ public final class SecurityManagerFirebase implements SecurityManager {
      */
     private List<AuthUI.IdpConfig> getIdProviders() {
         return Arrays.asList(
+                // Email log in should make testing on emulator easier,
+                // but errors occur when login attempted.
+                //new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
                 new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
                 new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()
-        //        , new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build()
         );
     }
 
