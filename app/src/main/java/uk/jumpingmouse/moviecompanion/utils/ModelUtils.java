@@ -27,7 +27,9 @@ import uk.jumpingmouse.moviecompanion.model.DataContract;
 public final class ModelUtils {
 
     private static final String TMDB_BASE_URL = "http://image.tmdb.org/t/p/";
-    private static final String TMDB_POSTER_SIZE = "w780";
+    // 2/8/17: The available poster sizes are:
+    // "w92", "w154", "w185", "w342", "w500", "w780", "original"
+    private static final String TMDB_POSTER_SIZE = "w500";
     private static final String TMDB_THUMBNAIL_SIZE = "w154";
 
     // This map contains a mapping between genre ids and their corresponding genre names.
